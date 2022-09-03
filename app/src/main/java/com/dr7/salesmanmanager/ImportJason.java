@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.Window;
 import android.widget.ProgressBar;
@@ -35,8 +33,8 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.dr7.salesmanmanager.Interface.Api_PendingInvoice;
 import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
 import com.dr7.salesmanmanager.Modles.Customer;
@@ -50,6 +48,8 @@ import com.dr7.salesmanmanager.Modles.OfferGroupModel;
 import com.dr7.salesmanmanager.Modles.OfferListMaster;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.Payment;
+import com.dr7.salesmanmanager.Modles.Pending_Invoice;
+import com.dr7.salesmanmanager.Modles.Pending_Serial;
 import com.dr7.salesmanmanager.Modles.PriceListD;
 import com.dr7.salesmanmanager.Modles.PriceListM;
 import com.dr7.salesmanmanager.Modles.QtyOffers;
@@ -64,8 +64,6 @@ import com.dr7.salesmanmanager.Modles.UnCollect_Modell;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.SalesMan;
-import com.google.gson.Gson;
-import com.sewoo.request.android.RequestHandler;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -83,7 +81,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -95,14 +92,13 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.JarException;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 import static com.dr7.salesmanmanager.AccountStatment.getAccountList_text;
 import static com.dr7.salesmanmanager.Activities.totalBalance_text;
@@ -115,13 +111,13 @@ import static com.dr7.salesmanmanager.Login.headerDll;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.previousIp;
 import static com.dr7.salesmanmanager.Login.salesMan;
-import static com.dr7.salesmanmanager.Login.salesManNo;
 import static com.dr7.salesmanmanager.Login.typaImport;
-import static com.dr7.salesmanmanager.MainActivity.enter;
+import static com.dr7.salesmanmanager.MainActivity.fill_Pending_inv;
+import static com.dr7.salesmanmanager.MainActivity.openPendingTextView;
+import static com.dr7.salesmanmanager.MainActivity.pdialog;
 import static com.dr7.salesmanmanager.Methods.convertToEnglish;
 import static com.dr7.salesmanmanager.Methods.getDecimal;
 import static com.dr7.salesmanmanager.ReturnByVoucherNo.loadSerial;
-import static com.dr7.salesmanmanager.UnCollectedData.from_date;
 import static com.dr7.salesmanmanager.UnCollectedData.resultData;
 
 public class ImportJason extends AppCompatActivity {
@@ -169,14 +165,18 @@ public class ImportJason extends AppCompatActivity {
     public String CONO = "";
     String userNo = "";
     boolean start = false;
-    String ipAddress = "", ipWithPort = "", SalesManLogin;
+    String ipAddress = "", ipWithPort = "", SalesManLogin,link;
 
+    public  static  ArrayList<Pending_Invoice> list_pending_invoice=new ArrayList<>();
+    public  static  ArrayList<Pending_Serial> list_pending_serial=new ArrayList<>();
+    public Api_PendingInvoice apiPendingInvoice;
     public ImportJason(Context context) {
         this.context = context;
         this.mHandler = new DatabaseHandler(context);
         List<Settings> settings = mHandler.getAllSettings();
         System.setProperty("http.keepAlive", "false");
         this.requestQueue = Volley.newRequestQueue(context);
+
         SalesManLogin = mHandler.getAllUserNo();
         //Log.e("SalesManLogin", "" + SalesManLogin);
         if (settings.size() != 0) {
@@ -197,7 +197,113 @@ public class ImportJason extends AppCompatActivity {
         }
         counter = 0;
         generalMethod=new GeneralMethod(context);
+        link="http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() +"/";
+        if(link.trim().length()!=0)
+        {
+            try {
+                Retrofit retrofit = RetrofitInstance.getInstance(link);
+                apiPendingInvoice= retrofit.create(Api_PendingInvoice.class);
+            }catch (Exception e){
+                Log.e("apiPendingInvoice",""+e.getMessage());
+            }
+
+        }
+
     }
+
+    public void fetchCallData(int flag) {
+// 1 from  RE EXPORT DIALOG ----2 FROM IMPORT DATA
+        Call<ArrayList<Pending_Invoice>> myData = apiPendingInvoice.getPendingInvoiceInfo(CONO,salesMan);
+
+        myData.enqueue(new Callback<ArrayList<Pending_Invoice>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Pending_Invoice>> call, retrofit2.Response<ArrayList<Pending_Invoice>> response) {
+
+                if (!response.isSuccessful()) {
+                    Log.e("onResponse", "not=" + response.message());
+                } else {
+                    Log.e("getInitialDataPending","begin3");
+                    list_pending_invoice.clear();
+                    list_pending_invoice.addAll(response.body());
+                    Log.e("list_pending_invoice","fill_inv="+list_pending_invoice.size());
+
+                    if(flag!=2)
+                    fill_Pending_inv.setText("fill_inv");
+                    if(flag==2){
+                        if(list_pending_invoice.size()!=0){
+                            Log.e("list_pending_invoice","fill_inv="+list_pending_invoice.size());
+//                            openExportDialog();
+                        }
+                    }
+
+                    fetchCallData_serial(flag);
+
+//                    fetchCashDetailData(from, toDat, pos);
+                   Log.e("onResponse", "flag=" + flag);
+
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Pending_Invoice>> call, Throwable throwable) {
+                Log.e("onFailure", "=" + throwable.getMessage());
+                list_pending_invoice.clear();
+                pdialog.dismissWithAnimation();
+                if(flag!=2)
+                fill_Pending_inv.setText("fill_inv");
+
+
+                fetchCallData_serial(flag);
+            }
+        });
+    }
+
+    public void fetchCallData_serial(int flag) {
+
+        Call<ArrayList<Pending_Serial>> myData = apiPendingInvoice.getPendingSerialInfo(CONO,salesMan);
+
+        myData.enqueue(new Callback<ArrayList<Pending_Serial>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Pending_Serial>> call, retrofit2.Response<ArrayList<Pending_Serial>> response) {
+                pdialog.dismissWithAnimation();
+                if (!response.isSuccessful()) {
+                    Log.e("onResponse", "not=" + response.message());
+                } else {
+                    list_pending_serial.clear();
+                    list_pending_serial.addAll(response.body());
+                    if(flag!=2)
+                    fill_Pending_inv.setText("fill_serial");
+                    Log.e("getInitialDataPending","begin33");
+                    if((list_pending_invoice.size()!=0&&flag==2)||(list_pending_serial.size()!=0&&flag==2)){
+                        openPendingTextView.setText("open");
+                    }
+//                    fetchCashDetailData(from, toDat, pos);
+                    Log.e("onResponse", "=" + response.body().get(0).getSERIALCODE());
+                    Log.e("onResponse", "=" + list_pending_serial.size());
+
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Pending_Serial>> call, Throwable throwable) {
+                Log.e("onFailure", "=" + throwable.getMessage());
+                pdialog.dismissWithAnimation();
+                    list_pending_serial.clear();
+                if(flag!=2)
+                    fill_Pending_inv.setText("fill_serial");
+
+                if((list_pending_invoice.size()!=0&&flag==2)||(list_pending_serial.size()!=0&&flag==2)){
+                    openPendingTextView.setText("open");
+                }
+            }
+        });
+    }
+
+
     public  void getVoucherMReturnData(String voucherNo){
 
             new JSONTask_VoucherMReturnData(voucherNo).execute();
@@ -3357,7 +3463,11 @@ Log.e("customerList",""+customerList.size());
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Toast.makeText(context, s, Toast.LENGTH_LONG).show();
+            Log.e("getInitialDataPending","begin");
             dialog.dismiss();
+//            ************************Pending_Invoice*************************
+
+
         }
 
         private void setText(final TextView text, final String value) {
@@ -3369,7 +3479,33 @@ Log.e("customerList",""+customerList.size());
             });
         }
     }
+    public void getInitialDataPending(Context context) {
+        runOnUiThread(new Runnable() {
 
+            @Override
+            public void run() {
+
+                // Stuff that updates the UI
+                pdialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+
+                pdialog.getProgressHelper().setBarColor(Color.parseColor("#31AFB4"));
+                pdialog.setTitleText("Loading ...1");
+                pdialog.setCancelable(false);
+                pdialog.show();
+
+            }
+        });
+
+        try {
+            Log.e("getInitialDataPending","begin2");
+            fetchCallData(2);
+
+
+        }catch (Exception e){
+            pdialog.dismissWithAnimation();
+            Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
     private class SQLTask_part extends AsyncTask<String, Integer, String> {
         ProgressBar pb;
         Dialog dialog;
@@ -3431,6 +3567,7 @@ Log.e("customerList",""+customerList.size());
             super.onPostExecute(s);
             Toast.makeText(context, s, Toast.LENGTH_LONG).show();
             dialog.dismiss();
+            getInitialDataPending(context);
         }
 
         private void setText(final TextView text, final String value) {

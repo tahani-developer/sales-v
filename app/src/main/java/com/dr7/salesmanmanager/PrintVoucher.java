@@ -490,13 +490,18 @@ public class PrintVoucher extends AppCompatActivity {
                     Toast.makeText(PrintVoucher.this, "Please fill the requested fields", Toast.LENGTH_LONG).show();
             }
         });
-        if (Build.VERSION.SDK_INT >= 30){
-            if (!Environment.isExternalStorageManager()){
-                Intent getpermission = new Intent();
-                getpermission.setAction(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                startActivity(getpermission);
+        try {
+            if (Build.VERSION.SDK_INT >= 30){
+                if (!Environment.isExternalStorageManager()){
+                    Intent getpermission = new Intent();
+                    getpermission.setAction(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                    startActivity(getpermission);
+                }
             }
+        }catch (Exception e){
+
         }
+
 //
 //        preview.setOnTouchListener(new View.OnTouchListener() {
 //            @Override

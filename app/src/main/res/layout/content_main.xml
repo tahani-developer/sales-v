@@ -33,11 +33,35 @@ android:visibility="gone"
             android:textStyle="bold|italic"
             android:fontFamily="sans-serif"
             />
+        <TextView
+            android:id="@+id/notExportedTextView"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginHorizontal="20dp"
+            android:text="@string/pendingInvoice"
+            android:gravity="center"
+            android:layout_margin="5dp"
+            android:drawableLeft="@drawable/ic_info_black_24dp"
+            android:drawableStart="@drawable/ic_info_black_24dp"
+
+            android:textColor="@color/colorblue_dark"
+
+            app:autoSizeMaxTextSize="16sp"
+            app:autoSizeMinTextSize="14sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+            android:textStyle="bold|italic"
+            android:fontFamily="sans-serif"
+            />
+
     <TextView
         android:id="@+id/mainTextView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="1.4"
 
 
 
@@ -60,7 +84,7 @@ android:visibility="gone"
             android:layout_marginRight="15dp"
             android:layout_marginLeft="15dp"
 
-            android:layout_weight="1">
+            android:layout_weight="1.5">
         <TextView
             android:id="@+id/timeTextView"
             android:layout_width="wrap_content"
@@ -77,6 +101,20 @@ android:visibility="gone"
             android:textStyle="bold|italic"
             android:fontFamily="sans-serif"
             />
+            <TextView
+                android:id="@+id/openPendingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="gone"
+
+                app:autoSizeMaxTextSize="16sp"
+                app:autoSizeMinTextSize="14sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                android:textStyle="bold|italic"
+                android:fontFamily="sans-serif"
+                />
             <TextView
                 android:id="@+id/timerTextView"
                 android:layout_width="wrap_content"
@@ -126,7 +164,7 @@ android:visibility="invisible"
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_weight="3"
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical"

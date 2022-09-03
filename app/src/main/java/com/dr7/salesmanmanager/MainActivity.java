@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
@@ -74,7 +75,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.dr7.salesmanmanager.Adapters.Pending_item_Adapter;
+import com.dr7.salesmanmanager.Adapters.Pending_seriak_adapter;
+import com.dr7.salesmanmanager.Adapters.ReturnItemAdapter;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.TransactionsInfo;
 import com.dr7.salesmanmanager.Modles.Customer;
@@ -135,6 +141,8 @@ import java.util.Timer;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.CustomerCheckInFragment.settext1;
+import static com.dr7.salesmanmanager.ImportJason.list_pending_invoice;
+import static com.dr7.salesmanmanager.ImportJason.list_pending_serial;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
@@ -151,7 +159,9 @@ public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
         CustomerCheckInFragment.CustomerCheckInInterface, CustomerListShow.CustomerListShow_interface {
     private static final int REQ_CODE_SPEECH_INPUT = 100;
+   public static SweetAlertDialog pdialog;
     boolean isKitKat = false;
+    public  static  boolean openDialog=false;
     int salesMan = 1;
     RadioGroup radioGroup;
     public   static int plantype=0;
@@ -162,7 +172,7 @@ public class MainActivity extends AppCompatActivity
     String typeImport="";
     int  approveAdmin=-1,workOnLine=-1;
     public  static  EditText passwordFromAdmin, password ;
-    static public TextView mainTextView,timeTextView,salesmanPlanRespon,getplan;
+    static public TextView mainTextView,timeTextView,salesmanPlanRespon,getplan,notExportedTextView,openPendingTextView;
     LinearLayout checkInLinearLayout, checkOutLinearLayout;
     public static ImageView checkInImageView, checkOutImageView;
     static int checknum;
@@ -225,11 +235,13 @@ Dialog dialog1;
     List<Settings>settingsList;
     int NoLocationAsk=0;
 
-    public  static TextView masterControlLoc;
+    public  static TextView masterControlLoc,  fill_Pending_inv;;
     String ipAddress="";
     NavigationView navigationView;
 
     GeneralMethod generalMethod;
+     public  Pending_item_Adapter adapter;
+    public  Pending_seriak_adapter adapter_serial;
 
 //
 
@@ -317,7 +329,23 @@ Dialog dialog1;
         checkInLinearLayout = (LinearLayout) findViewById(R.id.checkInLinearLayout);
         checkOutLinearLayout = (LinearLayout) findViewById(R.id.checkOutLinearLayout);
 
+
+        try {
+            if (Build.VERSION.SDK_INT >= 30){
+                if (!Environment.isExternalStorageManager()){
+                    Intent getpermission = new Intent();
+                    getpermission.setAction(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                    startActivity(getpermission);
+                }
+            }
+        }catch (Exception e){
+
+        }
+
+
+
      try {
+
 
 saveCurentLocation();
 
@@ -350,18 +378,18 @@ saveCurentLocation();
         endtripText=findViewById(R.id.   endtripText);
         starttripText=findViewById(R.id.   starttripText);;
 
-      if(Login.SalsManTripFlage==1)
-      {
-          if(  databaseHandler.getLastSaleManTrip().equals("2"))
-          checkInLinearLayout.setEnabled(false);
-        checkOutLinearLayout.setEnabled(false);
-
-      }
-      else
-      {  starttripText.setVisibility(View.INVISIBLE);
-          endtripText.setVisibility(View.INVISIBLE);
-
-      }
+//      if(Login.SalsManTripFlage==1)
+//      {
+//          if(  databaseHandler.getLastSaleManTrip().equals("2"))
+//          checkInLinearLayout.setEnabled(false);
+//        checkOutLinearLayout.setEnabled(false);
+//
+//      }
+//      else
+//      {  starttripText.setVisibility(View.INVISIBLE);
+//          endtripText.setVisibility(View.INVISIBLE);
+//
+//      }
 
         endtripText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -419,8 +447,8 @@ else
 
 
 //////////////// salesman plan for cake shop
-        salesmanPlanRespon=findViewById(R.id.   salesmanPlanRespon);
-    //    getplan=findViewById(R.id.     getplan);
+        salesmanPlanRespon=findViewById(R.id.salesmanPlanRespon);
+//        getplan=findViewById(R.id.     getplan);
 
 
 
@@ -656,7 +684,16 @@ else
 
 
         mainTextView = (TextView) findViewById(R.id.mainTextView);
+        openPendingTextView= (TextView) findViewById(R.id.openPendingTextView);
         settext2();
+        notExportedTextView=findViewById(R.id.notExportedTextView);
+        notExportedTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("notExportedTextView","22222");
+                openExportDialog();
+            }
+        });
 
 //        checkInImageView = (ImageView) findViewById(R.id.checkInImageView);
 //        checkOutImageView = (ImageView) findViewById(R.id.checkOutImageView);
@@ -746,11 +783,162 @@ else
         navUsername.setText(Login.salesMan);
         navigationView.setNavigationItemSelectedListener(this);
         menuItemState = 0;
+        openPendingTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.e("afterTextChanged","2222"+s.toString());
+                if(s.toString().trim().equals("open"))
+                {
+                    Log.e("afterTextChanged",""+s.toString());
+                    if(openDialog==false)
+                    openExportDialog();
+                }
+
+            }
+        });
 //        locationPermissionRequest=new LocationPermissionRequest(MainActivity.this);
 //        locationPermissionRequest.timerLocation();
 
 
       //  getLocation();
+    }
+
+    public void openExportDialog() {
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.pending_invoice);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
+        int height = (int)(getResources().getDisplayMetrics().heightPixels*0.90);
+        openDialog=true;
+        dialog.getWindow().setLayout(width, height);
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        validPassowrdSetting=false;
+        lp.gravity = Gravity.CENTER;
+        lp.windowAnimations = R.style.DialogAnimation;
+        Button re_export_voucher,button2;
+        TextView cancel_dialog;
+        re_export_voucher=dialog.findViewById(R.id.re_export_voucher);
+        cancel_dialog=dialog.findViewById(R.id.cancel_dialog);
+        cancel_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog=false;
+                dialog.dismiss();
+            }
+        });
+        re_export_voucher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reExcportToStock();
+//                refreshAdapter();
+            }
+        });
+        button2=dialog.findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reExportStockSerial();
+            }
+        });
+
+        dialog.getWindow().setAttributes(lp);
+        dialog.show();
+        RecyclerView pendig_recycle_voucher,pendig_recycle_serial;
+        pendig_recycle_voucher=dialog.findViewById(R.id.pendig_recycle_voucher);
+        pendig_recycle_serial=dialog.findViewById(R.id.pendig_recycle_serial);
+
+
+        fill_Pending_inv=dialog.findViewById(R.id.fill_Pending_inv);
+        fill_Pending_inv.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().trim().equals("fill_inv"))
+                {
+                   Log.e( "fill_inv","list_pending_invoice="+list_pending_invoice.size());
+                   pendig_recycle_voucher.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                    adapter = new Pending_item_Adapter(list_pending_invoice,MainActivity.this);
+                    pendig_recycle_voucher.setAdapter(adapter);
+                }else  if(s.toString().trim().equals("fill_serial"))
+                {
+                    Log.e( "fill_inv","list_pending_invoice="+list_pending_invoice.size());
+                    pendig_recycle_serial.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                    adapter_serial = new Pending_seriak_adapter(list_pending_serial,MainActivity.this);
+                    pendig_recycle_serial.setAdapter(adapter_serial);
+                }
+                else if(s.toString().trim().equals("refresh")){
+                    getInitialDataPending();
+                }
+
+            }
+        });
+//
+        getInitialDataPending();
+
+
+
+
+
+    }
+
+    private void getInitialDataPending() {
+        pdialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+
+        pdialog.getProgressHelper().setBarColor(Color.parseColor("#31AFB4"));
+        pdialog.setTitleText("Loading ...1");
+        pdialog.setCancelable(false);
+        pdialog.show();
+        try {
+            ImportJason importJason=new ImportJason(this);
+            importJason.fetchCallData(1);
+        }catch (Exception e){
+            pdialog.dismissWithAnimation();
+            Toast.makeText(MainActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void reExportStockSerial() {
+
+        ExportJason exportJason = null;
+        try {
+            exportJason = new ExportJason(MainActivity.this);
+            exportJason.exportSerial_stock();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void reExcportToStock() {
+        ExportJason exportJason = null;
+        try {
+            exportJason = new ExportJason(MainActivity.this);
+            exportJason.exportStock(2);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     private void openReadBarcode() {
@@ -2560,7 +2748,7 @@ else
                 showCustomerList_checkbox, noReturn_checkbox, workSerial_checkbox,
                 showItemImage_checkbox,approveAdmin_checkbox,asaveOnly_checkbox,showSolidQty_checkbox,offerFromAdmin_checkbox,checkQtyServer,dontShowTax_checkbox
                 ,continousReading_checkbox,totalDiscount_checkbox,itemUnit_checkBox,dontDuplicateItems_checkbox
-                ,sumCurentQty_checkbox,salesoffers_checkbox,checkqtyinorder_checkbox,locationtracker_checkbox,aqaba_tax_exemption_checBox;
+                ,sumCurentQty_checkbox,salesoffers_checkbox,checkqtyinorder_checkbox,locationtracker_checkbox,aqaba_tax_exemption_checBox,showCustomerLocation_checBox;
         Dialog dialog;
         LinearLayout linearSetting,linearStore;
         TextView editIp;
@@ -2666,6 +2854,7 @@ else
             checkqtyinorder_checkbox= (CheckBox) dialog.findViewById(R.id.checkqtyinorder);
             locationtracker_checkbox= (CheckBox) dialog.findViewById(R.id.locationtracker);
             aqaba_tax_exemption_checBox= (CheckBox) dialog.findViewById(R.id.aqaba_tax_exemption_checBox);
+            showCustomerLocation_checBox= (CheckBox) dialog.findViewById(R.id.showCustomerLocation_checBox);
             FloatingActionButton okBut_floatingAction=dialog.findViewById(R.id.okBut_floatingAction);
             okBut_floatingAction.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -3034,9 +3223,10 @@ else
                     locationtracker_checkbox.setChecked(false);
 
                 }
-                Log.e("aqaba_tax_checBox",""+mDbHandler.getAllSettings().get(0).getAqapaTax());
+
                 aqaba_tax_exemption_checBox.setChecked(mDbHandler.getAllSettings().get(0).getAqapaTax() == 1);
 
+                showCustomerLocation_checBox.setChecked(mDbHandler.getAllSettings().get(0).getShowCustomerLocation()==1);
 
 
             }else {
@@ -3249,15 +3439,16 @@ else
                         Log.e("showsolidQty",""+showsolidQty);
 
 
+                        int showLocation=showCustomerLocation_checBox.isChecked()?1:0;
                         String salesmanname=salesmanNmae.getText().toString();
-                        Log.e("salesmanname",""+salesmanname);
+                        Log.e("salesmanname",""+salesmanname+"\tshowLocation="+showLocation);
                         mDbHandler.deleteAllSettings();
-                        mDbHandler.addSetting(link, taxKind,     504, invoice,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice,canChangPrice_Returnonly, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value);
-                        mDbHandler.addSetting(link, taxKind,     506, return1,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value);
-                        mDbHandler.addSetting(link, taxKind,     508, order,       priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value);
-                        /*cash*/mDbHandler.addSetting(link, taxKind  ,    1    ,    paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice,canChangPrice_Returnonly, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value);
-                        /*chequ*/mDbHandler.addSetting(link, taxKind  ,     4,       paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value);
-                /*credit card*/mDbHandler.addSetting(link, taxKind   , 2,         paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value);
+                        mDbHandler.addSetting(link, taxKind,     504, invoice,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice,canChangPrice_Returnonly, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation);
+                        mDbHandler.addSetting(link, taxKind,     506, return1,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation);
+                        mDbHandler.addSetting(link, taxKind,     508, order,       priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation);
+                        /*cash*/mDbHandler.addSetting(link, taxKind  ,    1    ,    paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice,canChangPrice_Returnonly, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation);
+                        /*chequ*/mDbHandler.addSetting(link, taxKind  ,     4,       paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation);
+                /*credit card*/mDbHandler.addSetting(link, taxKind   , 2,         paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation);
 
 
                         finish();
@@ -3268,11 +3459,20 @@ else
                             stopService(new Intent(MainActivity.this, MyServices.class));
 
                             startService(new Intent(MainActivity.this, MyServices.class));
-                        }
-                        else
+                        }else
                         {
+
+                            Intent BgServiceIntent = new Intent(MainActivity.this, MyServices.class);
+                            BgServiceIntent.putExtra("close",true);
+                            startService(BgServiceIntent);
+
                             stopService(new Intent(MainActivity.this, MyServices.class));
+
                         }
+//                        else
+//                        {
+//                            stopService(new Intent(MainActivity.this, MyServices.class));
+//                        }
 
 
 
@@ -3363,6 +3563,9 @@ else
         final EditText tel = (EditText) dialog.findViewById(R.id.com_tel);
         final EditText tax = (EditText) dialog.findViewById(R.id.tax_no);
         final EditText noteInvoice = (EditText) dialog.findViewById(R.id.notes);
+        final EditText salesman_car = (EditText) dialog.findViewById(R.id.salesman_car);
+        final EditText salesman_id= (EditText) dialog.findViewById(R.id.salesman_id);
+
 
 //        tel.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 //            @Override
@@ -3406,6 +3609,8 @@ else
                 name.setText("" + mDbHandler.getAllCompanyInfo().get(0).getCompanyName());
                 tel.setText("" + mDbHandler.getAllCompanyInfo().get(0).getcompanyTel());
                 tax.setText("" + mDbHandler.getAllCompanyInfo().get(0).getTaxNo());
+                salesman_id.setText(mDbHandler.getAllCompanyInfo().get(0).getNational_id()+"");
+                salesman_car.setText(mDbHandler.getAllCompanyInfo().get(0).getCarNo()+"");
 //            logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
                 logo.setBackground(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
                 itemBitmapPic= mDbHandler.getAllCompanyInfo().get(0).getLogo();
@@ -3478,13 +3683,15 @@ else
                 if (!name.getText().toString().equals("") && !tel.getText().toString().equals("") && !tax.getText().toString().equals(""))
                 {
                     String comName = name.getText().toString().trim();
-                   String comTel = "0";
+                   String comTel = "0",car_no="",nationalId="";
                            int taxNo = 0;
                     try {
                         comTel = tel.getText().toString();
                         taxNo = Integer.parseInt(tax.getText().toString());
                         String companyNote = noteInvoice.getText().toString();
 
+                        car_no=salesman_car.getText().toString().trim();
+                        nationalId=salesman_id.getText().toString().trim();
                         mDbHandler.deleteAllCompanyInfo();
                         if(itemBitmapPic!=null)
                         {
@@ -3494,7 +3701,7 @@ else
 
 
                        Log.e("addCompanyInfo",comName+" "+comTel+" "+taxNo+" "+itemBitmapPic+" ");
-                        mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic, companyNote,0,0,position);
+                        mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic, companyNote,0,0,position,nationalId,car_no);
                         try {
                             if(isNetworkAvailable())
                             {
@@ -4569,31 +4776,36 @@ Log.e("Exception==",e.getMessage());
     }
     boolean chechTransctionsForCustomer(String name){
        Voucher voucher=databaseHandler.getLastVoucher();
+
       String  cus_num=voucher.getCustNumber();
         String  time=voucher.getTime();
-        if(cus_num.equals(name))
-
+        if(voucher!=null)
         {
-            try {
+            if(cus_num.equals(name))
 
-                      List<Transaction> transactions= databaseHandler.getAlltransactions();
-                Transaction transaction=transactions.get(transactions.size()-1);
-                if(chechTransctionstime(transaction.getCheckInTime(),time))
-                    return true;
-                else return false;
-            }catch (Exception e){
-                Log.e("Exception==",e.getMessage()+"") ;
-                return false;
+            {
+                try {
+
+                    List<Transaction> transactions= databaseHandler.getAlltransactions();
+                    Transaction transaction=transactions.get(transactions.size()-1);
+                    if(chechTransctionstime(transaction.getCheckInTime(),time))
+                        return true;
+                    else return false;
+                }catch (Exception e){
+                    Log.e("Exception==",e.getMessage()+"") ;
+                    return false;
+                }
+
+
+
             }
+            else
+            {
+                return false;
 
+            }
+        }else return false;
 
-
-        }
-        else
-        {
-            return false;
-
-        }
           }
 
     public static boolean chechTransctionstime(String checkintime, String vochertime) throws ParseException {

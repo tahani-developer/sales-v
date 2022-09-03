@@ -12,6 +12,24 @@ public class CompanyInfo {
     private  double longtudeCompany;
     private  double latitudeCompany;
     private  String notePosition;
+    private  String national_id;
+    private  String carNo;
+
+    public String getNational_id() {
+        return national_id;
+    }
+
+    public void setNational_id(String national_id) {
+        this.national_id = national_id;
+    }
+
+    public String getCarNo() {
+        return carNo;
+    }
+
+    public void setCarNo(String carNo) {
+        this.carNo = carNo;
+    }
 
     public String getNotePosition() {
         return notePosition;

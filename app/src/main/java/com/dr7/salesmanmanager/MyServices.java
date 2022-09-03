@@ -33,7 +33,7 @@ public class MyServices extends Service {
     MediaPlayer player;
     int i=0;
     Timer T;
-    public static int LOCATIONTRACK =-1;
+    public int LOCATIONTRACK =-1;
     String userNo="0";
     DatabaseHandler db = new DatabaseHandler(MyServices.this);
     List<Settings> settings=new ArrayList<>();
@@ -53,6 +53,7 @@ public class MyServices extends Service {
         userNo= db.getAllUserNo();
         if (settings.size() != 0) {
             LOCATIONTRACK = settings.get(0).getLocationtracker();
+
             Log.e(TAG,"spical"+ LOCATIONTRACK +"   ");
         }
 
@@ -67,9 +68,17 @@ public class MyServices extends Service {
             Log.e(TAG,"spical"+ LOCATIONTRACK +"   ");
         }
 
-            Timer();
 
-            return START_STICKY;
+        boolean shouldClose=intent.getBooleanExtra("close",false);
+        if(shouldClose){
+            onDestroy();
+            stopSelf();
+        } else {
+            Timer();
+            // Continue to action here
+        }
+
+            return START_NOT_STICKY;
 
     }
 
@@ -82,7 +91,7 @@ public class MyServices extends Service {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void run() {
-                Log.e(TAG, "onStartCommand() , service started..."+i++);
+                Log.e(TAG, "Timer() , service started..."+i++);
 
 
                 Log.e(TAG,"approveAdmin = "+ LOCATIONTRACK +"   ="+getApplicationContext().toString());
@@ -130,6 +139,9 @@ public class MyServices extends Service {
                     });
 
                 }else {
+                    T.cancel();
+                    T=null;
+
                     Log.e(TAG,"no approveAdmin = "+ LOCATIONTRACK);
 
                 }
@@ -159,9 +171,12 @@ public class MyServices extends Service {
 //        player.stop();
 //        player.release();
 //        Toast.makeText(this, "Service stopped...", Toast.LENGTH_SHORT).show();
-        Timer();
+        Log.e(TAG, "onDestroy() ,LOCATIONTRACK..."+LOCATIONTRACK);
+//        if(LOCATIONTRACK ==1) {
+//            Timer();
+//        }
 
-        Log.e(TAG, "onCreate() , service stopped...");
+        Log.e(TAG, "onDestroy() , service stopped...");
     }
 
     @Override
@@ -232,7 +247,7 @@ public class MyServices extends Service {
 
                //     Log.e(TAG,"approveAdminnn = "+approveAdmin+"   "+userNo);
 
-                    Log.e(TAG,"approveAdmin = "+ LOCATIONTRACK +"   ="+getApplicationContext().toString());
+                    Log.e(TAG,"LOCATIONTRACK = "+ LOCATIONTRACK +"   =");
 
 //                Handler h = new Handler(Looper.getMainLooper());
 //                h.post(new Runnable() {

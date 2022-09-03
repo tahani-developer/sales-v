@@ -63,6 +63,7 @@ import static com.dr7.salesmanmanager.Login.typaImport;
 public class CustomerListShow extends DialogFragment {
     private String URL_TO_HIT = "";
 
+    public  int showCustomerLoc=0;
     public ListView itemsListView;
     public List<Customer> customerList;
     public List<Customer> emptyCustomerList;
@@ -154,13 +155,14 @@ public class CustomerListShow extends DialogFragment {
             }
 
 
+            showCustomerLoc=mHandler.getAllSettings().get(0).getShowCustomerLocation();
             if (mHandler.getAllSettings().get(0).getShowCustomerList() == 1) {
 
-                customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList,showCustomerLoc);
                 itemsListView.setAdapter(customersListAdapter);
 
             } else {
-                customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList);
+                customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList,showCustomerLoc);
                 itemsListView.setAdapter(customersListAdapter);
             }
 
@@ -248,7 +250,7 @@ Log.e("customerList===",customerList.size()+"");
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(s.length()!=0)
                 {
-                    customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                    customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList,showCustomerLoc);
                     itemsListView.setAdapter(customersListAdapter);
                     // Call back the Adapter with current character to Filter
                     customersListAdapter.getFilter().filter(s.toString());
@@ -259,11 +261,11 @@ Log.e("customerList===",customerList.size()+"");
                     if (mHandler.getAllSettings().size() != 0) {
                         if (mHandler.getAllSettings().get(0).getShowCustomerList() == 1) {
 //
-                            customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                            customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList,showCustomerLoc);
                             itemsListView.setAdapter(customersListAdapter);
                             //customersListAdapter.notifyDataSetChanged();
                         } else {
-                            customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList);
+                            customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList,showCustomerLoc);
                             itemsListView.setAdapter(customersListAdapter);
                             // customersListAdapter.notifyDataSetChanged();
                         }
@@ -606,7 +608,7 @@ Log.e("customerList===",customerList.size()+"");
                         }
 
                     }
-                    customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                    customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList,showCustomerLoc);
                     itemsListView.setAdapter(customersListAdapter);
 
                     Toast.makeText(getActivity(), "Customers list is ready" + customerList.size(), Toast.LENGTH_SHORT).show();
@@ -811,7 +813,7 @@ Log.e("customerList===",customerList.size()+"");
                     }
 
                 }
-                customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList,showCustomerLoc);
                 itemsListView.setAdapter(customersListAdapter);
 
                 Toast.makeText(getActivity(), "Customers list is ready" + customerList.size(), Toast.LENGTH_SHORT).show();

@@ -467,7 +467,8 @@ public class ItemsReport extends AppCompatActivity {
         try {
             if (!textItemNumber.equals("")) {
                 Log.e("case1==", "case1");
-                if ((itemNumber.contains(textItemNumber)) || itemName.toLowerCase().contains(textItemNumber.toLowerCase()) && vType == voucherType &&
+                if (((itemNumber.contains(textItemNumber)) || itemName.toLowerCase().contains(textItemNumber.toLowerCase()) )
+                        && vType == voucherType &&
                         (formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate)))) {
 

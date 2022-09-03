@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="320dp"
-    android:layout_height="500dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/layer7"
     android:layoutDirection="locale"
     android:id="@+id/linearCompany"
@@ -9,7 +9,73 @@
     android:orientation="vertical"
     android:padding="5dp"
     >
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="10dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/logo"
+            android:gravity="center_vertical"
+
+            android:textColor="@color/text_view_color"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_gravity="center"
+
+
+            android:background="@drawable/ic_cloud_upload_black_24dp"
+
+            />
+        <ImageView
+            android:id="@+id/logo_fal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_gravity="center"
+
+
+            android:background="@drawable/logo_falcons"
+
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/logo"
+            android:visibility="gone"
+            android:textColor="@color/text_view_color"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/savecompanyLocation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:layout_margin="10dp"
+            android:drawableEnd="@drawable/ic_add_location_black_24dp"
+
+            android:text="@string/saveLocation"
+            android:drawableRight="@drawable/ic_add_location_black_24dp" />
+
+    </TableRow>
     <LinearLayout
         android:id="@+id/row11"
         android:layout_width="match_parent"
@@ -40,7 +106,6 @@
 
 
         >
-
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -82,6 +147,122 @@
                 />
 
         </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/salesman_name"
+                android:textColor="@color/text_view_color"
+                app:autoSizeMaxTextSize="14sp"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeStepGranularity="1sp"
+                app:autoSizeTextType="uniform"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                />
+
+            <EditText
+                android:id="@+id/salesman_name"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:layout_margin="1dp"
+                android:background="@drawable/back_border_edit"
+
+                android:textSize="14sp"
+                android:text=""
+                android:textColor="@color/text_view_color"
+                />
+
+        </TableRow>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+
+        >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/carNo"
+                android:textColor="@color/text_view_color"
+                app:autoSizeMaxTextSize="14sp"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeStepGranularity="1sp"
+                app:autoSizeTextType="uniform"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                />
+
+            <EditText
+                android:id="@+id/salesman_car"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_margin="1dp"
+                android:background="@drawable/back_border_edit"
+
+                android:textSize="14sp"
+                android:text=""
+                android:textColor="@color/text_view_color"
+                />
+
+    </TableRow>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+
+        >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/national_id"
+                android:textColor="@color/text_view_color"
+                app:autoSizeMaxTextSize="14sp"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeStepGranularity="1sp"
+                app:autoSizeTextType="uniform"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                />
+
+            <EditText
+                android:id="@+id/salesman_id"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_margin="1dp"
+                android:background="@drawable/back_border_edit"
+
+                android:textSize="14sp"
+                android:text=""
+                android:textColor="@color/text_view_color"
+                />
+
+    </TableRow>
+
+
 
         <TableRow
             android:layout_width="match_parent"
@@ -190,6 +371,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:id="@+id/note_position"
 
         android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"
@@ -239,60 +421,7 @@
 
 
     </TableLayout>
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginLeft="10dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/logo"
-            android:gravity="center_vertical"
-
-            android:textColor="@color/text_view_color"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.7"
-            android:layout_marginLeft="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_gravity="center"
-
-
-            android:background="@drawable/ic_cloud_upload_black_24dp"
-
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/logo"
-            android:visibility="invisible"
-            android:textColor="@color/text_view_color"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/savecompanyLocation"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:visibility="gone"
-            android:layout_margin="10dp"
-            android:drawableEnd="@drawable/ic_add_location_black_24dp"
-
-            android:text="@string/saveLocation"
-            android:drawableRight="@drawable/ic_add_location_black_24dp" />
-
-    </TableRow>
 
 
     <LinearLayout

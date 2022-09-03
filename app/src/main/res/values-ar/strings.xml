@@ -198,7 +198,7 @@
     <string name="payment_number">رقم السند</string>
     <string name="voucher_type">نوع الفاتورة</string>
     <string name="voucher_date">تاريخ الفاتورة</string>
-    <string name="sale_man_number">رقم المندوب</string>
+    <string name="sale_man_number">المندوب</string>
     <string name="voucher_discount">خصم الفاتورة</string>
     <string name="voucher_discount_Percent">نسبة الخصم</string>
     <string name="remark">ملاحظة</string>
@@ -618,6 +618,13 @@
     <string name="youAreNotConnectedToStock">أنت غير مرتبط مع برنامج المستودعات !!</string>
     <string name="aqaba_tax_exemption">اعفاء ضريبة العقبة</string>
     <string name="no_tax">اعفاء ضريبي </string>
+    <string name="pendingInvoice">الفواتير المعلقة</string>
+    <string name="pendingSerial">السيريلات المعلقة</string>
+    <string name="re_export_voucher"> تصدير الفواتير</string>
+    <string name="re_export_serial">تصدير السيريلات</string>
+    <string name="showCustomerLocation">اظهار موقع العميل</string>
+    <string name="national_id">الرقم الوطني</string>
+    <string name="carNo">رقم السيارة</string>
     <string name="reson">السبب لعدم عمل فواتير </string>
     <string name="NameofPerson">اسم الشخص </string>
     <string name="phoneNum">رقم الهاتف</string>

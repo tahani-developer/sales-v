@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/liner_inventory"
+    android:layout_margin="2dp"
+
+
+    >
+
+    <TableLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+
+        android:stretchColumns="*">
+        <TableRow
+            >
+
+
+
+
+
+
+
+
+            <TextView
+                android:id="@+id/net_total"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+
+                android:gravity="center"
+                android:textSize="13sp"
+                android:padding="1dp"
+                android:text="1245102045"
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimary"
+                />
+
+            <TextView
+                android:id="@+id/trans_date"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+
+                android:gravity="center"
+                android:textSize="13sp"
+                android:padding="1dp"
+                android:text="1245102045"
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimary"
+                />
+            <TextView
+                android:id="@+id/van_code"
+                android:layout_width="90dp"
+                android:layout_height="match_parent"
+
+                android:gravity="center"
+                android:textSize="13sp"
+                android:maxLines="1"
+
+                android:scrollbars="vertical"
+                android:padding="1dp"
+                android:text="0001"
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimary"
+                />
+            <TextView
+                android:id="@+id/transeKind"
+                android:layout_width="140dp"
+                android:layout_height="match_parent"
+
+                android:gravity="center"
+                android:layout_column="2"
+                android:padding="1dp"
+                android:textSize="13sp"
+
+                android:text="1245102"
+                android:scrollbars="vertical"
+
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimary"
+                />
+            <TextView
+                android:id="@+id/voucher_no"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="1dp"
+                android:maxLines="1"
+                android:text="124510204552"
+                android:scrollbars="vertical"
+                android:textSize="13sp"
+                android:textColor="@color/colorPrimary"
+                android:textColorLink="@color/colorPrimary"
+                />
+        </TableRow>
+    </TableLayout>
+    <!--        </LinearLayout>-->
+    <!--    </TableRow>-->
+    <!--    </HorizontalScrollView>-->
+
+
+</LinearLayout>

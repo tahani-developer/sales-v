@@ -784,7 +784,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                            final ImageView serialScan = dialog.findViewById(R.id.serialScan);
                                                            RadioButton discPercRadioButton = dialog.findViewById(R.id.discPercRadioButton);
                                                            RadioButton discValueRadioButton = dialog.findViewById(R.id.discValueRadioButton);
-
+                                                           linearPrice = dialog.findViewById(R.id.linearPrice);
+                                                           Log.e("Purchase_Order","222="+Purchase_Order);
+                                                           if(Purchase_Order==1)
+                                                           {
+                                                               discountLinearLayout.setVisibility(View.GONE);
+                                                               bonusLinearLayout.setVisibility(View.GONE);
+                                                               if(CustomerListShow.paymentTerm==0) {
+                                                                   price.setVisibility(View.GONE);
+                                                                   linearPrice.setVisibility(View.GONE);
+                                                               }
+                                                           }
 //                                                       use_OneUnit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 //                                                           @Override
 //                                                           public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -2014,6 +2024,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             final LinearLayout discountLinearLayout = dialog.findViewById(R.id.discount_linear);
             final LinearLayout unitWeightLinearLayout = dialog.findViewById(R.id.linearWeight);
             bonusLinearLayout = dialog.findViewById(R.id.linear_bonus);
+            Log.e("Purchase_Order","==****"+Purchase_Order);
+            if(Purchase_Order==1)
+            {
+                discountLinearLayout.setVisibility(View.GONE);
+                bonusLinearLayout.setVisibility(View.GONE);
+                if(CustomerListShow.paymentTerm==0)
+                linearPrice.setVisibility(View.GONE);
+            }
+
             final LinearLayout discribtionItem_linear = dialog.findViewById(R.id.discribtionItem_linear);
             final LinearLayout serialNo_linear = dialog.findViewById(R.id.serialNo_linear);
             final EditText item_remark = dialog.findViewById(R.id.item_note);
@@ -2472,7 +2491,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             unit.setVisibility(View.GONE);
             //****************************************************************************************************
 
-
+            bonusLinearLayout.setVisibility(View.INVISIBLE);
             addToList.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("ResourceAsColor")
                 @Override
@@ -3673,6 +3692,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             category = itemView.findViewById(R.id.textViewCategory);
             unitQty = itemView.findViewById(R.id.textViewUnit_qty);
             price = itemView.findViewById(R.id.textViewPrice);
+            if(Purchase_Order==1)
+            {
+                if(CustomerListShow.paymentTerm==0)
+                price.setVisibility(View.GONE);
+            }
             tax = itemView.findViewById(R.id.textViewTax);
             barcode = itemView.findViewById(R.id.textViewBarcode);
 

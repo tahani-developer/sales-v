@@ -33,7 +33,7 @@
 
             <TextView
                 android:id="@+id/total"
-                android:layout_width="100dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -42,8 +42,19 @@
                 android:textSize="17sp"
                 android:textStyle="bold" />
             <TextView
+                android:id="@+id/item_bonus"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="visible"
+                android:text="  المجاني "
+                android:textColor="@color/add_button"
+                android:textDirection="rtl"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+            <TextView
                 android:id="@+id/item_discount"
-                android:layout_width="100dp"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:visibility="visible"

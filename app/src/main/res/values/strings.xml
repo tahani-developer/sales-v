@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 200.41    </string>
+    <string name="version"> V 200.48  </string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -578,6 +578,14 @@
     <string name="youAreNotConnectedToStock">You Are Not Connected To Stock!!</string>
     <string name="aqaba_tax_exemption">Aqaba Tax Exemption</string>
     <string name="no_tax">No Tax</string>
+    <string name="pendingInvoice">Pending Invoice</string>
+    <string name="pendingSerial">Pending Serial</string>
+    <string name="re_export_voucher">Re Export Voucher</string>
+    <string name="re_export_serial">Re Export Serial</string>
+    <string name="showCustomerLocation">Show Customer Location</string>
+    <string name="national_id">National Id</string>
+    <string name="carNo">Car Number</string>
+
     <string name="reson">The reason for not making Vochers </string>
     <string name="NameofPerson">Name of Person </string>
     <string name="phoneNum">Phone Num </string>

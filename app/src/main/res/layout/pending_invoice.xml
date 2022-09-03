@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="50dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+
+        android:layout_margin="3dp"
+        android:gravity="start|center"
+        android:text="@string/pendingInvoice"
+        android:textColor="@color/colorblue_dark3"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/cancel_dialog"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:padding="5dp"
+            android:layout_margin="3dp"
+
+            android:gravity="end"
+            android:textColor="@color/colorblue_dark3"
+            android:textSize="12sp"
+            android:drawableEnd="@drawable/ic_cancel_black_24dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/fill_Pending_inv"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/pendingInvoice"
+        android:textColor="@color/colorblue_dark3"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+    <HorizontalScrollView
+        android:id="@+id/HorizontalScrollView01"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_weight="1.6"
+        android:fillViewport="true"
+
+
+        android:layout_margin="2dp"
+
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+
+                android:layout_margin="5dp"
+
+                android:gravity="center"
+                android:id="@+id/invoicetable"
+                android:background="@drawable/back_border_shape"
+                >
+
+                <TextView
+                    android:id="@+id/textView_cridit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="12sp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/net_sales"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+
+
+
+                <TextView
+                    android:id="@+id/textView_date_voucher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="12sp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/date"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/textView_debit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:text="@string/sale_man_number"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/textView_voucherNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/voucher_type"
+
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/voucherNo"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+
+
+
+            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/pendig_recycle_voucher"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="2dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/back_border_edit"
+
+                android:orientation="vertical"
+                >
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+    </HorizontalScrollView>
+    <Button
+        android:id="@+id/re_export_voucher"
+        android:layout_width="150dp"
+        android:layout_height="55dp"
+        android:layout_margin="5dp"
+        android:imeOptions="actionDone"
+        android:layout_gravity="center"
+        android:textSize="12sp"
+        android:background="@drawable/done_button"
+        android:textColor="@color/white"
+        android:text="@string/re_export_voucher"
+        android:textStyle="bold"
+        tools:ignore="TextViewEdits" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+
+
+        android:gravity="start|center"
+        android:text="@string/pendingSerial"
+        android:textColor="@color/colorblue_dark3"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+    <HorizontalScrollView
+        android:id="@+id/HorizontalScrollView02"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_weight="1.6"
+        android:fillViewport="true"
+
+
+        android:layout_margin="2dp"
+
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+
+                android:layout_margin="5dp"
+
+                android:gravity="center"
+                android:id="@+id/serialtable"
+                android:background="@drawable/back_border_shape"
+                >
+
+                <TextView
+                    android:id="@+id/textView_cridit1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="12sp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/voucher_type"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+
+
+
+                <TextView
+                    android:id="@+id/textView_date_voucher1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="12sp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/date"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/textView_debit1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:text="@string/sale_man_number"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+
+
+
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/textView_transName1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/serialcode"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/textView_voucherNo1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/voucherNo"
+
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+
+
+            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/pendig_recycle_serial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="2dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/back_border_edit"
+
+                android:orientation="vertical"
+                >
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+    </HorizontalScrollView>
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="150dp"
+        android:layout_height="55dp"
+        android:layout_margin="5dp"
+        android:imeOptions="actionDone"
+        android:layout_gravity="center"
+        android:textSize="12sp"
+        android:background="@drawable/done_button"
+        android:textColor="@color/white"
+        android:text="@string/re_export_serial"
+        android:textStyle="bold"
+        tools:ignore="TextViewEdits" />
+</LinearLayout>

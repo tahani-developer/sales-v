@@ -3,7 +3,10 @@ package com.dr7.salesmanmanager;
 import static com.dr7.salesmanmanager.ImportJason.listItemsReturn;
 import static com.dr7.salesmanmanager.ImportJason.returnListSerial;
 import static com.dr7.salesmanmanager.ImportJason.voucherReturn;
+import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.Login.salesMan;
+import static com.dr7.salesmanmanager.Login.salesManNo;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 
 import androidx.annotation.RequiresApi;
@@ -1020,17 +1023,26 @@ exportData(2);
     }
 
     private void calcTotalVoucher() {
+        int salesMan=1;
+        try {
+            salesMan = Integer.parseInt(Login.salesMan.trim());
+        }catch (Exception e){
+
+        }
 
         total=0;
         for (int i=0;i<listItemsMain.size();i++)
         {
             total+=listItemsMain.get(i).getQty()*listItemsMain.get(i).getPrice();
+            dataBase.updateSalesManItemsBalance2(listItemsMain.get(i).getQty(), salesMan, listItemsMain.get(i).getItemNo());
+
+
         }
        // Log.e("calcTotalVoucher","total"+total);
     }
 
     private void saveSerial() {
-   Log.e("saveSeria,returnListSeria",""+"saveVoucherMaster"+returnListSerial.size());
+
         for(int i=0;i<returnListSerial.size();i++)
         {
            // Log.e("returnListSerial","getVoucherNo"+returnListSerial.get(i).getVoucherNo());

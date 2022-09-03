@@ -132,12 +132,14 @@ import static android.content.Context.LOCATION_SERVICE;
 //import static android.support.v4.content.ContextCompat.getSystemServiceName;
 import static android.widget.LinearLayout.VERTICAL;
 import static com.dr7.salesmanmanager.Activities.currentKey;
+import static com.dr7.salesmanmanager.Activities.discType_static;
 import static com.dr7.salesmanmanager.Activities.discvalue_static;
 
 import static com.dr7.salesmanmanager.Activities.locationPermissionRequestAc;
 import static com.dr7.salesmanmanager.AddItemsFragment2.REQUEST_Camera_Barcode;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 
+import static com.dr7.salesmanmanager.DiscountFragment.discountPerc;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.dr7.salesmanmanager.Login.OfferCakeShop;
 import static com.dr7.salesmanmanager.Login.Purchase_Order;
@@ -511,6 +513,8 @@ public class SalesInvoice extends Fragment {
 
         decimalFormat = new DecimalFormat("00.000");
         mDbHandler = new DatabaseHandler(getActivity());
+        Purchase_Order=mDbHandler.getFlagSettings().get(0).getPurchaseOrder();
+        Log.e("Purchase_Order","111="+Purchase_Order);
         flag_settingsList = mDbHandler.getFlagSettings();
             totalDiscount_checkbox= (CheckBox)view. findViewById(R.id.totalDiscount_checkbox);
         totalDiscount_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -1152,14 +1156,13 @@ public class SalesInvoice extends Fragment {
         }
 
         aqapa_tax=mDbHandler.getAllSettings().get(0).getAqapaTax();
-        Log.e("aqapa_tax","="+aqapa_tax);
-        if (Build.VERSION.SDK_INT >= 30){
-            if (!Environment.isExternalStorageManager()){
-                Intent getpermission = new Intent();
-                getpermission.setAction(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                startActivity(getpermission);
-            }
+
+        if(Purchase_Order==1){
+            mDbHandler.getAllSettings().get(0).setBonusNotAlowed(1);
         }
+
+
+        Log.e("Purchase_Order","111="+Purchase_Order);
         return view;
     }
 
@@ -1237,7 +1240,7 @@ public class SalesInvoice extends Fragment {
         }
         else {
             notIncludeTax.setVisibility(View.VISIBLE);
-            linearTotalCashDiscount.setVisibility(View.VISIBLE);
+//            linearTotalCashDiscount.setVisibility(View.VISIBLE);
         }
     }
 
@@ -5148,7 +5151,7 @@ public class SalesInvoice extends Fragment {
         netTotal = 0.0;
         totalDiscount = 0;
 //        double disc_dentail=Double.parseDouble(discTextView.getText().toString());
-        totalDiscount += discvalue_static;
+//        totalDiscount += discvalue_static;
         //test discount item with discount total voucher
 //        sum_discount +=DiscountFragment.getDiscountPerc();
 //        sum_discount +=DiscountFragment.getDiscountValue();
@@ -5274,6 +5277,7 @@ public class SalesInvoice extends Fragment {
                 totalDiscount = 0.0;
             }
             checkGroupOffer(flagDelete);
+            // for rawat almazaq
 
             for (int i = 0; i < items.size(); i++) {
                 itemGroup = items.get(i).getCategory();
@@ -5282,12 +5286,25 @@ public class SalesInvoice extends Fragment {
                     itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
                     itemTotal = items.get(i).getQty() * items.get(i).getPosPrice() - itemTax;
                 } else {
+
                     itemTax = items.get(i).getAmount() * items.get(i).getTaxPercent() * 0.01;
                     itemTotal = items.get(i).getAmount();
                 }
                 itemTotalAfterTax = items.get(i).getAmount() + itemTax;
                 subTotal = subTotal + itemTotal;
             }
+
+
+            if(discType_static==0)// value
+            {
+                totalDiscount+=discvalue_static;
+            }else {// percent
+//                Log.e("totalDiscount",""+totalDiscount+"--"+DiscountFragment.getDiscountPerc()+"\t"+subTotal);
+                discvalue_static=subTotal*(DiscountFragment.getDiscountPerc()/100);
+                totalDiscount+=discvalue_static;
+            }
+
+            // re calculate total disc
             for (int i = 0; i < items.size(); i++) {
                 itemTotal = items.get(i).getAmount();
                 itemTotalPerc = itemTotal / subTotal;
@@ -5315,6 +5332,8 @@ public class SalesInvoice extends Fragment {
                 }
                 totalTaxValue = totalTaxValue + itemTax;
             }
+
+//            totalTaxValue=(subTotal-totalDiscount)*0.16;
             totalDiscount+=getTotalDiscSetting(netTotal);
 
 
@@ -5477,7 +5496,15 @@ public class SalesInvoice extends Fragment {
                 itemTotalAfterTax = items.get(i).getAmount();
                 subTotal = subTotal + itemTotal;
             }
+                // for rawat almazaq
+                if(discType_static==0)// value
+                {
+                    totalDiscount+=discvalue_static;
+                }else {// percent
 
+                    discvalue_static=subTotal*(DiscountFragment.getDiscountPerc()/100);
+                    totalDiscount+=discvalue_static;
+                }
             for (int i = 0; i < items.size(); i++) {
 
 
@@ -5541,6 +5568,7 @@ public class SalesInvoice extends Fragment {
                 totalTaxValue=0;
                 taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
             }else{// خاضع
+                netTotal=netTotal-totalTaxValue;
                 totalTaxValue=0;
                 taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
                 subTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));

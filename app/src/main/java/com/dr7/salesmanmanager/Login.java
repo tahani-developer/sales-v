@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -23,6 +24,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -30,9 +32,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,7 +100,7 @@ public class Login extends AppCompatActivity {
     activeKey model_key;
     int key_int;
     Context context;
-    TextView loginText;
+    TextView loginText,companyInfo_btn;
     EditText ipEditText;
     public static String userNo = "";
     SweetAlertDialog dialogTem, sweetAlertDialog;
@@ -147,14 +152,15 @@ public class Login extends AppCompatActivity {
     public  static    int  voucherReturn_spreat=0;
     public  static    int  updateOnlySelectedCustomer=0;// just for OneOOne
 
-    public  static    int   SalsManPlanFlage=0;
+    public  static    int   SalsManPlanFlage=1;
     public  static    int   SalsManTripFlage=0;
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
- public  static    String headerDll = "";
-  //    public  static    String  headerDll = "/Falcons/VAN.dll";
-    public  static  int gone_noTax_totalDisc=1;
+    public  static    String headerDll = "";
+//    public  static    String  headerDll = "/Falcons/VAN.dll";
+    public  static  int gone_noTax_totalDisc=0;
+
 
     @Override
     protected void onDestroy() {
@@ -372,6 +378,24 @@ public class Login extends AppCompatActivity {
 
         }
         mDHandler.deleteAllPreviusYear();
+        try {
+            Purchase_Order=0;
+            mDHandler.getFlagSettings().get(0).setPurchaseOrder(0);
+        }catch (Exception e){
+            Log.e("mDHandler","setPurchaseOrder"+e.getMessage());
+        }
+
+//        try {
+//            if (Build.VERSION.SDK_INT >= 30){
+//                if (!Environment.isExternalStorageManager()){
+//                    Intent getpermission = new Intent();
+//                    getpermission.setAction(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+//                    startActivity(getpermission);
+//                }
+//            }
+//        }catch (Exception e){
+//
+//        }
 
     }
 
@@ -621,6 +645,7 @@ public class Login extends AppCompatActivity {
         noTax_Sw=moreDialog.findViewById(R.id.noTax);
 
         purchaseOrder_switch=moreDialog.findViewById(R.id.purchaseOrder_switch);
+//        purchaseOrder_switch.setVisibility(View.GONE);
         swExport = moreDialog.findViewById(R.id.swExport);
         swMax = moreDialog.findViewById(R.id.swMax);
         maxvochServer= moreDialog.findViewById(R.id.maxvochServer);
@@ -880,6 +905,13 @@ public class Login extends AppCompatActivity {
         model_key = new activeKey();
         goMainText=findViewById(R.id.goMainText);
         loginText = (TextView) findViewById(R.id.logInTextView);
+        companyInfo_btn= (TextView) findViewById(R.id.companyInfo_btn);
+        companyInfo_btn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCompanyDialog();
+            }
+        });
         currentTimeAndDate = Calendar.getInstance().getTime();
         Log.e("currentTimeAndDate", "" + currentTimeAndDate);
         df = new SimpleDateFormat("dd/MM/yyyy");
@@ -940,6 +972,105 @@ public class Login extends AppCompatActivity {
 
         }
     }
+
+    private void openCompanyDialog() {
+
+        final Dialog dialog = new Dialog(Login.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.company_info_dialog);
+
+
+        WindowManager.LayoutParams lp2 = new WindowManager.LayoutParams();
+        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.90);
+        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.80);
+        dialog.getWindow().setLayout(width, height);
+        lp2.copyFrom(dialog.getWindow().getAttributes());
+        RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.radioGrp);
+        RadioButton radioTop = dialog.findViewById(R.id.radioTop);
+        RadioButton radioBottom = dialog.findViewById(R.id.radioBottom);
+
+        LinearLayout mainLinear = dialog.findViewById(R.id.linearCompany);
+        try {
+            if (languagelocalApp.equals("ar")) {
+                mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            } else {
+                if (languagelocalApp.equals("en")) {
+                    mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        } catch (Exception e) {
+            mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+        final EditText name = (EditText) dialog.findViewById(R.id.com_name);
+        final EditText tel = (EditText) dialog.findViewById(R.id.com_tel);
+        final EditText tax = (EditText) dialog.findViewById(R.id.tax_no);
+        final EditText noteInvoice = (EditText) dialog.findViewById(R.id.notes);
+        final EditText salesman_name = (EditText) dialog.findViewById(R.id.salesman_name);
+        TableRow note_position = dialog.findViewById(R.id.note_position);
+        final EditText salesman_car = (EditText) dialog.findViewById(R.id.salesman_car);
+        final EditText salesman_id = (EditText) dialog.findViewById(R.id.salesman_id);
+
+            final  TextView savecompanyLocation=(TextView) dialog.findViewById(R.id.savecompanyLocation);
+
+           ImageView logo = (ImageView) dialog.findViewById(R.id.logo);
+
+            Button okButton = (Button) dialog.findViewById(R.id.okBut);
+            Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
+            okButton.setText(getResources().getString(R.string.ok));
+            cancelButton.setVisibility(View.GONE);
+            DatabaseHandler mDbHandler=new DatabaseHandler(Login.this);
+            try {
+                if (mDbHandler.getAllCompanyInfo().size() != 0) {
+                    name.setText("" + mDbHandler.getAllCompanyInfo().get(0).getCompanyName());
+                    tel.setText("" + mDbHandler.getAllCompanyInfo().get(0).getcompanyTel());
+                    tax.setText("" + mDbHandler.getAllCompanyInfo().get(0).getTaxNo());
+//            logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
+                    logo.setBackground(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
+//                    itemBitmapPic= mDbHandler.getAllCompanyInfo().get(0).getLogo();
+                    noteInvoice.setVisibility(View.GONE);
+                    note_position.setVisibility(View.GONE);
+                    salesman_id.setText(mDbHandler.getAllCompanyInfo().get(0).getNational_id()+"");
+                    salesman_car.setText(mDbHandler.getAllCompanyInfo().get(0).getCarNo()+"");
+                    noteInvoice.setText(""+mDbHandler.getAllCompanyInfo().get(0).getNoteForPrint());
+                    if(mDbHandler.getAllCompanyInfo().get(0).getNotePosition().equals("1"))
+                    {
+                        radioBottom.setChecked(true);
+                    }
+                    else {
+                        radioTop.setChecked(true);
+                    }
+
+                }
+                else {
+                    tax.setText(0+"");
+                }
+                String salesName=mDbHandler.getSalesmanName_fromSalesTeam();
+                salesman_name.setText(salesName+"");
+                Log.e("salesName",""+salesName);
+            }catch ( Exception e){
+
+            }
+
+
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  dialog.dismiss();
+                }
+            });
+
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+
+        }
+
 
     private void openApp() {
 //        KeyguardManager mKeyGuardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);

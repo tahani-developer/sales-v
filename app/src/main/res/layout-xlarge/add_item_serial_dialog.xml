@@ -422,7 +422,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="3dp"
         android:layout_weight="5"
-        android:visibility="gone"
+
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="5dp"

@@ -51,10 +51,13 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.DiscountFragment.discountPerc;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.getTotalBalanceInActivities;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.Login.offerTalaat;
+import static com.dr7.salesmanmanager.Login.talaatLayoutAndPassowrd;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.voucherReturn_spreat;
 import static com.dr7.salesmanmanager.MainActivity.curentDate;
@@ -174,15 +177,18 @@ public class Activities extends AppCompatActivity implements
         }
     }
 
- public  static   double discvalue_static=0;
+ public  static   double discvalue_static=0,discType_static=0;
     @Override
     public void addDiscount(double discount, int iDiscType) {
 
 //        salesInvoice.sum_discount+=discount;
 
 //        salesInvoice.sum_discount=0;
-        Log.e("addDiscount","discount"+discount);
+
         discvalue_static=discount;
+        discType_static=iDiscType;
+        DiscountFragment.setDiscountPerc(discountPerc);
+        Log.e("addDiscount","discount"+discount+"\tdiscType_static="+discType_static);
 //        salesInvoice.discTextView.setText(decimalFormat.format(discount));
         salesInvoice.calculateTotals(0);
     }
@@ -693,14 +699,21 @@ public class Activities extends AppCompatActivity implements
                         builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
                         builder2.create().show();
                     } else {
-                        if(allDataPosted()||typaImport==0|| Purchase_Order==1)
-                        {
+                        if(offerTalaat==1){
                             finish();
                             Intent inte=new Intent(Activities.this,AccountStatment.class);
                             startActivity(inte);
                         }else {
-                            showDialogExportData();
+                            if(allDataPosted()||typaImport==0|| Purchase_Order==1)
+                            {
+                                finish();
+                                Intent inte=new Intent(Activities.this,AccountStatment.class);
+                                startActivity(inte);
+                            }else {
+                                showDialogExportData();
+                            }
                         }
+
 
 
                     }

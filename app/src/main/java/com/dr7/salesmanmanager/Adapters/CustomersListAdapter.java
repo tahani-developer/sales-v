@@ -44,12 +44,14 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
     private List<Customer> mOriginalValues;
     private List<Customer> custList;
     private CustomerListShow customerListShow;
+    public  int showCustomerLoc_sett;
 
-    public CustomersListAdapter(CustomerListShow customerListShow, Context context, List<Customer> custList) {
+    public CustomersListAdapter(CustomerListShow customerListShow, Context context, List<Customer> custList,int showCustomerLoc) {
         this.context = context;
         this.mOriginalValues = custList;
         this.custList = custList;
         this.customerListShow = customerListShow;
+        this.showCustomerLoc_sett=showCustomerLoc;
 
     }
 
@@ -76,6 +78,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         LinearLayout linearLayout;
         TextView custAccountTextView,showloction;
         TextView custNameTextView;
+
     }
 
     @Override
@@ -90,7 +93,13 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         holder.custNameTextView = (TextView) view.findViewById(R.id.custNameTextView);
         holder. showloction= (TextView) view.findViewById(R.id.showloction);
 
-       // holder. showloction.setVisibility(View.INVISIBLE);
+        if(showCustomerLoc_sett==0)
+        {
+            holder. showloction.setVisibility(View.INVISIBLE);
+        }else {
+            holder. showloction.setVisibility(View.VISIBLE);
+        }
+//
         holder. showloction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

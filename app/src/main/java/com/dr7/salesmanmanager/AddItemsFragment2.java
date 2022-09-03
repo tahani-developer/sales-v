@@ -1489,10 +1489,6 @@ try {
 
                 List.add(item);
                 Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.succsesful), Toast.LENGTH_LONG);
-//                toast.setGravity(Gravity.CENTER, 0, 180);
-//                ViewGroup group = (ViewGroup) toast.getView();
-//                TextView messageTextView = (TextView) group.getChildAt(0);
-//                messageTextView.setTextSize(15);
                 toast.show();
                 String storeNo=mDbHandler.getAllUserNo();
                 voucherDate=convertToEnglish(voucherDate);
@@ -1542,10 +1538,7 @@ try {
 
         } else {
             Toast toast = Toast.makeText(context, "Items has not been added, insure your entries", Toast.LENGTH_LONG);
-//            toast.setGravity(Gravity.CENTER, 0, 180);
-//            ViewGroup group = (ViewGroup) toast.getView();
-//            TextView messageTextView = (TextView) group.getChildAt(0);
-//            messageTextView.setTextSize(15);
+
             toast.show();
             return false;
         }

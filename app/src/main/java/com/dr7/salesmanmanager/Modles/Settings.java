@@ -57,6 +57,15 @@ public class Settings {
     private  int  CheckQtyinOrder;
     private  int  locationtracker;
     private  int  aqapaTax;
+    private  int  showCustomerLocation;
+
+    public int getShowCustomerLocation() {
+        return showCustomerLocation;
+    }
+
+    public void setShowCustomerLocation(int showCustomerLocation) {
+        this.showCustomerLocation = showCustomerLocation;
+    }
 
     public int getAqapaTax() {
         return aqapaTax;
@@ -66,7 +75,7 @@ public class Settings {
         this.aqapaTax = aqapaTax;
     }
 
-    public int getLocationtracker() {
+    public synchronized int getLocationtracker() {
         return locationtracker;
     }
 
