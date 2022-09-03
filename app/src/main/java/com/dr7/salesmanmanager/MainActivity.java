@@ -378,18 +378,18 @@ saveCurentLocation();
         endtripText=findViewById(R.id.   endtripText);
         starttripText=findViewById(R.id.   starttripText);;
 
-      if(Login.SalsManTripFlage==1)
-      {
-          if(  databaseHandler.getLastSaleManTrip().equals("2"))
-          checkInLinearLayout.setEnabled(false);
-        checkOutLinearLayout.setEnabled(false);
-
-      }
-      else
-      {  starttripText.setVisibility(View.INVISIBLE);
-          endtripText.setVisibility(View.INVISIBLE);
-
-      }
+//      if(Login.SalsManTripFlage==1)
+//      {
+//          if(  databaseHandler.getLastSaleManTrip().equals("2"))
+//          checkInLinearLayout.setEnabled(false);
+//        checkOutLinearLayout.setEnabled(false);
+//
+//      }
+//      else
+//      {  starttripText.setVisibility(View.INVISIBLE);
+//          endtripText.setVisibility(View.INVISIBLE);
+//
+//      }
 
         endtripText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -447,7 +447,7 @@ else
 
 
 //////////////// salesman plan for cake shop
-        salesmanPlanRespon=findViewById(R.id.   salesmanPlanRespon);
+        salesmanPlanRespon=findViewById(R.id.salesmanPlanRespon);
 //        getplan=findViewById(R.id.     getplan);
 
 
@@ -3469,10 +3469,10 @@ else
                             stopService(new Intent(MainActivity.this, MyServices.class));
 
                         }
-                        else
-                        {
-                            stopService(new Intent(MainActivity.this, MyServices.class));
-                        }
+//                        else
+//                        {
+//                            stopService(new Intent(MainActivity.this, MyServices.class));
+//                        }
 
 
 
@@ -4776,31 +4776,36 @@ Log.e("Exception==",e.getMessage());
     }
     boolean chechTransctionsForCustomer(String name){
        Voucher voucher=databaseHandler.getLastVoucher();
+
       String  cus_num=voucher.getCustNumber();
         String  time=voucher.getTime();
-        if(cus_num.equals(name))
-
+        if(voucher!=null)
         {
-            try {
+            if(cus_num.equals(name))
 
-                      List<Transaction> transactions= databaseHandler.getAlltransactions();
-                Transaction transaction=transactions.get(transactions.size()-1);
-                if(chechTransctionstime(transaction.getCheckInTime(),time))
-                    return true;
-                else return false;
-            }catch (Exception e){
-                Log.e("Exception==",e.getMessage()+"") ;
-                return false;
+            {
+                try {
+
+                    List<Transaction> transactions= databaseHandler.getAlltransactions();
+                    Transaction transaction=transactions.get(transactions.size()-1);
+                    if(chechTransctionstime(transaction.getCheckInTime(),time))
+                        return true;
+                    else return false;
+                }catch (Exception e){
+                    Log.e("Exception==",e.getMessage()+"") ;
+                    return false;
+                }
+
+
+
             }
+            else
+            {
+                return false;
 
+            }
+        }else return false;
 
-
-        }
-        else
-        {
-            return false;
-
-        }
           }
 
     public static boolean chechTransctionstime(String checkintime, String vochertime) throws ParseException {

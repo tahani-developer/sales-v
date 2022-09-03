@@ -790,8 +790,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                            {
                                                                discountLinearLayout.setVisibility(View.GONE);
                                                                bonusLinearLayout.setVisibility(View.GONE);
-                                                               price.setVisibility(View.GONE);
-                                                               linearPrice.setVisibility(View.GONE);
+                                                               if(CustomerListShow.paymentTerm==0) {
+                                                                   price.setVisibility(View.GONE);
+                                                                   linearPrice.setVisibility(View.GONE);
+                                                               }
                                                            }
 //                                                       use_OneUnit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 //                                                           @Override
@@ -2027,6 +2029,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             {
                 discountLinearLayout.setVisibility(View.GONE);
                 bonusLinearLayout.setVisibility(View.GONE);
+                if(CustomerListShow.paymentTerm==0)
                 linearPrice.setVisibility(View.GONE);
             }
 
@@ -3691,6 +3694,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             price = itemView.findViewById(R.id.textViewPrice);
             if(Purchase_Order==1)
             {
+                if(CustomerListShow.paymentTerm==0)
                 price.setVisibility(View.GONE);
             }
             tax = itemView.findViewById(R.id.textViewTax);

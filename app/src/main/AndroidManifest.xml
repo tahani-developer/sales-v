@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.dr7.salesmanmanager"
-    android:versionCode="2"
-    android:versionName="1.0">
+    android:versionCode="3"
+    android:versionName="2.0">
 
 
 
@@ -20,13 +20,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
+
         tools:ignore="GoogleAppIndexingWarning"
-        android:testOnly="false"
-        android:debuggable="true"
+
         >
 
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
-        tools:ignore="GoogleAppIndexingWarning">
+
         <activity
             android:name=".Reports.CustomerWithoutTrasn_Report"
             android:exported="false" />
@@ -259,7 +259,7 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the "MyLocation" functionality.
     -->
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -273,12 +273,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH"
     />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission
-        android:name="android.permission.BLUETOOTH"
-        android:maxSdkVersion="30" />
-    <uses-permission
-        android:name="android.permission.BLUETOOTH_ADMIN"
-        android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

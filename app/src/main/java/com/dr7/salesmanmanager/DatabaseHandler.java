@@ -74,7 +74,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.noTax;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 195;
+    private static final int DATABASE_VERSION = 196;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
