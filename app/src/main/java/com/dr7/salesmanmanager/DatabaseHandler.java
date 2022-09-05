@@ -7023,6 +7023,18 @@ Log.e("addCompanyInfo","addCompanyInfo");
         db.execSQL("delete from " + SERIAL_ITEMS_TABLE + " where IS_POSTED_SERIAL = '1' ");
         db.close();
     }
+
+
+
+    public void deleteAllPostedData_serial(String deleteDate) {
+       SQLiteDatabase db = this.getWritableDatabase();
+
+       if(deleteDate.length()==1){
+          deleteDate="0"+deleteDate;
+       }
+       db.execSQL("delete from " + SERIAL_ITEMS_TABLE + " where  DATE_VOUCHER LIKE '%/"+deleteDate.trim()+"/%'");
+       db.close();
+    }
     public  void  deletItemsOfferQty(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + ITEMS_QTY_OFFER);
