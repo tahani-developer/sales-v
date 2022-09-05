@@ -155,10 +155,10 @@ public class Login extends AppCompatActivity {
     public  static    int   SalsManPlanFlage=1;
     public  static    int   SalsManTripFlage=0;
     public  static    int   POS_ACTIVE=0;
-    public  static    int   Plan_ACTIVE=1;
+    public  static    int   Plan_ACTIVE=0;
     public  static    int   Separation_of_the_serial=0;// for oppo
-    public  static    String headerDll = "";
-//    public  static    String  headerDll = "/Falcons/VAN.dll";
+//    public  static    String headerDll = "";
+    public  static    String  headerDll = "/Falcons/VAN.dll";
     public  static  int gone_noTax_totalDisc=0;
 
 
@@ -1024,16 +1024,22 @@ public class Login extends AppCompatActivity {
             try {
                 if (mDbHandler.getAllCompanyInfo().size() != 0) {
                     name.setText("" + mDbHandler.getAllCompanyInfo().get(0).getCompanyName());
+                    name.setEnabled(false);
                     tel.setText("" + mDbHandler.getAllCompanyInfo().get(0).getcompanyTel());
+                    tel.setEnabled(false);
                     tax.setText("" + mDbHandler.getAllCompanyInfo().get(0).getTaxNo());
+                    tax.setEnabled(false);
 //            logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
                     logo.setBackground(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
 //                    itemBitmapPic= mDbHandler.getAllCompanyInfo().get(0).getLogo();
                     noteInvoice.setVisibility(View.GONE);
                     note_position.setVisibility(View.GONE);
                     salesman_id.setText(mDbHandler.getAllCompanyInfo().get(0).getNational_id()+"");
+                    salesman_id.setEnabled(false);
                     salesman_car.setText(mDbHandler.getAllCompanyInfo().get(0).getCarNo()+"");
+                    salesman_car.setEnabled(false);
                     noteInvoice.setText(""+mDbHandler.getAllCompanyInfo().get(0).getNoteForPrint());
+                    noteInvoice.setEnabled(false);
                     if(mDbHandler.getAllCompanyInfo().get(0).getNotePosition().equals("1"))
                     {
                         radioBottom.setChecked(true);
@@ -1048,6 +1054,7 @@ public class Login extends AppCompatActivity {
                 }
                 String salesName=mDbHandler.getSalesmanName_fromSalesTeam();
                 salesman_name.setText(salesName+"");
+                salesman_name.setEnabled(false);
                 Log.e("salesName",""+salesName);
             }catch ( Exception e){
 

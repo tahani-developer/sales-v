@@ -711,6 +711,7 @@ public class AddItemsFragment2 extends DialogFragment {
         });
 
         greaterZero_checkbox=view.findViewById(R.id.greaterZero_checkbox);
+//        greaterZero_checkbox.setChecked(false);
         greaterZero_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

@@ -9,6 +9,12 @@
     android:orientation="vertical"
     android:padding="5dp"
     >
+    <ScrollView android:layout_height="match_parent"
+        android:layout_width="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -488,4 +494,6 @@
             android:textColor="@color/layer5"
             android:textStyle="bold" />
     </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
 </LinearLayout>

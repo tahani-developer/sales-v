@@ -100,6 +100,7 @@
                 android:layout_marginTop="1dp"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:checked="false"
                 android:layout_weight="0"
                 android:text="@string/greatZero"
                 android:textColor="@color/text_view_color"
