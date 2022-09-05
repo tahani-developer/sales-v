@@ -125,14 +125,15 @@
                 android:textColor="@color/layer7"
                 android:layout_weight="1"
                 android:id="@+id/save"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="20dp"
                 android:textStyle="bold"
-                android:layout_marginEnd="5dp"
+
+                android:layout_marginEnd="20dp"
                 android:layout_height="wrap_content"
                 android:text="@string/save"/>
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="match_parent"
-
+android:visibility="gone"
                 android:id="@+id/cancel"
                 android:textColor="@color/layer7"
                 android:layout_marginEnd="5dp"

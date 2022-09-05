@@ -2951,7 +2951,8 @@ public class ExportJason extends AppCompatActivity {
                 //http://localhost:8082/EXPORTTOSTOCK?CONO=295&STRNO=4
                 String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/EXPORTTOSTOCK";
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin+"&VHFTYPE="+taxType;
-                Log.e("tag_link", "ExportData -->" + link);Log.e("tag_data", "ExportData -->" + data);
+                Log.e("tag_link", "ExportData -->" + link);
+                Log.e("tag_data", "ExportData -->" + data);
 
 
 ////
