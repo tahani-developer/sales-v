@@ -591,6 +591,9 @@
     <string name="phoneNum">Phone Num </string>
     <string name="enterdata">Please Enter data </string>
     <string name="custwithouttrans">Customers visited without Vochers</string>
+    <string name="clear_serial_old">Clear Serial Old</string>
+    <string name="doneDelete">Done Delete</string>
+    <string name="enter_password_del_towmonth">Enter Password for delete all data except last tow month data serial</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

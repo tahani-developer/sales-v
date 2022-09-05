@@ -630,5 +630,8 @@
     <string name="phoneNum">رقم الهاتف</string>
     <string name="enterdata">يرجى إدخال المعلومات </string>
     <string name="custwithouttrans">العملاء الذين تمت زيارتهم دون عمل فواتير</string>
+    <string name="clear_serial_old">حذف السيريلات القديمة</string>
+    <string name="doneDelete">تم الحذف</string>
+    <string name="enter_password_del_towmonth">ادخل كلمة السر لحذف كل السيريلات القديمة باستثناء اخر شهرين </string>
 
 </resources>

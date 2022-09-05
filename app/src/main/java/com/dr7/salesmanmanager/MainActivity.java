@@ -841,7 +841,14 @@ else
         re_export_voucher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(list_pending_invoice.size()!=0)
                 reExcportToStock();
+                else {
+                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(getResources().getString(R.string.warning_message))
+                            .setContentText(getResources().getString(R.string.emptyList))
+                            .show();
+                }
 //                refreshAdapter();
             }
         });
@@ -849,7 +856,14 @@ else
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(list_pending_serial.size()!=0)
                 reExportStockSerial();
+                else {
+                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(getResources().getString(R.string.warning_message))
+                            .setContentText(getResources().getString(R.string.emptyList))
+                            .show();
+                }
             }
         });
 
@@ -1804,6 +1818,14 @@ else
 
 
         }
+        else if (id == R.id.nav_clear_serial) {
+//            locationPermissionRequest.closeLocation();
+
+            passwordDataClear_serialDialog();
+
+
+        }
+
         else if (id == R.id.nav_unCollectedchecked) {
           //  locationPermissionRequest.closeLocation();
             finish();
@@ -1906,6 +1928,48 @@ else
 
                 .show();
     }
+    private void passwordDataClear_serialDialog() {
+        final EditText editText = new EditText(MainActivity.this);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(MainActivity.this, SweetAlertDialog.NORMAL_TYPE);
+
+        sweetMessage.setTitleText(getResources().getString(R.string.enter_password_del_towmonth));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+        sweetMessage.setCustomView(editText);
+        sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if(editText.getText().toString().equals("2021000"))
+                {
+                    Calendar c = Calendar.getInstance();
+                    int month = c.get(Calendar.MONTH);
+                    for(int i=0;i<month;i++){
+                        Log.e("month","3="+i);
+                        mDbHandler.deleteAllPostedData_serial(i+"");
+                    }
+
+                    showSuccesful(getResources().getString(R.string.doneDelete));
+                    sweetAlertDialog.dismissWithAnimation();
+
+                }
+                else {
+                    editText.setError("Incorrect");
+                }
+            }
+        })
+
+                .show();
+    }
+
+    private void showSuccesful(String message) {
+        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText(getResources().getString(R.string.succsesful))
+                .setContentText((message))
+                .show();
+
+    }
+
     int lastVoucherNo=0;
     private void openEditSettingSerialVoucher() {
         isPosted=true;

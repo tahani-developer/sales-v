@@ -82,6 +82,10 @@
                 android:icon="@drawable/ic_clear_all_black_24dp"
                 android:title="@string/app_clear_local" />
             <item
+                android:id="@+id/nav_clear_serial"
+                android:icon="@drawable/ic_cancel_black_24dp"
+                android:title="@string/clear_serial_old" />
+            <item
                 android:id="@+id/nav_backup_data"
                 android:icon="@drawable/ic_backup_black_24dp"
                 android:title="@string/backupData" />
