@@ -2386,13 +2386,13 @@ else
 
 
                 }
+                if( Purchase_Order==1) {
+                    if (!chechTransctionsForCustomer(cutm_num)) {
+                        openTransInfo(cutm_num, cutm_name);
 
-                if (!chechTransctionsForCustomer(cutm_num)) {
-                    openTransInfo(cutm_num, cutm_name);
 
-
+                    }
                 }
-
                // openVisitRateDialog();  stopped just for new customer
             }
         });
