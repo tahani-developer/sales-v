@@ -212,6 +212,7 @@ public class ImportJason extends AppCompatActivity {
     }
 
     public void fetchCallData(int flag) {
+        Log.e("fetchCallData","fetchCallData");
 // 1 from  RE EXPORT DIALOG ----2 FROM IMPORT DATA
         Call<ArrayList<Pending_Invoice>> myData = apiPendingInvoice.getPendingInvoiceInfo(CONO,salesMan);
 
@@ -220,8 +221,10 @@ public class ImportJason extends AppCompatActivity {
             public void onResponse(Call<ArrayList<Pending_Invoice>> call, retrofit2.Response<ArrayList<Pending_Invoice>> response) {
 
                 if (!response.isSuccessful()) {
-                    Log.e("onResponse", "not=" + response.message());
+                    Log.e("fetchCallDataonResponse", "not=" + response.message());
+                    pdialog.dismissWithAnimation();
                 } else {
+                    pdialog.dismissWithAnimation();
                     Log.e("getInitialDataPending","begin3");
                     list_pending_invoice.clear();
                     list_pending_invoice.addAll(response.body());
@@ -248,7 +251,7 @@ public class ImportJason extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ArrayList<Pending_Invoice>> call, Throwable throwable) {
-                Log.e("onFailure", "=" + throwable.getMessage());
+                Log.e("fetchCallDataonFailure", "=" + throwable.getMessage());
                 list_pending_invoice.clear();
                 pdialog.dismissWithAnimation();
                 if(flag!=2)
@@ -269,8 +272,10 @@ public class ImportJason extends AppCompatActivity {
             public void onResponse(Call<ArrayList<Pending_Serial>> call, retrofit2.Response<ArrayList<Pending_Serial>> response) {
                 pdialog.dismissWithAnimation();
                 if (!response.isSuccessful()) {
-                    Log.e("onResponse", "not=" + response.message());
+                    pdialog.dismissWithAnimation();
+                    Log.e("fetchCallData_serialonResponse", "not=" + response.message());
                 } else {
+                    pdialog.dismissWithAnimation();
                     list_pending_serial.clear();
                     list_pending_serial.addAll(response.body());
                     if(flag!=2)

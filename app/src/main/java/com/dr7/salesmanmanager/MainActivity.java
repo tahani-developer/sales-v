@@ -4727,7 +4727,7 @@ Log.e("Exception==",e.getMessage());
         dialog1 = new Dialog(MainActivity.this);
         dialog1.setCancelable(true);
         dialog1.setContentView(R.layout.client_info);
-
+        dialog1.setCancelable(false);
         EditText reson,personname,phonenum;
         reson=dialog1.findViewById(R.id.reson);
         personname=dialog1.findViewById(R.id.NameofPerson);
@@ -4737,9 +4737,8 @@ Log.e("Exception==",e.getMessage());
             @Override
             public void onClick(View view) {
 
-                if(!personname.getText().toString().equals(""))
                 if(!reson.getText().toString().equals(""))
-                    if(!phonenum.getText().toString().equals(""))
+
                 {
                     phonenum.setError(null);
                     reson.setError(null);
@@ -4753,15 +4752,10 @@ Log.e("Exception==",e.getMessage());
                 transactionsInfo.setDate(convertToEnglish(curentDate.toString()));
                databaseHandler. insertTrans_info(transactionsInfo);
                 dialog1.dismiss();}
-                else
-                    {
-                        phonenum.setError("");
-                    }
+
                 else
                 {
                     reson.setError("");
-                }   else{
-                    personname.setError("");
                 }
             }
         });
