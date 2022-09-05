@@ -38,6 +38,7 @@ import org.json.JSONException;
 import java.util.List;
 import java.util.Locale;
 
+import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 
@@ -97,6 +98,7 @@ public class Reports extends AppCompatActivity {
         shelf_inventory_report.setOnClickListener(onClickListener);
         custwithouttrans_report=findViewById(R.id.custwithouttrans);
         custwithouttrans_report.setOnClickListener(onClickListener);
+          if( Purchase_Order==1)   custwithouttrans_report.setVisibility(View.GONE);
         customer_log_report.setOnClickListener(onClickListener);
         serial_report.setOnClickListener(onClickListener);
         cash_reoprt.setOnClickListener(onClickListener);
