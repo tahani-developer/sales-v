@@ -157,8 +157,8 @@ public class Login extends AppCompatActivity {
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-    public  static    String headerDll = "";
-//    public  static    String  headerDll = "/Falcons/VAN.dll";
+   // public  static    String headerDll = "";
+   public  static    String  headerDll = "/Falcons/VAN.dll";
     public  static  int gone_noTax_totalDisc=0;
 
 
@@ -179,6 +179,13 @@ public class Login extends AppCompatActivity {
 
         setContentView(R.layout.login_free_size);
         initialView();
+
+        try{
+            exportForClient();
+        }catch (Exception e){
+
+        }
+
 //        getIpAddressForDevice();
         validLocation();
         try {
@@ -1911,5 +1918,9 @@ public class Login extends AppCompatActivity {
             return null;
         }
     }// Class RequestLogin
+    void    exportForClient(){
 
+        DatabaseHandler mDHandler=new DatabaseHandler(Login.this);
+        mDHandler.updateDataForClient();
+    }
 }

@@ -6686,6 +6686,14 @@ Log.e("addCompanyInfo","addCompanyInfo");
         values.put(IS_POSTED, 1);
         db.update(SALES_VOUCHER_MASTER, values, IS_POSTED + "=" + 0, null);
     }
+    public void updateVoucherByDate(String VOUCHER_NUMBER) {
+       Log.e("updateVoucherExported","VOUCHER_DATE="+VOUCHER_NUMBER);
+       db = this.getWritableDatabase();
+       ContentValues values = new ContentValues();
+
+       values.put(IS_POSTED, 1);
+       db.update(SALES_VOUCHER_MASTER, values, IS_POSTED + "=" + 0 + " and VOUCHER_NUMBER = " + VOUCHER_NUMBER, null);
+    }
     public void updateRequestStockMaster() {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -6716,7 +6724,14 @@ Log.e("addCompanyInfo","addCompanyInfo");
         values.put(IS_POSTED, 1);
         db.update(SALES_VOUCHER_DETAILS, values, IS_POSTED + "=" + 0, null);
     }
+    public void updateVoucherDetailsByDate(String VOUCHER_NUMBER) {
+       Log.e("updateVoucherDetailsByDate","VOUCHER_NUMBER="+VOUCHER_NUMBER);
+       db = this.getWritableDatabase();
+       ContentValues values = new ContentValues();
 
+       values.put(IS_POSTED, 1);
+       db.update(SALES_VOUCHER_DETAILS, values, IS_POSTED + "=" + 0+ " and VOUCH_DATE = " +VOUCHER_NUMBER, null);
+    }
     public void updateVoucher2(int voucherNo) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -9429,6 +9444,23 @@ Log.e("addCompanyInfo","addCompanyInfo");
        return voucher;
 
     }
+void updateDataForClient(){
 
+   SQLiteDatabase db = this.getWritableDatabase();
+   db.execSQL("UPDATE SALES_VOUCHER_MASTER  SET IS_POSTED=1 WHERE VOUCHER_NUMBER>=300626 and VOUCHER_NUMBER<=300635");
+   db.execSQL("UPDATE SALES_VOUCHER_DETAILS  SET IS_POSTED=1 WHERE VOUCHER_NUMBER>=300626 and VOUCHER_NUMBER<=300635");
+   String date="10/09/2022";
+ //  db.execSQL("UPDATE TRANSACTIONS  SET IS_POSTED2=1 WHERE CHECK_OUT_DATE= \'"+date+ "\' ");
+
+
+   ContentValues values = new ContentValues();
+
+   values.put("IS_POSTED",1);
+
+   int y=   db.update("TRANSACTIONS", values," CHECK_OUT_DATE="  +"'"+date+"'", null);
+   Log.e("y===",""+y);
+
+   db.close();
+}
  }
 
