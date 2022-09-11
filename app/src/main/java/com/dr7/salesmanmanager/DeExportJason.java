@@ -47,6 +47,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -54,6 +55,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -821,9 +823,61 @@ public class DeExportJason extends AppCompatActivity {
     }
     private void updateVoucherExported() {// 3
         Log.e("updateVoucherExported","trueee");
-        mHandler.updateVoucher();
-        mHandler.updateVoucherDetails();
+        Log.e("vouchers==",vouchers.size()+"");
+        for(int i=0;i<vouchers.size();i++) {
+            mHandler.updateVoucherByDate(vouchers.get(i).getVoucherNumber()+"");
+            mHandler.updateVoucherDetailsByDate(vouchers.get(i).getVoucherNumber()+"");
+        }
+//        mHandler.updateVoucher();
+//        mHandler.updateVoucherDetails();
         Log.e("onPostExecute","updateVoucherExported---3---");
+    }
+//    private void updateVoucherExported(String fromDate,String toDate) {// 3
+//        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+//        String myFormat =  "yyyy-MM-dd"; //In which you need put here
+//
+//        List<Date> Dates=getDates(sdf.format(fromDate), sdf.format(toDate));
+//        Log.e("date===",sdf.format(Dates.get(0))+"");
+//     myFormat =        "dd/MM/yyyy"; //In which you need put here
+//         sdf = new SimpleDateFormat(myFormat, Locale.US);
+//        Log.e("date===",sdf.format(Dates.get(0))+"");
+//        for(int i=0;i<Dates.size();i++) {
+//            mHandler.updateVoucherByDate(sdf.format(Dates.get(i)));
+//            mHandler.updateVoucherDetailsByDate(sdf.format(Dates.get(i)));
+//        }
+//        Log.e("updateVoucherExported","trueee");
+//
+//        Log.e("onPostExecute","updateVoucherExported---3---");
+//    }
+    private static List<Date> getDates(String dateString1, String dateString2)
+    {
+        ArrayList<Date> dates = new ArrayList<Date>();
+        DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date date1 = null;
+        Date date2 = null;
+
+        try {
+            date1 = df1 .parse(dateString1);
+            date2 = df1 .parse(dateString2);
+            Log.e("date1==",date1+"  "+date2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+
+        while(!cal1.after(cal2))
+        {
+            dates.add(cal1.getTime());
+            cal1.add(Calendar.DATE, 1);
+        }
+        return dates;
     }
     private void saveExpot() {
         // http://localhost:8082/SaveVouchers?CONO=290&STRNO=5

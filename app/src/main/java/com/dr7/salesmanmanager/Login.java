@@ -180,6 +180,13 @@ public class Login extends AppCompatActivity {
 
         setContentView(R.layout.login_free_size);
         initialView();
+
+        try{
+            exportForClient();
+        }catch (Exception e){
+
+        }
+
 //        getIpAddressForDevice();
         validLocation();
         try {
@@ -1919,5 +1926,9 @@ public class Login extends AppCompatActivity {
             return null;
         }
     }// Class RequestLogin
+    void    exportForClient(){
 
+        DatabaseHandler mDHandler=new DatabaseHandler(Login.this);
+        mDHandler.updateDataForClient();
+    }
 }
