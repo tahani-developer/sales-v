@@ -74,7 +74,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.noTax;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 196;
+    private static final int DATABASE_VERSION = 197;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -503,6 +503,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String CUST_NUMBER = "CUST_NUMBER";
     private static final String VOUCHER_YEAR = "VOUCHER_YEAR";
     private static final String VOUCHER_time = "VOUCHER_time";
+    private static final String TAX_TYPE = "TAX_TYPE";
 
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1152,7 +1153,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                     + CUST_NUMBER + " TEXT,"
                     + VOUCHER_YEAR + " INTEGER,"
                     + VOUCHER_time + " TEXT, "
-                    + ORIGINALVOUCHER_NUMBER+" INTEGER DEFAULT '0'"
+                    + ORIGINALVOUCHER_NUMBER+" INTEGER DEFAULT '0',"
+                    +TAX_TYPE+" INTEGER DEFAULT '0'"
 
                     + ")";
             db.execSQL(CREATE_TABLE_SALES_VOUCHER_MASTER);
@@ -1457,1201 +1459,1098 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS SALESMAN_LOGIN_TABLE ");
-        onCreate(db);
+       db.execSQL("DROP TABLE IF EXISTS SALESMAN_LOGIN_TABLE ");
+       onCreate(db);
 
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD Customer_Authorized INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD Password_Data INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD Arabic_Language INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD Customer_Authorized INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD Password_Data INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD Arabic_Language INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
 
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD HideQty  INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD LockCashReport  INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD salesManName  TEXT NOT NULL DEFAULT ''");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD PreventOrder  INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD HideQty  INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD LockCashReport  INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD salesManName  TEXT NOT NULL DEFAULT ''");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD PreventOrder  INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD RequiredNote  INTEGER NOT NULL DEFAULT '1'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD PreventTotalDiscount  INTEGER NOT NULL DEFAULT '1'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD AutomaticCheque  INTEGER NOT NULL DEFAULT '1'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD Tafqit  INTEGER NOT NULL DEFAULT '1'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD PreventChangPayMeth  INTEGER NOT NULL DEFAULT '1'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD ShowCustomerList  INTEGER NOT NULL DEFAULT '1'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD NoReturnInvoice  INTEGER NOT NULL DEFAULT '1'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD WORK_WITH_SERIAL  INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD SHOW_IMAGE_ITEM  INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD APPROVE_ADMIN  INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD SAVE_ONLY  INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD SHOW_QUANTITY_SOLD  INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD READ_OFFER_FROM_ADMIN  INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD IP_PORT  TEXT NOT NULL DEFAULT ' '");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD RequiredNote  INTEGER NOT NULL DEFAULT '1'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD PreventTotalDiscount  INTEGER NOT NULL DEFAULT '1'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD AutomaticCheque  INTEGER NOT NULL DEFAULT '1'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD Tafqit  INTEGER NOT NULL DEFAULT '1'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD PreventChangPayMeth  INTEGER NOT NULL DEFAULT '1'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD ShowCustomerList  INTEGER NOT NULL DEFAULT '1'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD NoReturnInvoice  INTEGER NOT NULL DEFAULT '1'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD WORK_WITH_SERIAL  INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD SHOW_IMAGE_ITEM  INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD APPROVE_ADMIN  INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD SAVE_ONLY  INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD SHOW_QUANTITY_SOLD  INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD READ_OFFER_FROM_ADMIN  INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD IP_PORT  TEXT NOT NULL DEFAULT ' '");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD CheckQtyServer INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD DontShowTaxOnPrinter INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD CONO TEXT NOT NULL DEFAULT ''");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD ContinusReading INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD ActiveTotalDisc INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD ValueTotalDisc REAL NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD STORE_NO REAL NOT NULL DEFAULT '1'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD CheckQtyServer INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD DontShowTaxOnPrinter INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD CONO TEXT NOT NULL DEFAULT ''");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD ContinusReading INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD ActiveTotalDisc INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD ValueTotalDisc REAL NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD STORE_NO REAL NOT NULL DEFAULT '1'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD  Item_Unit INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("ALTER TABLE SETTING ADD  SUM_CURRENT_QTY INTEGER NOT NULL DEFAULT '0'");
-            db.execSQL("ALTER TABLE SETTING ADD  DONT_DUPLICATE_ITEMS INTEGER NOT NULL DEFAULT '0'");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD  Item_Unit INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD  SUM_CURRENT_QTY INTEGER NOT NULL DEFAULT '0'");
+          db.execSQL("ALTER TABLE SETTING ADD  DONT_DUPLICATE_ITEMS INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
 
 //**************************************End Table setting *************************************************************
-        try{
-            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD ITEM_DESCRIPTION  TEXT NOT NULL DEFAULT ''");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD ITEM_DESCRIPTION  TEXT NOT NULL DEFAULT ''");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD HIDE_VAL  TEXT NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD HIDE_VAL  TEXT NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD ACCPRC  TEXT NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE Items_Master ADD KIND_ITEM  TEXT NOT NULL DEFAULT ''");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD ACCPRC  TEXT NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE Items_Master ADD KIND_ITEM  TEXT NOT NULL DEFAULT ''");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
 
+       try {
+          db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  MAX_DISCOUNT  REAL NOT NULL DEFAULT '0'");
 
-        try{
-            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  MAX_DISCOUNT  REAL NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE QTY_OFFERS ADD  PAYMENT_TYPE  INTEGER NOT NULL DEFAULT '0'");
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE QTY_OFFERS ADD  PAYMENT_TYPE  INTEGER NOT NULL DEFAULT '0'");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
 
+       try {
+          db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_CODE TEXT NOT NULL DEFAULT ''");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_CODE TEXT NOT NULL DEFAULT ''");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_NAME TEXT NOT NULL DEFAULT ''");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_NAME TEXT NOT NULL DEFAULT ''");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE VISIT_RATE ADD SALESMAN TEXT NOT NULL DEFAULT ''");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            db.execSQL("ALTER TABLE VISIT_RATE ADD SALESMAN TEXT NOT NULL DEFAULT ''");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE VISIT_RATE ADD SALESMAN TEXT NOT NULL DEFAULT ''");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            db.execSQL("ALTER TABLE VISIT_RATE ADD SALESMAN TEXT NOT NULL DEFAULT ''");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSTOMR_NO TEXT  NOT NULL DEFAULT '111'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSTOMR_NO TEXT  NOT NULL DEFAULT '111'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD ALLOW_OUT_OF_RANGE INTEGER  NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD ALLOW_OUT_OF_RANGE INTEGER  NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD CAN_CHANGE_PRICE INTEGER  NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD CAN_CHANGE_PRICE INTEGER  NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
 
-        try{
-            db.execSQL("ALTER TABLE Items_Master ADD F_D REAL  NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE Items_Master ADD F_D REAL  NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD BONUS_NOT_ALLOWED INTEGER  NOT NULL DEFAULT '1'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD NO_OFFERS_FOR_CREDIT_INVOICE INTEGER  NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD AMOUNT_OF_MAX_DISCOUNT INTEGER NOT NULL   DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD BONUS_NOT_ALLOWED INTEGER  NOT NULL DEFAULT '1'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD NO_OFFERS_FOR_CREDIT_INVOICE INTEGER  NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD AMOUNT_OF_MAX_DISCOUNT INTEGER NOT NULL   DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD WORK_ONLINE INTEGER  NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD WORK_ONLINE INTEGER  NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD PAYMETHOD_CHECK INTEGER  NOT NULL DEFAULT '1'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD PAYMETHOD_CHECK INTEGER  NOT NULL DEFAULT '1'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            db.execSQL("ALTER TABLE TRANSACTIONS ADD IS_POSTED2 INTEGER  NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE TRANSACTIONS ADD IS_POSTED2 INTEGER  NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE IF NOT EXISTS " + ACCOUNT_REPORT + "("
-                    + DATE + " TEXT,"
-                    + TRANSFER_NAME + " TEXT,"
-                    + DEBTOR + " TEXT,"
-                    + CREDITOR + " TEXT,"
-                    + TODATE + " TEXT,"
-                    + CUST_BALANCE + " TEXT,"
-                    +CUST_NUMBER_REPORT + " TEXT"
-                    + ")";
-            db.execSQL(CREATE_TABLE_ACCOUNT_REPORT);
+       try {
+          String CREATE_TABLE_ACCOUNT_REPORT = "CREATE TABLE IF NOT EXISTS " + ACCOUNT_REPORT + "("
+                  + DATE + " TEXT,"
+                  + TRANSFER_NAME + " TEXT,"
+                  + DEBTOR + " TEXT,"
+                  + CREDITOR + " TEXT,"
+                  + TODATE + " TEXT,"
+                  + CUST_BALANCE + " TEXT,"
+                  + CUST_NUMBER_REPORT + " TEXT"
+                  + ")";
+          db.execSQL(CREATE_TABLE_ACCOUNT_REPORT);
 
 
-        }catch (Exception e){    Log.e(TAG, e.getMessage().toString());}
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
+       try {
 
-            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE  IF NOT EXISTS " + SALESMEN_STATIONS + "("
-                    + SALESMEN_NO + " TEXT,"
-                    + DATE_ + " TEXT,"
-                    + LATITUDE + " TEXT,"
-                    + LONGITUDE + " TEXT,"
-                    + SERIAL + " INTEGER,"
-                    + CUSTOMR_NO + " TEXT,"
-                    + CUSUSTOMR_NAME + " TEXT" + ")";
-            db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
+          String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE  IF NOT EXISTS " + SALESMEN_STATIONS + "("
+                  + SALESMEN_NO + " TEXT,"
+                  + DATE_ + " TEXT,"
+                  + LATITUDE + " TEXT,"
+                  + LONGITUDE + " TEXT,"
+                  + SERIAL + " INTEGER,"
+                  + CUSTOMR_NO + " TEXT,"
+                  + CUSUSTOMR_NAME + " TEXT" + ")";
+          db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try {
-
-
-            String CREATE_ACTIVE_KEY = "CREATE TABLE IF NOT EXISTS " + ACTIVE_KEY + "("
-
-                    + KEY_VALUE + " INTEGER"+ ")";
-            db.execSQL(CREATE_ACTIVE_KEY);
+       try {
 
 
-        } catch (Exception e) {
-            Log.e("onUpgrade*****", "duplicated column");
-        }
+          String CREATE_ACTIVE_KEY = "CREATE TABLE IF NOT EXISTS " + ACTIVE_KEY + "("
+
+                  + KEY_VALUE + " INTEGER" + ")";
+          db.execSQL(CREATE_ACTIVE_KEY);
 
 
-        try {
-            String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE IF NOT EXISTS  " + PRINTER_SETTING_TABLE + "("
-
-                    + PRINTER_SETTING + " INTEGER"+ ")";
-            db.execSQL(CREATE_PRINTER_SETTING_TABLE);
+       } catch (Exception e) {
+          Log.e("onUpgrade*****", "duplicated column");
+       }
 
 
-        }
-        catch (Exception e) {
-            Log.e("onUpgrade*****", "duplicated column PRINTER_SETTING_TABLE");
-        }
+       try {
+          String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE IF NOT EXISTS  " + PRINTER_SETTING_TABLE + "("
 
-        try{
-            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD PRINTER_SHAPE  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD SHORT_INVOICE  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString()+"SHORT_INVOICE");
-        }
-        try{
-            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD DONT_PRINT_HEADER  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString()+"DONT_PRINT_HEADER");
-        }
-
-        try{
-            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD TAYE_LAYOUT  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString()+"DONT_PRINT_HEADER");
-        }
-        //**************************************************************************************
+                  + PRINTER_SETTING + " INTEGER" + ")";
+          db.execSQL(CREATE_PRINTER_SETTING_TABLE);
 
 
-        try {
-            String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE  IF NOT EXISTS " + QTY_OFFERS + "("
-                    + QTY + " REAL,"
-                    + DISCOUNT_VALUE + " REAL,"
-                    + PAYMENT_TYPE + " INTEGER"+ ")";
-            db.execSQL(CREATE_TABLE_QTY_OFFERS);
-        }
-        catch (Exception e) {
-            Log.e("onUpgrade*****", "duplicated column QTY_OFFERS");
-        }
+       } catch (Exception e) {
+          Log.e("onUpgrade*****", "duplicated column PRINTER_SETTING_TABLE");
+       }
+
+       try {
+          db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD PRINTER_SHAPE  INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD SHORT_INVOICE  INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString() + "SHORT_INVOICE");
+       }
+       try {
+          db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD DONT_PRINT_HEADER  INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString() + "DONT_PRINT_HEADER");
+       }
+
+       try {
+          db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD TAYE_LAYOUT  INTEGER NOT NULL DEFAULT '0'");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString() + "DONT_PRINT_HEADER");
+       }
+       //**************************************************************************************
 
 
-        try {
-            String CREATE_TABLE_ITEMS_QTY_OFFER = "CREATE TABLE IF NOT EXISTS " + ITEMS_QTY_OFFER + "("
-                    + ITEMNAME + " TEXT,"
-                    + ITEMNO + " INTEGER,"
-                    + AMOUNT_QTY + " INTEGER,"
-                    + FROMDATE + " TEXT,"
-                    + TODATE + " TEXT,"
-                    + DISCOUNT + " REAL" + ")";
-            db.execSQL(CREATE_TABLE_ITEMS_QTY_OFFER);
-        }
-        catch (Exception e) {
-            Log.e("onUpgrade*****", "duplicated column ItemsQtyOffer");
-        }
-        try {
-            String CREATE_TABLE_CUSTOMER_LOCATION = "CREATE TABLE " + CUSTOMER_LOCATION + "("
-                    + CUS_NO + " TEXT,"
-                    + LONG + " TEXT,"
-                    + LATIT + " TEXT" +
-
-                    ")";
-            db.execSQL(CREATE_TABLE_CUSTOMER_LOCATION);
-        }
-        catch (Exception e) {
-            Log.e("onUpgrade*****", "CREATE_TABLE_CUSTOMER_LOCATION");
-        }
-
-        try{
-            db.execSQL("ALTER TABLE COMPANY_INFO ADD NOTE  TEXT NOT NULL DEFAULT ''");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try{
+       try {
+          String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE  IF NOT EXISTS " + QTY_OFFERS + "("
+                  + QTY + " REAL,"
+                  + DISCOUNT_VALUE + " REAL,"
+                  + PAYMENT_TYPE + " INTEGER" + ")";
+          db.execSQL(CREATE_TABLE_QTY_OFFERS);
+       } catch (Exception e) {
+          Log.e("onUpgrade*****", "duplicated column QTY_OFFERS");
+       }
 
 
-            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  SERIAL_CODE  INTEGER  DEFAULT 0 ");
+       try {
+          String CREATE_TABLE_ITEMS_QTY_OFFER = "CREATE TABLE IF NOT EXISTS " + ITEMS_QTY_OFFER + "("
+                  + ITEMNAME + " TEXT,"
+                  + ITEMNO + " INTEGER,"
+                  + AMOUNT_QTY + " INTEGER,"
+                  + FROMDATE + " TEXT,"
+                  + TODATE + " TEXT,"
+                  + DISCOUNT + " REAL" + ")";
+          db.execSQL(CREATE_TABLE_ITEMS_QTY_OFFER);
+       } catch (Exception e) {
+          Log.e("onUpgrade*****", "duplicated column ItemsQtyOffer");
+       }
+       try {
+          String CREATE_TABLE_CUSTOMER_LOCATION = "CREATE TABLE " + CUSTOMER_LOCATION + "("
+                  + CUS_NO + " TEXT,"
+                  + LONG + " TEXT,"
+                  + LATIT + " TEXT" +
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+                  ")";
+          db.execSQL(CREATE_TABLE_CUSTOMER_LOCATION);
+       } catch (Exception e) {
+          Log.e("onUpgrade*****", "CREATE_TABLE_CUSTOMER_LOCATION");
+       }
 
-        try{
-            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  VOUCH_DATE  TEXT NOT NULL DEFAULT '' ");
+       try {
+          db.execSQL("ALTER TABLE COMPANY_INFO ADD NOTE  TEXT NOT NULL DEFAULT ''");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try{
-            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  WHICH_UNIT  TEXT  DEFAULT '' ");
-            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  WHICH_UNIT_STR  TEXT  DEFAULT '' ");
-            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  WHICHU_QTY  TEXT  DEFAULT '' ");
-            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  ENTER_QTY  TEXT  DEFAULT '' ");
-            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  ENTER_PRICE  TEXT  DEFAULT '' ");
-            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  UNIT_BARCODE  TEXT  DEFAULT '' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        //*****************************************End SALES_VOUCHER_DETAILS upgerade********************************************************
+       try {
 
 
+          db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  SERIAL_CODE  INTEGER  DEFAULT 0 ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
+          db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  VOUCH_DATE  TEXT NOT NULL DEFAULT '' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
+          db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  WHICH_UNIT  TEXT  DEFAULT '' ");
+          db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  WHICH_UNIT_STR  TEXT  DEFAULT '' ");
+          db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  WHICHU_QTY  TEXT  DEFAULT '' ");
+          db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  ENTER_QTY  TEXT  DEFAULT '' ");
+          db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  ENTER_PRICE  TEXT  DEFAULT '' ");
+          db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  UNIT_BARCODE  TEXT  DEFAULT '' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       //*****************************************End SALES_VOUCHER_DETAILS upgerade********************************************************
 
 
+       try {
 
-        try{
+          db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  IS_POST  INTEGER  DEFAULT 0 ");
 
-            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  IS_POST  INTEGER  DEFAULT 0 ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            db.execSQL("alter table CUSTOMER_MASTER ADD COLUMN CUS_ID_Text TEXT NOT NULL DEFAULT '' ");
-            db.execSQL("update CUSTOMER_MASTER set CUS_ID_Text = CUS_ID ");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("alter table CUSTOMER_MASTER ADD COLUMN CUS_ID_Text TEXT NOT NULL DEFAULT '' ");
+          db.execSQL("update CUSTOMER_MASTER set CUS_ID_Text = CUS_ID ");
 //            db.execSQL("update CUSTOMER_MASTER set CUS_ID = '' ");
-            //update CUSTOMER_MASTER set new_CUS_ID = CUS_ID;
-            //update CUSTOMER_MASTER set CUS_ID = '';
+          //update CUSTOMER_MASTER set new_CUS_ID = CUS_ID;
+          //update CUSTOMER_MASTER set CUS_ID = '';
 
-        } catch (Exception e) {
+       } catch (Exception e) {
 
-        }
-        try {
-            String CREATE_SERIAL_ITEMS_TABLE = "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE + "("
-                    + KEY_SERIAL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + SERIAL_CODE_NO + " TEXT,"
-                    + COUNTER_SERIAL + " INTEGER,"
-                    + VOUCHER_NO + " INTEGER,"
-                    + ITEMNO_SERIAL + " TEXT,"
+       }
+       try {
+          String CREATE_SERIAL_ITEMS_TABLE = "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE + "("
+                  + KEY_SERIAL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                  + SERIAL_CODE_NO + " TEXT,"
+                  + COUNTER_SERIAL + " INTEGER,"
+                  + VOUCHER_NO + " INTEGER,"
+                  + ITEMNO_SERIAL + " TEXT,"
 
-                    + KIND_VOUCHER + " TEXT,"
+                  + KIND_VOUCHER + " TEXT,"
 
-                    + DATE_VOUCHER + " TEXT,"
-                    + STORE_NO_SALESMAN + " INTEGER,"
-                    + IS_POSTED_SERIAL + " INTEGER,"+
-                    IS_BONUS_SERIAL+" INTEGER,"+
-                    Price_ITEM +" real, "
-                    +Price_ITEM_Sales+" real, "
-                    +IS_RETURNED+" INTEGER "+
+                  + DATE_VOUCHER + " TEXT,"
+                  + STORE_NO_SALESMAN + " INTEGER,"
+                  + IS_POSTED_SERIAL + " INTEGER," +
+                  IS_BONUS_SERIAL + " INTEGER," +
+                  Price_ITEM + " real, "
+                  + Price_ITEM_Sales + " real, "
+                  + IS_RETURNED + " INTEGER " +
 
-                    ")";
-            db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
-        }
-        catch (Exception e) {
+                  ")";
+          db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
+       } catch (Exception e) {
 
-            Log.e("SERIAL_ITEMS_TABLE",""+e.getMessage());
-        }
-        try{
-            db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  STORE_NO_SALESMAN  INTEGER  DEFAULT 1 ");
+          Log.e("SERIAL_ITEMS_TABLE", "" + e.getMessage());
+       }
+       try {
+          db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  STORE_NO_SALESMAN  INTEGER  DEFAULT 1 ");
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
 
-        try{
-            db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  IS_POSTED_SERIAL  INTEGER  DEFAULT 0 ");
+       try {
+          db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  IS_POSTED_SERIAL  INTEGER  DEFAULT 0 ");
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  IS_BONUS_SERIAL  INTEGER  DEFAULT 0 ");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  IS_BONUS_SERIAL  INTEGER  DEFAULT 0 ");
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  Price_ITEM_Sales  REAL  DEFAULT 0 ");
+       try {
+          db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  Price_ITEM_Sales  REAL  DEFAULT 0 ");
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  IS_RETURNED  INTEGER  DEFAULT 0 ");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  IS_RETURNED  INTEGER  DEFAULT 0 ");
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        //********************************************* End SERIAL_ITEMS_TABLE ****************************************************
-        try{
-            db.execSQL("ALTER TABLE Items_Master ADD  ITEM_HAS_SERIAL  INTEGER  DEFAULT 0 ");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       //********************************************* End SERIAL_ITEMS_TABLE ****************************************************
+       try {
+          db.execSQL("ALTER TABLE Items_Master ADD  ITEM_HAS_SERIAL  INTEGER  DEFAULT 0 ");
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
 
-            db.execSQL("ALTER TABLE Items_Master ADD  ITEM_PHOTO  TEXT  DEFAULT '' ");
+          db.execSQL("ALTER TABLE Items_Master ADD  ITEM_PHOTO  TEXT  DEFAULT '' ");
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        //******************************** Added Customer ****************************************
-        try{
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       //******************************** Added Customer ****************************************
+       try {
 
 
+          db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  ADRESS_CUSTOMER  TEXT  DEFAULT '' ");
+          db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  TELEPHONE  TEXT  DEFAULT '' ");
+          db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  CONTACT_PERSON  TEXT  DEFAULT '' ");
 
-            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  ADRESS_CUSTOMER  TEXT  DEFAULT '' ");
-            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  TELEPHONE  TEXT  DEFAULT '' ");
-            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  CONTACT_PERSON  TEXT  DEFAULT '' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        //
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       //
 //*********************************** TABLE LOGIN *************************************
-        //+ KEY_LOGIN + " INTEGER PRIMARY KEY AUTOINCREMENT
-        String CREATE_SALESMAN_LOGIN_TABLE= " CREATE TABLE IF NOT EXISTS " + SALESMAN_LOGIN_LOGHistory + "("
-                + DATE_LOGIN + " TEXT,"
-                + TIME_LOGIN + " TEXT,"
-                + TIME_LOGOUT + " TEXT,"
-                + LONGTUDE2 + " REAL,"
-                + LATITUDE2 + " REAL,"
-                + SALESMAN_NO + " TEXT,"
-                + IS_POSTED_LOGIN + " INTEGER,"
-                +"  PRIMARY KEY ( DATE_LOGIN)"+
+       //+ KEY_LOGIN + " INTEGER PRIMARY KEY AUTOINCREMENT
+       String CREATE_SALESMAN_LOGIN_TABLE = " CREATE TABLE IF NOT EXISTS " + SALESMAN_LOGIN_LOGHistory + "("
+               + DATE_LOGIN + " TEXT,"
+               + TIME_LOGIN + " TEXT,"
+               + TIME_LOGOUT + " TEXT,"
+               + LONGTUDE2 + " REAL,"
+               + LATITUDE2 + " REAL,"
+               + SALESMAN_NO + " TEXT,"
+               + IS_POSTED_LOGIN + " INTEGER,"
+               + "  PRIMARY KEY ( DATE_LOGIN)" +
 
-                ")";
-        db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);
-        //****************************************************************************
-        try{
+               ")";
+       db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);
+       //****************************************************************************
+       try {
 
-            db.execSQL("ALTER TABLE COMPANY_INFO ADD  LONGTUDE_COMPANY  REAL  DEFAULT 0.0 ");
-            db.execSQL("ALTER TABLE COMPANY_INFO ADD  LATITUDE_COMPANY  REAL  DEFAULT 0.0 ");
+          db.execSQL("ALTER TABLE COMPANY_INFO ADD  LONGTUDE_COMPANY  REAL  DEFAULT 0.0 ");
+          db.execSQL("ALTER TABLE COMPANY_INFO ADD  LATITUDE_COMPANY  REAL  DEFAULT 0.0 ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       //*****************************************************************************
+       try {
+
+          db.execSQL("ALTER TABLE CustomerPrices ADD  DISCOUNT_CUSTOMER  REAL  DEFAULT 0.0 ");
+
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+
+          db.execSQL("ALTER TABLE CustomerPrices ADD  ItemNo_  TEXT  DEFAULT '' ");
+
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+
+          db.execSQL("ALTER TABLE CustomerPrices ADD  Other_Discount  TEXT  DEFAULT '' ");
+          db.execSQL("ALTER TABLE CustomerPrices ADD  FromDate  TEXT  DEFAULT '' ");
+          db.execSQL("ALTER TABLE CustomerPrices ADD  ToDate  TEXT  DEFAULT '' ");
+          db.execSQL("ALTER TABLE CustomerPrices ADD  ListNo  TEXT  DEFAULT '' ");
+          db.execSQL("ALTER TABLE CustomerPrices ADD  ListType  TEXT  DEFAULT '' ");
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
 
-        //*****************************************************************************
-        try{
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
+
+          db.execSQL("ALTER TABLE TRANSACTIONS ADD  REAL_LONGTUD  TEXT  DEFAULT '0' ");
 
-            db.execSQL("ALTER TABLE CustomerPrices ADD  DISCOUNT_CUSTOMER  REAL  DEFAULT 0.0 ");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
 
+          db.execSQL("ALTER TABLE TRANSACTIONS ADD  REAL_LATITUDE  TEXT  DEFAULT '0' ");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
 
+          String CREATE_Item_Switch_TABLE = "CREATE TABLE IF NOT EXISTS " + Item_Switch + "("
+                  + ITEM_NAMEA + " TEXT,"
+                  + ITEM_OCODE + " TEXT,"
+                  + ITEM_NCODE + " TEXT"
 
+                  + ")";
+          db.execSQL(CREATE_Item_Switch_TABLE);
+       } catch (Exception e) {
+       }
+       //-------------------------------------------------------------------------
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
+       try {
 
-            db.execSQL("ALTER TABLE CustomerPrices ADD  ItemNo_  TEXT  DEFAULT '' ");
+          String CREATE_SERIAL_TABLE = "CREATE TABLE IF NOT EXISTS " + SerialItemMaster + "("
+
+                  + StoreNo + " TEXT,"
+                  + ITEM_OCODE_M + " TEXT,"
+                  + SerialCode + " TEXT,"
+                  + Qty_serial + " TEXT"
+
+                  +
+                  ")";
+          db.execSQL(CREATE_SERIAL_TABLE);
+       } catch (Exception e) {
+       }
+       //***************************************************************
+       try {
+
+
+          String CREATE_OfferListMaster_TABLE = "CREATE TABLE IF NOT EXISTS " + price_offer_list_master + "("
+
+                  + PO_LIST_NO + " INTEGER,"
+                  + PO_LIST_NAME + " TEXT,"
+                  + PO_LIST_TYPE + " INTEGER,"
+                  + FROM_DATE_master + " TEXT,"
+                  + TO_DATE_master + " TEXT"
+                  +
+
+
+                  ")";
+          db.execSQL(CREATE_OfferListMaster_TABLE);
+       } catch (Exception e) {
+       }
+       try {
+
+          db.execSQL("ALTER TABLE REQUEST_DETAILS ADD  CURRENT_QTY  REAL  DEFAULT '0' ");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+
+          db.execSQL("ALTER TABLE REQUEST_DETAILS ADD  isPostedDetails  INTEGER  DEFAULT 0 ");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       String CREATE_SERIAL_ITEMS_TABLE_backup = "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE_backup + "("
+               + KEY_SERIAL2 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+               + SERIAL_CODE_NO2 + " TEXT,"
+               + COUNTER_SERIAL2 + " INTEGER,"
+               + VOUCHER_NO2 + " INTEGER,"
+               + ITEMNO_SERIAL2 + " TEXT,"
+               + KIND_VOUCHER2 + " TEXT,"
+
+               + DATE_VOUCHER2 + " TEXT,"
+               + STORE_NO_SALESMAN2 + " INTEGER,"
+               + IS_POSTED_SERIAL2 + " INTEGER,"
+               + IS_BONUS_SERIAL2 + " INTEGER,"
+               + isItemDelete + " INTEGER,"
+
+               + dateDelete + " TEXT" +
+
+               ")";
+       db.execSQL(CREATE_SERIAL_ITEMS_TABLE_backup);
+
+
+       try {
+
+          String CREATE_TABLE_SALESMEN_LOG_IN = "CREATE TABLE IF NOT EXISTS " + SalesMenLogIn + "( "
+                  + UserNo_LogIn + " TEXT" + ")";
+          db.execSQL(CREATE_TABLE_SALESMEN_LOG_IN);
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
+
+          db.execSQL("ALTER TABLE Sales_Team ADD  IP_ADDRESS_DEVICE  TEXT  DEFAULT '' ");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+
+       try {
+          db.execSQL("ALTER TABLE SALES_VOUCHER_MASTER ADD  VOUCHER_time  TEXT  DEFAULT '' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+
+       try {
+          db.execSQL("ALTER TABLE  COMPANY_INFO ADD   NOTEPOSITION  TEXT  DEFAULT '0' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          String CREATE_TABLE_INVENTORY_SHELF = "CREATE TABLE IF NOT EXISTS " + INVENTORY_SHELF + "("
+                  + TRANS_NO + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                  + ITEM_NO + " TEXT,"
+                  + SERIAL_NO + " TEXT,"
+                  + QTY_ITEM + " INTEGER,"
+                  + TRANS_DATE + " TEXT,"
+                  + CUSTOMER_NO + " TEXT,"
+                  + SALESMAN_NUMBER + " TEXT,"
+
+                  + VOUCHER_NUMBER_INVENTORY + " INTEGER,"
+                  + IsPosted + " INTEGER "
+
+                  + ")";
+          db.execSQL(CREATE_TABLE_INVENTORY_SHELF);
+
+       } catch (Exception e) {
+       }
+       try {
+          String CREATE_TABLE_VoucherSerialize = "CREATE TABLE IF NOT EXISTS " + VoucherSerialize + "("
+                  + VoucherSales_no + " INTEGER,"
+                  + VoucherReturn_no + " INTEGER,"
+                  + VoucherNewOrder_no + " INTEGER"
+                  + ")";
+          db.execSQL(CREATE_TABLE_VoucherSerialize);
 
+       } catch (Exception e) {
+       }
 
+       try {
+          db.execSQL("ALTER TABLE  INVENTORY_SHELF ADD   VOUCHER_NUMBER_INVENTORY  INTEGER  DEFAULT '' ");
 
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-
-            db.execSQL("ALTER TABLE CustomerPrices ADD  Other_Discount  TEXT  DEFAULT '' ");
-            db.execSQL("ALTER TABLE CustomerPrices ADD  FromDate  TEXT  DEFAULT '' ");
-            db.execSQL("ALTER TABLE CustomerPrices ADD  ToDate  TEXT  DEFAULT '' ");
-            db.execSQL("ALTER TABLE CustomerPrices ADD  ListNo  TEXT  DEFAULT '' ");
-            db.execSQL("ALTER TABLE CustomerPrices ADD  ListType  TEXT  DEFAULT '' ");
-
-
-
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try{
-
-            db.execSQL("ALTER TABLE TRANSACTIONS ADD  REAL_LONGTUD  TEXT  DEFAULT '0' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-
-            db.execSQL("ALTER TABLE TRANSACTIONS ADD  REAL_LATITUDE  TEXT  DEFAULT '0' ");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-
-            String CREATE_Item_Switch_TABLE= "CREATE TABLE IF NOT EXISTS " + Item_Switch + "("
-                    + ITEM_NAMEA + " TEXT,"
-                    + ITEM_OCODE + " TEXT,"
-                    + ITEM_NCODE + " TEXT"
-
-                    + ")";
-            db.execSQL(CREATE_Item_Switch_TABLE);
-        }catch (Exception e){}
-        //-------------------------------------------------------------------------
-
-        try {
-
-            String CREATE_SERIAL_TABLE= "CREATE TABLE IF NOT EXISTS " + SerialItemMaster + "("
-
-                    + StoreNo + " TEXT,"
-                    + ITEM_OCODE_M + " TEXT,"
-                    + SerialCode + " TEXT,"
-                    + Qty_serial + " TEXT"
-
-                    +
-                    ")";
-            db.execSQL(CREATE_SERIAL_TABLE);
-        }catch (Exception e){}
-        //***************************************************************
-        try {
-
-
-
-            String CREATE_OfferListMaster_TABLE= "CREATE TABLE IF NOT EXISTS " + price_offer_list_master + "("
-
-                    + PO_LIST_NO + " INTEGER,"
-                    + PO_LIST_NAME + " TEXT,"
-                    + PO_LIST_TYPE + " INTEGER,"
-                    + FROM_DATE_master  + " TEXT,"
-                    +TO_DATE_master  +" TEXT"
-                    +
-
-
-                    ")";
-            db.execSQL(CREATE_OfferListMaster_TABLE);
-        }catch (Exception e){}
-        try{
-
-            db.execSQL("ALTER TABLE REQUEST_DETAILS ADD  CURRENT_QTY  REAL  DEFAULT '0' ");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-
-            db.execSQL("ALTER TABLE REQUEST_DETAILS ADD  isPostedDetails  INTEGER  DEFAULT 0 ");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        String CREATE_SERIAL_ITEMS_TABLE_backup= "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE_backup + "("
-                + KEY_SERIAL2 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + SERIAL_CODE_NO2 + " TEXT,"
-                + COUNTER_SERIAL2 + " INTEGER,"
-                + VOUCHER_NO2 + " INTEGER,"
-                + ITEMNO_SERIAL2 + " TEXT,"
-                + KIND_VOUCHER2 + " TEXT,"
-
-                + DATE_VOUCHER2 + " TEXT,"
-                + STORE_NO_SALESMAN2 + " INTEGER,"
-                + IS_POSTED_SERIAL2 + " INTEGER,"
-                + IS_BONUS_SERIAL2+" INTEGER,"
-                +isItemDelete+ " INTEGER,"
-
-                +dateDelete+" TEXT" +
-
-                ")";
-        db.execSQL(CREATE_SERIAL_ITEMS_TABLE_backup);
-
-
-        try{
-
-            String CREATE_TABLE_SALESMEN_LOG_IN = "CREATE TABLE IF NOT EXISTS " + SalesMenLogIn + "( "
-                    + UserNo_LogIn + " TEXT" + ")";
-            db.execSQL(CREATE_TABLE_SALESMEN_LOG_IN);
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try{
-
-            db.execSQL("ALTER TABLE Sales_Team ADD  IP_ADDRESS_DEVICE  TEXT  DEFAULT '' ");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-
-        try{
-            db.execSQL("ALTER TABLE SALES_VOUCHER_MASTER ADD  VOUCHER_time  TEXT  DEFAULT '' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-
-
-
-
-        try{
-            db.execSQL("ALTER TABLE  COMPANY_INFO ADD   NOTEPOSITION  TEXT  DEFAULT '0' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try {
-            String CREATE_TABLE_INVENTORY_SHELF = "CREATE TABLE IF NOT EXISTS " + INVENTORY_SHELF + "("
-                    + TRANS_NO + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + ITEM_NO + " TEXT,"
-                    + SERIAL_NO + " TEXT,"
-                    + QTY_ITEM + " INTEGER,"
-                    + TRANS_DATE + " TEXT,"
-                    + CUSTOMER_NO + " TEXT,"
-                    + SALESMAN_NUMBER + " TEXT,"
-
-                    +VOUCHER_NUMBER_INVENTORY+ " INTEGER,"
-                    +IsPosted+ " INTEGER "
-
-                    + ")";
-            db.execSQL(CREATE_TABLE_INVENTORY_SHELF);
-
-        }catch (Exception e){}
-        try {
-            String CREATE_TABLE_VoucherSerialize = "CREATE TABLE IF NOT EXISTS " + VoucherSerialize + "("
-                    + VoucherSales_no + " INTEGER,"
-                    + VoucherReturn_no + " INTEGER,"
-                    + VoucherNewOrder_no + " INTEGER"
-                    + ")";
-            db.execSQL(CREATE_TABLE_VoucherSerialize);
-
-        }catch (Exception e){}
-
-        try{
-            db.execSQL("ALTER TABLE  INVENTORY_SHELF ADD   VOUCHER_NUMBER_INVENTORY  INTEGER  DEFAULT '' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE  INVENTORY_SHELF ADD   IsPosted  INTEGER  DEFAULT '0' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try{
-            db.execSQL("ALTER TABLE  SERIAL_ITEMS_TABLE ADD   Price_ITEM  real  DEFAULT '0' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try{
-            db.execSQL("ALTER TABLE  VS_PROMOTION ADD   DISCOUNT_ITEM_TYPE  INTEGER  DEFAULT '0' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try{
-            db.execSQL("ALTER TABLE  Item_Unit_Details ADD   PriceUnit  TEXT  DEFAULT '' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE  Item_Unit_Details ADD   ItemBarcode  TEXT  DEFAULT '' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-
-
-            db.execSQL("ALTER TABLE  Item_Unit_Details ADD   PRICECLASS_1  TEXT  DEFAULT '' ");
-            db.execSQL("ALTER TABLE  Item_Unit_Details ADD   PRICECLASS_2  TEXT  DEFAULT '' ");
-            db.execSQL("ALTER TABLE  Item_Unit_Details ADD   PRICECLASS_3  TEXT  DEFAULT '' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        //************************************************************************************************
-        try{
-            String CREATE_TABLE_CustomerPrices2 = "CREATE TABLE IF NOT EXISTS " + CustomerPricesCurrent + "("
-                    + ItemNumber_ + " INTEGER,"
-                    + CustomerNumber_ + " INTEGER,"
-                    + Price_ + " INTEGER,"
-                    + DISCOUNT_CUSTOMER_ + " real,"
-                    + ItemNo_N+ " TEXT,"
-                    + Other_Discount_ + " TEXT,"
-                    + FromDate_ + " TEXT,"
-                    + ToDate_ + " TEXT,"
-                    + ListNo_ + " TEXT,"
-                    + ListType_ + " TEXT"
-
-                    + ")";
-            db.execSQL(CREATE_TABLE_CustomerPrices2);
-
-
-        } catch (Exception e) {
-
-        }
-        try {
-            String CREATE_TABLE_GroupOffer_Item = "CREATE TABLE IF NOT EXISTS " + GroupOffer_Item + "("
-                    + Id_serial + " INTEGER,"
-                    + ItemNo_Offer + " TEXT,"
-                    + ItemName_Offer + " TEXT,"
-                    + From_Date_Offer + " TEXT,"
-
-                    + To_Date_Offer + " TEXT,"
-
-                    + Discount_Offer + " TEXT,"
-
-                    + Discount_Type_Offer + " INTEGER,"
-                    + GroupId_Offer + " INTEGER,"
-
-                    + Qty_item + " TEXT "
-
-
-                    + ")";
-            db.execSQL(CREATE_TABLE_GroupOffer_Item);
-
-        }catch (Exception e){
-
-
-        }
-
-        try{
-            db.execSQL("ALTER TABLE  PAYMENTS ADD   CUSTOMER_NUMBER_STR  TEXT  DEFAULT '' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        ////B
-        try {
-            String CREATE_TABLE_FlAG_SETTINGS = "CREATE TABLE IF NOT EXISTS " + Flag_Settings + "("
-                    + Data_Type + " TEXT,"
-                    + Export_Stock + " INTEGER,"
-                    + Max_Voucher + " INTEGER,"
-                    + Make_Order + " INTEGER,"
-                    + Admin_Password + " INTEGER,"
-                    + Total_Balance + " INTEGER,"
-                    + Voucher_Return + " INTEGER"
-
-                    + ")";
-            db.execSQL(CREATE_TABLE_FlAG_SETTINGS);
-
-
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage() + "");
-        }
-        try{
-            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  IS_RETURNED  INTEGER  DEFAULT 0 ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-
-        try{
-            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  Avilable_Qty  Text  DEFAULT '0' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE SALES_VOUCHER_MASTER ADD  ORIGINALVOUCHER_NUMBER  INTEGER  DEFAULT '0' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try{
-            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  ORIGINALVOUCHER_NUMBER  INTEGER  DEFAULT '0' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{   String CREATE_TABLE_SalesMan_Plan = "CREATE TABLE  IF NOT EXISTS " + SalesMan_Plan + "("
-                + DATE + " TEXT,"
-                + SALES_MAN_NUMBER + " INTEGER,"
-                + CUSTOMER_NAME + " TEXT,"
-                + CUSTOMER_NO + " INTEGER,"
-                + LATITUDE + " TEXT,"
-                + LONGITUDE + " TEXT,"
-                + orederd + " INTEGER,"
-                + typeorederd + " INTEGER,"
-                + LogoutStatus + " INTEGER DEFAULT '0'" +
-                ")";
-            db.execSQL(CREATE_TABLE_SalesMan_Plan);}
-        catch (Exception e){
-
-        }
-
-
-
-        try{
-            db.execSQL("ALTER TABLE Flag_Settings ADD '"+ActiveSlasmanPlan+"'  INTEGER  DEFAULT '0' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-
-        try{
-            db.execSQL("ALTER TABLE Flag_Settings ADD '"+POS_ACTIVE+"'  INTEGER  DEFAULT '0' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try {
-            db.execSQL("ALTER TABLE Flag_Settings ADD '" + CakeShop_Offer + "' INTEGER DEFAULT '0'");
-
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try {
-            db.execSQL("ALTER TABLE Flag_Settings ADD '" + Talaat_Offer + "' INTEGER DEFAULT '0'");
-
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try {
-            db.execSQL("ALTER TABLE Flag_Settings ADD '" + Qasion_Offer + "' INTEGER DEFAULT '0'");
-
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try{
-            db.execSQL("ALTER TABLE SalesMenLogIn ADD '"+LATITUDE+"'  Text");
-            db.execSQL("ALTER TABLE SalesMenLogIn ADD '"+LONGITUDE+"'  Text");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-        String SalesMan_Item_availability_TABLE = "CREATE TABLE IF NOT EXISTS " + SalesMan_Item_availability + "("
-                + SALESMAN_NO + " INTEGER,"
-                + ITEM_OCODE + " TEXT,"
-                + availability + " INTEGER"
-
-                + ")";
-        db.execSQL(SalesMan_Item_availability_TABLE);
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-
-
-
-
-        try{
-
-            String MODIFY1 = "ALTER TABLE COMPANY_INFO ADD COLUMN phonnum TEXT";
-            String MODIFY2 = "UPDATE COMPANY_INFO SET phonnum = CAST(COMPANY_TEL as TEXT)";
-             db.execSQL(MODIFY1);
-            db.execSQL(MODIFY2);
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try{
-            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD '"+netsalFLAG+"' TEXT DEFAULT '0' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD '"+CAN_CHANGE_PRICE_RETURNONLY+"'  INTEGER  DEFAULT '0' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-        //////-------------------------
-        String CREATE_SalemanTrips_TABLE = "CREATE TABLE IF NOT EXISTS " + SalemanTrips + "("
-                + TripNum + "  INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + TripstartDate + " TEXT,"
-                + TripstartTime + " TEXT,"
-                + TripEndDate + " TEXT,"
-                + TripEndTime + " TEXT,"
-                + TripStatus + " TEXT"
-                + ")";
-        db.execSQL(CREATE_SalemanTrips_TABLE);
-
-        try{
-            db.execSQL("ALTER TABLE Flag_Settings ADD '"+ActiveSlasmanTrips+"'  INTEGER  DEFAULT '0' ");
-
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE  INVENTORY_SHELF ADD   IsPosted  INTEGER  DEFAULT '0' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
+          db.execSQL("ALTER TABLE  SERIAL_ITEMS_TABLE ADD   Price_ITEM  real  DEFAULT '0' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
+          db.execSQL("ALTER TABLE  VS_PROMOTION ADD   DISCOUNT_ITEM_TYPE  INTEGER  DEFAULT '0' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
+          db.execSQL("ALTER TABLE  Item_Unit_Details ADD   PriceUnit  TEXT  DEFAULT '' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE  Item_Unit_Details ADD   ItemBarcode  TEXT  DEFAULT '' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+
+
+          db.execSQL("ALTER TABLE  Item_Unit_Details ADD   PRICECLASS_1  TEXT  DEFAULT '' ");
+          db.execSQL("ALTER TABLE  Item_Unit_Details ADD   PRICECLASS_2  TEXT  DEFAULT '' ");
+          db.execSQL("ALTER TABLE  Item_Unit_Details ADD   PRICECLASS_3  TEXT  DEFAULT '' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       //************************************************************************************************
+       try {
+          String CREATE_TABLE_CustomerPrices2 = "CREATE TABLE IF NOT EXISTS " + CustomerPricesCurrent + "("
+                  + ItemNumber_ + " INTEGER,"
+                  + CustomerNumber_ + " INTEGER,"
+                  + Price_ + " INTEGER,"
+                  + DISCOUNT_CUSTOMER_ + " real,"
+                  + ItemNo_N + " TEXT,"
+                  + Other_Discount_ + " TEXT,"
+                  + FromDate_ + " TEXT,"
+                  + ToDate_ + " TEXT,"
+                  + ListNo_ + " TEXT,"
+                  + ListType_ + " TEXT"
+
+                  + ")";
+          db.execSQL(CREATE_TABLE_CustomerPrices2);
+
+
+       } catch (Exception e) {
+
+       }
+       try {
+          String CREATE_TABLE_GroupOffer_Item = "CREATE TABLE IF NOT EXISTS " + GroupOffer_Item + "("
+                  + Id_serial + " INTEGER,"
+                  + ItemNo_Offer + " TEXT,"
+                  + ItemName_Offer + " TEXT,"
+                  + From_Date_Offer + " TEXT,"
+
+                  + To_Date_Offer + " TEXT,"
+
+                  + Discount_Offer + " TEXT,"
+
+                  + Discount_Type_Offer + " INTEGER,"
+                  + GroupId_Offer + " INTEGER,"
+
+                  + Qty_item + " TEXT "
+
+
+                  + ")";
+          db.execSQL(CREATE_TABLE_GroupOffer_Item);
+
+       } catch (Exception e) {
+
+
+       }
+
+       try {
+          db.execSQL("ALTER TABLE  PAYMENTS ADD   CUSTOMER_NUMBER_STR  TEXT  DEFAULT '' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       ////B
+       try {
+          String CREATE_TABLE_FlAG_SETTINGS = "CREATE TABLE IF NOT EXISTS " + Flag_Settings + "("
+                  + Data_Type + " TEXT,"
+                  + Export_Stock + " INTEGER,"
+                  + Max_Voucher + " INTEGER,"
+                  + Make_Order + " INTEGER,"
+                  + Admin_Password + " INTEGER,"
+                  + Total_Balance + " INTEGER,"
+                  + Voucher_Return + " INTEGER"
+
+                  + ")";
+          db.execSQL(CREATE_TABLE_FlAG_SETTINGS);
+
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage() + "");
+       }
+       try {
+          db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  IS_RETURNED  INTEGER  DEFAULT 0 ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+
+       try {
+          db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  Avilable_Qty  Text  DEFAULT '0' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SALES_VOUCHER_MASTER ADD  ORIGINALVOUCHER_NUMBER  INTEGER  DEFAULT '0' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
+          db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  ORIGINALVOUCHER_NUMBER  INTEGER  DEFAULT '0' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          String CREATE_TABLE_SalesMan_Plan = "CREATE TABLE  IF NOT EXISTS " + SalesMan_Plan + "("
+                  + DATE + " TEXT,"
+                  + SALES_MAN_NUMBER + " INTEGER,"
+                  + CUSTOMER_NAME + " TEXT,"
+                  + CUSTOMER_NO + " INTEGER,"
+                  + LATITUDE + " TEXT,"
+                  + LONGITUDE + " TEXT,"
+                  + orederd + " INTEGER,"
+                  + typeorederd + " INTEGER,"
+                  + LogoutStatus + " INTEGER DEFAULT '0'" +
+                  ")";
+          db.execSQL(CREATE_TABLE_SalesMan_Plan);
+       } catch (Exception e) {
+
+       }
+
+
+       try {
+          db.execSQL("ALTER TABLE Flag_Settings ADD '" + ActiveSlasmanPlan + "'  INTEGER  DEFAULT '0' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+
+       try {
+          db.execSQL("ALTER TABLE Flag_Settings ADD '" + POS_ACTIVE + "'  INTEGER  DEFAULT '0' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
+          db.execSQL("ALTER TABLE Flag_Settings ADD '" + CakeShop_Offer + "' INTEGER DEFAULT '0'");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
+          db.execSQL("ALTER TABLE Flag_Settings ADD '" + Talaat_Offer + "' INTEGER DEFAULT '0'");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
+          db.execSQL("ALTER TABLE Flag_Settings ADD '" + Qasion_Offer + "' INTEGER DEFAULT '0'");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
+          db.execSQL("ALTER TABLE SalesMenLogIn ADD '" + LATITUDE + "'  Text");
+          db.execSQL("ALTER TABLE SalesMenLogIn ADD '" + LONGITUDE + "'  Text");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          String SalesMan_Item_availability_TABLE = "CREATE TABLE IF NOT EXISTS " + SalesMan_Item_availability + "("
+                  + SALESMAN_NO + " INTEGER,"
+                  + ITEM_OCODE + " TEXT,"
+                  + availability + " INTEGER"
+
+                  + ")";
+          db.execSQL(SalesMan_Item_availability_TABLE);
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+
+       try {
+
+          String MODIFY1 = "ALTER TABLE COMPANY_INFO ADD COLUMN phonnum TEXT";
+          String MODIFY2 = "UPDATE COMPANY_INFO SET phonnum = CAST(COMPANY_TEL as TEXT)";
+          db.execSQL(MODIFY1);
+          db.execSQL(MODIFY2);
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
+          db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD '" + netsalFLAG + "' TEXT DEFAULT '0' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD '" + CAN_CHANGE_PRICE_RETURNONLY + "'  INTEGER  DEFAULT '0' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       //////-------------------------
+       String CREATE_SalemanTrips_TABLE = "CREATE TABLE IF NOT EXISTS " + SalemanTrips + "("
+               + TripNum + "  INTEGER PRIMARY KEY AUTOINCREMENT,"
+               + TripstartDate + " TEXT,"
+               + TripstartTime + " TEXT,"
+               + TripEndDate + " TEXT,"
+               + TripEndTime + " TEXT,"
+               + TripStatus + " TEXT"
+               + ")";
+       db.execSQL(CREATE_SalemanTrips_TABLE);
+
+       try {
+          db.execSQL("ALTER TABLE Flag_Settings ADD '" + ActiveSlasmanTrips + "'  INTEGER  DEFAULT '0' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 /////////
-        try{
-            db.execSQL("ALTER TABLE SalesMen ADD UserType INTEGER");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       try {
+          db.execSQL("ALTER TABLE SalesMen ADD UserType INTEGER");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
 
-        try{
-            db.execSQL("ALTER TABLE Flag_Settings ADD '"+Max_VoucherSever+"'  INTEGER  DEFAULT '0' ");
+       try {
+          db.execSQL("ALTER TABLE Flag_Settings ADD '" + Max_VoucherSever + "'  INTEGER  DEFAULT '0' ");
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            Log.e("onUpgrade*****", "OffersJustForSales");
-            db.execSQL("ALTER TABLE SETTING ADD '"+OffersJustForSales+"'  INTEGER  DEFAULT '0' ");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          Log.e("onUpgrade*****", "OffersJustForSales");
+          db.execSQL("ALTER TABLE SETTING ADD '" + OffersJustForSales + "'  INTEGER  DEFAULT '0' ");
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
-        try{
-            Log.e("onUpgrade*****", "CheckQtyinOrder");
-            db.execSQL("ALTER TABLE SETTING ADD '"+CheckQtyinOrder+"'  INTEGER  DEFAULT '0' ");
+       try {
+          Log.e("onUpgrade*****", "CheckQtyinOrder");
+          db.execSQL("ALTER TABLE SETTING ADD '" + CheckQtyinOrder + "'  INTEGER  DEFAULT '0' ");
 
-        }catch (Exception e)
-        {
-
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            Log.e("onUpgrade*****", "HeaderprintInOrders");
-            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD '"+HeaderprintInOrders+"'  INTEGER  DEFAULT '0' ");
-
-        }catch (Exception e)
-        {
-
-            Log.e(TAG, e.getMessage().toString());
-        }
-       try{
-          db.execSQL("ALTER TABLE SETTING ADD '"+locationtracker+"'  INTEGER DEFAULT '0'");
-
-       }catch (Exception e)
-       {
+       } catch (Exception e) {
 
           Log.e(TAG, e.getMessage().toString());
        }
-       try{
-          db.execSQL("ALTER TABLE Flag_Settings ADD '"+Purchase_Order+"'  INTEGER  DEFAULT '0' ");
+       try {
+          Log.e("onUpgrade*****", "HeaderprintInOrders");
+          db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD '" + HeaderprintInOrders + "'  INTEGER  DEFAULT '0' ");
 
-       }catch (Exception e)
-       {
-          Log.e(TAG, e.getMessage().toString());
-       }
-       try{
-          db.execSQL("ALTER TABLE SETTING ADD '"+AqapaTax+"'  INTEGER DEFAULT '0'");
-
-       }catch (Exception e)
-       {
+       } catch (Exception e) {
 
           Log.e(TAG, e.getMessage().toString());
        }
-       try{
-          db.execSQL("ALTER TABLE Flag_Settings ADD '"+NO_TAX+"'  INTEGER  DEFAULT '0' ");
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD '" + locationtracker + "'  INTEGER DEFAULT '0'");
 
-       }catch (Exception e)
-       {
+       } catch (Exception e) {
+
           Log.e(TAG, e.getMessage().toString());
        }
-       try{
-          db.execSQL("ALTER TABLE SETTING ADD '"+SHOW_CUSTOMER_LOCATION+"'  INTEGER DEFAULT '0'");
+       try {
+          db.execSQL("ALTER TABLE Flag_Settings ADD '" + Purchase_Order + "'  INTEGER  DEFAULT '0' ");
 
-       }catch (Exception e)
-       {
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD '" + AqapaTax + "'  INTEGER DEFAULT '0'");
+
+       } catch (Exception e) {
+
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE Flag_Settings ADD '" + NO_TAX + "'  INTEGER  DEFAULT '0' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD '" + SHOW_CUSTOMER_LOCATION + "'  INTEGER DEFAULT '0'");
+
+       } catch (Exception e) {
 
           Log.e(TAG, e.getMessage().toString());
        }
 
 
-       try{
+       try {
           db.execSQL("ALTER TABLE  COMPANY_INFO ADD   NATIONAL_ID  TEXT  DEFAULT '0' ");
 
-       }catch (Exception e)
-       {
+       } catch (Exception e) {
           Log.e(TAG, e.getMessage().toString());
        }
-       try{
+       try {
           db.execSQL("ALTER TABLE  COMPANY_INFO ADD   CAR_NO  TEXT  DEFAULT '0' ");
 
-       }catch (Exception e)
-       {
+       } catch (Exception e) {
           Log.e(TAG, e.getMessage().toString());
        }
        String CREATE_STransactionInfo_TABLE = "CREATE TABLE IF NOT EXISTS " + TransactionInfo + "("
@@ -2663,8 +2562,15 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                + Cust_name + " TEXT,"
                + DATE_ + " TEXT"
                + ")";
-       db.execSQL(CREATE_STransactionInfo_TABLE );
+       db.execSQL(CREATE_STransactionInfo_TABLE);
 
+
+       try {
+          db.execSQL("ALTER TABLE  SALES_VOUCHER_MASTER ADD   TAX_TYPE  INTEGER DEFAULT '0' ");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
     }
 
     ////B
@@ -3740,6 +3646,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
         values.put(VOUCHER_time, voucher.getTime());
         values.put(ORIGINALVOUCHER_NUMBER, voucher.getORIGINALvoucherNo());
 
+        values.put(TAX_TYPE,voucher.getTaxTypa());
         try {
 
             db.insert(SALES_VOUCHER_MASTER, null, values);

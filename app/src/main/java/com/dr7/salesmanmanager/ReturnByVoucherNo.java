@@ -954,6 +954,10 @@ exportData(2);
       voucherReturn.setNetSales(total);
         voucherReturn.setORIGINALvoucherNo( Integer.parseInt(voucherNo_text.getText().toString().trim()));
       voucherReturn.setTax(0);
+        if(dataBase.getAllSettings().get(0).getTaxClarcKind()==0)
+        {
+            voucherReturn.setTaxTypa(0);
+        }else     voucherReturn.setTaxTypa(1);
 
       // calck netSales
       dataBase.addVoucher(voucherReturn);

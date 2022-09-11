@@ -2289,6 +2289,14 @@ public class SalesInvoice extends Fragment {
                         discountValue=0;discountPerc=0;
                         obj_discountFragment.setDiscountValue(0);
                         obj_discountFragment.setDiscountPerc(0);
+                        if(noTax==0)
+                        voucher.setTaxTypa(2);
+                        else {
+                            if(mDbHandler.getAllSettings().get(0).getTaxClarcKind()==0)
+                            {
+                                voucher.setTaxTypa(0);
+                            }else     voucher.setTaxTypa(1);
+                        }
 
 
 

@@ -152,7 +152,7 @@ public class Login extends AppCompatActivity {
     public  static    int  voucherReturn_spreat=0;
     public  static    int  updateOnlySelectedCustomer=0;// just for OneOOne
 
-    public  static    int   SalsManPlanFlage=1;
+    public  static    int   SalsManPlanFlage=0;
     public  static    int   SalsManTripFlage=0;
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=0;
@@ -160,6 +160,7 @@ public class Login extends AppCompatActivity {
 //    public  static    String headerDll = "";
     public  static    String  headerDll = "/Falcons/VAN.dll";
     public  static  int gone_noTax_totalDisc=0;
+    public  static  int password_rawat=0;
 
 
     @Override

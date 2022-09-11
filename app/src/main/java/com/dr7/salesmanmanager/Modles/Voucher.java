@@ -34,6 +34,15 @@ public class Voucher {
     private int voucherYear;
     private String time;
     private int ORIGINALvoucherNo;
+    private  int taxTypa;
+
+    public int getTaxTypa() {
+        return taxTypa;
+    }
+
+    public void setTaxTypa(int taxTypa) {
+        this.taxTypa = taxTypa;
+    }
 
     public int getORIGINALvoucherNo() {
         return ORIGINALvoucherNo;
@@ -291,6 +300,7 @@ public class Voucher {
             obj.put("VOUCHERYEAR", voucherYear);
 
             obj.put("PAYMETHOD", payMethod);
+            obj.put("EXCINC", taxTypa);
 
 
         } catch (JSONException e) {

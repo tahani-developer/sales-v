@@ -98,7 +98,7 @@ public class Reports extends AppCompatActivity {
         shelf_inventory_report.setOnClickListener(onClickListener);
         custwithouttrans_report=findViewById(R.id.custwithouttrans);
         custwithouttrans_report.setOnClickListener(onClickListener);
-          if( Purchase_Order==1)   custwithouttrans_report.setVisibility(View.GONE);
+          if( Purchase_Order==0)   custwithouttrans_report.setVisibility(View.GONE);
         customer_log_report.setOnClickListener(onClickListener);
         serial_report.setOnClickListener(onClickListener);
         cash_reoprt.setOnClickListener(onClickListener);
