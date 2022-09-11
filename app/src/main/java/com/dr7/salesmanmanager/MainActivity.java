@@ -3629,8 +3629,10 @@ else
         final EditText noteInvoice = (EditText) dialog.findViewById(R.id.notes);
         final EditText salesman_car = (EditText) dialog.findViewById(R.id.salesman_car);
         final EditText salesman_id= (EditText) dialog.findViewById(R.id.salesman_id);
-
-
+        EditText salesman_name= (EditText) dialog.findViewById(R.id.salesman_name);
+        String salesName=mDbHandler.getSalesmanName_fromSalesTeam();
+        salesman_name.setText(salesName+"");
+        salesman_name.setEnabled(false);
 //        tel.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 //            @Override
 //            public boolean onEditorAction(TextView v, int i, KeyEvent event) {
