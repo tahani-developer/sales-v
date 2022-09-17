@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Reports.TargetReport">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="3"
+        android:padding="3dp"
+
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:id="@+id/linear1"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="3dp"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/from_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:fontFamily="@font/alegreya"
+                android:text="@string/Month"
+                android:textColor="#103164"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/dateEdt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:entries="@array/montharray"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="2dp"
+                android:textSize="12sp"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear2"
+            android:layout_weight="1"
+            android:padding="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/linear1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/alegreya"
+                android:text="@string/target"
+                android:gravity="center"
+                android:textColor="#103164"
+                android:textSize="18sp" />
+
+            <RadioGroup
+                android:id="@+id/TargettypeRG"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:gravity="start|center_vertical"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/locationRBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:buttonTint="#CB04499F"
+                    android:checked="true"
+                    android:enabled="false"
+                    android:text="@string/items"
+                    android:textColor="#D84C5C6C" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/manualRBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="#CB04499F"
+                    android:enabled="false"
+                    android:text="@string/net_sales2"
+                    android:textColor="#D84C5C6C" />
+
+
+            </RadioGroup>
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".9"
+            android:padding="3dp"
+            android:orientation="horizontal">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/saleman_textInput"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start"
+                android:hint="@string/sales_man_name"
+                app:boxBackgroundColor="@color/white"
+                app:hintTextColor="@color/colorBlack"
+                app:boxStrokeColor="@color/colorBlack"
+                app:boxStrokeWidth="1dp"
+
+                app:endIconTint="@color/colorBlack">
+
+                <AutoCompleteTextView
+                    android:id="@+id/salemanTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1"
+                    android:inputType="textAutoComplete"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="14sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            >
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="match_parent"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/previewButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+                android:layout_weight="1"
+                android:background="@drawable/done_button"
+                android:fontFamily="@font/alegreya"
+                android:text="@string/preview"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="2"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/valulinear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="22dp"
+
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/valu3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:fontFamily="@font/alegreya"
+                android:text="@string/vlueoftarget"
+                android:textColor="#103164"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/vlueoftarget"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+
+                android:layout_weight="0.7"
+                android:background="@drawable/edittext_back"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textSize="12sp"
+
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:background="#0F4270"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp">
+
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alegreya"
+                        android:gravity="center"
+                        android:text="@string/target"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alegreya"
+                        android:gravity="center"
+                        android:text="@string/net_sales2"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alegreya"
+                        android:gravity="center"
+                        android:text="@string/Perceofunfulfilledgoal"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alegreya"
+                        android:gravity="center"
+                        android:text="@string/Perceofunfulfilledgoal"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/targetrec"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="4"
+        android:padding="3dp"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/saveButton"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:layout_weight="0.2"
+            android:background="@drawable/done_button"
+            android:text="@string/save"
+            android:textSize="15sp"
+            android:elevation="5dp"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="2"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/valulinear3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="22dp"
+
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/valu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:fontFamily="@font/alegreya"
+                android:text="@string/vlueoftarget"
+                android:textColor="#103164"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/vlueoftarget3"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+
+                android:layout_weight="0.7"
+                android:background="@drawable/edittext_back"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textSize="12sp"
+
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:background="#0F4270"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp">
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alegreya"
+                        android:gravity="center"
+                        android:text="@string/item_name"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alegreya"
+                        android:gravity="center"
+                        android:text="@string/item_number"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alegreya"
+                        android:gravity="center"
+                        android:text="@string/target"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alegreya"
+                        android:gravity="center"
+                        android:text="@string/Perceofunfulfilledgoal"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alegreya"
+                        android:gravity="center"
+                        android:text="@string/Perceofunfulfilledgoal"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/targetrec3"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

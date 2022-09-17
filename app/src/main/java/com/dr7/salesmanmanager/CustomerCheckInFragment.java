@@ -242,7 +242,7 @@ public class CustomerCheckInFragment extends DialogFragment {
                                 mainActivity.settext2();
 
                                 Date currentTimeAndDate = Calendar.getInstance().getTime();
-                                SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
+                                SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
                                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
                                 String currentTime = tf.format(currentTimeAndDate);

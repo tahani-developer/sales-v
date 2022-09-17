@@ -266,7 +266,7 @@
                         android:id="@+id/Trips_linear"
                         android:gravity="center_vertical"
 
-                        android:visibility="gone"
+
                         android:orientation="horizontal"
                         android:paddingVertical="10dp">
 

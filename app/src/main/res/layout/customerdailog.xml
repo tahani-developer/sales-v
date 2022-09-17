@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="350dp">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:id="@+id/LinearLayout01"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorblue_dark"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/custAccTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:inputType="text"
+            android:gravity="center"
+            android:lines="1"
+            android:text="@string/app_cust_no"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/cust"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_weight="0.3"
+            android:src="@drawable/ic_person_black_24dp"
+            android:text="@string/app_cust_no"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/custNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_weight="1"
+
+            android:gravity="center"
+
+            android:text="@string/cust_name"
+            android:textColor="@color/white"
+
+            android:textSize="14sp" />
+
+
+
+    </LinearLayout>
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical">
+      <androidx.recyclerview.widget.RecyclerView
+          android:layout_width="match_parent"
+          android:id="@+id/custmer_rec"
+          android:layout_height="match_parent"/>
+    </LinearLayout>
+</LinearLayout>

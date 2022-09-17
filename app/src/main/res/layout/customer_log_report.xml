@@ -306,6 +306,15 @@ android:textSize="13dp"
                 android:background="@color/colorblue_dark"
                 android:padding="5dp">
 
+                <!--                <TextView-->
+<!--                    android:layout_width="1dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:background="@color/white"-->
+<!--                    android:layout_margin="3dp"-->
+<!--                    android:visibility="gone"-->
+
+<!--                    />-->
+
                 <TextView
                     android:layout_width="130dp"
                     android:layout_height="wrap_content"
@@ -314,14 +323,6 @@ android:textSize="13dp"
                     android:text="@string/SALES_MAN_ID"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
-<!--                <TextView-->
-<!--                    android:layout_width="1dp"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:background="@color/white"-->
-<!--                    android:layout_margin="3dp"-->
-<!--                    android:visibility="gone"-->
-
-<!--                    />-->
 
                 <TextView
                     android:layout_width="130dp"
@@ -432,6 +433,15 @@ android:textSize="13dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/STATUS"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="130dp"
+                    android:id="@+id/Triptime"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="مدة الرحلة"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
                 <TextView

@@ -61,4 +61,10 @@
         android:orderInCategory="100"
         android:title="@string/saveLocation"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_SetVochsPosted"
+        android:orderInCategory="100"
+        android:title="@string/SetVochsPosted"
+        app:showAsAction="never" />
+
 </menu>

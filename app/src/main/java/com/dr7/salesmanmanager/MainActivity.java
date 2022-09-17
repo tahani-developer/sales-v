@@ -78,6 +78,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dr7.salesmanmanager.Adapters.CustomerselectedAdapter;
 import com.dr7.salesmanmanager.Adapters.Pending_item_Adapter;
 import com.dr7.salesmanmanager.Adapters.Pending_seriak_adapter;
 import com.dr7.salesmanmanager.Adapters.ReturnItemAdapter;
@@ -147,8 +148,10 @@ import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_R
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 
+import static com.dr7.salesmanmanager.Login.Plan_ACTIVE;
 import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.SalsManPlanFlage;
+import static com.dr7.salesmanmanager.Login.SalsManTripFlage;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.passwordSettingAdmin;
@@ -160,6 +163,7 @@ public class MainActivity extends AppCompatActivity
         CustomerCheckInFragment.CustomerCheckInInterface, CustomerListShow.CustomerListShow_interface {
     private static final int REQ_CODE_SPEECH_INPUT = 100;
    public static SweetAlertDialog pdialog;
+    public static  Dialog NewCustomerSelecteddialog;
     boolean isKitKat = false;
     public  static  boolean openDialog=false;
     int salesMan = 1;
@@ -189,7 +193,7 @@ public class MainActivity extends AppCompatActivity
     FusedLocationProviderClient mFusedLocationClient;
     LocationRequest mLocationRequest;
 Dialog dialog1;
-    TextView endtripText,starttripText;
+    public  static      TextView endtripText,starttripText;
   public String text;
     int position=0,netsalflag=0;
     public  static  double latitude_main, longitude_main;
@@ -391,55 +395,58 @@ saveCurentLocation();
 //
 //      }
 
-        endtripText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(  databaseHandler.getLastSaleManTrip().equals("1"))
-               OpenAuthenticDailog();
-else
-                {
-                    Toast.makeText(MainActivity.this, getResources().getString(R.string.newtripMsg), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        endtripText.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(  databaseHandler.getLastSaleManTrip().equals("1"))
+//               OpenAuthenticDailog();
+//else
+//                {
+//                    Toast.makeText(MainActivity.this, getResources().getString(R.string.newtripMsg), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
         starttripText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (databaseHandler.getLastSaleManTrip().equals("2"))
+//                List<Transaction> transactions=databaseHandler.getAlltransactions();
+//
+//                if (transactions.get(transactions.size()-1).getStatus()==1)
                 {
-                    Log.e("case1","case1");
-                    SaleManTrips trip=new SaleManTrips();
 
-                Date currentTimeAndDate = Calendar.getInstance().getTime();
-                SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
-                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                    Log.e("case1", "case1");
+                    SaleManTrips trip = new SaleManTrips();
 
-                String currentTime = convertToEnglish(tf.format(currentTimeAndDate));
-                String currentDate = convertToEnglish(df.format(currentTimeAndDate));
+                    Date currentTimeAndDate = Calendar.getInstance().getTime();
+                    SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
-
-
-                trip.setTripEndDate("00");
-                trip.setTripEndTime("00");
-                trip.setTripstartDate(currentDate);
-                trip.setTripstartTime(currentTime);
-                trip.setTripStatus("1");
+                    String currentTime = convertToEnglish(tf.format(currentTimeAndDate));
+                    String currentDate = convertToEnglish(df.format(currentTimeAndDate));
 
 
-                databaseHandler.insertSaleManTrip(trip);
-                    Toast.makeText(MainActivity.this, getResources().getString(R.string.tripisstarting), Toast.LENGTH_SHORT).show();
+                    trip.setTripEndDate("00");
+                    trip.setTripEndTime("00");
+                    trip.setTripstartDate(currentDate);
+                    trip.setTripstartTime(currentTime);
+                    trip.setTripStatus("1");
+
+
+                    databaseHandler.insertSaleManTrip(trip);
+                    //     Toast.makeText(MainActivity.this, getResources().getString(R.string.tripisstarting), Toast.LENGTH_SHORT).show();
                     checkInLinearLayout.setEnabled(true);
                     checkOutLinearLayout.setEnabled(true);
-
-
-            }else{
-                    Log.e("case2","case2");
-                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText(getResources().getString(R.string.warning_message))
-                            .setContentText(getResources().getString(R.string.newtripMsg))
-                            .show();
+                    NewcustomerStarttripDialog();
                 }
+
+//            }else{
+//                    Log.e("case2","case2");
+//                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+//                            .setTitleText(getResources().getString(R.string.warning_message))
+//                            .setContentText(getResources().getString(R.string.newtripMsg))
+//                            .show();
+//                }
             }
 
         });
@@ -736,6 +743,20 @@ else
 //                    checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out));
                     if (!CustomerListShow.Customer_Name.equals("No Customer Selected !")) {
                         openCustCheckOut();
+                        MainActivity.    starttripText.setVisibility(View.VISIBLE);
+                        if(SalsManTripFlage==1)
+                        {
+
+                            SaleManTrips trip = new SaleManTrips();
+                        Date currentTimeAndDate = Calendar.getInstance().getTime();
+                        SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+                        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                        String currentTime = convertToEnglish(tf.format(currentTimeAndDate));
+                        String currentDate = convertToEnglish(df.format(currentTimeAndDate));
+                        trip.setTripEndDate(currentDate);
+                        trip.setTripEndTime(currentTime);
+                        trip.setTripStatus("2");
+                        databaseHandler.UpdateSaleManTrip(trip);}
 
                     } else {
                         Toast.makeText(MainActivity.this, "No Customer Selected !", Toast.LENGTH_SHORT).show();
@@ -1120,7 +1141,11 @@ else
             Intent intent = new Intent(MainActivity.this, PrintVoucher.class);
             startActivity(intent);
 
-        } else if (id == R.id.action_print_payment) {
+        } else if(id == R.id.action_SetVochsPosted){
+            SetVochsPosted();
+        }
+            else
+        if (id == R.id.action_print_payment) {
             Intent intent = new Intent(MainActivity.this, PrintPayment.class);
             startActivity(intent);
 
@@ -2771,6 +2796,73 @@ else
                         Toast.makeText(MainActivity.this, "Incorrect Password !", Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+    public void SetVochsPosted() {
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.password_dialog);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        validPassowrdSetting=false;
+        lp.gravity = Gravity.CENTER;
+        lp.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(lp);
+        passwordFromAdmin=dialog.findViewById(R.id.passwordFromAdmin);
+
+
+        LinearLayout mainLinear=dialog.findViewById(R.id.linearPassword);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+        password = (EditText) dialog.findViewById(R.id.editText1);
+
+        Button okButton = (Button) dialog.findViewById(R.id.button1);
+        Button cancelButton = (Button) dialog.findViewById(R.id.button2);
+        final CheckBox cb_show = (CheckBox) dialog.findViewById(R.id.checkBox_showpass);
+//        EditText et1 = (EditText) this.findViewById(R.id.editText1);
+        cb_show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cb_show.isChecked()) {
+                    password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                } else {
+                    password.setInputType(129);
+                }
+            }
+        });
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(password.getText().toString().equals("1234")){
+                    databaseHandler.SetVocherPosted();
+                    dialog.dismiss();
+            }
             }
         });
 
@@ -4911,5 +5003,35 @@ Log.e("Exception==",e.getMessage());
         }
         return false;    }
 
-
+   void  NewcustomerStarttripDialog(){
+       NewCustomerSelecteddialog = new Dialog(MainActivity.this);
+       NewCustomerSelecteddialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+       NewCustomerSelecteddialog.setCancelable(true);
+       NewCustomerSelecteddialog.setContentView(R.layout.customerdailog);
+       WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+       NewCustomerSelecteddialog.setCancelable(true);
+       lp.copyFrom(NewCustomerSelecteddialog.getWindow().getAttributes());
+       validPassowrdSetting=false;
+       lp.gravity = Gravity.CENTER;
+       lp.windowAnimations = R.style.DialogAnimation;
+       NewCustomerSelecteddialog.getWindow().setAttributes(lp);
+       NewCustomerSelecteddialog.show();
+     RecyclerView custmer_rec=  NewCustomerSelecteddialog  .findViewById(R.id.custmer_rec);
+     Log.e("custmer_rec",allCustomersList.size()+"");
+       custmer_rec .setLayoutManager(new LinearLayoutManager(MainActivity.this));
+       custmer_rec.setAdapter(new CustomerselectedAdapter(MainActivity.this,allCustomersList) );
+//       NewCustomerSelecteddialog.findViewById(R.id.okButton)  .setOnClickListener(new View.OnClickListener() {
+//           @Override
+//           public void onClick(View view) {
+//               mainTextView.setText("");
+//               NewCustomerSelecteddialog.dismiss();
+//           }
+//       });
+//       NewCustomerSelecteddialog.findViewById(R.id.cancelButton)  .setOnClickListener(new View.OnClickListener() {
+//           @Override
+//           public void onClick(View view) {
+//               NewCustomerSelecteddialog.dismiss();
+//           }
+//       });
+   }
 }

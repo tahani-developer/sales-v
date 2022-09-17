@@ -233,7 +233,7 @@
     <string name="total_bonus_qty2">الكمية المجانية</string>
     <string name="total_sales_noTax"> المبيعات(بدون ضريبة)</string>
     <string name="total_sales_noTax2"> المبيعات(بدون ضريبة)</string>
-    <string name="items">المواد</string>
+
     <string name="print">طباعة</string>
     <string name="show">اظهار</string>
     <string name="all">الكل</string>
@@ -411,6 +411,7 @@
     <string name="app_cheque_count">عدد الشيكات</string>
     <string name="preventPayMethod">عدم تغير طريقة الدفع</string>
     <string name="saveLocation">حفظ الموقع</string>
+    <string name="SetVochsPosted">Set Vochers Posted</string>
     <string name="ShowCustomerList">اظهار قائمة العملاء</string>
     <string name="pleaseSelectUser">اختر عميل محدد</string>
     <string name="noReturnInvoice">ايقاف فواتير الارجاع</string>
@@ -603,6 +604,7 @@
     <string name="SalsManTrips">نظام الجولات للمندوب</string>
     <string name="newtripMsg">  لا يمكنك بدء جولة جديدة بدون إنهاء الجولة الحالية</string>
     <string name="tripisstarting">تم بدء الجولة</string>
+    <string name="tripisstarting2">تم بدء الجولة للعميل</string>
     <string name="tripisending">تم إنهاء الجولة</string>
     <string name="currentqty">الكمية الحالية</string>
     <string name="actualqty">الكمية الفعلية</string>
@@ -633,5 +635,14 @@
     <string name="clear_serial_old">حذف السيريلات القديمة</string>
     <string name="doneDelete">تم الحذف</string>
     <string name="enter_password_del_towmonth">ادخل كلمة السر لحذف كل السيريلات القديمة باستثناء اخر شهرين </string>
-
+    <string name="addtraget">إضافة هدف</string>
+    <string name="Month">الشهر</string>
+    <string name="goalachievementrate">نسبة تحقيق الهدف</string>
+    <string name="Perceofunfulfilledgoal">النسبةالغير محققة للهدف</string>
+    <string name="TargetReport">تقرير الأهداف</string>
+    <string name="net_sales2">صافي المبيعات</string>
+    <string name="items">المواد</string>
+    <string name="vlueoftarget">Vlue of Target</string>
+    <string name="target">الهدف</string>
+    <string name="NetsaleTarget">الهدف على صافي المبيعات</string>
 </resources>

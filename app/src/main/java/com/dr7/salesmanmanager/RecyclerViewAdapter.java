@@ -1353,11 +1353,34 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                                                                                               if (items.get(holder.getAdapterPosition()).getQty() >= Double.parseDouble(unitQty.getText().toString())
 //                                                                                                       || mHandler.getAllSettings().get(0).getAllowMinus() == 1
 //                                                                                                       || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508)
+
                                                                                                  if (validQty(allItemsList.get(position).getQty(), Float.parseFloat(unitQty.getText().toString()))) {
+                                                                                                     Log.e("ayah,price", "" + price.getText().toString()+" ,, "+allItemsList.get(position).getMinSalePrice());
+                                                                                                     double dis__;
+                                                                                                     if(!discountText.toString().toString().equals(""))
+                                                                                                         dis__=Double.parseDouble(discountText.toString().trim());
+                                                                                                     else
+                                                                                                         dis__=0;
+
+
+                                                                                                     double priceafterdis=0;
+                                                                                                     if (radioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
+                                                                                                        // priceafterdis=Double.parseDouble(price.getText().toString())-   ( Double.parseDouble(price.getText().toString())* (Double.parseDouble(dis__)*0.01));
+                                                                                                         double  disforOneItem= (dis__*0.01)/Double.parseDouble(unitQty.getText().toString());
+                                                                                                         Log.e("ayah,disforOneItem", "" +disforOneItem);
+                                                                                                         priceafterdis=Double.parseDouble(price.getText().toString())-(Double.parseDouble(price.getText().toString())*disforOneItem);
+
+                                                                                                     } else {
+                                                                                                         double  disforOneItem= (dis__)/Double.parseDouble(unitQty.getText().toString());
+                                                                                                         Log.e("ayah,disforOneItem", "" +disforOneItem);
+                                                                                                         priceafterdis=Double.parseDouble(price.getText().toString())-    disforOneItem;
+
+
+                                                                                                     }
+                                                                                                     Log.e("ayah,priceafterdis", "" +priceafterdis);
 
                                                                                                      if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
-                                                                                                             Double.parseDouble(price.getText().toString()) >= allItemsList.get(position).getMinSalePrice())) {
-
+                                                                                                             priceafterdis >= allItemsList.get(position).getMinSalePrice())) {
 
                                                                                                          AddItemsFragment2 obj = new AddItemsFragment2();
                                                                                                          List<Offers> offer = checkOffers(itemNumber.getText().toString());

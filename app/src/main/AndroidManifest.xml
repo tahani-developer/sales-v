@@ -5,9 +5,6 @@
     android:versionCode="3"
     android:versionName="2.0">
 
-
-
-
     <application
         android:allowBackup="false"
         android:configChanges="orientation|screenSize"
@@ -20,12 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-
-        tools:ignore="GoogleAppIndexingWarning"
-
-        >
-
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".TargetReport"
+            android:exported="false" />
 
         <activity
             android:name=".Reports.CustomerWithoutTrasn_Report"
@@ -35,19 +30,10 @@
             android:name=".CarStocking"
             android:exported="false"
             android:windowSoftInputMode="adjustNothing|adjustPan" />
-
         <activity
             android:name=".SalesManPlanLocations"
             android:exported="false"
             android:label="@string/title_activity_sales_man_plan_locations" />
-        <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_maps_api.xml").
-             Note that the API key is linked to the encryption key used to sign the APK.
-             You need a different API key for each encryption key, including the release key that is used to
-             sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/.
-        -->
         <activity
             android:name=".ShowPlan"
             android:exported="false" />
@@ -59,10 +45,6 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-        <!-- <activity -->
-        <!-- android:name=".MapsActivity2" -->
-        <!-- android:exported="false" -->
-        <!-- android:label="@string/title_activity_maps2" /> -->
         <activity
             android:name=".ReturnByVoucherNo"
             android:exported="false"
@@ -76,9 +58,21 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
+        <!-- <activity -->
+        <!-- android:name=".MapsActivity2" -->
+        <!-- android:exported="false" -->
+        <!-- android:label="@string/title_activity_maps2" /> -->
         <activity
             android:name=".Reports.ShelfInventoeryReport"
             android:windowSoftInputMode="stateHidden" />
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
         <activity
             android:name=".Reports.SerialReport"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -106,8 +100,8 @@
         <activity android:name=".bluetoothprinter" />
         <activity
             android:name=".Login"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -140,8 +134,7 @@
             android:name=".Reports.CustomerLogReport"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"
-             />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.VouchersReport"
             android:label="@string/title_activity_main"
@@ -151,13 +144,13 @@
             android:name=".Reports.PaymentDetailsReport"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustNothing" /> <!-- android:windowSoftInputMode="stateHidden" -->
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".Reports.ItemsReport"
             android:configChanges="orientation"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustNothing" />
+            android:windowSoftInputMode="adjustNothing" /> <!-- android:windowSoftInputMode="stateHidden" -->
         <activity
             android:name=".Reports.TransactionsReport"
             android:label="@string/title_activity_main"
@@ -210,15 +203,14 @@
             android:excludeFromRecents="true"
             android:label="@string/title_activity_main"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".noThingNotifi" /> <!-- <activity -->
+        <activity android:name=".noThingNotifi" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" /> <!-- <activity -->
         <!-- android:name=".CPCL2Menu" -->
         <!-- android:label="@string/title_activity_main" -->
         <!-- android:screenOrientation="landscape" -->
         <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.dr7.salesmanmanager.provider"
@@ -240,6 +232,11 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
     </application>
 
     <supports-screens
@@ -252,6 +249,7 @@
         android:resizeable="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <!--
@@ -259,7 +257,6 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the "MyLocation" functionality.
     -->
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -270,9 +267,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.BLUETOOTH"
-    />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -282,14 +278,13 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
-
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission" />
     <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
+
 
 </manifest>

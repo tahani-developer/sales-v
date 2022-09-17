@@ -43,6 +43,10 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalTime;
+
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -51,6 +55,7 @@ import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.dr7.salesmanmanager.Login.SalsManTripFlage;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 
@@ -64,6 +69,8 @@ public class CustomerLogReport extends AppCompatActivity {
   AutoCompleteTextView customer_name;
   TableRow header_row;
   Button preview;
+    DatabaseHandler obj;
+   TextView Triptime ;
     int[] listImageIcone = new int[]{R.drawable.pdf_icon, R.drawable.excel_small};
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -87,9 +94,10 @@ public class CustomerLogReport extends AppCompatActivity {
         } catch (Exception e) {
             linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
+        Triptime=findViewById(R.id. Triptime);
         header_row=findViewById(R.id. header);
         transactionList = new ArrayList<Transaction>();
-        DatabaseHandler obj = new DatabaseHandler(CustomerLogReport.this);
+         obj = new DatabaseHandler(CustomerLogReport.this);
         transactionList = obj.getAlltransactions();
         expotTpExcel=findViewById(R.id.expotTpExcel);
         expotTpPdf=findViewById(R.id.expotTpPdf);
@@ -232,11 +240,16 @@ public class CustomerLogReport extends AppCompatActivity {
                 Log.e("fromDate=",fromDate+"");
                 Log.e("toDate=",toDate+"");
                 Log.e("name=",name+"");
-                if (formatDate(date).after(formatDate(fromDate))
-                        || formatDate(date).equals(formatDate(fromDate)) &&
-                        formatDate(date).before(formatDate(toDate))
-                        || formatDate(date).equals(formatDate(toDate))) {
+                if (
+                        (formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
+                                (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate)))
+//                        formatDate(date).after(formatDate(fromDate))
+//                        || formatDate(date).equals(formatDate(fromDate)) &&
+//                        formatDate(date).before(formatDate(toDate))
+//                        || formatDate(date).equals(formatDate(toDate))
 
+                ) {
+                    Log.e("transactionList.get(i)",transactionList.get(i).getCheckInDate()+" ");
                     if (!name.equals("")) {
                         Log.e("name2=",transactionList.get(i).getCusName()+"");
                         if (transactionList.get(i).getCusName().trim().contains(name.trim()))
@@ -254,14 +267,17 @@ public class CustomerLogReport extends AppCompatActivity {
     }
 void filltabel( List<Transaction> transactionList){
     try {
+       // Log.e("getSaleManTrip=",obj.getSaleManTrip(transactionList.get(transactionList.size()-1).getCheckOutDate(),transactionList.get(transactionList.size()-1).getCheckInTime())+"");
 
-Log.e("transactionList=",transactionList.size()+"");
-
-        TableLayout TableCustomerLogReport = (TableLayout) findViewById(R.id.TableCustomerLogReport);
+      String  difftime="";
+        Log.e("transactionList=",transactionList.size()+"");
+          TableLayout TableCustomerLogReport = (TableLayout) findViewById(R.id.TableCustomerLogReport);
         TableCustomerLogReport.removeAllViews();
         header_row.setPadding(5, 10, 5, 10);
         TableCustomerLogReport.addView(header_row);
         for (int n = 0; n < transactionList.size(); n++) {
+            String starttime =obj.getSaleManTrip(transactionList.get(n).getCheckOutDate(),transactionList.get(n).getCheckOutTime());
+            Log.e("starttime=",starttime+"");
             TableRow row = new TableRow(this);
             row.setPadding(5, 10, 5, 10);
 
@@ -270,7 +286,7 @@ Log.e("transactionList=",transactionList.size()+"");
             else
                 row.setBackgroundColor(ContextCompat.getColor(this, R.color.layer7));
 
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 9; i++) {
 
                 String[] record = {transactionList.get(n).getSalesManId() + "",
                         transactionList.get(n).getCusCode() + "",
@@ -279,7 +295,8 @@ Log.e("transactionList=",transactionList.size()+"");
                         transactionList.get(n).getCheckInTime(),
                         transactionList.get(n).getCheckOutDate(),
                         transactionList.get(n).getCheckOutTime(),
-                        transactionList.get(n).getStatus() + ""};
+                        transactionList.get(n).getStatus() +"",
+                        getTimeDiff(starttime,transactionList.get(n).getCheckInTime()) +"" };
 
                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                 row.setLayoutParams(lp);
@@ -293,6 +310,12 @@ Log.e("transactionList=",transactionList.size()+"");
                 textView.setLayoutParams(lp2);
 
                 row.addView(textView);
+             if(SalsManTripFlage==0)
+             { if(i==8) {
+                 textView.setVisibility(View.GONE);
+                 Triptime.setVisibility(View.GONE);
+             }
+             }
             }
             TableCustomerLogReport.addView(row);
 
@@ -325,5 +348,47 @@ Log.e("transactionList=",transactionList.size()+"");
         else
             to_date.setText(sdf.format(myCalendar.getTime()));
     }
+  String getTimeDiff(String startTime,String endTime){
+        try {
 
+//            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm", Locale.ENGLISH);
+//
+////      String startTime = "08:00 AM";
+////      String endTime = "04:00 PM";
+//
+//            LocalTime start = LocalTime.parse(startTime, timeFormatter);
+//            LocalTime end = LocalTime.parse(endTime, timeFormatter);
+//
+//            Duration diff = Duration.between(start, end);
+//
+//            long hours = diff.toHours();
+//            long minutes = diff.minusHours(hours).toMinutes();
+//            String totalTimeString = String.format("%02d:%02d", hours, minutes);
+//            System.out.println("TotalTime in Hours and Mins Format is " + totalTimeString);
+//            return totalTimeString;
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+            Date startDate = simpleDateFormat.parse(startTime);
+            Date endDate = simpleDateFormat.parse(endTime);
+
+            long difference = endDate.getTime() - startDate.getTime();
+            if(difference<0)
+            {
+                Date dateMax = simpleDateFormat.parse("24:00");
+                Date dateMin = simpleDateFormat.parse("00:00");
+                difference=(dateMax.getTime() -startDate.getTime() )+(endDate.getTime()-dateMin.getTime());
+            }
+            int days = (int) (difference / (1000*60*60*24));
+            int hours = (int) ((difference - (1000*60*60*24*days)) / (1000*60*60));
+            int min = (int) (difference - (1000*60*60*24*days) - (1000*60*60*hours)) / (1000*60);
+
+            Log.e("log_tag","Hours: "+hours+", Mins: "+min);
+           if(hours>0) return hours+" hours "+min+" Min";
+           else return min+" Min";
+
+        }
+   catch (Exception e){
+       Log.e("Exception",e.getMessage()+"");
+       return "00:00";
+   }
+  }
 }

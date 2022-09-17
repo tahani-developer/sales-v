@@ -2,12 +2,16 @@ package com.dr7.salesmanmanager;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.impl.cookie.DateUtils;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -152,6 +156,35 @@ public class GeneralMethod {
 //            }
         }
         return valid;
+
+    }
+    public void shareWhatsAppA(File pdfFile, int pdfExcel){
+        try {
+            Uri uri = Uri.fromFile(pdfFile);
+            Intent sendIntent = new Intent();
+            if (pdfFile.exists()) {
+                if (pdfExcel == 1) {
+                    sendIntent.setType("application/excel");
+                } else if (pdfExcel == 2) {
+                    sendIntent.setType("application/pdf");//46.185.208.4
+                }
+                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(String.valueOf(uri)));
+                sendIntent.setPackage("com.whatsapp");
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT,
+                        pdfFile.getName() + " Sharing File...");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, pdfFile.getName() + " Sharing File");
+                Log.e("shareIntent", "shareIntent");
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                context.startActivity(shareIntent);
+                Log.e("shareIntent==", "shareIntent"+shareIntent.getData());
+            }
+
+
+//
+        }catch (Exception e){
+            Log.e("Exception==", "Exception"+e.getMessage());
+            Toast.makeText(context, "Storage Permission"+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
     }
 

@@ -69,6 +69,7 @@ import static com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter.itemNoSto
 import static com.dr7.salesmanmanager.SalesInvoice.addNewSerial;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.noTax;
+import static com.dr7.salesmanmanager.SalesInvoice.time;
 
  public class DatabaseHandler extends SQLiteOpenHelper {
     public static String SalmnLat,SalmnLong;
@@ -9306,7 +9307,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
         db.execSQL("delete from " + SalemanTrips);
         db.close();
     }
-    public String getLastSaleManTrip() {
+    public String getLastSaleManTrip(String date ,String time) {
         Log.e("getLastSaleManTrip","getLastSaleManTrip");
         String selectQuery = " select TripStatus from "+SalemanTrips;
         String itemPrice="";
@@ -9325,7 +9326,35 @@ Log.e("addCompanyInfo","addCompanyInfo");
             return "2";
         }
         return "2" ;}
+    public String getSaleManTrip(String date,String time) {
+//     date="13/09/2022";test
+//     time="18:51";
+       Log.e("getLastSaleManTrip","getLastSaleManTrip "+date+" ,"+time);
+       String selectQuery = " select TripstartTime from "+SalemanTrips+" Where TripstartDate= '"+date+"' and TripEndTime= '"+time+"' ";
+       String itemPrice="";
+       db = this.getWritableDatabase();
+       Cursor cursor = db.rawQuery(selectQuery, null);
+       Log.e("selectQuery",selectQuery+"");
+       Log.e("cursor",cursor.getCount()+"");
+       try {
+          if (cursor.moveToFirst()) {
 
+
+              {
+
+                return cursor.getString(0);
+
+             }
+//            Log.e("ListItemBalance",""+salesManItemsBalanceList.get(0).getQty());
+//            Log.e("ListItemBalance",""+salesManItemsBalanceList.get(1).getQty());
+
+          }
+       }
+       catch ( Exception e)
+       {
+          return "";
+       }
+       return "" ;}
 
     public List<SalesManItemsBalance> getSalesManItemsQTY(String salesmanNo) {
         List<SalesManItemsBalance> salesManItemsBalanceList = new ArrayList<>();
@@ -9462,5 +9491,13 @@ void updateDataForClient(){
 
    db.close();
 }
+    void SetVocherPosted(){
+
+       SQLiteDatabase db = this.getWritableDatabase();
+       db.execSQL("UPDATE SALES_VOUCHER_MASTER  SET IS_POSTED=1");
+       db.execSQL("UPDATE SALES_VOUCHER_DETAILS  SET IS_POSTED=1");
+
+       db.close();
+    }
  }
 

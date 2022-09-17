@@ -151,7 +151,7 @@ public class PrintVoucher extends AppCompatActivity {
     int voucherType = 504;
 
     LinearLayout linearMain;
-
+GeneralMethod generalMethod;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -274,7 +274,7 @@ public class PrintVoucher extends AppCompatActivity {
                             else
                                 row.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer5));
 
-                            for (int i = 0; i < 9; i++) {
+                            for (int i = 0; i < 10; i++) {
                                 String[] record = {vouchers.get(n).getCustName() + "\t\t\t\t\t\t",
                                         vouchers.get(n).getVoucherNumber() + "",
                                         vouchers.get(n).getVoucherDate() + "",
@@ -300,7 +300,7 @@ public class PrintVoucher extends AppCompatActivity {
                                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
                                 row.setLayoutParams(lp);
 
-                                if (i != 8) {
+                                if (i != 8 && i != 9) {
                                     TextView textView = new TextView(PrintVoucher.this);
                                     textView.setText(record[i]);
 //                                    textView.setTextSize(12);
@@ -314,7 +314,8 @@ public class PrintVoucher extends AppCompatActivity {
 
                                     row.addView(textView);
 
-                                } else {
+                                }
+                                else if(i == 8) {
                                     Button textView = new  Button(PrintVoucher.this);
                                     //textView.setText(getResources().getString(R.string.print));
                                     textView.setClickable(true);
@@ -480,6 +481,31 @@ public class PrintVoucher extends AppCompatActivity {
 
                                     row.addView(textView);
                                 }
+                                else if(i == 9){
+                                    Log.e("i == 9","i == 9");
+                                    Button textView = new  Button(PrintVoucher.this);
+                                    //textView.setText(getResources().getString(R.string.print));
+                                    textView.setClickable(true);
+                                    textView.setBackground(getResources().getDrawable(R.drawable.ic_baseline_share_24));
+                                    //   textView.setTextColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer5));
+                                    //  textView.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorAccent));
+                                    textView.setGravity(Gravity.CENTER);
+
+
+                                    textView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Log.e("share","share");
+                                            shareWhatsApp(vouch);
+                                        }
+                                    });
+                                    TableRow.LayoutParams lp25 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 0.5f);
+                                    lp25.width=60;
+                                    lp25.height=60;
+                                    textView.setLayoutParams(lp25);
+
+                                    row.addView(textView);
+                                }
                             }
                             TableTransactionsReport.addView(row);
                         }
@@ -586,7 +612,20 @@ public class PrintVoucher extends AppCompatActivity {
 
         return false;
     }
-  public  void exportToPdf(Voucher voucher){
+
+    public  void   shareWhatsApp(Voucher voucher) {
+
+        vouchPrinted = voucher;
+        List<Item> itemVOCHER = new ArrayList<>();
+        itemVOCHER = obj.getAllItemsBYVOCHER(String.valueOf(voucher.getVoucherNumber()), voucher.getVoucherType());
+
+        Log.e("itemVOCHER==", "" + itemVOCHER.size());
+        PdfConverter pdf = new PdfConverter(PrintVoucher.this);
+ pdf.exportListToPdf(items, "Vocher", "", 16);
+
+
+    }
+        public  void exportToPdf(Voucher voucher){
 
       vouchPrinted=voucher;
   List<Item> itemVOCHER = new ArrayList<>();

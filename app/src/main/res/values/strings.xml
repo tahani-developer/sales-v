@@ -238,7 +238,7 @@
     <string name="total_bonus_qty2">Bonus Qty</string>
     <string name="total_sales_noTax">Total Sales (No Tax)</string>
     <string name="total_sales_noTax2">Sales (No Tax)</string>
-    <string name="items">Items</string>
+
     <string name="print">Print</string>
     <string name="show">Show</string>
     <string name="all">All</string>
@@ -369,6 +369,8 @@
     <string name="credit_value">Credit Value</string>
     <string name="invoice_note">Invoice Note :</string>
     <string name="saveLocation">Save Location</string>
+    <string name="SetVochsPosted">Set Vochers Posted</string>
+
     <string name="ShowCustomerList">Show Customer List</string>
     <string name="pleaseSelectUser">Please Select User</string>
     <string name="noReturnInvoice">No Return Invoice</string>
@@ -561,8 +563,9 @@
     <string name="endtrip">End Trip</string>
     <string name="SalsManTrips">SalsMan Trips</string>
     <string name="newtripMsg">you cannot start new trip without ending current trip</string>
-    <string name="tripisstarting">Trip has started</string>
 
+    <string name="tripisstarting">Trip has started</string>
+    <string name="tripisstarting2">Trip has started For </string>
     <string name="tripisending">Trip has ended</string>
     <string name="currentqty">Current qty</string>
     <string name="actualqty">Actual qty</string>
@@ -594,6 +597,18 @@
     <string name="clear_serial_old">Clear Serial Old</string>
     <string name="doneDelete">Done Delete</string>
     <string name="enter_password_del_towmonth">Enter Password for delete all data except last tow month data serial</string>
+    <string name="Month">Month</string>
+    <string name="addtraget">add traget</string>
+    <string name="goalachievementrate">Target achievement Perc</string>
+    <string name="Perceofunfulfilledgoal">Perc of unfulfilled Target</string>
+    <string name="TargetReport">Target Report</string>
+    <string name="net_sales2">Net Sales</string>
+    <string name="items">Items</string>
+    <string name="vlueoftarget">Vlue of Target</string>
+    <string name="target">Target</string>
+    <string name="NetsaleTarget">Netsale Target</string>
+
+
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
@@ -635,5 +650,18 @@
         <item>Al-Rajhi Bank</item>
 
     </string-array>
-
+    <string-array name="montharray">
+        <item>1 January</item>
+        <item>2 February</item>
+        <item>3 March</item>
+        <item>4 April</item>
+        <item>5 May</item>
+        <item>6 June</item>
+        <item>7 July</item>
+        <item>8 August</item>
+        <item>9 September</item>
+        <item>10 October</item>
+        <item>11 November</item>
+        <item>12 December</item>
+    </string-array>
 </resources>
