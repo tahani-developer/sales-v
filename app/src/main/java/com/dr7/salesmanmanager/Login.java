@@ -181,11 +181,11 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login_free_size);
         initialView();
 
-        try{
-            exportForClient();
-        }catch (Exception e){
-
-        }
+//        try{
+//            exportForClient();
+//        }catch (Exception e){
+//
+//        }
 
 //        getIpAddressForDevice();
         validLocation();
