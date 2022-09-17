@@ -36,6 +36,7 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.ImportJason.voucherReturn;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.salesManNo;
 
@@ -266,7 +267,7 @@ AppCompatButton save,cancel;
                     voucher.setVoucherYear(Integer.parseInt(voucherYear));
                     voucher.setTime(timevocher);
                     voucher.setORIGINALvoucherNo(voucherNumber);
-
+                    voucherReturn.setTaxTypa(0);
                     //////////
 
                     for (int i = 0; i < listOfDefferntsItem.size(); i++) {

@@ -1160,7 +1160,16 @@ public class SalesInvoice extends Fragment {
         if(Purchase_Order==1){
             mDbHandler.getAllSettings().get(0).setBonusNotAlowed(1);
         }
-
+        Log.e("gone_noTax_totalDisc","="+gone_noTax_totalDisc);
+        if(gone_noTax_totalDisc==0){
+            notIncludeTax.setVisibility(View.GONE);
+            linearTotalCashDiscount.setVisibility(View.GONE);
+            Log.e("gone_noTax_totalDisc","2="+gone_noTax_totalDisc);
+        }
+        else {
+            notIncludeTax.setVisibility(View.VISIBLE);
+//            linearTotalCashDiscount.setVisibility(View.VISIBLE);
+        }
 
         Log.e("Purchase_Order","111="+Purchase_Order);
         return view;
@@ -1234,14 +1243,7 @@ public class SalesInvoice extends Fragment {
 
         }
 
-        if(gone_noTax_totalDisc==1){
-            notIncludeTax.setVisibility(View.GONE);
-            linearTotalCashDiscount.setVisibility(View.GONE);
-        }
-        else {
-            notIncludeTax.setVisibility(View.VISIBLE);
-//            linearTotalCashDiscount.setVisibility(View.VISIBLE);
-        }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -2289,6 +2291,14 @@ public class SalesInvoice extends Fragment {
                         discountValue=0;discountPerc=0;
                         obj_discountFragment.setDiscountValue(0);
                         obj_discountFragment.setDiscountPerc(0);
+                        if(noTax==0)
+                        voucher.setTaxTypa(2);
+                        else {
+                            if(mDbHandler.getAllSettings().get(0).getTaxClarcKind()==0)
+                            {
+                                voucher.setTaxTypa(0);
+                            }else     voucher.setTaxTypa(1);
+                        }
 
 
 

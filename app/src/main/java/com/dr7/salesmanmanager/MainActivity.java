@@ -155,6 +155,7 @@ import static com.dr7.salesmanmanager.Login.SalsManTripFlage;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.passwordSettingAdmin;
+import static com.dr7.salesmanmanager.Login.password_rawat;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.updateOnlySelectedCustomer;
 
@@ -1196,7 +1197,7 @@ saveCurentLocation();
         isClickLocation=2;
 //        requestSingleUpdate();
         Log.e("saveCurrentLocation",""+isClickLocation);
-        getlocattTest();
+//        getlocattTest();
 //        if(CustomerListShow.Customer_Account.equals(""))
 //        {
 //            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
@@ -2731,7 +2732,9 @@ saveCurentLocation();
                 }
                 else {
 
-                    if (password.getText().toString().equals("303090")&&flag != 10) {
+                    if ((password.getText().toString().trim().equals("303090")&&password_rawat==0&&flag != 10)||
+
+                            ( password.getText().toString().trim().equals("709050")&&password_rawat==1&&flag != 10) )  {
                         dialog.dismiss();
 
                         if (flag == 1) {
@@ -4583,7 +4586,7 @@ saveCurentLocation();
             isPresent=false;
 
 
-            Log.e("backupDB.getAbsolutePath()", backupDB.getAbsolutePath());
+            Log.e("backupDB.getA", backupDB.getAbsolutePath());
         }
         catch (Exception e) {
             Log.e("Settings Backup", e.getMessage());
