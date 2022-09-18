@@ -442,6 +442,7 @@ android:textSize="13dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="مدة الرحلة"
+                    android:visibility="gone"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
                 <TextView

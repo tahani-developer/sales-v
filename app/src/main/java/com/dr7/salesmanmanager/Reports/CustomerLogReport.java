@@ -276,8 +276,8 @@ void filltabel( List<Transaction> transactionList){
         header_row.setPadding(5, 10, 5, 10);
         TableCustomerLogReport.addView(header_row);
         for (int n = 0; n < transactionList.size(); n++) {
-            String starttime =obj.getSaleManTrip(transactionList.get(n).getCheckOutDate(),transactionList.get(n).getCheckOutTime());
-            Log.e("starttime=",starttime+"");
+//            String starttime =obj.getSaleManTrip(transactionList.get(n).getCheckOutDate(),transactionList.get(n).getCheckOutTime());
+//            Log.e("starttime=",starttime+"");
             TableRow row = new TableRow(this);
             row.setPadding(5, 10, 5, 10);
 
@@ -286,7 +286,7 @@ void filltabel( List<Transaction> transactionList){
             else
                 row.setBackgroundColor(ContextCompat.getColor(this, R.color.layer7));
 
-            for (int i = 0; i < 9; i++) {
+            for (int i = 0; i < 8; i++) {
 
                 String[] record = {transactionList.get(n).getSalesManId() + "",
                         transactionList.get(n).getCusCode() + "",
@@ -295,8 +295,9 @@ void filltabel( List<Transaction> transactionList){
                         transactionList.get(n).getCheckInTime(),
                         transactionList.get(n).getCheckOutDate(),
                         transactionList.get(n).getCheckOutTime(),
-                        transactionList.get(n).getStatus() +"",
-                        getTimeDiff(starttime,transactionList.get(n).getCheckInTime()) +"" };
+                        transactionList.get(n).getStatus() +""
+                  //  ,    getTimeDiff(starttime,transactionList.get(n).getCheckInTime()) +""
+                };
 
                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                 row.setLayoutParams(lp);
