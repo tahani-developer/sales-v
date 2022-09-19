@@ -93,6 +93,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -5174,10 +5175,16 @@ Log.e("customerList",""+customerList.size());
 
 
     public void getSalesmanPlan(int SalesmanNum) {
+        Calendar  myCalendar = Calendar.getInstance();
+        int dayOfWeek=myCalendar.get(Calendar.DAY_OF_WEEK);
+        Log.e("dayOfWeek=",dayOfWeek+"");
+
+
         List<Settings> settings = mHandler.getAllSettings();
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
-            new JSONTask_GetSalesmanPlan(SalesmanNum,curentDate).execute();
+         if(Login.DayofweekPlan==1)new JSONTask_GetSalesmanPlan(SalesmanNum,dayOfWeek+"").execute();
+             else new JSONTask_GetSalesmanPlan(SalesmanNum,curentDate).execute();
 
         }
     }

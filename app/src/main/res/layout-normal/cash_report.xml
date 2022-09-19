@@ -223,6 +223,58 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="1dp"
+                android:text="@string/returncash"
+                android:textColor="@color/text_view_color"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_return_cash"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:padding="1dp"
+                android:textColor="@color/text_view_color"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </TableRow>
+        <TableRow
+            android:background="@color/layer3"
+            android:layout_marginTop="2dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="1dp"
+                android:text="@string/returncridt"
+                android:textColor="@color/text_view_color"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_return_cridt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:padding="1dp"
+                android:textColor="@color/text_view_color"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </TableRow>
+        <TableRow
+            android:background="@color/layer3"
+            android:layout_marginTop="2dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="1dp"
                 android:text="@string/total_sales"
                 android:textColor="@color/done_button"
                 android:textSize="14sp"

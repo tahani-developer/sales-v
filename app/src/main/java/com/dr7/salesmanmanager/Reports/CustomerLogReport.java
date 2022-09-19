@@ -153,7 +153,12 @@ public class CustomerLogReport extends AppCompatActivity {
         filter();
        // Toast.makeText(CustomerLogReport.this, transactionList.get(1).cusCode, Toast.LENGTH_LONG).show();
 
+        if(SalsManTripFlage==0)
+        { {
 
+            Triptime.setVisibility(View.GONE);
+        }
+        }
 
         ArrayAdapter<String> customerSpinnerAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_dropdown_item_1line, MainActivity.customersSpinnerArray);
@@ -268,59 +273,106 @@ public class CustomerLogReport extends AppCompatActivity {
 void filltabel( List<Transaction> transactionList){
     try {
        // Log.e("getSaleManTrip=",obj.getSaleManTrip(transactionList.get(transactionList.size()-1).getCheckOutDate(),transactionList.get(transactionList.size()-1).getCheckInTime())+"");
+        if(SalsManTripFlage==1) {
 
-      String  difftime="";
-        Log.e("transactionList=",transactionList.size()+"");
-          TableLayout TableCustomerLogReport = (TableLayout) findViewById(R.id.TableCustomerLogReport);
-        TableCustomerLogReport.removeAllViews();
-        header_row.setPadding(5, 10, 5, 10);
-        TableCustomerLogReport.addView(header_row);
-        for (int n = 0; n < transactionList.size(); n++) {
-//            String starttime =obj.getSaleManTrip(transactionList.get(n).getCheckOutDate(),transactionList.get(n).getCheckOutTime());
-//            Log.e("starttime=",starttime+"");
-            TableRow row = new TableRow(this);
-            row.setPadding(5, 10, 5, 10);
 
-            if (n % 2 == 0)
-                row.setBackgroundColor(ContextCompat.getColor(this, R.color.layer3));
-            else
-                row.setBackgroundColor(ContextCompat.getColor(this, R.color.layer7));
+            String difftime = "";
+            Log.e("transactionList=", transactionList.size() + "");
+            TableLayout TableCustomerLogReport = (TableLayout) findViewById(R.id.TableCustomerLogReport);
+            TableCustomerLogReport.removeAllViews();
+            header_row.setPadding(5, 10, 5, 10);
+            TableCustomerLogReport.addView(header_row);
+            for (int n = 0; n < transactionList.size(); n++) {
+                String starttime = obj.getSaleManTrip(transactionList.get(n).getCheckOutDate(), transactionList.get(n).getCheckOutTime());
+                Log.e("starttime=", starttime + "");
+                TableRow row = new TableRow(this);
+                row.setPadding(5, 10, 5, 10);
 
-            for (int i = 0; i < 8; i++) {
+                if (n % 2 == 0)
+                    row.setBackgroundColor(ContextCompat.getColor(this, R.color.layer3));
+                else
+                    row.setBackgroundColor(ContextCompat.getColor(this, R.color.layer7));
 
-                String[] record = {transactionList.get(n).getSalesManId() + "",
-                        transactionList.get(n).getCusCode() + "",
-                        transactionList.get(n).getCusName(),
-                        transactionList.get(n).getCheckInDate(),
-                        transactionList.get(n).getCheckInTime(),
-                        transactionList.get(n).getCheckOutDate(),
-                        transactionList.get(n).getCheckOutTime(),
-                        transactionList.get(n).getStatus() +""
-                  //  ,    getTimeDiff(starttime,transactionList.get(n).getCheckInTime()) +""
-                };
+                for (int i = 0; i < 9; i++) {
 
-                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                row.setLayoutParams(lp);
+                    String[] record = {transactionList.get(n).getSalesManId() + "",
+                            transactionList.get(n).getCusCode() + "",
+                            transactionList.get(n).getCusName(),
+                            transactionList.get(n).getCheckInDate(),
+                            transactionList.get(n).getCheckInTime(),
+                            transactionList.get(n).getCheckOutDate(),
+                            transactionList.get(n).getCheckOutTime(),
+                            transactionList.get(n).getStatus() + ""
+                            , getTimeDiff(starttime, transactionList.get(n).getCheckInTime()) + ""
+                    };
 
-                TextView textView = new TextView(this);
-                textView.setText(record[i]);
-                textView.setTextColor(ContextCompat.getColor(CustomerLogReport.this, R.color.colorblue_dark));
-                textView.setGravity(Gravity.CENTER);
+                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                    row.setLayoutParams(lp);
 
-                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(130, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                textView.setLayoutParams(lp2);
+                    TextView textView = new TextView(this);
+                    textView.setText(record[i]);
+                    textView.setTextColor(ContextCompat.getColor(CustomerLogReport.this, R.color.colorblue_dark));
+                    textView.setGravity(Gravity.CENTER);
 
-                row.addView(textView);
-             if(SalsManTripFlage==0)
-             { if(i==8) {
-                 textView.setVisibility(View.GONE);
-                 Triptime.setVisibility(View.GONE);
-             }
-             }
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(130, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                    textView.setLayoutParams(lp2);
+
+                    row.addView(textView);
+
+                }
+                TableCustomerLogReport.addView(row);
+
             }
-            TableCustomerLogReport.addView(row);
 
+        }else{
+
+            Log.e("transactionList=", transactionList.size() + "");
+            TableLayout TableCustomerLogReport = (TableLayout) findViewById(R.id.TableCustomerLogReport);
+            TableCustomerLogReport.removeAllViews();
+            header_row.setPadding(5, 10, 5, 10);
+            TableCustomerLogReport.addView(header_row);
+            for (int n = 0; n < transactionList.size(); n++) {
+                TableRow row = new TableRow(this);
+                row.setPadding(5, 10, 5, 10);
+
+                if (n % 2 == 0)
+                    row.setBackgroundColor(ContextCompat.getColor(this, R.color.layer3));
+                else
+                    row.setBackgroundColor(ContextCompat.getColor(this, R.color.layer7));
+
+                for (int i = 0; i < 8; i++) {
+
+                    String[] record = {transactionList.get(n).getSalesManId() + "",
+                            transactionList.get(n).getCusCode() + "",
+                            transactionList.get(n).getCusName(),
+                            transactionList.get(n).getCheckInDate(),
+                            transactionList.get(n).getCheckInTime(),
+                            transactionList.get(n).getCheckOutDate(),
+                            transactionList.get(n).getCheckOutTime(),
+                            transactionList.get(n).getStatus() + ""
+
+                    };
+
+                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                    row.setLayoutParams(lp);
+
+                    TextView textView = new TextView(this);
+                    textView.setText(record[i]);
+                    textView.setTextColor(ContextCompat.getColor(CustomerLogReport.this, R.color.colorblue_dark));
+                    textView.setGravity(Gravity.CENTER);
+
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(130, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                    textView.setLayoutParams(lp2);
+
+                    row.addView(textView);
+
+                }
+                TableCustomerLogReport.addView(row);
+
+            }
         }
+
+
     }catch (Exception e){
 
     }
@@ -389,7 +441,7 @@ void filltabel( List<Transaction> transactionList){
         }
    catch (Exception e){
        Log.e("Exception",e.getMessage()+"");
-       return "00:00";
+       return "0 Min";
    }
   }
 }

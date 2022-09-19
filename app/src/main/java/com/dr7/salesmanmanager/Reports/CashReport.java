@@ -98,7 +98,7 @@ public class CashReport  extends AppCompatActivity {
     boolean isFinishPrint=false;
     byte[] printIm;
     List<String> listCashRepost;
-    TextView cash_sal, credit_sale, total_sale;
+    TextView cash_sal, credit_sale, total_sale,text_return_cash,text_return_cridt;
     TextView cash_paymenttext, creditPaymenttext, nettext,total_cashtext,creditCard;
 
     List<Voucher> filteredVouchers;
@@ -118,7 +118,7 @@ public class CashReport  extends AppCompatActivity {
 
     byte[] readBuffer;
     int readBufferPosition;
-    public static double counter,returnCash=0,returnCridet=0;
+    public static double counter,returnCash=0,returnCridet=0,returnCash_COPY=0,returnCridet_COPY=0;
     volatile boolean stopWorker;
     DatabaseHandler obj;
     private ImageView pic;
@@ -177,6 +177,8 @@ public class CashReport  extends AppCompatActivity {
         {
             Toast.makeText(this, "Empty Data base", Toast.LENGTH_SHORT).show();
         }
+        text_return_cash=findViewById(R.id.text_return_cash);
+        text_return_cridt=findViewById(R.id.text_return_cridt);
         date = (EditText) findViewById(R.id.date_editReport_cash);
         preview = (Button) findViewById(R.id.preview_cash_report);
         print = (Button) findViewById(R.id.print_cash_report);
@@ -232,11 +234,19 @@ public class CashReport  extends AppCompatActivity {
                                     break;
                             }
                         }
+
+
                     }
+                    returnCash_COPY=returnCash;
+                    returnCridet_COPY=    returnCridet;
+                    returnCash=0;
+                    returnCridet=0;
 
                     total = cash + credit-returnCash-returnCridet;
                      T_cash=cash-returnCash;
                      T_credit=credit-returnCridet;
+                    text_return_cash.setText(convertToEnglish(decimalFormat.format(returnCash_COPY ))+ "");
+                    text_return_cridt.setText(convertToEnglish(decimalFormat.format(returnCridet_COPY ))+ "");
                     cash_sal.setText(convertToEnglish(decimalFormat.format(T_cash ))+ "");
                     credit_sale.setText(convertToEnglish(decimalFormat.format(T_credit ))+ "");
                     total_sale.setText(convertToEnglish(decimalFormat.format(total)));

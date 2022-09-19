@@ -10,8 +10,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,13 +39,34 @@ RadioButton TYPEPOFPLAN1,TYPEPOFPLAN2;
     public static   PolylineOptions rectLine;
     public static SalesManPlanAdapter planAdapter;
     public static  ArrayList<LatLng>  directionPoint =new ArrayList<>();;
+    Spinner mtrl_calendar_days_of_week;
+    int NumOfDayWeek;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_plan);
 
         init();
+        mtrl_calendar_days_of_week.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                NumOfDayWeek=i;
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        mtrl_calendar_days_of_week.setVisibility(View.GONE);
+        date .setVisibility(View.GONE);
+        if(Login.DayofweekPlan==1) {
+            mtrl_calendar_days_of_week.setVisibility(View.VISIBLE);
+            date .setVisibility(View.GONE);
+        } else {
+            date .setVisibility(View.VISIBLE);
+            mtrl_calendar_days_of_week.setVisibility(View.GONE);
+        }
         try{
             if(languagelocalApp.equals("ar"))
             {
@@ -100,6 +123,7 @@ RadioButton TYPEPOFPLAN1,TYPEPOFPLAN2;
 
     }
     public void  init() {
+        mtrl_calendar_days_of_week=findViewById(R.id.mtrl_calendar_days_of_week);
         showlocation_lin = findViewById(R.id.showlocation_lin );
                 showlocation = findViewById(R.id.showlocation );
         TYPEPOFPLAN1 = findViewById(R.id.TYPEPOFPLAN1 );

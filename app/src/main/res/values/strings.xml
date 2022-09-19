@@ -529,7 +529,7 @@
     <string name="showplan">Show Plan </string>
     <string name="TYPEPOFPLAN1">Ordered manually</string>
 
-    <string name="TYPEPOFPLAN2">Order By Customers Location  </string>
+    <string name="TYPEPOFPLAN2"> Customers Location  </string>
     <string name="GetPlan"> Get Plan</string>
     <string name="altayaa_shape">Altayaa Shape</string>
     <string name="importplan"> Import the plan first</string>
@@ -607,8 +607,9 @@
     <string name="vlueoftarget">Vlue of Target</string>
     <string name="target">Target</string>
     <string name="NetsaleTarget">Netsale Target</string>
-
-
+    <string name="returncash">Return Cash</string>
+    <string name="returncridt">Return Credit </string>
+    <string name="bySaleMan">By SaleMan</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
@@ -663,5 +664,15 @@
         <item>10 October</item>
         <item>11 November</item>
         <item>12 December</item>
+    </string-array>
+    <string-array name="DaysOfWeek">
+        <item>Saturday</item>
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+
     </string-array>
 </resources>

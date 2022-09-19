@@ -579,7 +579,7 @@
     <string name="allCategories">جميع الفئات</string>
 
     <string name="TYPEPOFPLAN1">ترتيب يدوي   </string>
-    <string name="TYPEPOFPLAN2">الترتيب حسب موقع العميل  </string>
+    <string name="TYPEPOFPLAN2">حسب موقع العميل  </string>
     <string name="importplan"> قم باستيراد الخطة اولا</string>
     <string name="showlocation"><u>عرض الخطة على الخريطة</u></string>
     <string name="duplicate_name">اسم مكرر</string>
@@ -645,4 +645,17 @@
     <string name="vlueoftarget">Vlue of Target</string>
     <string name="target">الهدف</string>
     <string name="NetsaleTarget">الهدف على صافي المبيعات</string>
+    <string name="returncash">المرتجع نقدا</string>
+    <string name="returncridt">المرتجع ذمم</string>
+    <string name="bySaleMan">حسب المندوب</string>
+    <string-array name="DaysOfWeek">
+        <item>السبت</item>
+        <item>الأحد</item>
+        <item>الأثنين</item>
+        <item>الثلاثاء</item>
+        <item>الاربعاء</item>
+        <item>الخميس</item>
+        <item>الجمعة</item>
+
+    </string-array>
 </resources>
