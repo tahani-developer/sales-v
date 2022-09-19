@@ -773,6 +773,7 @@ public class PdfConverter {
 
 
         insertCell(pdfPTable, context.getResources().getString(R.string.total_cash), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
         insertCell(pdfPTable, String.valueOf(total_cash), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
         return pdfPTable;
