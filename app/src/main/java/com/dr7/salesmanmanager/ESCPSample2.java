@@ -2439,7 +2439,7 @@ public class ESCPSample2
 			decimalFormat = new DecimalFormat("##.00");
 			String dataArabic_Report="";
 			try {
-				total_cash=net+cash-returnCash;
+				//total_cash=net+cash-returnCash;
 
 				if (companyInfo.getCompanyName().equals("")) {
 					companney_name = "Companey";
@@ -2475,7 +2475,7 @@ public class ESCPSample2
 //				"اجمالي البطاقة الائتمانية :     " + convertToEnglish(decimalFormat.format(creditCardPayment)) + " \n " +
 				posPtr.printAndroidFont(  null,true,line + " \n "   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 				posPtr.printAndroidFont(  null,true,"اجمالي المقبوضات :     " + convertToEnglish(decimalFormat.format(total_cash)) + " \n\n \n "  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
-
+			
 			}catch (Exception e){
 				Log.e("IOException","printerprintBitmaptotal_cash=e="+e.getMessage());
 //				Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_SHORT).show();

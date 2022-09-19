@@ -269,6 +269,7 @@ public class CashReport  extends AppCompatActivity {
                                 }
                             }
                         }
+
                     net=cashPayment+creditPayment;
                     cash_paymenttext.setText(convertToEnglish(decimalFormat.format(cashPayment))+"");
                     creditPaymenttext.setText(convertToEnglish(decimalFormat.format(creditPayment))+"");
@@ -276,6 +277,7 @@ public class CashReport  extends AppCompatActivity {
                     total_cash=cashPayment+cash-returnCash;
                     creditCard.setText(convertToEnglish(decimalFormat.format(creditCardPayment))+"");
                     total_cashtext.setText(convertToEnglish(decimalFormat.format((total_cash))));
+
                     }
 
                 else
