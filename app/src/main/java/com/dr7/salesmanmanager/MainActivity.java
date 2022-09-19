@@ -381,8 +381,9 @@ saveCurentLocation();
 
 
         endtripText=findViewById(R.id.   endtripText);
-        starttripText=findViewById(R.id.   starttripText);;
 
+        starttripText=findViewById(R.id.   starttripText);;
+        if(SalsManTripFlage==0)starttripText.setVisibility(View.INVISIBLE);
 //      if(Login.SalsManTripFlage==1)
 //      {
 //          if(  databaseHandler.getLastSaleManTrip().equals("2"))

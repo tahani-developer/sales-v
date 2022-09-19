@@ -915,7 +915,7 @@ public class PdfConverter {
         pdfPTableHeader.setSpacingAfter(20);
         pdfPTableHeader.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
 //        pdfPTableHeader.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
-        if (reportType != 13 && reportType != 14)
+        if (reportType != 13 && reportType != 14&& reportType != 16)
             insertCell(pdfPTableHeader, context.getString(R.string.date) + " : " + date, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
         if (reportType == 10)
             insertCell(pdfPTableHeader, context.getString(R.string.cust_name) + " : " + CustomerListShow.Customer_Name, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
@@ -996,7 +996,16 @@ public class PdfConverter {
                     break;
             }
             //
+            String paymentTyp = "";
+            switch (PrintVoucher.vouchPrinted.getPayMethod()) {
+                case 0:
+                    paymentTyp = "ذمم";
+                    break;
+                case 1:
+                    paymentTyp = "نقدا";
+                    break;
 
+            }
 
             PdfPTable headertable = new PdfPTable(1);
             headertable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
@@ -1056,14 +1065,14 @@ public class PdfConverter {
 
             }
 
-            PdfPCell cell1 = new PdfPCell(new Paragraph(context.getString(R.string.date) + " : " + date, arabicFontHeaderprint));
+            PdfPCell cell1 = new PdfPCell(new Paragraph(context.getString(R.string.date) + " : " + list.get(0).getDate(), arabicFontHeaderprint));
             PdfPCell cell2 = new PdfPCell(new Paragraph(context.getString(R.string.company_tel) + " : " + companyInfo.getcompanyTel(), arabicFontHeaderprint));
 
             PdfPCell cell3 = new PdfPCell(new Paragraph(context.getString(R.string.tax_no) + companyInfo.getTaxNo(), arabicFontHeaderprint));
             PdfPCell cell4 = new PdfPCell(new Paragraph(context.getString(R.string.voucherNo) + " : " + PrintVoucher.vouchPrinted.getVoucherNumber(), arabicFontHeaderprint));
             PdfPCell cell5 = new PdfPCell(new Paragraph(context.getString(R.string.cust_name) + " : " + PrintVoucher.vouchPrinted.getCustName(), arabicFontHeaderprint));
             PdfPCell cell6 = new PdfPCell(new Paragraph(context.getString(R.string.note) + " : " + companyInfo.getNoteForPrint(), arabicFontHeaderprint));
-            PdfPCell cell14 = new PdfPCell(new Paragraph(context.getString(R.string.app_paymentType) + " : " + PrintVoucher.vouchPrinted.getPayMethod(), arabicFontHeaderprint));
+            PdfPCell cell14 = new PdfPCell(new Paragraph(context.getString(R.string.app_paymentType) + " : " + paymentTyp, arabicFontHeaderprint));
 
 
             cell1.setBorder(Rectangle.NO_BORDER);
@@ -1245,7 +1254,7 @@ public class PdfConverter {
             String date = getCurentTimeDate(1);
             PdfPTable table = new PdfPTable(1);
             table.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
-            PdfPCell cell1 = new PdfPCell(new Paragraph(context.getString(R.string.date) + " : " + date, arabicFontHeaderprint));
+            PdfPCell cell1 = new PdfPCell(new Paragraph(context.getString(R.string.date) + " : " + list.get(0).getDate(), arabicFontHeaderprint));
             PdfPCell cell2 = new PdfPCell(new Paragraph(context.getString(R.string.company_tel) + " : " + companyInfo.getcompanyTel(), arabicFontHeaderprint));
 
             PdfPCell cell3 = new PdfPCell(new Paragraph(context.getString(R.string.tax_no) +  companyInfo.getTaxNo(), arabicFontHeaderprint));
