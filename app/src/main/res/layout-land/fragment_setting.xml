@@ -25,7 +25,19 @@
             android:text="@string/action_settings"
             android:textColor="@color/colorblue_dark"
             android:textSize="16sp"
+            android:layout_weight="1"
             android:textStyle="bold"
+            android:layout_marginBottom="5dp"/>
+        <TextView
+
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_weight="9"
+            android:id="@+id/sett_icon"
+            android:textColor="@color/colorblue_dark"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/ic_baseline_settings_24"
             android:layout_marginBottom="5dp"/>
     </LinearLayout>
 

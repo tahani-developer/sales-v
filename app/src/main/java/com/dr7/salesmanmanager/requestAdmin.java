@@ -12,8 +12,10 @@ import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.dr7.salesmanmanager.Interface.DaoRequsts;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.RequestAdmin;
+import com.dr7.salesmanmanager.Modles.RequstTest;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.Settings;
 
@@ -56,6 +58,11 @@ import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,7 +88,6 @@ import static com.dr7.salesmanmanager.Activities.currentKey;
 import static com.dr7.salesmanmanager.Activities.keyCreditLimit;
 import static com.dr7.salesmanmanager.DiscountFragment.checkState;
 import static com.dr7.salesmanmanager.Activities.currentKeyTotalDiscount;
-
 import static com.dr7.salesmanmanager.DiscountFragment.noteRequest;
 import static com.dr7.salesmanmanager.DiscountFragment.stateZero;
 import static com.dr7.salesmanmanager.Login.headerDll;
@@ -107,7 +113,9 @@ public class requestAdmin {
     String ipAddress="", ipWithPort = "", SalesManLogin,CONO="";
     JSONObject vouchersObject;
 
-
+    //ayah
+    private DatabaseReference databaseReference,databaseReference2;
+    ArrayList<RequestAdmin> requstsArrayAdapter=new ArrayList<>();
 
     //        public static List<Customer> customerList = new ArrayList<>();
 //        public static List<SalesManItemsBalance> salesManItemsBalanceList = new ArrayList<>();
@@ -182,12 +190,108 @@ public class requestAdmin {
         requestList.add(discountRequest);
         if(typaImport==0)
         jsonArrayRequest.put(requestList.get(0).getJSONObject());
-      else
-        jsonArrayRequest.put(requestList.get(0).getJSONObjectDelphi());
+      else {
+            jsonArrayRequest.put(requestList.get(0).getJSONObjectDelphi());
+//
+//            try{
+//                //ayah
+//                FirebaseDatabase dbroot = FirebaseDatabase.getInstance();
+//                databaseReference = dbroot.getReference(RequstTest.class.getSimpleName());
+//                databaseReference2 = dbroot.getReference(RequestAdmin.class.getSimpleName());
+//                databaseReference.keepSynced(true);//Keeping Data Fresh
+//                DaoRequsts daoRequsts=new DaoRequsts(context);
+//                Log.e("getRoot==", databaseReference.getRoot()+"");
+//                RequstTest requestAdmin1=new RequstTest();
+//                requestAdmin1.setSalesman_no(requestList.get(0).getSalesman_no());
+//                requestAdmin1.setCustomer_no(requestList.get(0).getCustomer_no());
+//                requestAdmin1.setCustomer_name(requestList.get(0).getCustomer_name());
+//                requestAdmin1.setRequest_type(requestList.get(0).getRequest_type());
+//                requestAdmin1.setAmount_value(requestList.get(0).getAmount_value());
+//                requestAdmin1.setKey_validation(requestList.get(0).getKey_validation());
+//                requestAdmin1.setStatus(requestList.get(0).getStatus());
+//                requestAdmin1.setSeen_row(requestList.get(0).getSeen_row());
+//
+//                daoRequsts.addRequst(requestAdmin1);
+//                daoRequsts.add(requestList.get(0));
+//                getlistofdata();
+//            }catch (Exception e){
+//                Log.e("Exception==", e.getMessage()+"");
+//            }
 
+        }
         Log.e("getData",""+requestList.get(0).getJSONObject());
     }
+    private void getlistofdata() {
+        ChildEventListener childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.e("onChildAdded", "onChildAdded:" + dataSnapshot.getKey());
 
+                // A new comment has been added, add it to the displayed list
+                RequstTest comment = dataSnapshot.getValue(RequstTest.class);
+
+//                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(MainActivity.this);
+//
+//                mBuilder.setContentTitle("Notification Alert, Click Me!");
+//                mBuilder.setContentText("Hi, This is Android Notification Detail!");
+//                NotificationManager mNotificationManager = (NotificationManager) getSystemService(MainActivity.NOTIFICATION_SERVICE);
+//
+//// notificationID allows you to update the notification later on.
+//                mNotificationManager.notify(1, mBuilder.build());
+                // ...
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.e("onChildAdded", "onChildChanged:" + dataSnapshot.getKey());
+
+                // A comment has changed, use the key to determine if we are displaying this
+                // comment and if so displayed the changed comment.
+                RequstTest newComment = dataSnapshot.getValue(RequstTest.class);
+                String commentKey = dataSnapshot.getKey();
+
+                // ...
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.e("onChildAdded", "onChildRemoved:" + dataSnapshot.getKey());
+
+                // A comment has changed, use the key to determine if we are displaying this
+                // comment and if so remove it.
+//                Requsts newComment = dataSnapshot.getValue(Requsts.class);
+//                String commentKey = dataSnapshot.getKey();
+//                for(int i=0;i<requstsArrayAdapter.size();i++)
+//                    if (requstsArrayAdapter.get(i).getId().equals(newComment.getId()))
+//                        requstsArrayAdapter.remove(i);
+//
+//                filladapter();
+
+                // ...
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.e("onChildAdded", "onChildMoved:" + dataSnapshot.getKey());
+
+                // A comment has changed position, use the key to determine if we are
+                // displaying this comment and if so move it.
+//                Requsts movedComment = dataSnapshot.getValue(Requsts.class);
+//                String commentKey = dataSnapshot.getKey();
+//                requstsArrayAdapter.add(movedComment);
+//                filladapter();
+                // ...
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("onChildAdded", "postComments:onCancelled", databaseError.toException());
+                Toast.makeText(context, "Failed to load comments.", Toast.LENGTH_LONG).show();
+
+            }
+        };
+        databaseReference.child(DaoRequsts.Firebase_ipAddress).addChildEventListener(childEventListener);
+    }
     public static int getRandomNumberString() {
         // It will generate 6 digit random Number.
         // from 0 to 999999

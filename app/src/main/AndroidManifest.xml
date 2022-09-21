@@ -19,7 +19,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".TargetReport"
+            android:name=".Reports.TargetReport"
             android:exported="false" />
 
         <activity
