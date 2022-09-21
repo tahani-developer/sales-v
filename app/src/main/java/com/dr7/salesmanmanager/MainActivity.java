@@ -2944,6 +2944,13 @@ saveCurentLocation();
             catch (Exception e){
                 linearSetting.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
             }
+            dialog.findViewById(R.id.sett_icon).setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    SetVochsPosted();
+                    return false;
+                }
+            });
             sumCurentQty_checkbox= (CheckBox) dialog.findViewById(R.id.sumCurentQty_checkbox);
             dontDuplicateItems_checkbox= (CheckBox) dialog.findViewById(R.id.dontDuplicateItems_checkbox);
             continousReading_checkbox = (CheckBox) dialog.findViewById(R.id.continousReading_checkbox);

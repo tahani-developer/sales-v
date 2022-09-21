@@ -1690,12 +1690,17 @@ public class ExportJason extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressSave = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
-            progressSave.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
-            progressSave.setTitleText(" Save Load");
-            progressSave.setCancelable(false);
-            progressSave.show();
 
+            Handler h = new Handler(Looper.getMainLooper());
+            h.post(new Runnable() {
+                public void run() {
+                    progressSave = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+                    progressSave.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+                    progressSave.setTitleText(" Save Load");
+                    progressSave.setCancelable(false);
+                    progressSave.show();
+                }
+            });
         }
 
         @Override

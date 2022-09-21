@@ -49,6 +49,7 @@ import androidx.core.content.ContextCompat;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Flag_Settings;
+import com.dr7.salesmanmanager.Modles.RequestAdmin;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.activeKey;
@@ -59,6 +60,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,6 +72,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -157,7 +161,7 @@ public class Login extends AppCompatActivity {
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-//  public  static    String headerDll = "";
+ //public  static    String headerDll = "";
   public  static    String  headerDll = "/Falcons/VAN.dll";
     public  static  int gone_noTax_totalDisc=0;
     public  static  int password_rawat=0;
