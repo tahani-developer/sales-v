@@ -696,6 +696,10 @@ saveCurentLocation();
         openPendingTextView= (TextView) findViewById(R.id.openPendingTextView);
         settext2();
         notExportedTextView=findViewById(R.id.notExportedTextView);
+        if(mDbHandler.getFlagSettings().get(0).getExport_Stock()==1)
+        {
+            notExportedTextView.setVisibility(View.VISIBLE);
+        }else  notExportedTextView.setVisibility(View.GONE);
         notExportedTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

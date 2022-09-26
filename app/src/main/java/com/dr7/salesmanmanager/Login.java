@@ -154,7 +154,7 @@ public class Login extends AppCompatActivity {
 
     public  static    int  talaatLayoutAndPassowrd=0;
     public  static    int  voucherReturn_spreat=0;
-    public  static    int  updateOnlySelectedCustomer=0;// just for OneOOne
+    public  static    int  updateOnlySelectedCustomer=1;// just for OneOOne
 
     public  static    int   SalsManPlanFlage=0;
     public  static    int   SalsManTripFlage=0;
