@@ -2481,7 +2481,9 @@ saveCurentLocation();
 
 
                 }
+                Log.e("Purchase_Order=====",""+Purchase_Order);
                 if( Purchase_Order==1) {
+                    Log.e("chechTransctions",""+chechTransctionsForCustomer(cutm_num));
                     if (!chechTransctionsForCustomer(cutm_num)) {
                         openTransInfo(cutm_num, cutm_name);
 
@@ -4904,8 +4906,28 @@ Log.e("Exception==",e.getMessage());
         EditText reson,personname,phonenum;
         reson=dialog1.findViewById(R.id.reson);
         personname=dialog1.findViewById(R.id.NameofPerson);
+        personname.requestFocus();
         phonenum=dialog1.findViewById(R.id.phoneNum);
+      RadioGroup radioGroup=  dialog1.findViewById(R.id.resonRadioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.notimportant) {
+                    reson.setText("غير مهتم");
+                    reson.requestFocus();
+                }else  if (checkedId == R.id.custoumernotavailable) {
+                    reson.setText("صاحب المحل غير موجود");
+                    reson.requestFocus();
+                }else  if (checkedId == R.id.anothertime) {
+                    reson.setText("تم وضع موعد لاحق");
+                    reson.requestFocus();
+                }else  if (checkedId == R.id.itemnotavailable) {
+                    reson.setText("المنتج غير متوفر");
+                    reson.requestFocus();
+                }
 
+            }
+        });
         dialog1.findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

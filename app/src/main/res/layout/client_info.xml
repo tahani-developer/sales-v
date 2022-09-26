@@ -3,7 +3,7 @@
     android:layout_width="320dp"
     android:background="@color/layer7"
     android:orientation="vertical"
-    android:layout_height="350dp">
+    android:layout_height="450dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -30,19 +30,72 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="3dp"
-            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_weight=".9"
             >
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_weight="3"
 
                 android:text="@string/reson"
                 android:textColor="@color/colorblue_dark"
                 android:textStyle="bold"
                 android:gravity="center_vertical"
                 />
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:id="@+id/resonRadioGroup"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/notimportant"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                   android:textColor="@color/colorBlack"
+                    android:layout_height="match_parent"
+                    android:text="غير مهتم"/>
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="12sp"
+                    android:id="@+id/custoumernotavailable"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:layout_height="match_parent"
+                    android:text="صاحب المحل غير موجود"/>
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="12sp"
+                    android:id="@+id/anothertime"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:layout_height="match_parent"
+                    android:text="تم وضع موعد لاحق"/>
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/itemnotavailable"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:layout_height="match_parent"
+                    android:text="المنتج غير متوفر"/>
+
+            </RadioGroup>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="3dp"
+            android:layout_weight="1.1"
+            >
+
+
 
             <EditText
                 android:id="@+id/reson"

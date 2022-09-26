@@ -35,10 +35,10 @@ public class DaoRequsts {
         if(mHandler.getAllSettings().size() != 0) {
             ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
             Firebase_ipAddress= ipAddress.replace(".", "_");
-            Log.e("ipAddress==",ipAddress);
+            Log.e("ipAddress==",Firebase_ipAddress);
         }
         databaseReference = dbroot.getReference(RequestAdmin.class.getSimpleName());
-        databaseReference2 = dbroot.getReference(RequstTest.class.getSimpleName()).child(ipAddress);
+        databaseReference2 = dbroot.getReference(RequstTest.class.getSimpleName()).child(Firebase_ipAddress);
 
 
 
@@ -51,7 +51,7 @@ public class DaoRequsts {
     public boolean ChildIsExists(String value) {
         Log.e("ChildIsExists","ChildIsExists");
         final boolean[] flage = {false};
-        databaseReference.child(ipAddress).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child(Firebase_ipAddress).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.hasChild(value)) {

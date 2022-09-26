@@ -210,10 +210,10 @@ public class requestAdmin {
 //                requestAdmin1.setKey_validation(requestList.get(0).getKey_validation());
 //                requestAdmin1.setStatus(requestList.get(0).getStatus());
 //                requestAdmin1.setSeen_row(requestList.get(0).getSeen_row());
-//
+//                requestAdmin1.setNote(requestList.get(0).getNote());
+//                requestAdmin1.setTotal_voucher(requestList.get(0).getTotal_voucher());
 //                daoRequsts.addRequst(requestAdmin1);
-//                daoRequsts.add(requestList.get(0));
-//                getlistofdata();
+//              //  daoRequsts.add(requestList.get(0));
 //            }catch (Exception e){
 //                Log.e("Exception==", e.getMessage()+"");
 //            }
@@ -221,77 +221,7 @@ public class requestAdmin {
         }
         Log.e("getData",""+requestList.get(0).getJSONObject());
     }
-    private void getlistofdata() {
-        ChildEventListener childEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.e("onChildAdded", "onChildAdded:" + dataSnapshot.getKey());
 
-                // A new comment has been added, add it to the displayed list
-                RequstTest comment = dataSnapshot.getValue(RequstTest.class);
-
-//                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(MainActivity.this);
-//
-//                mBuilder.setContentTitle("Notification Alert, Click Me!");
-//                mBuilder.setContentText("Hi, This is Android Notification Detail!");
-//                NotificationManager mNotificationManager = (NotificationManager) getSystemService(MainActivity.NOTIFICATION_SERVICE);
-//
-//// notificationID allows you to update the notification later on.
-//                mNotificationManager.notify(1, mBuilder.build());
-                // ...
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.e("onChildAdded", "onChildChanged:" + dataSnapshot.getKey());
-
-                // A comment has changed, use the key to determine if we are displaying this
-                // comment and if so displayed the changed comment.
-                RequstTest newComment = dataSnapshot.getValue(RequstTest.class);
-                String commentKey = dataSnapshot.getKey();
-
-                // ...
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.e("onChildAdded", "onChildRemoved:" + dataSnapshot.getKey());
-
-                // A comment has changed, use the key to determine if we are displaying this
-                // comment and if so remove it.
-//                Requsts newComment = dataSnapshot.getValue(Requsts.class);
-//                String commentKey = dataSnapshot.getKey();
-//                for(int i=0;i<requstsArrayAdapter.size();i++)
-//                    if (requstsArrayAdapter.get(i).getId().equals(newComment.getId()))
-//                        requstsArrayAdapter.remove(i);
-//
-//                filladapter();
-
-                // ...
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.e("onChildAdded", "onChildMoved:" + dataSnapshot.getKey());
-
-                // A comment has changed position, use the key to determine if we are
-                // displaying this comment and if so move it.
-//                Requsts movedComment = dataSnapshot.getValue(Requsts.class);
-//                String commentKey = dataSnapshot.getKey();
-//                requstsArrayAdapter.add(movedComment);
-//                filladapter();
-                // ...
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("onChildAdded", "postComments:onCancelled", databaseError.toException());
-                Toast.makeText(context, "Failed to load comments.", Toast.LENGTH_LONG).show();
-
-            }
-        };
-        databaseReference.child(DaoRequsts.Firebase_ipAddress).addChildEventListener(childEventListener);
-    }
     public static int getRandomNumberString() {
         // It will generate 6 digit random Number.
         // from 0 to 999999
