@@ -1379,8 +1379,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                      }
                                                                                                      Log.e("ayah,priceafterdis", "" +priceafterdis);
 
-                                                                                                     if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
-                                                                                                             priceafterdis >= allItemsList.get(position).getMinSalePrice())) {
+                                                                                                     if ( voucherType==506 || mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1   &&
+                                                                                                                priceafterdis >= allItemsList.get(position).getMinSalePrice())) {
 
                                                                                                          AddItemsFragment2 obj = new AddItemsFragment2();
                                                                                                          List<Offers> offer = checkOffers(itemNumber.getText().toString());

@@ -265,6 +265,8 @@ public class Login extends AppCompatActivity {
             OfferCakeShop = flag_settingsList.get(0).getOfferCakeShop();
             offerQasion = flag_settingsList.get(0).getOfferQasion();
             offerTalaat = flag_settingsList.get(0).getOfferTalaat();
+            Purchase_Order = flag_settingsList.get(0).getPurchaseOrder();
+            Log.e(" Purchase_Order==",""+ Purchase_Order);
             Log.e(" SalsManPlanFlage",""+ SalsManPlanFlage);
         } else {
 
@@ -391,7 +393,7 @@ public class Login extends AppCompatActivity {
         }
         mDHandler.deleteAllPreviusYear();
         try {
-            Purchase_Order=0;
+       //     Purchase_Order=0;
             mDHandler.getFlagSettings().get(0).setPurchaseOrder(0);
         }catch (Exception e){
             Log.e("mDHandler","setPurchaseOrder"+e.getMessage());
