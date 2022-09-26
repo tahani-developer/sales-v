@@ -420,7 +420,7 @@ public class CashReport  extends AppCompatActivity {
         sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if(editText.getText().toString().equals("2021000"))
+                if(editText.getText().toString().equals(Login.password_setting))
                 {
 
                     sweetAlertDialog.dismissWithAnimation();

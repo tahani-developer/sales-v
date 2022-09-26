@@ -154,19 +154,19 @@ public class Login extends AppCompatActivity {
 
     public  static    int  talaatLayoutAndPassowrd=0;
     public  static    int  voucherReturn_spreat=0;
-    public  static    int  updateOnlySelectedCustomer=1;// just for OneOOne
+    public  static    int  updateOnlySelectedCustomer=0;// just for OneOOne
 
     public  static    int   SalsManPlanFlage=0;
     public  static    int   SalsManTripFlage=0;
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
- //public  static    String headerDll = "";
-  public  static    String  headerDll = "/Falcons/VAN.dll";
+//  public  static    String headerDll = "";
+    public  static    String  headerDll = "/Falcons/VAN.dll";
     public  static  int gone_noTax_totalDisc=0;
     public  static  int password_rawat=0;
-
-
+    public  static  int password_talaat=0;
+    public  static  String password_setting="2021000";
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -184,6 +184,7 @@ public class Login extends AppCompatActivity {
 
         setContentView(R.layout.login_free_size);
         initialView();
+     if(   password_talaat==1)password_setting="2022111";
 
 //        try{
 //            exportForClient();
@@ -265,6 +266,7 @@ public class Login extends AppCompatActivity {
             OfferCakeShop = flag_settingsList.get(0).getOfferCakeShop();
             offerQasion = flag_settingsList.get(0).getOfferQasion();
             offerTalaat = flag_settingsList.get(0).getOfferTalaat();
+            gone_noTax_totalDisc = flag_settingsList.get(0).getNoTax();
             Log.e(" SalsManPlanFlage",""+ SalsManPlanFlage);
         } else {
 
@@ -811,7 +813,7 @@ public class Login extends AppCompatActivity {
         sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if(editText.getText().toString().equals("2021000"))
+                if(editText.getText().toString().equals(password_setting))
                 {
                     if(flag==1){
                         ipEditText.setAlpha(1f);
@@ -848,7 +850,7 @@ public class Login extends AppCompatActivity {
         sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if(editText.getText().toString().equals("2021000"))
+                if(editText.getText().toString().equals(password_setting))
                 {
                     textInput.setEnabled(true);
                     sweetAlertDialog.dismissWithAnimation();

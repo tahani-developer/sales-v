@@ -2180,7 +2180,7 @@ public class ExportJason extends AppCompatActivity {
             h.post(new Runnable() {
                 public void run() {
                     password.setError(null);
-                    passwordFromAdmin.setText("2021000");
+                    passwordFromAdmin.setText(Login.password_setting);
                     Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
                 }
             });
@@ -2225,7 +2225,7 @@ public class ExportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
                         password.setError(null);
-                        passwordFromAdmin.setText("2021000");
+                        passwordFromAdmin.setText(Login.password_setting);
 
                     }
                 });
@@ -2281,7 +2281,7 @@ public class ExportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
                         password.setError(null);
-                        passwordFromAdmin.setText("2021000");
+                        passwordFromAdmin.setText(Login.password_setting);
                         Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -2293,7 +2293,7 @@ public class ExportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
                         password.setError(null);
-                        passwordFromAdmin.setText("2021000");
+                        passwordFromAdmin.setText(Login.password_setting);
                         Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -2332,7 +2332,7 @@ public class ExportJason extends AppCompatActivity {
                 else {
 
                     password.setError(null);
-                    passwordFromAdmin.setText("2021000");
+                    passwordFromAdmin.setText(Login.password_setting);
                     if (s.contains("Not definded id")) {
                         Toast.makeText(context, "Check WebServices Id 25", Toast.LENGTH_SHORT).show();
                     }
@@ -2341,7 +2341,7 @@ public class ExportJason extends AppCompatActivity {
             }
             else {
                 password.setError(null);
-                passwordFromAdmin.setText("2021000");}
+                passwordFromAdmin.setText(Login.password_setting);}
         }
 
     }
@@ -2379,7 +2379,7 @@ public class ExportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
                         password.setError(null);
-                        passwordFromAdmin.setText("2021000");
+                        passwordFromAdmin.setText(Login.password_setting);
 
                     }
                 });
@@ -2418,7 +2418,7 @@ public class ExportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
                         password.setError(null);
-                        passwordFromAdmin.setText("2021000");
+                        passwordFromAdmin.setText(Login.password_setting);
                         Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
 
 
@@ -2432,7 +2432,7 @@ public class ExportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
                         password.setError(null);
-                        passwordFromAdmin.setText("2021000");
+                        passwordFromAdmin.setText(Login.password_setting);
                         Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
 
 
@@ -2470,14 +2470,14 @@ public class ExportJason extends AppCompatActivity {
                             else {
 
                                 password.setError(null);
-                                passwordFromAdmin.setText("2021000");
+                                passwordFromAdmin.setText(Login.password_setting);
 
                             }
 
             }
             else {
                 password.setError(null);
-                passwordFromAdmin.setText("2021000");
+                passwordFromAdmin.setText(Login.password_setting);
             }
         }
 

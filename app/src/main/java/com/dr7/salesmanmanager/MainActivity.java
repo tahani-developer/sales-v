@@ -1945,7 +1945,7 @@ saveCurentLocation();
         sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if(editText.getText().toString().equals("2021000"))
+                if(editText.getText().toString().equals(Login.password_setting))
                 {
                     mDbHandler.deleteAllPostedData();
                     sweetAlertDialog.dismissWithAnimation();
@@ -1971,7 +1971,7 @@ saveCurentLocation();
         sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if(editText.getText().toString().equals("2021000"))
+                if(editText.getText().toString().equals(Login.password_setting))
                 {
                     Calendar c = Calendar.getInstance();
                     int month = c.get(Calendar.MONTH);
@@ -2893,7 +2893,7 @@ saveCurentLocation();
             h.post(new Runnable() {
                 public void run() {
                     password.setError(null);
-                    passwordFromAdmin.setText("2021000");
+                    passwordFromAdmin.setText(Login.password_setting);
                 }
             });
         }
@@ -3497,7 +3497,7 @@ saveCurentLocation();
             sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
-                    if(editText.getText().toString().equals("2021000"))
+                    if(editText.getText().toString().equals(Login.password_setting))
                     {
                         linkEditText.setAlpha(1f);
                         linkEditText.setEnabled(true);
