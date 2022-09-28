@@ -599,9 +599,9 @@
     <string name="enter_password_del_towmonth">Enter Password for delete all data except last tow month data serial</string>
     <string name="Month">Month</string>
     <string name="addtraget">add traget</string>
-    <string name="goalachievementrate">Target achievement Perc</string>
+
     <string name="Perceofunfulfilledgoal">Perc of unfulfilled Target</string>
-    <string name="TargetReport">Target Report</string>
+
     <string name="net_sales2">Net Sales</string>
     <string name="items">Items</string>
     <string name="vlueoftarget">Vlue of Target</string>
@@ -610,6 +610,11 @@
     <string name="returncash">Return Cash</string>
     <string name="returncridt">Return Credit </string>
     <string name="bySaleMan">By SaleMan</string>
+    <string name="TargetReport">Target Report</string>
+    <string name="TARGET_NET_SALE">Target Net Sale</string>
+    <string name="REAL_NET_SALE">Real Net Sale</string>
+    <string name="PERC">achievement Perc</string>
+    <string name="goalachievementrate">achievement Sale</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

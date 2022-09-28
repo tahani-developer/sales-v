@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+
+    android:layout_height="50dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp">
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/alegreya"
+            android:gravity="center"
+            android:id="@+id/TARGET_NET_SALE"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/alegreya"
+            android:gravity="center"
+            android:id="@+id/REAL_NET_SALE"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/alegreya"
+            android:gravity="center"
+            android:id="@+id/PERC"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

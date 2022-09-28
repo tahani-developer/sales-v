@@ -637,9 +637,10 @@
     <string name="enter_password_del_towmonth">ادخل كلمة السر لحذف كل السيريلات القديمة باستثناء اخر شهرين </string>
     <string name="addtraget">إضافة هدف</string>
     <string name="Month">الشهر</string>
-    <string name="goalachievementrate">نسبة تحقيق الهدف</string>
+    <string name="goalachievementrate">المبيعات</string>
     <string name="Perceofunfulfilledgoal">النسبةالغير محققة للهدف</string>
     <string name="TargetReport">تقرير الأهداف</string>
+
     <string name="net_sales2">صافي المبيعات</string>
     <string name="items">المواد</string>
     <string name="vlueoftarget">Vlue of Target</string>
@@ -648,6 +649,9 @@
     <string name="returncash">المرتجع نقدا</string>
     <string name="returncridt">المرتجع ذمم</string>
     <string name="bySaleMan">حسب المندوب</string>
+    <string name="TARGET_NET_SALE">الهدف لصافي المبيعات</string>
+    <string name="REAL_NET_SALE">  صافي المبيعات المحقق</string>
+    <string name="PERC">النسبة المحققة</string>
     <string-array name="DaysOfWeek">
         <item>السبت</item>
         <item>الأحد</item>
