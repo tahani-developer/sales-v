@@ -2,6 +2,7 @@ package com.dr7.salesmanmanager;
 
 import static com.dr7.salesmanmanager.Methods.convertToEnglish;
 import static com.dr7.salesmanmanager.SalesInvoice.noTax;
+import static com.dr7.salesmanmanager.SalesInvoice.taxCalcType;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -163,7 +164,9 @@ public class ItemsListAdapter extends BaseAdapter {
         lineDescTextView.setText(String.valueOf(itemList.get(i).getDisc()));
         lineDiscTextView_detail.setText(String.valueOf(itemList.get(i).getDisc()));
         if(noTax==0){
+            if(taxCalcType==1)
             amountTextView.setText(convertToEnglish(decimalFormat.format(itemList.get(i).getAmount()-itemList.get(i).getTaxValue())));
+            else  amountTextView.setText(convertToEnglish(decimalFormat.format(itemList.get(i).getAmount())));
         }else {
             amountTextView.setText(convertToEnglish(decimalFormat.format(itemList.get(i).getAmount())));
         }
