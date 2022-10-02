@@ -60,10 +60,12 @@ import com.dr7.salesmanmanager.Modles.SalesManPlan;
 import com.dr7.salesmanmanager.Modles.SalesTeam;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
+import com.dr7.salesmanmanager.Modles.TargetDetalis;
 import com.dr7.salesmanmanager.Modles.UnCollect_Modell;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.SalesMan;
+import com.dr7.salesmanmanager.Reports.TargetReport;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -85,6 +87,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.annotation.Target;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -158,6 +161,8 @@ public class ImportJason extends AppCompatActivity {
     public static ArrayList<Payment> paymentChequesList = new ArrayList<>();
     public static ArrayList<serialModel> returnListSerial = new ArrayList<>();
     public static ArrayList<SalesManPlan>salesManPlanList = new ArrayList<>();
+    public static ArrayList<TargetDetalis>salesGoalsList = new ArrayList<>();
+    public static ArrayList<TargetDetalis>ItemsGoalsList = new ArrayList<>();
     public static ArrayList<Item> listItemsReturn = new ArrayList<>();
     public static ArrayList<Item> CopyForServerVocger_listItemsReturn = new ArrayList<>();
     public static Voucher voucherReturn = new Voucher();
@@ -372,6 +377,15 @@ public class ImportJason extends AppCompatActivity {
     public void getVoucherNoFromServer(String srialCode) {
 
         new JSONTask_getVoucherNoForSerial(srialCode).execute();
+    }
+    public void getSaleGoalItems(String salnum,String month) {
+
+        new JSONTask_GetSaleGoalItems(salnum,month).execute();
+    }
+
+    public void getSalesmanGoal(String salnum,String month) {
+
+        new JSONTask_GetSalesmanGoal(salnum,month).execute();
     }
     private class JSONTask_getVoucherNoForSerial extends AsyncTask<String, String, String> {
 
@@ -5403,7 +5417,342 @@ Log.e("customerList",""+customerList.size());
      }
 
     }
+    private class JSONTask_GetSalesmanGoal extends AsyncTask<String, String, String> {
+        String  SalesmanNum;
+        String date;
 
+        public JSONTask_GetSalesmanGoal(String salesmanNum, String date) {
+            SalesmanNum = salesmanNum;
+            this.date = date;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage(context.getResources().getString(R.string.process));
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setProgress(0);
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                if (!ipAddress.equals("")) {
+
+                    // http://10.0.0.22:8085/ADMGetPlan?CONO=290&SALESNO=1&PDATE=17/01/2022
+                    URL_TO_HIT =
+                            "http://" + ipAddress + ":"+ ipWithPort.trim() + headerDll.trim() +"/GetGoal?CONO="+CONO.trim()+"&SALE_MAN_NUMBER="+SalesmanNum+"&SMONTH="+date;
+
+                    Log.e("link", "" +  URL_TO_HIT );
+                }
+            } catch (Exception e) {
+                progressDialog.dismiss();
+            }
+
+            try {
+
+                //*************************************
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
+
+//
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+                Log.e("finalJson***Import", sb.toString());
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                // JsonResponse = sb.toString();
+
+                String finalJson = sb.toString();
+                Log.e("finalJson***Import", finalJson);
+
+
+
+
+                return finalJson;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex)
+
+            {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+                progressDialog.dismiss();
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        Toast.makeText(context, "Ip Connection Failed", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            }
+            catch (Exception e)
+
+            {
+                e.printStackTrace();
+                Log.e("Exception", "" + e.getMessage());
+//                progressDialog.dismiss();
+                progressDialog.dismiss();
+                return null;
+            }
+
+
+            //***************************
+
+        }
+
+
+        @Override
+        protected void onPostExecute(String array) {
+            super.onPostExecute(array);
+            progressDialog.dismiss();
+            JSONObject jsonObject1 = null;
+            if (array != null) {
+                if (array.contains("TARGET_NET_SALE")) {
+
+                    if (array.length() != 0) {
+                        try {
+                            JSONArray requestArray = null;
+                            requestArray = new JSONArray(array);
+                            salesGoalsList.clear();
+                            Log.e("requestArray==",""+requestArray.length());
+                            for (int i = 0; i < requestArray.length(); i++) {
+                                Log.e("sss===","sssss");
+                                TargetDetalis targetDetalis = new      TargetDetalis();
+                                jsonObject1 = requestArray.getJSONObject(i);
+
+
+                                targetDetalis.setTargetNetSale(jsonObject1.getString("TARGET_NET_SALE") );
+                          targetDetalis.setOrignalNetSale( jsonObject1.getString("REAL_NET_SALE"));
+                                targetDetalis.setSalManNo( jsonObject1.getString("SALE_MAN_NUMBER"));
+                                targetDetalis.setSalManName(jsonObject1.getString("SALE_MAN_NUMBER"));
+                                targetDetalis.setDate(jsonObject1.getString("SMONTH"));
+                                targetDetalis.setPERC(jsonObject1.getString("PERC"));
+                                salesGoalsList.add( targetDetalis);
+                                Log.e("targetDetalis==",""+targetDetalis.getTargetNetSale()+"  "+ targetDetalis.getOrignalNetSale());
+                            }
+
+                            Log.e("salesGoalsList==",""+salesGoalsList.size());
+
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                    TargetReport. NetsalTargetRespon.setText("TARGET_NET_SALE");
+
+
+                }
+                else  if(array.contains("No Data Found")){
+                    Toast.makeText(context, "No Data", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+
+            }
+        }
+
+    }
+    private class JSONTask_GetSaleGoalItems extends AsyncTask<String, String, String> {
+        String  SalesmanNum;
+        String date;
+
+        public JSONTask_GetSaleGoalItems(String salesmanNum, String date) {
+            SalesmanNum = salesmanNum;
+            this.date = date;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage(context.getResources().getString(R.string.process));
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setProgress(0);
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                if (!ipAddress.equals("")) {
+
+                    // http://10.0.0.22:8085/ADMGetPlan?CONO=290&SALESNO=1&PDATE=17/01/2022
+                    URL_TO_HIT =
+                            "http://" + ipAddress + ":"+ ipWithPort.trim() + headerDll.trim() +"/GetGoalItems?CONO="+CONO.trim()+"&SALE_MAN_NUMBER="+SalesmanNum+"&SMONTH="+date;
+
+                    Log.e("link", "" +  URL_TO_HIT );
+                }
+            } catch (Exception e) {
+                progressDialog.dismiss();
+            }
+
+            try {
+
+                //*************************************
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
+
+//
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+                Log.e("finalJson***Import", sb.toString());
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                // JsonResponse = sb.toString();
+
+                String finalJson = sb.toString();
+                Log.e("finalJson***Import", finalJson);
+
+
+
+
+                return finalJson;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex)
+
+            {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+                progressDialog.dismiss();
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        Toast.makeText(context, "Ip Connection Failed", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            }
+            catch (Exception e)
+
+            {
+                e.printStackTrace();
+                Log.e("Exception", "" + e.getMessage());
+//                progressDialog.dismiss();
+                progressDialog.dismiss();
+                return null;
+            }
+
+
+            //***************************
+
+        }
+
+
+        @Override
+        protected void onPostExecute(String array) {
+            super.onPostExecute(array);
+            progressDialog.dismiss();
+            JSONObject jsonObject1 = null;
+            if (array != null) {
+                if (array.contains("SALE_MAN_NUMBER")) {
+
+                    if (array.length() != 0) {
+                        try {
+                            JSONArray requestArray = null;
+                            requestArray = new JSONArray(array);
+                            ItemsGoalsList.clear();
+                            Log.e("requestArray==",""+requestArray.length());
+                            for (int i = 0; i < requestArray.length(); i++) {
+                                Log.e("sss===","sssss");
+                                TargetDetalis targetDetalis = new      TargetDetalis();
+                                jsonObject1 = requestArray.getJSONObject(i);
+                                targetDetalis.setSalManName(  jsonObject1.getString("SALE_MAN_NAME"));
+                                targetDetalis.setSalManNo(jsonObject1.getString("SALE_MAN_NUMBER"));
+                                targetDetalis.setItemTarget(jsonObject1.getString("ITEMTARGET"));
+                                targetDetalis.setItemName( jsonObject1.getString("ITEMNAME"));
+                                targetDetalis.setItemNo( jsonObject1.getString("ITEMOCODE"));
+                                targetDetalis.setItemNo( jsonObject1.getString("ITEMOCODE"));
+                                targetDetalis.setOrignalNetSale(jsonObject1.getString("REAL_NET_SALE"));
+                                targetDetalis.setPERC(jsonObject1.getString("PERC"));
+                                ItemsGoalsList.add(targetDetalis);
+                            }
+                            Log.e("salesGoalsList==",""+salesGoalsList.size());
+
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                   TargetReport. itemTargetRespon.setText("ITEMTARGET");
+
+
+                }
+                else  if(array.contains("No Data Found")){
+                    Toast.makeText(context, "No Data", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+
+            }
+        }
+
+    }
     private void getSuccsesfuly() {
         new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
                             .setTitleText(context.getResources().getString(R.string.saveSuccessfuly))

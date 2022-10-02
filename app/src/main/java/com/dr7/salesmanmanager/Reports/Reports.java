@@ -46,7 +46,7 @@ public class Reports extends AppCompatActivity {
 
 
     LinearLayout showplanLin,customer_log_report,transactions_report,stock_request_report,Inventory_report,cash_reoprt,
-            return_report,serial_report,shelf_inventory_report,custwithouttrans_report;
+            return_report,serial_report,shelf_inventory_report,custwithouttrans_report,Target_Report;
 
     DatabaseHandler MHandler;
     LinearLayout inventory_layout,mainLayout;
@@ -97,6 +97,8 @@ public class Reports extends AppCompatActivity {
         shelf_inventory_report=findViewById(R.id.shelf_inventory_report);
         shelf_inventory_report.setOnClickListener(onClickListener);
         custwithouttrans_report=findViewById(R.id.custwithouttrans);
+        Target_Report=findViewById(R.id.TargetReport);
+        Target_Report.setOnClickListener(onClickListener);
         custwithouttrans_report.setOnClickListener(onClickListener);
           if( Purchase_Order==0)   custwithouttrans_report.setVisibility(View.GONE);
         customer_log_report.setOnClickListener(onClickListener);
@@ -183,6 +185,10 @@ public class Reports extends AppCompatActivity {
                 case R.id. custwithouttrans:
                     Intent intent10 = new Intent(Reports.this, CustomerWithoutTrasn_Report.class);
                     startActivity(intent10);
+                    break;
+                case R.id.TargetReport:
+                    Intent intent11 = new Intent(Reports.this, TargetReport.class);
+                    startActivity(intent11);
                     break;
             }
 

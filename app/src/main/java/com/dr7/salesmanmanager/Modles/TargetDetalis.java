@@ -8,19 +8,43 @@ public class TargetDetalis {
    String SalManName;
    String Date;
    int TargetType;
-   double TargetNetSale;
-   double OrignalNetSale;
+   String TargetNetSale;
+   String OrignalNetSale;
    String ItemNo;
    String ItemName;
+   String  PERC;
+   String ItemTarget;
 
-   double ItemTarget;
+   public String getPERC() {
+      return PERC;
+   }
 
-   public double getOrignalNetSale() {
+   public void setPERC(String PERC) {
+      this.PERC = PERC;
+   }
+
+   public String getTargetNetSale() {
+      return TargetNetSale;
+   }
+
+   public void setTargetNetSale(String targetNetSale) {
+      TargetNetSale = targetNetSale;
+   }
+
+   public String getOrignalNetSale() {
       return OrignalNetSale;
    }
 
-   public void setOrignalNetSale(double orignalNetSale) {
+   public void setOrignalNetSale(String orignalNetSale) {
       OrignalNetSale = orignalNetSale;
+   }
+
+   public String getItemTarget() {
+      return ItemTarget;
+   }
+
+   public void setItemTarget(String itemTarget) {
+      ItemTarget = itemTarget;
    }
 
    public String getSalManNo() {
@@ -55,13 +79,7 @@ public class TargetDetalis {
       TargetType = targetType;
    }
 
-   public double getTargetNetSale() {
-      return TargetNetSale;
-   }
 
-   public void setTargetNetSale(double targetNetSale) {
-      TargetNetSale = targetNetSale;
-   }
 
    public String getItemNo() {
       return ItemNo;
@@ -79,13 +97,8 @@ public class TargetDetalis {
       ItemName = itemName;
    }
 
-   public double getItemTarget() {
-      return ItemTarget;
-   }
 
-   public void setItemTarget(double itemTarget) {
-      ItemTarget = itemTarget;
-   }
+
 
    public JSONObject getJsonObject(){
 

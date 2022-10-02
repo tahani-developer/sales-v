@@ -652,6 +652,60 @@ android:visibility="visible"
 
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:visibility="visible"
+                android:orientation="vertical">
+                <androidx.cardview.widget.CardView
+
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:elevation="10dp"
+                    card_view:cardBackgroundColor="@color/white"
+                    android:id="@+id/TargetReport_CardView"
+                    card_view:cardCornerRadius="15dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/TargetReport"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:clickable="true"
+                            android:layout_width="match_parent"
+                            android:layout_weight="5"
+                            android:layout_height="60dp"
+                            android:src="@drawable/plan"
+                            />
+
+                        <TextView
+                            android:id="@+id/textView_TargetReport_"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="10dp"
+                            android:gravity="center_horizontal"
+                            android:text="@string/TargetReport"
+                            android:textSize="18sp"
+                            android:textColor="@color/colorblue_dark"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
