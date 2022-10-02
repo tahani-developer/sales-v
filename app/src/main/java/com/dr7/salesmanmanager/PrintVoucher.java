@@ -621,7 +621,7 @@ GeneralMethod generalMethod;
 
         Log.e("itemVOCHER==", "" + itemVOCHER.size());
         PdfConverter pdf = new PdfConverter(PrintVoucher.this);
- pdf.exportListToPdf(items, "Vocher", "", 16);
+ pdf.exportListToPdf(items, "Vocher", "", 17);
 
 
     }
