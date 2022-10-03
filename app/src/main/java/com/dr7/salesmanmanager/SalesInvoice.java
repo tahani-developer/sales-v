@@ -196,7 +196,7 @@ public class SalesInvoice extends Fragment {
     public static int noTax=0,priceByCustomer=0;
     SimpleDateFormat dateFormat, timeformat;
     String dateCurent="",timevocher;
-    public static  int updatedSerial=0,addNewSerial=0;
+    public static  int updatedSerial=0,addNewSerial=0,taxCalcType=0;
     int typeRequest = 0, haveResult = 0, approveAdmin = 0,countNormalQty=0,countBunosQty=0,contiusReading=0;
     int counterSerial;
 
@@ -1170,8 +1170,9 @@ public class SalesInvoice extends Fragment {
             notIncludeTax.setVisibility(View.VISIBLE);
 //            linearTotalCashDiscount.setVisibility(View.VISIBLE);
         }
+        taxCalcType=mDbHandler.getAllSettings().get(0).getTaxClarcKind() ;
 
-        Log.e("Purchase_Order","111="+Purchase_Order);
+//        Log.e("Purchase_Order","111="+taxCalcType);
         return view;
     }
 
@@ -5151,7 +5152,8 @@ public class SalesInvoice extends Fragment {
         netTotalTextView.setText("0.0");
 //        calculateTotals_cridit();
         double itemTax, itemTotal, itemTotalAfterTax,
-                itemTotalPerc, itemDiscVal, posPrice, totalQty = 0,allItemQtyWithDisc=0,itemsQty=0;
+                itemTotalPerc,  posPrice, totalQty = 0,allItemQtyWithDisc=0,itemsQty=0;
+        Float itemDiscVal;
         //**********************************************************************
         list_discount_offers = mDbHandler.getDiscountOffers();// total discount
         itemsQtyOfferList = mDbHandler.getItemsQtyOffer();
@@ -5313,16 +5315,25 @@ public class SalesInvoice extends Fragment {
                 discvalue_static=subTotal*(DiscountFragment.getDiscountPerc()/100);
                 totalDiscount+=discvalue_static;
             }
-
+            DecimalFormat df = new DecimalFormat("#.00");
+//            y1 = Float.valueOf(df.format(y1));
             // re calculate total disc
             for (int i = 0; i < items.size(); i++) {
                 itemTotal = items.get(i).getAmount();
                 itemTotalPerc = itemTotal / subTotal;
-                itemDiscVal = (itemTotalPerc * totalDiscount);
+                itemDiscVal =(float) (itemTotalPerc * totalDiscount);
+//                Log.e("itemDiscVal","-------====="+itemDiscVal+"\t percent=="+itemTotalPerc);
+//                Log.e("itemDiscVal","-------====="+itemDiscVal+"\t percent=="+decimalFormat.format(itemDiscVal));
+
+//
+//                itemDiscVal = Float.valueOf(convertToEnglish(df.format(itemDiscVal));
+//                Log.e("itemDiscVal2222","-------====="+itemDiscVal);
+                items.get(i).setVoucherDiscount(itemDiscVal);
                 items.get(i).setTotalDiscVal(itemDiscVal);
                 //************************************************************
 //                totalQty +=items.get(i).getQty();
 ////                Log.e("totalQty",""+totalQty);
+                itemTotal = itemTotal - itemDiscVal;//for rawat_mazaq
                 itemGroup = items.get(i).getCategory();
                 if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
                     itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
@@ -5331,7 +5342,7 @@ public class SalesInvoice extends Fragment {
 //                    itemTotal = itemTotal - itemDiscVal;
                     itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
                 }
-                itemTotal = itemTotal - itemDiscVal;//for rawat_mazaq
+
                 if(aqapa_tax==0)
                 items.get(i).setTaxValue(itemTax);
                 else
@@ -5530,7 +5541,7 @@ public class SalesInvoice extends Fragment {
 
                 itemTotal = items.get(i).getAmount() - itemTax;
                 itemTotalPerc = itemTotal / subTotal;
-                itemDiscVal = (itemTotalPerc * totalDiscount);
+                itemDiscVal = (float)(itemTotalPerc * totalDiscount);
                 items.get(i).setVoucherDiscount((float) itemDiscVal);
                 items.get(i).setTotalDiscVal(itemDiscVal);
 //                itemTotal = itemTotal - itemDiscVal;
