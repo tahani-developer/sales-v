@@ -1456,7 +1456,7 @@ public class PdfConverter {
         //   doc.add(new Paragraph(list.get(0).getItemName(),arabicFont));
         doc.add(pdfPTable3);
 
-            for(int x=0;x<21-count;x++)
+            for(int x=0;x<15-count;x++)
                 doc.add(new Paragraph("\n"));
 
         PdfPTable table2 = new PdfPTable(4);
