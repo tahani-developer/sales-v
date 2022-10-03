@@ -1394,7 +1394,7 @@ public class PdfConverter {
 
             table.setWidthPercentage(100f);
 
-        PdfPCell cell4 = new PdfPCell(new Paragraph("رقم الفاتورة" + " : " + PrintVoucher.vouchPrinted.getVoucherNumber() + "   Vocher No         " + "التاريخ " + " : " + list.get(0).getDate() + "        Date", arabicFontHeaderprint));
+        PdfPCell cell4 = new PdfPCell(new Paragraph("رقم العرض" + " : " + PrintVoucher.vouchPrinted.getVoucherNumber() + "   Vocher No         " + "التاريخ " + " : " + list.get(0).getDate() + "        Date", arabicFontHeaderprint));
 
         cell4.setBorder(Rectangle.NO_BORDER);
         table.addCell(cell4);
@@ -1483,7 +1483,7 @@ public class PdfConverter {
             table21.setWidthPercentage(100f);
         PdfPCell cell8 = new PdfPCell(new Paragraph(context.getString(R.string.discount_value) , arabicFontHeaderprint));
             PdfPCell cell81 = new PdfPCell(new Paragraph( PrintVoucher.vouchPrinted.getVoucherDiscount()+"", arabicFontHeaderprint));
-            PdfPCell cell82 = new PdfPCell(new Paragraph("المبلغ المطلوب :"+" فقط " + getArabicString(PrintVoucher.vouchPrinted.getNetSales() +"")+" لا غير " , arabicFontHeaderprint));
+            PdfPCell cell82 = new PdfPCell(new Paragraph("المبلغ :"+" فقط " + getArabicString(PrintVoucher.vouchPrinted.getNetSales() +"")+" لا غير " , arabicFontHeaderprint));
           //  PdfPCell cell83 =  new PdfPCell(new Paragraph( " فقط " + getArabicString( 249.828 +" لا غير ")  , arabicFont));
             cell82 .setColspan(2);
             cell8.setBorder(Rectangle.NO_BORDER);
@@ -1522,7 +1522,7 @@ public class PdfConverter {
             table23.setWidthPercentage(100f);
             PdfPCell cell10 = new PdfPCell(new Paragraph("", arabicFontHeaderprint));
             PdfPCell cell11 = new PdfPCell(new Paragraph("", arabicFontHeaderprint));
-            PdfPCell cell12 = new PdfPCell(new Paragraph("اسم البائع" , arabicFontHeaderprint));
+            PdfPCell cell12 = new PdfPCell(new Paragraph("" , arabicFontHeaderprint));
             PdfPCell cell131 = new PdfPCell(new Paragraph(" توقيع المستلم", arabicFontHeaderprint));
             cell10.setBorder(Rectangle.NO_BORDER);
             cell11.setBorder(Rectangle.NO_BORDER);
