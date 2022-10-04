@@ -119,7 +119,7 @@
     <string name="bonus_item">Bonus Item </string>
     <string name="discount_value">Discount Value </string>
     <string name="of">Of</string>
-
+    <string name="totalafterdiscount">Total after Disc </string>
     <string name="app_cust_balance">Customer Balance</string>
     <string name="app_max_debit">Debit Limit</string>
     <string name="app_avail_debit">Allowed Debit</string>
@@ -615,6 +615,8 @@
     <string name="REAL_NET_SALE">Real Net Sale</string>
     <string name="PERC">achievement Perc</string>
     <string name="goalachievementrate">achievement Sale</string>
+    <string name="items_Unit">items Unit</string>
+
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

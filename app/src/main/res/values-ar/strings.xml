@@ -113,6 +113,7 @@
     <string name="bonus_item">المادة المجانية </string>
     <string name="discount_value">قيمة الخصم </string>
     <string name="of">من</string>
+    <string name="totalafterdiscount">المجموع بعد الخصم</string>
     <string name="quantity"> الكمية </string>
 
     <string name="app_cust_balance">رصيد العميل</string>
@@ -638,6 +639,7 @@
     <string name="addtraget">إضافة هدف</string>
     <string name="Month">الشهر</string>
     <string name="goalachievementrate">المبيعات</string>
+    <string name="items_Unit">الوحدات</string>
     <string name="Perceofunfulfilledgoal">النسبةالغير محققة للهدف</string>
     <string name="TargetReport">تقرير الأهداف</string>
 

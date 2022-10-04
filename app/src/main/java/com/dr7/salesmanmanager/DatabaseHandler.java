@@ -75,7 +75,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.time;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 197;
+    private static final int DATABASE_VERSION = 198;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -463,6 +463,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String locationtracker ="LocationTracker";
     private static final String AqapaTax ="AqapaTax";
     private static final String SHOW_CUSTOMER_LOCATION ="SHOW_CUSTOMER_LOCATION";
+    private static final String Items_Units ="Items_Units";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
@@ -1110,7 +1111,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                 + CheckQtyinOrder + " INTEGER  DEFAULT 0 , "
                 + locationtracker+" INTEGER DEFAULT 0 , "
                 +AqapaTax+" INTEGER DEFAULT 0 , "
-                +SHOW_CUSTOMER_LOCATION+" INTEGER DEFAULT 0 "
+                +SHOW_CUSTOMER_LOCATION+" INTEGER DEFAULT 0 , "
+      + Items_Units+" INTEGER DEFAULT 0 "
                 + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
@@ -2541,7 +2543,6 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
           Log.e(TAG, e.getMessage().toString());
        }
 
-
        try {
           db.execSQL("ALTER TABLE  COMPANY_INFO ADD   NATIONAL_ID  TEXT  DEFAULT '0' ");
 
@@ -2572,6 +2573,14 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
        } catch (Exception e) {
           Log.e(TAG, e.getMessage().toString());
        }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD '" + Items_Units + "'  INTEGER DEFAULT '0'");
+
+       } catch (Exception e) {
+
+          Log.e(TAG, e.getMessage().toString());
+       }
+
     }
 
     ////B
@@ -3451,7 +3460,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                            int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
                            int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer,
                            int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc,String store,int itemUnit,int sumQtys,int noDuplicate,
-                           int salesoffersflage,int checkqtyinorderflage,int locationtrackerflage,int aqapaTax,int show_location) {
+                           int salesoffersflage,int checkqtyinorderflage,int locationtrackerflage,int aqapaTax,int show_location,int Items_unitflage) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -3519,6 +3528,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
        values.put(AqapaTax,aqapaTax);
        values.put(SHOW_CUSTOMER_LOCATION,show_location);
+       values .put(Items_Units,Items_unitflage);
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
@@ -3586,6 +3596,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
        values.put(locationtracker, defaultValue);
        values.put(AqapaTax, defaultValue);
        values.put( SHOW_CUSTOMER_LOCATION, defaultValue);
+       values.put( Items_Units, defaultValue);
+
        db.insert(TABLE_SETTING, null, values);
        db.close();
     }
@@ -4003,6 +4015,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 setting.setLocationtracker(cursor.getInt(53));
                 setting.setAqapaTax(cursor.getInt(54));
                 setting.setShowCustomerLocation(cursor.getInt(55));
+               setting.setItems_Unit(cursor.getInt(56));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -6036,7 +6049,22 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
         return units;
     }
+    public List<String> getItemsUnits(String itemNo) {
+       List<String> units = new ArrayList<>();
+      // units.add("1");
+       String selectQuery = "select DISTINCT  UnitID  from " + Item_Unit_Details + " where ItemNo = '" + itemNo + "'";
 
+       db = this.getWritableDatabase();
+       Cursor cursor = db.rawQuery(selectQuery, null);
+
+       if (cursor.moveToFirst()) {
+          do {
+             units.add(cursor.getString(0));
+          } while (cursor.moveToNext());
+       }
+
+       return units;
+    }
     public List<Payment> getAllPayments() {
 
         List<Payment> paymentsList = new ArrayList<Payment>();
@@ -9406,5 +9434,22 @@ void updateDataForClient(){
 
        db.close();
     }
+    public String getConvRate(String itemNo,String UnitID) {
+      String ConvRate="1";
+       // units.add("1");
+       String selectQuery = "select DISTINCT  ConvRate  from " + Item_Unit_Details + " where ItemNo = '" + itemNo + "' and UnitID= '"+UnitID+"' ";
+
+       db = this.getWritableDatabase();
+       Cursor cursor = db.rawQuery(selectQuery, null);
+
+       if (cursor.moveToFirst()) {
+          do {
+             ConvRate=cursor.getString(0);
+          } while (cursor.moveToNext());
+       }
+
+       return ConvRate;
+    }
+
  }
 
