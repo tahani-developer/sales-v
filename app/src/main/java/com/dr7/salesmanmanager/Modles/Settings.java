@@ -58,6 +58,15 @@ public class Settings {
     private  int  locationtracker;
     private  int  aqapaTax;
     private  int  showCustomerLocation;
+    private  int Items_Unit;
+
+    public int getItems_Unit() {
+        return Items_Unit;
+    }
+
+    public void setItems_Unit(int items_Unit) {
+        Items_Unit = items_Unit;
+    }
 
     public int getShowCustomerLocation() {
         return showCustomerLocation;
