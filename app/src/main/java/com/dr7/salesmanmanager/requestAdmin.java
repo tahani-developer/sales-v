@@ -188,37 +188,15 @@ public class requestAdmin {
 
 
         requestList.add(discountRequest);
+
+//GetObjToAddInFirebase();
         if(typaImport==0)
         jsonArrayRequest.put(requestList.get(0).getJSONObject());
       else {
             jsonArrayRequest.put(requestList.get(0).getJSONObjectDelphi());
 
-//            try{
-//                //ayah
-//                FirebaseDatabase dbroot = FirebaseDatabase.getInstance();
-//                databaseReference = dbroot.getReference(RequstTest.class.getSimpleName());
-//                databaseReference2 = dbroot.getReference(RequestAdmin.class.getSimpleName());
-//                databaseReference.keepSynced(true);//Keeping Data Fresh
-//                DaoRequsts daoRequsts=new DaoRequsts(context);
-//                Log.e("getRoot==", databaseReference.getRoot()+"");
-//                RequstTest requestAdmin1=new RequstTest();
-//                requestAdmin1.setSalesman_no(requestList.get(0).getSalesman_no());
-//                requestAdmin1.setCustomer_no(requestList.get(0).getCustomer_no());
-//                requestAdmin1.setCustomer_name(requestList.get(0).getCustomer_name());
-//                requestAdmin1.setRequest_type(requestList.get(0).getRequest_type());
-//                requestAdmin1.setAmount_value(requestList.get(0).getAmount_value());
-//                requestAdmin1.setKey_validation(requestList.get(0).getKey_validation());
-//                requestAdmin1.setStatus(requestList.get(0).getStatus());
-//                requestAdmin1.setSeen_row(requestList.get(0).getSeen_row());
-//                requestAdmin1.setNote(requestList.get(0).getNote());
-//                requestAdmin1.setTotal_voucher(requestList.get(0).getTotal_voucher());
-//                daoRequsts.addRequst(requestAdmin1);
-//              //  daoRequsts.add(requestList.get(0));
-//            }catch (Exception e){
-//                Log.e("Exception==", e.getMessage()+"");
-//            }
-
         }
+
         Log.e("getData",""+requestList.get(0).getJSONObject());
     }
 
@@ -979,6 +957,35 @@ public class requestAdmin {
         }
 
     }
+void GetObjToAddInFirebase(){
+    try{
+        //ayah
+        Log.e("GetObjToAddInFirebase==","GetObjToAddInFirebase");
+        DaoRequsts daoRequsts=new DaoRequsts(context);
+        RequstTest requestAdmin1=new RequstTest();
+        requestAdmin1.setSalesman_no(requestList.get(0).getSalesman_no());
+        String salesName=mHandler.getSalesmanName_fromSalesTeam();
+        requestAdmin1.setSalesman_name(salesName);
+        requestAdmin1.setCustomer_no(requestList.get(0).getCustomer_no());
+        requestAdmin1.setVoucher_no(requestList.get(0).getVoucher_no());
+        requestAdmin1.setDate(requestList.get(0).getDate());
+        requestAdmin1.setTime(requestList.get(0).getTime());
+        requestAdmin1.setCustomer_name(requestList.get(0).getCustomer_name());
+        requestAdmin1.setRequest_type(requestList.get(0).getRequest_type());
+        requestAdmin1.setAmount_value(requestList.get(0).getAmount_value());
+        requestAdmin1.setKey_validation(requestList.get(0).getKey_validation());
+        Log.e("requestAdmin1.getKey_validation()==", requestAdmin1.getKey_validation()+"");
+        requestAdmin1.setStatus(requestList.get(0).getStatus());
+        requestAdmin1.setSeen_row(requestList.get(0).getSeen_row());
+        requestAdmin1.setNote(requestList.get(0).getNote());
+        requestAdmin1.setTotal_voucher(requestList.get(0).getTotal_voucher());
+        daoRequsts.addRequst(requestAdmin1);
+        SalesInvoice.lastrequst=requestAdmin1.getKey_validation();
 
+    }catch (Exception e){
+        Log.e("Exception==", e.getMessage()+"");
+    }
+
+}
 }
 

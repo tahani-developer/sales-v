@@ -1,13 +1,19 @@
 package com.dr7.salesmanmanager;
 
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import org.apache.http.impl.cookie.DateUtils;
 
@@ -22,6 +28,7 @@ import java.util.Locale;
 public class GeneralMethod {
     Context  context;
     private DecimalFormat decimalFormat;
+    public static final String NOTIFICATION_CHANNEL_ID = "NOTIFICATION_CHANNEL";
 
     DatabaseHandler databaseHandler;
     private Calendar myCalendar;
@@ -158,6 +165,21 @@ public class GeneralMethod {
         return valid;
 
     }
+    public static void displayNotification(Context context,String title,String body){
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context,NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                .setColor(ContextCompat.getColor(context, R.color.colorblue_dark))
+                .setContentTitle(title)
+                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+                .setContentText(body)
+            //    .setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+ "://" +context.getPackageName()+"/"+ context.getResources().getResourceName((R.raw.messege))))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat managerCompat =  NotificationManagerCompat.from(context);
+        managerCompat.notify(1,mBuilder.build());
+    }
+
     public void shareWhatsAppA(File pdfFile, int pdfExcel){
         try {
             Uri uri = Uri.fromFile(pdfFile);
