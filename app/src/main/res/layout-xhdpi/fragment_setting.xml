@@ -1034,6 +1034,14 @@
                         android:text="@string/items_Unit"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
+                    <CheckBox
+                        android:id="@+id/EndTripReport_checBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/EndTripReport"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
             </LinearLayout>

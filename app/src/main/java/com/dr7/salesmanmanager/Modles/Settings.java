@@ -59,6 +59,15 @@ public class Settings {
     private  int  aqapaTax;
     private  int  showCustomerLocation;
     private  int Items_Unit;
+    private  int EndTripReport;
+
+    public int getEndTripReport() {
+        return EndTripReport;
+    }
+
+    public void setEndTripReport(int endTripReport) {
+        EndTripReport = endTripReport;
+    }
 
     public int getItems_Unit() {
         return Items_Unit;

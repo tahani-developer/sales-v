@@ -616,6 +616,7 @@
     <string name="PERC">achievement Perc</string>
     <string name="goalachievementrate">achievement Sale</string>
     <string name="items_Unit">items Unit</string>
+    <string name="EndTripReport">not making any sale Report</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>

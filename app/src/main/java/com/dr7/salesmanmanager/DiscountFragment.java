@@ -31,6 +31,9 @@ import java.util.Timer;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.Activities.currentKey;
+import static com.dr7.salesmanmanager.Activities.currentKeyTotalDiscount;
+import static com.dr7.salesmanmanager.Activities.keyCreditLimit;
 import static com.dr7.salesmanmanager.SalesInvoice.discountRequest;
 
 /**
@@ -177,6 +180,8 @@ public class DiscountFragment extends DialogFragment {
             {
                 if(!discValueEditText.getText().toString().equals(""))
                 {
+
+
                     Boolean check = checkDiscount();
                     if (!check) {
                         discValueEditText.setError("Not Valid");
@@ -235,10 +240,16 @@ public class DiscountFragment extends DialogFragment {
                 switch (view.getId()) {
                     case R.id.okButton:
                                addDiscount();
+                        currentKey = "";
+                        currentKeyTotalDiscount="";
+                        keyCreditLimit="";
                                 break;
                             case R.id.cancelButton:
 //;
                                 DiscountFragment.this.dismiss();
+                                currentKey = "";
+                                currentKeyTotalDiscount="";
+                                keyCreditLimit="";
                                 break;
                         }
                     }
@@ -268,6 +279,7 @@ public class DiscountFragment extends DialogFragment {
         discValueEditText = (EditText) view.findViewById(R.id.discEditText);
         noteEditText=(EditText) view.findViewById(R.id.noteEditText);
         requestDiscount = view.findViewById(R.id.requestDiscount);
+
     }
 
     void stopTimer() {
@@ -278,6 +290,7 @@ public class DiscountFragment extends DialogFragment {
 
 
     private void addDiscount() {
+
         Boolean check = checkDiscount();
         if (!check) {
             Toast.makeText(getActivity(), "Invalid Discount Value please Enter a valid Discount", Toast.LENGTH_LONG).show();

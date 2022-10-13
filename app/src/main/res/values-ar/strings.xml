@@ -640,9 +640,9 @@
     <string name="Month">الشهر</string>
     <string name="goalachievementrate">المبيعات</string>
     <string name="items_Unit">الوحدات</string>
+    <string name="EndTripReport">تقرير عدم اجراء أي عملية بيع </string>
     <string name="Perceofunfulfilledgoal">النسبةالغير محققة للهدف</string>
     <string name="TargetReport">تقرير الأهداف</string>
-
     <string name="net_sales2">صافي المبيعات</string>
     <string name="items">المواد</string>
     <string name="vlueoftarget">Vlue of Target</string>

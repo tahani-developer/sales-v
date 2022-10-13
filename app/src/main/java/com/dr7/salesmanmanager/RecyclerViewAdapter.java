@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -49,12 +50,16 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dr7.salesmanmanager.Interface.DaoRequsts;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.RequestAdmin;
+import com.dr7.salesmanmanager.Modles.RequstTest;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 
@@ -77,6 +82,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.widget.LinearLayout.VERTICAL;
 
+import static com.dr7.salesmanmanager.Activities.currentKeyTotalDiscount;
+import static com.dr7.salesmanmanager.Activities.keyCreditLimit;
 import static com.dr7.salesmanmanager.AddItemsFragment2.barcode;
 import static com.dr7.salesmanmanager.AddItemsFragment2.endAddItem;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
@@ -107,6 +114,7 @@ import static com.dr7.salesmanmanager.StockRequest.clearData;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder> {
     SalesInvoice.SalesInvoiceInterface salesInvoiceInterfaceListener;
     private List<Item> allItemsList;
+public static     String CountOfItems="1";
     private ArrayList<Integer> isClicked = new ArrayList<>();
     private List<Item> filterList;
     private Context cont;
@@ -119,7 +127,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     CompanyInfo companyInfo;
     String ipAddress = "",ipWithPort="";
     boolean added = false, haveCstomerDisc = false, haveChangeCustDisc = false;
-    DatabaseHandler MHandler;
+    public static  DatabaseHandler MHandler;
     DecimalFormat threeDForm;
     int settingPriceCus = 0, showItemImageSetting = 0;
     List<String> localItemNumber;
@@ -149,11 +157,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     requestAdmin request;
 
 
-    int typeRequest = 0, haveResult = 0, approveAdmin = 0, dontDuplicateItems = 0, sumCurentQty = 0;
-
+    int typeRequest = 0, haveResult = 0, approveAdmin = 0, dontDuplicateItems = 0, sumCurentQty = 0,ItemUnitsFlage=0;
+    LinearLayout UnitSpinnerLinear;
     LinearLayout mainRequestLinear;
     LinearLayout resultLinear;
-    LinearLayout mainLinear;
+    LinearLayout mainLinear,linearUnit;
     ImageView acceptDiscount, rejectDiscount;
     public static EditText serialValue;
     public static int numberBarcodsScanner = 0;
@@ -413,12 +421,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                            try {
 
+
                                                                if ((allItemsList.get(position).getItemHasSerial().equals("1")) && voucherType != 508) {
                                                                    current_itemHasSerial = 1;
 
                                                                    dialog.setContentView(R.layout.add_item_serial_dialog);
                                                                    serialValue = dialog.findViewById(R.id.serialValue);
-
+                                                                   UnitSpinnerLinear= dialog.findViewById(R.id.linearUnit);
+                                                                   UnitSpinnerLinear.setVisibility(View.GONE);
+                                                                   if(MHandler.getAllSettings().get(0).getItems_Unit()==1)UnitSpinnerLinear.setVisibility(View.VISIBLE);
                                                                    mainRequestLinear = dialog.findViewById(R.id.mainRequestLinear);
                                                                    checkStateResult = dialog.findViewById(R.id.checkStateResult);
                                                                    rejectDiscount = dialog.findViewById(R.id.rejectDiscount);
@@ -725,7 +736,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
                                                                    lp.copyFrom(dialog.getWindow().getAttributes());
 
-
+                                                                   UnitSpinnerLinear= dialog.findViewById(R.id.linearUnit);
+                                                                   UnitSpinnerLinear.setVisibility(View.GONE);
+                                                                   if(MHandler.getAllSettings().get(0).getItems_Unit()==1)UnitSpinnerLinear.setVisibility(View.VISIBLE);
                                                                    lp.gravity = Gravity.CENTER;
                                                                    lp.windowAnimations = R.style.DialogAnimation;
                                                                    dialog.getWindow().setAttributes(lp);
@@ -764,6 +777,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                            price = dialog.findViewById(R.id.price);
 
                                                            final Spinner unit = dialog.findViewById(R.id.unit);
+                                                           final Spinner   Item_unit= dialog.findViewById(R.id.Item_unit);
                                                            final TextView textQty = dialog.findViewById(R.id.textQty);
                                                            unitQty = dialog.findViewById(R.id.unitQty);
                                                            final EditText unitWeight = dialog.findViewById(R.id.unitWeight);
@@ -854,6 +868,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                            }
 
+                                                           ItemUnitsFlage= MHandler.getAllSettings().get(0).getItems_Unit();
 
                                                            approveAdmin = MHandler.getAllSettings().get(0).getApproveAdmin();
                                                            //**********************************************************************************************
@@ -1275,9 +1290,33 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
                                                            List<String> units = mHandler.getAllexistingUnits(itemNumber.getText().toString());
-
+                                                           List<String> ITEMS_units = mHandler.getItemsUnits(itemNumber.getText().toString());
+                                                           ITEMS_units.add(0,"");
                                                            ArrayAdapter<String> unitsList = new ArrayAdapter<String>(cont, R.layout.spinner_style, units);
                                                            unit.setAdapter(unitsList);
+
+                                                           ArrayAdapter<String> itemsunitsList = new ArrayAdapter<String>(cont, R.layout.spinner_style, ITEMS_units);
+                                                        Item_unit.setAdapter(itemsunitsList);
+
+                                                        try {
+                                                            CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
+                                                 Log.e("CountOfItems",CountOfItems+"");
+                                                        }catch (Exception e){}
+
+                                                           Item_unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                               @Override
+                                                               public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                                                 CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
+                                                                   Log.e("CountOfItems",CountOfItems+"");
+
+                                                               }
+
+                                                               @Override
+                                                               public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                                               }
+                                                           });
+
                                                            if ((allItemsList.get(position).getItemHasSerial().equals("1"))) {
                                                                unit.setVisibility(View.GONE);
                                                            }
@@ -2241,6 +2280,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     requestDiscount.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            currentKey = "";
+                            currentKeyTotalDiscount="";
+                            keyCreditLimit="";
+
 
                             String discountText = "";
                             discountPerVal = 0;
@@ -3799,4 +3842,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
              ||
              (MainActivity.OffersJustForSalsFlag == 1 &&SalesInvoice.voucherType == 504));
  }
+  public static   String getCountOfItems(String itemcode,String unitid ){
+        String CountOfItems=MHandler.getConvRate(itemcode, unitid);
+        if(CountOfItems!=null && !CountOfItems.equals(""))
+            return CountOfItems;
+        else
+            return "1";
+    }
 }

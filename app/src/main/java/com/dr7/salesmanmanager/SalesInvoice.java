@@ -12,6 +12,7 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.graphics.drawable.Drawable;
 
 import android.location.Location;
 import android.location.LocationListener;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -72,6 +74,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dr7.salesmanmanager.Interface.DaoRequsts;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
@@ -85,6 +88,7 @@ import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.QtyOffers;
 import com.dr7.salesmanmanager.Modles.RequestAdmin;
+import com.dr7.salesmanmanager.Modles.RequstTest;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
@@ -132,9 +136,11 @@ import static android.content.Context.LOCATION_SERVICE;
 //import static android.support.v4.content.ContextCompat.getSystemServiceName;
 import static android.widget.LinearLayout.VERTICAL;
 import static com.dr7.salesmanmanager.Activities.currentKey;
+import static com.dr7.salesmanmanager.Activities.currentKeyTotalDiscount;
 import static com.dr7.salesmanmanager.Activities.discType_static;
 import static com.dr7.salesmanmanager.Activities.discvalue_static;
 
+import static com.dr7.salesmanmanager.Activities.keyCreditLimit;
 import static com.dr7.salesmanmanager.Activities.locationPermissionRequestAc;
 import static com.dr7.salesmanmanager.AddItemsFragment2.REQUEST_Camera_Barcode;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
@@ -163,6 +169,8 @@ import android.location.LocationManager;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.print.PrintHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -173,6 +181,11 @@ import com.google.android.gms.location.LocationServices;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
@@ -185,7 +198,7 @@ public class SalesInvoice extends Fragment {
     public static  List<Item> jsonItemsList = new ArrayList<>();
     List<Flag_Settings> flag_settingsList;
     public  int aqapa_tax=0;
-
+    private DatabaseReference databaseReference,databaseReference2;
     public static List<Item> jsonItemsList2 = new ArrayList<>();
     public static List<Item> jsonItemsList_intermidiate= new ArrayList<>();
     public  TextView addSerial;
@@ -388,7 +401,7 @@ public class SalesInvoice extends Fragment {
 
         public void displayFindItemFragment2();
     }
-
+    public static String lastrequst="";
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -403,6 +416,18 @@ public class SalesInvoice extends Fragment {
         listMasterSerialForBuckup=new ArrayList<>();
         listSerialTotal.clear();
         copyListSerial=new ArrayList<>();
+
+        contextG=getActivity().getApplicationContext();
+
+//        try{
+//            DaoRequsts daoRequsts=new DaoRequsts(contextG);
+//            daoRequsts.getStatusofrequst(contextG);
+//        }catch (Exception  exception){
+//            Log.e("Exception",exception.getMessage());
+//        }
+
+       // getStatusofrequst(SalesInvoice.this ,lastrequst);
+
 
         contextG=getActivity().getApplicationContext();
 
@@ -474,6 +499,7 @@ public class SalesInvoice extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
+
                     if (!generalMethod.checkDeviceDate()) {
                         showMessageInvalidDate();
 
@@ -3027,7 +3053,12 @@ public class SalesInvoice extends Fragment {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 dialog_request.dismiss();
+                currentKey = "";
+                currentKeyTotalDiscount="";
+                keyCreditLimit="";
+                Log.e("okButtononClick==",keyCreditLimit+" ");
                 if(listSerialTotal.size()!=0)
                 {
                     if (verifySerialListDosenotDuplicates()) {
@@ -3056,6 +3087,10 @@ public class SalesInvoice extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                currentKey = "";
+                currentKeyTotalDiscount="";
+                keyCreditLimit="";
+                Log.e("cancelButton==",keyCreditLimit+" ");
                 dialog_request.dismiss();
             }
         });
@@ -7780,6 +7815,9 @@ try {
 
         }
     }
+
+
+
 
 
 //    public  void searchByBarcodeNo(String barcodeValue) {

@@ -81,6 +81,7 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
 //import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
 
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.CountOfItems;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.SalesInvoice.addItemImgButton2;
 import static com.dr7.salesmanmanager.SalesInvoice.addNewSerial;
@@ -1457,7 +1458,7 @@ try {
 //                    item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - item.getDisc());
                 } else {
 //                item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - descPerc);
-                    item.setAmount(item.getQty() * item.getPrice() - descPerc);
+                    item.setAmount(Float.parseFloat(CountOfItems)*item.getQty() * item.getPrice() - descPerc);
 
                     Log.e("log222=", "amount==="+item.getAmount() );
                    // Log.e("log ==", item.getQty() + " * " + item.getPrice() + " -" + descPerc);
