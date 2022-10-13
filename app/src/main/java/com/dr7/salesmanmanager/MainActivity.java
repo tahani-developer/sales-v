@@ -4762,7 +4762,7 @@ saveCurentLocation();
                    if (type == 100) {
                        SaleManTrips trip = new SaleManTrips();
                        Date currentTimeAndDate = Calendar.getInstance().getTime();
-                       SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+                       SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
                        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                        String currentTime = convertToEnglish(tf.format(currentTimeAndDate));
                        String currentDate = convertToEnglish(df.format(currentTimeAndDate));

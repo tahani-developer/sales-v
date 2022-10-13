@@ -419,12 +419,12 @@ public class SalesInvoice extends Fragment {
 
         contextG=getActivity().getApplicationContext();
 
-        try{
-            DaoRequsts daoRequsts=new DaoRequsts(contextG);
-            daoRequsts.getStatusofrequst(contextG);
-        }catch (Exception  exception){
-            Log.e("Exception",exception.getMessage());
-        }
+//        try{
+//            DaoRequsts daoRequsts=new DaoRequsts(contextG);
+//            daoRequsts.getStatusofrequst(contextG);
+//        }catch (Exception  exception){
+//            Log.e("Exception",exception.getMessage());
+//        }
 
        // getStatusofrequst(SalesInvoice.this ,lastrequst);
 
@@ -499,6 +499,7 @@ public class SalesInvoice extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
+
                     if (!generalMethod.checkDeviceDate()) {
                         showMessageInvalidDate();
 
@@ -3052,7 +3053,12 @@ public class SalesInvoice extends Fragment {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 dialog_request.dismiss();
+                currentKey = "";
+                currentKeyTotalDiscount="";
+                keyCreditLimit="";
+                Log.e("okButtononClick==",keyCreditLimit+" ");
                 if(listSerialTotal.size()!=0)
                 {
                     if (verifySerialListDosenotDuplicates()) {
@@ -3081,6 +3087,10 @@ public class SalesInvoice extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                currentKey = "";
+                currentKeyTotalDiscount="";
+                keyCreditLimit="";
+                Log.e("cancelButton==",keyCreditLimit+" ");
                 dialog_request.dismiss();
             }
         });
