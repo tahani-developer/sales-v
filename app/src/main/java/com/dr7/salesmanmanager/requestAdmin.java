@@ -133,18 +133,19 @@ public class requestAdmin {
 
 
     public void startParsing() {
-        List<Settings> settings = mHandler.getAllSettings();
-        if (settings.size() != 0) {
-            getData();
-            String ipAddress = settings.get(0).getIpAddress();
-            URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin.php";
+        //old requst code
+//        List<Settings> settings = mHandler.getAllSettings();
+//        if (settings.size() != 0) {
+//            getData();
+//            String ipAddress = settings.get(0).getIpAddress();
+//            URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin.php";
 
-            if(typaImport==0)
-            new JSONTask().execute(URL_TO_HIT);
-            else {
-                getRequestObject();
-                new JSONTask_AddRequest_IIS().execute();
-            }
+//            if(typaImport==0)
+//            new JSONTask().execute(URL_TO_HIT);
+//            else {
+//                getRequestObject();
+//                new JSONTask_AddRequest_IIS().execute();
+//            }
 
         }
     }
@@ -189,13 +190,13 @@ public class requestAdmin {
 
         requestList.add(discountRequest);
 
-//GetObjToAddInFirebase();
-        if(typaImport==0)
-        jsonArrayRequest.put(requestList.get(0).getJSONObject());
-      else {
-            jsonArrayRequest.put(requestList.get(0).getJSONObjectDelphi());
-
-        }
+GetObjToAddInFirebase();
+//        if(typaImport==0)
+//        jsonArrayRequest.put(requestList.get(0).getJSONObject());
+//      else {
+//            jsonArrayRequest.put(requestList.get(0).getJSONObjectDelphi());
+//
+//        }
 
         Log.e("getData",""+requestList.get(0).getJSONObject());
     }
@@ -318,10 +319,9 @@ public class requestAdmin {
                             checkState_LimitCredit.setText("0");
                     }
 
-
-
-                    task=new TimerTask(context);
-                    task.startTimer();
+              //      old requst code
+//                    task=new TimerTask(context);
+//                    task.startTimer();
 //                    Log.e("tag", "****SuccessText"+checkState.getText().toString());
                     progressDialog.dismiss();
 
@@ -942,9 +942,9 @@ public class requestAdmin {
                     }
 
 
-
-                    task=new TimerTask(context);
-                    task.startTimer();
+//old requst code
+//                    task=new TimerTask(context);
+//                    task.startTimer();
 //                    Log.e("tag", "****SuccessText"+checkState.getText().toString());
 //                    progressDialog.dismiss();
 

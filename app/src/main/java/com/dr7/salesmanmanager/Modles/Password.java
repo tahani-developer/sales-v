@@ -7,6 +7,11 @@ public class Password {
     public Password() {
     }
 
+    public Password(int password_type, String password_no) {
+        this.password_type = password_type;
+        this.password_no = password_no;
+    }
+
     public int getPassword_type() {
         return password_type;
     }

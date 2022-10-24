@@ -89,9 +89,12 @@ dependencies {
 
 
 
-    implementation 'com.google.firebase:firebase-database:20.0.5'
-  
+    implementation 'com.google.firebase:firebase-database:20.1.0'
 
 
+    implementation 'com.google.firebase:firebase-ads:9.6.1'
+    implementation 'com.google.firebase:firebase-config:21.2.0'
+    implementation 'com.google.firebase:firebase-invites:17.0.0'
 
+    implementation 'com.google.firebase:firebase-messaging:23.1.0'
 }

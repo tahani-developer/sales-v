@@ -12,6 +12,8 @@ import com.dr7.salesmanmanager.GeneralMethod;
 import com.dr7.salesmanmanager.Login;
 import com.dr7.salesmanmanager.Modles.RequestAdmin;
 import com.dr7.salesmanmanager.Modles.RequstTest;
+import com.dr7.salesmanmanager.Modles.SalesMenLocation;
+import com.dr7.salesmanmanager.MyServices;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.SalesInvoice;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -188,7 +190,8 @@ if(requstTest!=null) {
     }
         if((requstTest.getRequest_type().equals("0")||requstTest.getRequest_type().equals("2")) && checkState_recycler!=null)   checkState_recycler.setText(requstTest.getStatus().toString());
         if(requstTest.getRequest_type().equals("1")&&checkState!=null)  checkState.setText(requstTest.getStatus().toString());
-        if(requstTest.getRequest_type().equals("100")&&checkState_LimitCredit!=null)     checkState_LimitCredit.setText(requstTest.getStatus().toString());
+        if(requstTest.getRequest_type().equals("10")&&checkState!=null)checkState.setText(requstTest.getStatus().toString());
+            if(requstTest.getRequest_type().equals("100")&&checkState_LimitCredit!=null)     checkState_LimitCredit.setText(requstTest.getStatus().toString());
 
 
     }

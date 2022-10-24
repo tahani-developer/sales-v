@@ -420,14 +420,14 @@ public class SalesInvoice extends Fragment {
 
         contextG=getActivity().getApplicationContext();
 
-//        try{
-//            DaoRequsts daoRequsts=new DaoRequsts(contextG);
-//            daoRequsts.getStatusofrequst(contextG);
-//        }catch (Exception  exception){
-//            Log.e("Exception",exception.getMessage());
-//        }
+        try{
+            DaoRequsts daoRequsts=new DaoRequsts(contextG);
+            daoRequsts.getStatusofrequst(contextG);
+        }catch (Exception  exception){
+            Log.e("Exception",exception.getMessage());
+        }
 
-       // getStatusofrequst(SalesInvoice.this ,lastrequst);
+
 
 
         contextG=getActivity().getApplicationContext();

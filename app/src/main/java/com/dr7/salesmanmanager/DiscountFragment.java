@@ -284,8 +284,9 @@ public class DiscountFragment extends DialogFragment {
 
     void stopTimer() {
         Log.e("stopTimer","stopTimer");
-        task=new TimerTask(main_context);
-        task.stopTimer();
+        //old requst code
+//        task=new TimerTask(main_context);
+//        task.stopTimer();
     }
 
 
@@ -356,10 +357,11 @@ public class DiscountFragment extends DialogFragment {
         if(stateZero)
         {
             Log.e("checkStatuseRequest","first"+checkState.getText().toString());
-            task=new TimerTask(main_context);
-            task.startTimer();
+            //old requst code
+//            task=new TimerTask(main_context);
+//            task.startTimer();
         }
-
+        //      old requst code
 
 //        timer = new Timer();
 //            timer.schedule(new TimerTask() {
