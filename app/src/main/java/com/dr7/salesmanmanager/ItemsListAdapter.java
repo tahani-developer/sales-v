@@ -1,8 +1,10 @@
 package com.dr7.salesmanmanager;
 
 import static com.dr7.salesmanmanager.Methods.convertToEnglish;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.CountOfItems;
 import static com.dr7.salesmanmanager.SalesInvoice.noTax;
 import static com.dr7.salesmanmanager.SalesInvoice.taxCalcType;
+import static com.dr7.salesmanmanager.SalesInvoice.unitsItems_select;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -28,6 +30,7 @@ import java.util.List;
 public class ItemsListAdapter extends BaseAdapter {
 
     private Context context;
+    int itemUnit=1;
     private List<Item> itemList,secondListItems;
     private DecimalFormat decimalFormat;
     int typeScreen=0;//0 landscap
@@ -120,9 +123,21 @@ public class ItemsListAdapter extends BaseAdapter {
         itemNoTextView.setText(itemList.get(i).getItemNo());
         itemNoTextView_detail.setText(itemList.get(i).getItemNo());
         itemNameTextView.setText(itemList.get(i).getItemName());
+        itemUnit=1;
         if(databaseHandler.getAllSettings().get(0).getItemUnit()==1)
         {
-            int itemUnit=databaseHandler.getUnitForItem(itemList.get(i).getItemNo());
+            if(databaseHandler.getAllSettings().get(0).getItems_Unit()==1)
+            {
+                try {
+                    if(!itemList.get(i).getWhichu_qty().equals(""))
+                    itemUnit=(int)(Double.parseDouble(itemList.get(i).getWhichu_qty()));
+                }catch (Exception e){
+                    Log.e("itemList***","getItems_Unit= "+e.getMessage());
+                }
+
+            }else
+             itemUnit=databaseHandler.getUnitForItem(itemList.get(i).getItemNo());
+            Log.e("itemList***","itemUnit= "+itemUnit+"\tgetWhich_unit= "+itemList.get(i).getWhichu_qty());
             if(itemList.get(i).getOneUnitItem().equals("1"))
                 qtyTextView.setText(itemList.get(i).getQty()+"");
             else
@@ -135,10 +150,21 @@ public class ItemsListAdapter extends BaseAdapter {
         }
 
         if(databaseHandler.getAllSettings().get(0).getItemUnit()==1 &&itemList.get(i).getOneUnitItem().equals("0"))
-        {
+        {String itemUnitPrice="";
             int itemUnit=databaseHandler.getUnitForItem(itemList.get(i).getItemNo());
-            String itemUnitPrice=databaseHandler.getUnitPrice(itemList.get(i).getItemNo().trim(),rate);
-           // Log.e("priceTextView","1="+itemUnitPrice);
+
+            if(unitsItems_select==1){
+                if(!itemList.get(i).getWhichu_qty().equals(""))
+                    try {
+                        itemUnitPrice=databaseHandler.getUnitPrice(itemList.get(i).getItemNo().trim(),"-1",Double.parseDouble(itemList.get(i).getWhichu_qty()));
+                        Log.e("itemUnitPrice","1==="+itemUnitPrice);
+                    }catch (Exception e){
+                        Log.e("itemUnitPrice",""+e.getMessage());
+                    }
+            }else {
+                itemUnitPrice=databaseHandler.getUnitPrice(itemList.get(i).getItemNo().trim(),rate,0);
+            }
+            Log.e("priceTextView","2="+itemUnitPrice);
             if(!itemUnitPrice.equals(""))
             {
                 if(itemList.get(i).getOneUnitItem().equals("1"))
@@ -158,6 +184,7 @@ public class ItemsListAdapter extends BaseAdapter {
         }
 
 
+        Log.e("itemUnitPrice","getPrice==="+itemList.get(i).getPrice());
 
         bonusTextView.setText(String.valueOf(itemList.get(i).getBonus()));
         bonusTextView_detail.setText(String.valueOf(itemList.get(i).getBonus()));

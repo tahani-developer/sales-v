@@ -103,6 +103,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
 import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
+import static com.dr7.salesmanmanager.SalesInvoice.unitsItems_select;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
@@ -114,7 +115,7 @@ import static com.dr7.salesmanmanager.StockRequest.clearData;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder> {
     SalesInvoice.SalesInvoiceInterface salesInvoiceInterfaceListener;
     private List<Item> allItemsList;
-public static     String CountOfItems="1";
+public static     int CountOfItems=1;
     private ArrayList<Integer> isClicked = new ArrayList<>();
     private List<Item> filterList;
     private Context cont;
@@ -316,14 +317,14 @@ public static     String CountOfItems="1";
 //            holder.price.setText("300");
 //
 //        }else {
-        if (itemUnit == 1) {
+        if (itemUnit == 1&&unitsItems_select==0) {
 //            if(items.get(position).getPrice()!=0)
 //            {
 //                holder.price.setText("" + items.get(position).getPrice());
 //            }else{
 
             Log.e("rate_customer", "" + rate_customer);
-            String postPriceUniteValue = MHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer);
+            String postPriceUniteValue = MHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer,0);
             if (!postPriceUniteValue.equals("")) {
                 try {
                     priceUnit = Float.parseFloat(postPriceUniteValue);
@@ -868,7 +869,6 @@ public static     String CountOfItems="1";
 
                                                            }
 
-                                                           ItemUnitsFlage= MHandler.getAllSettings().get(0).getItems_Unit();
 
                                                            approveAdmin = MHandler.getAllSettings().get(0).getApproveAdmin();
                                                            //**********************************************************************************************
@@ -1254,12 +1254,12 @@ public static     String CountOfItems="1";
                                                                price.setText("" + allItemsList.get(position).getPrice());
                                                            }
                                                        }
-                                                           if (mHandler.getAllSettings().get(0).getItemUnit() == 1) {
+                                                           if (mHandler.getAllSettings().get(0).getItemUnit() == 1&&unitsItems_select==0) {
 //                                                           if(items.get(position).getPrice()!=0)
 //                                                           {
 //                                                               price.setText("" + items.get(position).getPrice());
 //                                                           }else {
-                                                               String itemUnitPrice = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer);
+                                                               String itemUnitPrice = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer,0);
                                                                if (!itemUnitPrice.equals(""))
                                                                    price.setText(itemUnitPrice);
 //                                                           }
@@ -1307,6 +1307,8 @@ public static     String CountOfItems="1";
                                                                @Override
                                                                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                                                                  CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
+                                                                 if(!Item_unit.getSelectedItem().toString().equals(""))
+                                                                 price.setText(mHandler.getUnitPrice(itemNumber.getText().toString(),"-1",CountOfItems));
                                                                    Log.e("CountOfItems",CountOfItems+"");
 
                                                                }
@@ -2512,12 +2514,12 @@ public static     String CountOfItems="1";
                 price.setText("" + allItemsList.get(position).getPrice());
             }
         }
-            if (mHandler.getAllSettings().get(0).getItemUnit() == 1) {
+            if (mHandler.getAllSettings().get(0).getItemUnit() == 1&&unitsItems_select==0) {
 //                                                           if(items.get(position).getPrice()!=0)
 //                                                           {
 //                                                               price.setText("" + items.get(position).getPrice());
 //                                                           }else {
-                String itemUnitPrice = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer);
+                String itemUnitPrice = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer,0);
                 if (!itemUnitPrice.equals(""))
                     price.setText(itemUnitPrice);
 //                                                           }
@@ -3842,11 +3844,21 @@ public static     String CountOfItems="1";
              ||
              (MainActivity.OffersJustForSalsFlag == 1 &&SalesInvoice.voucherType == 504));
  }
-  public static   String getCountOfItems(String itemcode,String unitid ){
+  public static   int getCountOfItems(String itemcode,String unitid ){
         String CountOfItems=MHandler.getConvRate(itemcode, unitid);
+        int resule=1;
         if(CountOfItems!=null && !CountOfItems.equals(""))
-            return CountOfItems;
+        {
+            try {
+                resule=Integer.parseInt(CountOfItems);
+            }catch (Exception e){
+                Log.e("getCountOfItems",""+e.getMessage());
+            }
+
+            return resule;
+        }
+
         else
-            return "1";
+            return 1;
     }
 }

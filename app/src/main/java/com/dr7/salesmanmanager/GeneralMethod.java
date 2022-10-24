@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -27,6 +29,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class GeneralMethod {
     Context  context;
@@ -244,5 +248,36 @@ public class GeneralMethod {
         }
 
     }
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+    public static void showSweetDialog(Context context, int type, String title, String content) {
+        switch (type) {
+            case 0://Error Type
+                new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(title)
+                        .setContentText(content)
+                        .setConfirmText(context.getString(R.string.ok))
+                        .show();
+                break;
+            case 1://Success Type
+                new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText(title)
+                        .setContentText(content)
+                        .setConfirmText(context.getString(R.string.ok))
+                        .show();
+                break;
+            case 3://warning Type
+                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText(title)
+                        .setContentText(content)
+                        .setConfirmText(context.getString(R.string.ok))
+                        .show();
+                break;
 
+        }
+    }
 }

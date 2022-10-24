@@ -100,7 +100,9 @@ public class Reports extends AppCompatActivity {
         Target_Report=findViewById(R.id.TargetReport);
         Target_Report.setOnClickListener(onClickListener);
         custwithouttrans_report.setOnClickListener(onClickListener);
-          if( Purchase_Order==0)   custwithouttrans_report.setVisibility(View.GONE);
+//          if( Purchase_Order==0)   custwithouttrans_report.setVisibility(View.GONE);
+//          if(MHandler.getAllSettings().get(0).getEndTripReport()==1)
+//              custwithouttrans_report.setVisibility(View.VISIBLE);
         customer_log_report.setOnClickListener(onClickListener);
         serial_report.setOnClickListener(onClickListener);
         cash_reoprt.setOnClickListener(onClickListener);

@@ -70,6 +70,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.addNewSerial;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.noTax;
 import static com.dr7.salesmanmanager.SalesInvoice.time;
+import static com.dr7.salesmanmanager.SalesInvoice.voucher;
 
  public class DatabaseHandler extends SQLiteOpenHelper {
     public static String SalmnLat,SalmnLong;
@@ -2742,8 +2743,23 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
     public void addSerialVoucherNo( long saleVoucher,long retVoucher,long order) {
         long curentMaxVoucher=getMaxFromVoucherMaster(504);
-        Log.e("getMaxSerialNumber", "FromSetting" + curentMaxVoucher+"\t"+saleVoucher);
+//        Log.e("getMaxSerialNumber", "FromSetting" + curentMaxVoucher+"\t"+saleVoucher);
         if (curentMaxVoucher > saleVoucher&&rawahneh_getMaxVouchFromServer==0) {
+
+           try {
+              deleteFromVoucherSerialize();
+              db = this.getReadableDatabase();
+              ContentValues values = new ContentValues();
+              values.put(VoucherSales_no, curentMaxVoucher);
+
+              db.insert(VoucherSerialize, null, values);
+//              Log.e("VoucherSerialize", "VoucherSerialize");
+              db.close();
+           } catch (Exception e) {
+              Log.e("VoucherSerialize", "" + e.getMessage());
+
+           }
+
         } else {
 
 
@@ -4616,12 +4632,11 @@ Log.e("addCompanyInfo","addCompanyInfo");
                     Voucher.setNetSales(-1);
                     Log.e("NullPointerException","tax and netsales");
                 }
-
-
                 Voucher.setCustName(cursor.getString(14));
                 Voucher.setCustNumber(cursor.getString(15));
                 Voucher.setVoucherYear(Integer.parseInt(cursor.getString(16)));
                 Voucher.setTime(cursor.getString(17));
+                Voucher.setTaxTypa(cursor.getInt(19));
 
 
                 // Adding transaction to list
@@ -4673,6 +4688,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 Voucher.setTime(cursor.getString(17));
 
 
+                Voucher.setTaxTypa(cursor.getInt(19));
                 // Adding transaction to list
                 vouchers.add(Voucher);
             } while (cursor.moveToNext());
@@ -8251,8 +8267,8 @@ Log.e("addCompanyInfo","addCompanyInfo");
         return  itemUnit;
     }
 
-    public String getUnitPrice(String itemNo,String rate) {
-        // Log.e("getUnitPrice","itemNo"+itemNo+"\trate="+rate);
+    public String getUnitPrice(String itemNo,String rate,double countItems) {
+         Log.e("getUnitPrice","itemNo"+itemNo+"\trate="+rate);
         String selectQuery="";
         switch (rate){
             case "0":
@@ -8268,9 +8284,13 @@ Log.e("addCompanyInfo","addCompanyInfo");
             case "3":   selectQuery = "select PRICECLASS_3 from Item_Unit_Details where ItemNo='"+itemNo.trim()+"'";
 
                 break;
+
+           case "-1":   selectQuery = "select PriceUnit from Item_Unit_Details where ItemNo='"+itemNo.trim()+"'  and ConvRate='"+countItems+"'";
+
+              break;
         }
 
-        // Log.e("selectQuery","itemNo"+selectQuery);
+         Log.e("selectQuery","itemNo"+selectQuery);
         String itemUnit="";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -8294,9 +8314,12 @@ Log.e("addCompanyInfo","addCompanyInfo");
         return  itemUnit;
     }
 
-    public ItemUnitDetails getItemUnitDetails(String itemNumber) {
-
-        String selectQuery = "select * from Item_Unit_Details where ItemNo='"+itemNumber.trim()+"'";
+    public ItemUnitDetails getItemUnitDetails(String itemNumber,int countItem) {
+       //and ConvRate=100
+       String selectQuery="";
+       if(countItem!=-1)
+        selectQuery = "select * from Item_Unit_Details where ItemNo='"+itemNumber.trim()+"' and ConvRate='"+countItem+"'";
+       else   selectQuery = "select * from Item_Unit_Details where ItemNo='"+itemNumber.trim()+"'";
         Log.e("selectQuery===",selectQuery);
         ItemUnitDetails itemUnit=new ItemUnitDetails();
         db = this.getWritableDatabase();

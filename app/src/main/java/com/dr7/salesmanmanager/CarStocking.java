@@ -272,7 +272,7 @@ AppCompatButton save,cancel;
 
                     for (int i = 0; i < listOfDefferntsItem.size(); i++) {
                         ItemsMaster itemsMaster = databaseHandler.getItemMasterForItem(listOfDefferntsItem.get(i).getItemNo());
-                        ItemUnitDetails itemUnitDetails = databaseHandler.getItemUnitDetails(listOfDefferntsItem.get(i).getItemNo());
+                        ItemUnitDetails itemUnitDetails = databaseHandler.getItemUnitDetails(listOfDefferntsItem.get(i).getItemNo(),-1);
 
 
                         Item item = new Item();

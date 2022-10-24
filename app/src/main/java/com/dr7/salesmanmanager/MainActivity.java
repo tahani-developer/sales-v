@@ -965,7 +965,7 @@ saveCurentLocation();
     }
 
     private void reExportStockSerial() {
-
+// new chech internat*************************
         ExportJason exportJason = null;
         try {
             exportJason = new ExportJason(MainActivity.this);
@@ -1655,7 +1655,11 @@ saveCurentLocation();
 
                                 try {
 //                                    obj.startExportDatabase();
-                                    obj.startExport(0);
+                                    if(isNetworkAvailable())
+                                        obj.startExport(0);
+                                    else {
+                                        generalMethod.showSweetDialog(MainActivity.this,0,""+getResources().getString(R.string.checkinternetConnection),"");
+                                    }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -2472,7 +2476,11 @@ saveCurentLocation();
                         }
                         try {
 //                        objJson.startExportDatabase();
+                            if(isNetworkAvailable())
                             objJson.startExport(0);
+                            else {
+                                generalMethod.showSweetDialog(MainActivity.this,0,""+getResources().getString(R.string.checkinternetConnection),"");
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -2799,7 +2807,11 @@ saveCurentLocation();
                                 obj = new ExportJason(MainActivity.this);
 
 //                                obj.startExportDatabase();
-                                obj.startExport(0);
+                                if(isNetworkAvailable())
+                                    obj.startExport(0);
+                                else {
+                                    generalMethod.showSweetDialog(MainActivity.this,0,""+getResources().getString(R.string.checkinternetConnection),"");
+                                }
                             } catch (JSONException e) {
                                 Toast.makeText(MainActivity.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
                                 e.printStackTrace();
@@ -3605,7 +3617,11 @@ saveCurentLocation();
                         int checkqtyinorderflage= checkqtyinorder_checkbox.isChecked()?1:0;
                         int locationtrackerflage= locationtracker_checkbox.isChecked()?1:0;
                         int aqapaTax_value=aqaba_tax_exemption_checBox.isChecked()?1:0;
-                        int Items_unitflage=   Items_unit_checBox.isChecked()?1:0;;
+                        int Items_unitflage=   Items_unit_checBox.isChecked()?1:0;
+                        if(Items_unitflage==1){
+                            item_unit=1;
+                            itemUnit_checkBox.setChecked(true);
+                        }
                         int  EndTripReportflage=   EndTripReport_checBox.isChecked()?1:0;
                         double valueOfTotDisc=0;
                         try {

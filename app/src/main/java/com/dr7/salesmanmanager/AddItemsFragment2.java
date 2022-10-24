@@ -1099,7 +1099,6 @@ try {
 //        jsonItemsList_intermidiate = new ArrayList<>();
         String dateCurent=getCurentTimeDate(1);
         String rate_customer = mDbHandler.getRateOfCustomer();
-        itemUnit=mDbHandler.getAllSettings().get(0).getItemUnit();
         if(rate_customer.equals(""))
         {
             rate_customer="0";
@@ -1268,7 +1267,11 @@ try {
 
             item = new Item();
             unitDetail=new ItemUnitDetails();
-            unitDetail=getItemUnitInfo(itemNumber);
+            if(mDbHandler.getAllSettings().get(0).getItems_Unit()==0)// not enabled units
+            {
+                CountOfItems=-1;
+            }
+            unitDetail=getItemUnitInfo(itemNumber,CountOfItems);
             item.setItemNo(itemNumber);
             item.setItemName(itemName);
 
@@ -1305,8 +1308,15 @@ try {
 
                 //***************************************************
                 if(mDbHandler.getAllSettings().get(0).getItemUnit()==1)
-                {
-                    int itemUnit=mDbHandler.getUnitForItem(itemNumber);
+                {int itemUnit=1;
+                    if(mDbHandler.getAllSettings().get(0).getItems_Unit()==1)
+                    { itemUnit=CountOfItems;
+
+                        Log.e("getItemUnitInfo2","itemUnit="+itemUnit);
+                    }
+                    else {
+                        itemUnit = mDbHandler.getUnitForItem(itemNumber);// get convrate
+                    }
                     if(oneUnit==0)
                     item.setQty(Float.parseFloat(qty)*itemUnit);
                     else {// just item one unit
@@ -1458,7 +1468,7 @@ try {
 //                    item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - item.getDisc());
                 } else {
 //                item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - descPerc);
-                    item.setAmount(Float.parseFloat(CountOfItems)*item.getQty() * item.getPrice() - descPerc);
+                    item.setAmount(item.getQty() * item.getPrice() - descPerc);
 
                     Log.e("log222=", "amount==="+item.getAmount() );
                    // Log.e("log ==", item.getQty() + " * " + item.getPrice() + " -" + descPerc);
@@ -1546,9 +1556,10 @@ try {
         }
     }
 
-    private ItemUnitDetails getItemUnitInfo(String itemNumber) {
+    private ItemUnitDetails getItemUnitInfo(String itemNumber,int countItem) {
+        Log.e("getItemUnitInfo","itemNumber="+itemNumber+"\tcountItem= "+countItem);
         ItemUnitDetails item= new ItemUnitDetails();
-        item=mDbHandler.getItemUnitDetails(itemNumber);
+        item=mDbHandler.getItemUnitDetails(itemNumber,countItem);
         return  item;
     }
 

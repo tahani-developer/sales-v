@@ -337,6 +337,7 @@ public class SalesInvoice extends Fragment {
     private FusedLocationProviderClient fusedLocationClient;
     public  static  CustomerLocation customerLocation;
    public static ArrayList<Bitmap> listItemImage;
+   public  static  int unitsItems_select=0;
 //    public  Location curent_location;
 //    static Voucher voucherSale;
 //    static List<Item> itemSale;
@@ -1198,7 +1199,8 @@ public class SalesInvoice extends Fragment {
         }
         taxCalcType=mDbHandler.getAllSettings().get(0).getTaxClarcKind() ;
 
-//        Log.e("Purchase_Order","111="+taxCalcType);
+        unitsItems_select=mDbHandler.getAllSettings().get(0).getItems_Unit();
+        Log.e("unitsItems_select","= "+unitsItems_select);
         return view;
     }
 
@@ -3600,9 +3602,19 @@ public class SalesInvoice extends Fragment {
         LinearLayout mainLineardialog=dialog.findViewById(R.id.mainLineardialog);
         Button okButton = (Button) dialog.findViewById(R.id.button1);
         Button cancelButton = (Button) dialog.findViewById(R.id.button2);
-
+        int itemUnit=1;
         final RadioGroup discTypeRadioGroup_up= dialog.findViewById(R.id.discTypeRadioGroup_up);
-        int itemUnit=mDbHandler.getUnitForItem(items.get(position).getItemNo());
+        if(mDbHandler.getAllSettings().get(0).getItems_Unit()==1)
+        {
+            try {
+                if(!items.get(position).getWhichu_qty().equals(""))
+                    itemUnit=(int)(Double.parseDouble(items.get(position).getWhichu_qty()));
+            }catch (Exception e){
+                Log.e("itemList***","getItems_Unit= "+e.getMessage());
+            }
+
+        }else itemUnit=mDbHandler.getUnitForItem(items.get(position).getItemNo());
+
         if(mDbHandler.getAllSettings().get(0).getItemUnit()==1&&items.get(position).getOneUnitItem().equals("0"))
         {
             if(itemUnit!=0)
@@ -3707,7 +3719,18 @@ public class SalesInvoice extends Fragment {
 
 
 
-                                        int itemUnit=mDbHandler.getUnitForItem(itemNumber);
+                                        int itemUnit=1;
+                                        if(mDbHandler.getAllSettings().get(0).getItems_Unit()==1)
+                                        {
+                                            try {
+                                                if(!items.get(position).getWhichu_qty().equals(""))
+                                                    itemUnit=(int)(Double.parseDouble(items.get(position).getWhichu_qty()));
+                                            }catch (Exception e){
+                                                Log.e("itemList***","getItems_Unit= "+e.getMessage());
+                                            }
+
+                                        }else itemUnit=mDbHandler.getUnitForItem(items.get(position).getItemNo());
+
 
                                         items.get(position).setQty(Float.parseFloat(qty.getText().toString().trim())*itemUnit);
 
