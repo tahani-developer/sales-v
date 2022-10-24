@@ -32,6 +32,7 @@ import com.dr7.salesmanmanager.Modles.MainGroup_Id_Count;
 import com.dr7.salesmanmanager.Modles.OfferGroupModel;
 import com.dr7.salesmanmanager.Modles.OfferListMaster;
 import com.dr7.salesmanmanager.Modles.Offers;
+import com.dr7.salesmanmanager.Modles.Password;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PriceListD;
 import com.dr7.salesmanmanager.Modles.PriceListM;
@@ -75,7 +76,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.time;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 199;
+    private static final int DATABASE_VERSION = 200;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -677,7 +678,10 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
     private static final String  Cust_num="Cust_num";
     private static final String  Cust_name="Cust_name";
-
+    //-----------------------------------------------------
+    private static final String  AdminPasswords="AdminPasswords";
+    private static final String  password_type="password_type";
+    private static final String  password_no="password";
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -1457,6 +1461,13 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                + DATE_ + " TEXT"
                + ")";
        db.execSQL(CREATE_STransactionInfo_TABLE );
+       //------------------------------------------------
+       String CREATE_AdminPasswords_TABLE = "CREATE TABLE IF NOT EXISTS " + AdminPasswords+ "("
+               + password_type + " TEXT,"
+               + password_no + " TEXT"
+
+               + ")";
+       db.execSQL(CREATE_AdminPasswords_TABLE);
     }
 
 
@@ -2588,7 +2599,13 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
           Log.e(TAG, e.getMessage().toString());
        }
+///-------------------------------
+       String CREATE_AdminPasswords_TABLE = "CREATE TABLE IF NOT EXISTS " + AdminPasswords+ "("
+               + password_type + " TEXT,"
+               + password_no + " TEXT"
 
+               + ")";
+       db.execSQL(CREATE_AdminPasswords_TABLE);
     }
 
     ////B
@@ -2618,7 +2635,24 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
         db.close();
 
     }
+    public void insertAdminPasswords(com.dr7.salesmanmanager.Modles.Password  password) {
 
+       db = this.getReadableDatabase();
+       ContentValues values = new ContentValues();
+
+       values.put(password_type, password.getPassword_type());
+       values.put(password_no, password.getPassword_no());
+
+
+       db.insert(AdminPasswords, null, values);
+       db.close();
+
+    }
+    public void DeleteAdminPasswords(){
+       SQLiteDatabase db = this.getWritableDatabase();
+       db.execSQL("delete from " + AdminPasswords);
+       db.close();
+    }
     public List<Flag_Settings> getFlagSettings() {
 
         List<Flag_Settings> flagSettings = new ArrayList<>();
@@ -2657,7 +2691,31 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
         return flagSettings;
 
     }
+    public  List<Password> getAdminPasswords() {
 
+       List<Password> passwords = new ArrayList<>();
+       String selectQuery = "SELECT * FROM " + AdminPasswords;
+       db = this.getWritableDatabase();
+       Cursor cursor = db.rawQuery(selectQuery, null);
+
+       if (cursor.moveToFirst()) {
+          do {
+             Password password = new Password(
+                   cursor.getInt(0),
+                     cursor.getString(1)
+
+
+             );
+
+             passwords.add(password);
+
+          } while (cursor.moveToNext());
+          cursor.close();
+          Log.e("getAdminPasswords", "" + passwords.size());
+       }
+       return passwords;
+
+    }
     public void updateFlagSettings (String dataType, int export, int max, int order,
                                     int password, int total, int vReturn,int SalPlan,int pos,
                                     int csOffer, int tOffer, int qOffer,int SalTrip,int mavVoServer,int purchOrder

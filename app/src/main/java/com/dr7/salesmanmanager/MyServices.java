@@ -18,6 +18,8 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
+import com.dr7.salesmanmanager.Interface.LocationDao;
+import com.dr7.salesmanmanager.Modles.SalesMenLocation;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
 
@@ -123,6 +125,20 @@ public class MyServices extends Service {
                                         salesmanStations.setLongitude("" + longitude);
                                         Log.e(TAG, "  nnn");
                                         Log.e(TAG, " mmmm " + salesmanStations.getJSONObject());
+//                                        SalesMenLocation salesMenLocation=new SalesMenLocation();
+//                                        salesMenLocation.setSalesmanNo(userNo+"");
+//                                        DatabaseHandler mHandler=new DatabaseHandler(MyServices.this);
+//                                        String salesName=mHandler.getSalesmanName_fromSalesTeam();
+//                                        salesMenLocation.setSalesmanName(salesName);
+//                                        salesMenLocation.setLatitude(latitude+"");
+//                                        salesMenLocation.setLongitude(longitude+"");
+//                                   try {
+//                                       Log.e("salesMan==", " salesMan " + userNo);
+//                                       LocationDao daoRequsts =new LocationDao(MyServices.this);
+//                                       daoRequsts.addLocation(salesMenLocation);
+//                                   }catch (Exception e){
+//                                       Log.e("Exception", ""+e.getMessage());
+//                                   }
 
                                             if (latitude !=0||longitude!=0)
                                             {

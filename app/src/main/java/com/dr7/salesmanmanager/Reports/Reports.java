@@ -100,7 +100,7 @@ public class Reports extends AppCompatActivity {
         Target_Report=findViewById(R.id.TargetReport);
         Target_Report.setOnClickListener(onClickListener);
         custwithouttrans_report.setOnClickListener(onClickListener);
-          if( Purchase_Order==0)   custwithouttrans_report.setVisibility(View.GONE);
+//          if( Purchase_Order==0)   custwithouttrans_report.setVisibility(View.GONE);
         customer_log_report.setOnClickListener(onClickListener);
         serial_report.setOnClickListener(onClickListener);
         cash_reoprt.setOnClickListener(onClickListener);
@@ -223,7 +223,7 @@ public class Reports extends AppCompatActivity {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (password.getText().toString().equals("303090")) {
+                if (password.getText().toString().equals(Login.Mainpassword_setting)) {
                     dialog.dismiss();
                     Intent intent6 = new Intent(Reports.this, CashReport.class);
                     startActivity(intent6);

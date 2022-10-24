@@ -24,10 +24,7 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.print.PrintHelper;
-import android.view.Gravity;
+
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -35,17 +32,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dr7.salesmanmanager.BluetoothConnectMenu;
 import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.ExportToExcel;
 import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Login;
-import com.dr7.salesmanmanager.MainActivity;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
@@ -82,7 +75,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
-import static com.dr7.salesmanmanager.ReceiptVoucher.savebitmap;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -420,7 +412,7 @@ public class CashReport  extends AppCompatActivity {
         sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if(editText.getText().toString().equals(Login.password_setting))
+                if(editText.getText().toString().equals(Login.Secondpassword_setting))
                 {
 
                     sweetAlertDialog.dismissWithAnimation();

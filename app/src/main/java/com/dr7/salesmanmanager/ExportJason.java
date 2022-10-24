@@ -30,7 +30,6 @@ import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.serialModel;
-import com.google.gson.JsonObject;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -68,7 +67,6 @@ import static com.dr7.salesmanmanager.Login.userNo;
 import static com.dr7.salesmanmanager.MainActivity.fill_Pending_inv;
 import static com.dr7.salesmanmanager.MainActivity.password;
 import static com.dr7.salesmanmanager.MainActivity.passwordFromAdmin;
-import static com.dr7.salesmanmanager.ReturnByVoucherNo.ReturnupdateditemList;
 import static com.dr7.salesmanmanager.ReturnByVoucherNo.voucherNo_ReturnNo;
 
 public class ExportJason extends AppCompatActivity {
@@ -2180,7 +2178,7 @@ public class ExportJason extends AppCompatActivity {
             h.post(new Runnable() {
                 public void run() {
                     password.setError(null);
-                    passwordFromAdmin.setText(Login.password_setting);
+                    passwordFromAdmin.setText(Login.Secondpassword_setting);
                     Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
                 }
             });
@@ -2225,7 +2223,7 @@ public class ExportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
                         password.setError(null);
-                        passwordFromAdmin.setText(Login.password_setting);
+                        passwordFromAdmin.setText(Login.Secondpassword_setting);
 
                     }
                 });
@@ -2281,7 +2279,7 @@ public class ExportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
                         password.setError(null);
-                        passwordFromAdmin.setText(Login.password_setting);
+                        passwordFromAdmin.setText(Login.Secondpassword_setting);
                         Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -2293,7 +2291,7 @@ public class ExportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
                         password.setError(null);
-                        passwordFromAdmin.setText(Login.password_setting);
+                        passwordFromAdmin.setText(Login.Secondpassword_setting);
                         Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -2332,7 +2330,7 @@ public class ExportJason extends AppCompatActivity {
                 else {
 
                     password.setError(null);
-                    passwordFromAdmin.setText(Login.password_setting);
+                    passwordFromAdmin.setText(Login.Secondpassword_setting);
                     if (s.contains("Not definded id")) {
                         Toast.makeText(context, "Check WebServices Id 25", Toast.LENGTH_SHORT).show();
                     }
@@ -2341,7 +2339,7 @@ public class ExportJason extends AppCompatActivity {
             }
             else {
                 password.setError(null);
-                passwordFromAdmin.setText(Login.password_setting);}
+                passwordFromAdmin.setText(Login.Secondpassword_setting);}
         }
 
     }
@@ -2379,7 +2377,7 @@ public class ExportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
                         password.setError(null);
-                        passwordFromAdmin.setText(Login.password_setting);
+                        passwordFromAdmin.setText(Login.Secondpassword_setting);
 
                     }
                 });
@@ -2418,7 +2416,7 @@ public class ExportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
                         password.setError(null);
-                        passwordFromAdmin.setText(Login.password_setting);
+                        passwordFromAdmin.setText(Login.Secondpassword_setting);
                         Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
 
 
@@ -2432,7 +2430,7 @@ public class ExportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
                         password.setError(null);
-                        passwordFromAdmin.setText(Login.password_setting);
+                        passwordFromAdmin.setText(Login.Secondpassword_setting);
                         Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
 
 
@@ -2470,14 +2468,14 @@ public class ExportJason extends AppCompatActivity {
                             else {
 
                                 password.setError(null);
-                                passwordFromAdmin.setText(Login.password_setting);
+                                passwordFromAdmin.setText(Login.Secondpassword_setting);
 
                             }
 
             }
             else {
                 password.setError(null);
-                passwordFromAdmin.setText(Login.password_setting);
+                passwordFromAdmin.setText(Login.Secondpassword_setting);
             }
         }
 

@@ -13,6 +13,7 @@
 <!--    <ImageView-->
 <!--        android:id="@+id/imageView3"-->
 <!--      />-->
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/setting_floatingBtn"
         android:layout_width="wrap_content"
@@ -62,7 +63,11 @@
         android:textColor="@color/text_view_color"
         android:textColorHint="@color/layer1"
         android:textSize="14sp" />
-
+    <TextView
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="match_parent"
+        android:id="@+id/passwordrespon"/>
     <EditText
         android:id="@+id/passwordEditText"
         android:layout_width="250dp"

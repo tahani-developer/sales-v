@@ -81,7 +81,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dr7.salesmanmanager.Adapters.CustomerselectedAdapter;
 import com.dr7.salesmanmanager.Adapters.Pending_item_Adapter;
 import com.dr7.salesmanmanager.Adapters.Pending_seriak_adapter;
-import com.dr7.salesmanmanager.Adapters.ReturnItemAdapter;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.TransactionsInfo;
 import com.dr7.salesmanmanager.Modles.Customer;
@@ -127,7 +126,6 @@ import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -145,10 +143,8 @@ import static com.dr7.salesmanmanager.CustomerCheckInFragment.settext1;
 import static com.dr7.salesmanmanager.ImportJason.list_pending_invoice;
 import static com.dr7.salesmanmanager.ImportJason.list_pending_serial;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
-import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 
-import static com.dr7.salesmanmanager.Login.Plan_ACTIVE;
 import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.SalsManPlanFlage;
 import static com.dr7.salesmanmanager.Login.SalsManTripFlage;
@@ -329,7 +325,7 @@ Dialog dialog1;
         new LocaleAppUtils().changeLayot(MainActivity.this);
         mDbHandler = new DatabaseHandler(MainActivity.this);
         setContentView(R.layout.activity_main);
-
+        Log.e("salesMan==", " salesMan " + Login.salesMan);
         getcustomer();
         checkInLinearLayout = (LinearLayout) findViewById(R.id.checkInLinearLayout);
         checkOutLinearLayout = (LinearLayout) findViewById(R.id.checkOutLinearLayout);
@@ -1950,7 +1946,7 @@ saveCurentLocation();
         sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if(editText.getText().toString().equals(Login.password_setting))
+                if(editText.getText().toString().equals(Login.Secondpassword_setting))
                 {
                     mDbHandler.deleteAllPostedData();
                     sweetAlertDialog.dismissWithAnimation();
@@ -1976,7 +1972,7 @@ saveCurentLocation();
         sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if(editText.getText().toString().equals(Login.password_setting))
+                if(editText.getText().toString().equals(Login.Secondpassword_setting))
                 {
                     Calendar c = Calendar.getInstance();
                     int month = c.get(Calendar.MONTH);
@@ -2744,7 +2740,7 @@ saveCurentLocation();
                 }
                 else {
 
-                    if ((password.getText().toString().trim().equals("303090")&&password_rawat==0&&flag != 10)||
+                    if ((password.getText().toString().trim().equals(Login.Mainpassword_setting)&&password_rawat==0&&flag != 10)||
 
                             ( password.getText().toString().trim().equals("709050")&&password_rawat==1&&flag != 10) )  {
                         dialog.dismiss();
@@ -2900,7 +2896,7 @@ saveCurentLocation();
             h.post(new Runnable() {
                 public void run() {
                     password.setError(null);
-                    passwordFromAdmin.setText(Login.password_setting);
+                    passwordFromAdmin.setText(Login.Secondpassword_setting);
                 }
             });
         }
@@ -3507,7 +3503,7 @@ saveCurentLocation();
             sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
-                    if(editText.getText().toString().equals(Login.password_setting))
+                    if(editText.getText().toString().equals(Login.Secondpassword_setting))
                     {
                         linkEditText.setAlpha(1f);
                         linkEditText.setEnabled(true);
@@ -4887,7 +4883,7 @@ Log.e("Exception==",e.getMessage());
         sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if(editText.getText().toString().equals("303090"))
+                if(editText.getText().toString().equals(Login.Mainpassword_setting))
                 {
                     Intent chooseFile;
                     Intent intent;

@@ -24,7 +24,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -49,7 +48,7 @@ import androidx.core.content.ContextCompat;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Flag_Settings;
-import com.dr7.salesmanmanager.Modles.RequestAdmin;
+import com.dr7.salesmanmanager.Modles.Password;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.activeKey;
@@ -60,8 +59,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.FirebaseApp;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -72,7 +70,6 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -103,6 +100,7 @@ public class Login extends AppCompatActivity {
     public static int key_value_Db;
     activeKey model_key;
     int key_int;
+    public static TextView   passwordrespon;
     Context context;
     TextView loginText,companyInfo_btn;
     EditText ipEditText;
@@ -167,7 +165,8 @@ public class Login extends AppCompatActivity {
     public  static  int gone_noTax_totalDisc=0;
     public  static  int password_rawat=0;
     public  static  int password_talaat=0;
-    public  static  String password_setting="2021000";
+    public  static  String Mainpassword_setting="303090";
+    public  static  String Secondpassword_setting ="2021000";
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -185,7 +184,13 @@ public class Login extends AppCompatActivity {
 
         setContentView(R.layout.login_free_size);
         initialView();
-     if(   password_talaat==1)password_setting="2022111";
+     //if(   password_talaat==1) Secondpassword_setting ="2022111";
+
+
+
+
+
+
 
 //        try{
 //            exportForClient();
@@ -195,9 +200,10 @@ public class Login extends AppCompatActivity {
 
 //        getIpAddressForDevice();
         validLocation();
-        try {
 
-            if (mDHandler.getAllSettings().size() != 0) {
+        getPasswords();
+        try {
+                if (mDHandler.getAllSettings().size() != 0) {
                 if (mDHandler.getAllSettings().get(0).getArabic_language() == 1) {
                     languagelocalApp = "ar";
                     LocaleAppUtils.setLocale(new Locale("ar"));
@@ -414,6 +420,27 @@ public class Login extends AppCompatActivity {
 //
 //        }
 
+    }
+
+    private void getPasswords() {
+        List<Password> passwords=mDHandler.getAdminPasswords();
+        if (passwords.size() != 0)
+        {
+            for(int i=0;i<passwords.size();i++) {
+                if (passwords.get(i).getPassword_type() == 1)
+                    Mainpassword_setting = passwords.get(i).getPassword_no();
+                else if (passwords.get(i).getPassword_type() == 2)
+                    Secondpassword_setting = passwords.get(i).getPassword_no();
+
+            }
+
+            if(Mainpassword_setting.equals(""))  Mainpassword_setting="303090";
+            if(Secondpassword_setting.equals(""))  Secondpassword_setting="2021000";
+        }else{
+            Mainpassword_setting="303090";
+            Secondpassword_setting="2021000";
+        }
+        Log.e("getPasswords=",Mainpassword_setting+"  "+Secondpassword_setting);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -816,7 +843,7 @@ public class Login extends AppCompatActivity {
         sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if(editText.getText().toString().equals(password_setting))
+                if(editText.getText().toString().equals(Secondpassword_setting))
                 {
                     if(flag==1){
                         ipEditText.setAlpha(1f);
@@ -853,7 +880,7 @@ public class Login extends AppCompatActivity {
         sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if(editText.getText().toString().equals(password_setting))
+                if(editText.getText().toString().equals(Secondpassword_setting))
                 {
                     textInput.setEnabled(true);
                     sweetAlertDialog.dismissWithAnimation();
@@ -914,7 +941,29 @@ public class Login extends AppCompatActivity {
         checkIpDevice=findViewById(R.id.checkIpDevice);
         locationPermissionRequest = new LocationPermissionRequest(Login.this);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        passwordrespon= findViewById(R.id.passwordrespon);
+        passwordrespon.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                         if(editable.toString().trim().length()!=0){
+
+                             if(passwordrespon.getText().toString().trim().equals("PASSWORDTYPE")){
+                                 Log.e("passwordrespon=","passwordrespon");
+                                 getPasswords();
+                             }
+                         }
+            }
+        });
         provider = locationManager.getBestProvider(new Criteria(), false);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);

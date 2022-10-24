@@ -47,6 +47,7 @@ import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
 import com.dr7.salesmanmanager.Modles.OfferGroupModel;
 import com.dr7.salesmanmanager.Modles.OfferListMaster;
 import com.dr7.salesmanmanager.Modles.Offers;
+import com.dr7.salesmanmanager.Modles.Password;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Pending_Invoice;
 import com.dr7.salesmanmanager.Modles.Pending_Serial;
@@ -118,6 +119,8 @@ import static com.dr7.salesmanmanager.Login.salesMan;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.MainActivity.fill_Pending_inv;
 import static com.dr7.salesmanmanager.MainActivity.openPendingTextView;
+import static com.dr7.salesmanmanager.MainActivity.password;
+import static com.dr7.salesmanmanager.MainActivity.passwordFromAdmin;
 import static com.dr7.salesmanmanager.MainActivity.pdialog;
 import static com.dr7.salesmanmanager.Methods.convertToEnglish;
 import static com.dr7.salesmanmanager.Methods.getDecimal;
@@ -2993,7 +2996,7 @@ public class ImportJason extends AppCompatActivity {
                         qtyOffers.setToDate(finalObject.getString("TODATE"));
                         qtyOffers.setDiscount_value(finalObject.getDouble("DISCOUNT"));
                         itemsQtyOfferList.add(qtyOffers);
-
+                        Log.e("Import Data,itemsQtyOfferList", "itemsQtyOfferList");
                     }
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
@@ -3084,6 +3087,7 @@ Log.e("customerList",""+customerList.size());
             if (result != null && result.size() != 0) {
                 Log.e("Customerr", "*****************" + customerList.size());
                 storeInDatabase();
+                getPassowrdSetting("1");
             } else {
 
                 // Toast.makeText(context, "Not able to fetch Customer data from server.", Toast.LENGTH_SHORT).show();
@@ -4498,7 +4502,7 @@ Log.e("customerList",""+customerList.size());
                 vouchersObject.put("JSN", jsonArrayRequest);
                 Log.e("getAddedCustomer","JSN"+vouchersObject);
 
-///ADMUpdateLocation                        JSONSTR={"JSN"                        --> LATITUDE,LONGITUDE,SALESNO
+//ADMUpdateLocation                        JSONSTR={"JSN"                        --> LATITUDE,LONGITUDE,SALESNO
                 String JsonResponse = null;
 
                 HttpClient client = new DefaultHttpClient();
@@ -5760,7 +5764,146 @@ Log.e("customerList",""+customerList.size());
                             .show();
     }
 
+    public void getPassowrdSetting(String type) {
+        try {
+            mHandler.DeleteAdminPasswords();
+//            new JSONTask_getPassword().execute();
+            new JSONTask_IIsgetPassword(type).execute();
 
+        }
+        catch (Exception e)
+        {
+
+        }
+
+    }
+    private class JSONTask_IIsgetPassword extends AsyncTask<String, String, String> {
+
+        public String passwordValue = "";
+        String passtype;
+
+        public JSONTask_IIsgetPassword(String passtype) {
+            this.passtype = passtype;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+
+                if (!ipAddress.equals("")) {
+                    URL_TO_HIT = "http://" + ipAddress + ":" + ipWithPort + headerDll.trim() + "/ADMGetPassword?CONO=" + CONO + "&PASSWORDTYPE=" + passtype;
+
+                    Log.e("URL_TO_HIT", URL_TO_HIT);
+                }
+            } catch (Exception e) {
+
+
+            }
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
+                HttpResponse response = client.execute(request);
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("tagUpdate", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }
+            //org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+
+
+                return null;
+            } catch (Exception e) {
+
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String respon) {
+            super.onPostExecute(respon);
+
+            JSONObject jsonObject1 = null;
+            if (respon != null)
+            {
+                Log.e("respon", respon);
+                if (respon.contains("PASSWORDTYPE")) {
+                    try {
+
+
+                        JSONArray requestArray = null;
+                        requestArray = new JSONArray(respon);
+
+                        for (int i = 0; i < requestArray.length(); i++) {
+
+                            Password password = new Password();
+                            jsonObject1 = requestArray.getJSONObject(i);
+                            password.setPassword_type(Integer.parseInt(jsonObject1.getString("PASSWORDTYPE")));
+                            password.setPassword_no(jsonObject1.getString("PASSWORDKEY"));
+                            mHandler.insertAdminPasswords(password);
+
+                        }
+
+                        if (passtype.equals("2")) {
+
+                          Login.  passwordrespon.setText("PASSWORDTYPE");
+
+                        }
+
+
+                    } catch (JSONException e) {
+//                        progressDialog.dismiss();
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+            } else {
+
+
+
+            }
+
+
+            if (passtype.equals("1")) {
+
+                new JSONTask_IIsgetPassword("2").execute();
+
+            }
+        }
+
+
+    }
 }
 
 
