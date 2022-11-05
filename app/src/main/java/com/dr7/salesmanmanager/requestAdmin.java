@@ -148,7 +148,7 @@ public class requestAdmin {
 //            }
 
         }
-    }
+
 
     public void getState() {
         List<Settings> settings = mHandler.getAllSettings();

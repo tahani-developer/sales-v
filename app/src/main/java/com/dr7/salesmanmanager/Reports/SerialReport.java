@@ -413,19 +413,18 @@ int[] listImageIcone=new int[]{
             Filterdseriallist.clear();
             String fromDate = generalMethod.convertToEnglish(from_date.getText().toString().trim());
             String toDate = generalMethod.convertToEnglish(to_date.getText().toString());
+
+            Log.e("fromDate=", fromDate + "");
+            Log.e("toDate=", toDate + "");
             for (int i = 0; i < allseriallist.size(); i++) {
 
                 String date = allseriallist.get(i).getDateVoucher();
 
-                Log.e("date=", date + "");
-                Log.e("fromDate=", fromDate + "");
-                Log.e("toDate=", toDate + "");
-
-                if (formatDate(date).after(formatDate(fromDate))
-                        || formatDate(date).equals(formatDate(fromDate)) &&
-                        formatDate(date).before(formatDate(toDate))
-                        || formatDate(date).equals(formatDate(toDate))) {
-
+                    if ((formatDate(date).after(formatDate(fromDate))
+                        || formatDate(date).equals(formatDate(fromDate))) &&
+                            (  formatDate(date).before(formatDate(toDate))
+                        || formatDate(date).equals(formatDate(toDate)))) {
+                    Log.e("date===", date + "");
                     if (!ItemKindspinner.getSelectedItem().toString().equals(""))
                     {
                         for (int j = 0; j < mastersItemkinds.size(); j++)
