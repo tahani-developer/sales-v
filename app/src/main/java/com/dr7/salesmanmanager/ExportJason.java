@@ -111,6 +111,7 @@ public class ExportJason extends AppCompatActivity {
 //    getCustomerLocation
     String ipAddress="",ipWithPort="",URL_TO_HIT="";
 
+    GeneralMethod generalMethod;
     public int exportJustCustomer=0;
 
     public ExportJason(Context context) throws JSONException {
@@ -129,6 +130,7 @@ public class ExportJason extends AppCompatActivity {
 
         SalesManLogin= mHandler.getAllUserNo();
         fillIpAddressWithPort();
+        generalMethod=new GeneralMethod(context);
     }
     public void exportReturnUpdateList() {
 
@@ -1540,7 +1542,11 @@ public class ExportJason extends AppCompatActivity {
 
 
                 }
-
+                else {
+                    Log.e("elseExportSALE","---3---__");
+                    pdVoucher.dismissWithAnimation();
+                Toast.makeText(context, "Export SALES_VOUCHER_Detail= "+result.toString(), Toast.LENGTH_SHORT).show();
+                }
 
             } else {
                 Log.e("elseExportSALES_VOUCHER_D","---3---__");
@@ -1795,7 +1801,12 @@ public class ExportJason extends AppCompatActivity {
                 progressSave.dismissWithAnimation();
 
             }
-            exportStock(0);// 18
+            if(generalMethod.isNetworkAvailable())
+                exportStock(0);// 18
+            else {
+                generalMethod.showSweetDialog(context,0,""+context.getResources().getString(R.string.checkinternetConnection),"");
+            }
+
         }
     }
     private void updateVoucherExported() {// 3
@@ -3129,7 +3140,14 @@ public class ExportJason extends AppCompatActivity {
             } else {
                 pdStosk.dismissWithAnimation();
             }
-            new  JSONTaskExportItem_Serial(flag_export).execute();// 19
+
+
+            if(generalMethod.isNetworkAvailable())
+                new  JSONTaskExportItem_Serial(flag_export).execute();// 19
+            else {
+                generalMethod.showSweetDialog(context,0,""+context.getResources().getString(R.string.checkinternetConnection),"");
+            }
+
 
 
         }
