@@ -130,8 +130,18 @@
                 android:layout_height="30dp"
                 android:visibility="invisible" />
         </LinearLayout>
-
-
+    <LinearLayout android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent">
+        <CheckBox
+            android:layout_width="match_parent"
+            android:id="@+id/Ret_Cal_CkB"
+            android:checked="true"
+            android:layout_height="match_parent"
+            android:text="@string/returncalculate"/>
+    </LinearLayout>
     </LinearLayout>
 
     <TableLayout

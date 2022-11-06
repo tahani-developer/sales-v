@@ -28,6 +28,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -120,6 +121,7 @@ public class CashReport  extends AppCompatActivity {
     SimpleDateFormat df;
     ConstraintLayout mailLayout;
     Date currentTimeAndDate;
+    CheckBox Ret_Cal_CkB;
     //
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
@@ -169,6 +171,7 @@ public class CashReport  extends AppCompatActivity {
         {
             Toast.makeText(this, "Empty Data base", Toast.LENGTH_SHORT).show();
         }
+        Ret_Cal_CkB=findViewById(R.id.Ret_Cal_CkB);
         text_return_cash=findViewById(R.id.text_return_cash);
         text_return_cridt=findViewById(R.id.text_return_cridt);
         date = (EditText) findViewById(R.id.date_editReport_cash);
@@ -231,9 +234,15 @@ public class CashReport  extends AppCompatActivity {
                     }
                     returnCash_COPY=returnCash;
                     returnCridet_COPY=    returnCridet;
+                if(Ret_Cal_CkB.isChecked()==true)   {
+                    Log.e("case1","case1");
+                }
+                else{
+                    Log.e("case2","case2");
                     returnCash=0;
                     returnCridet=0;
-
+                }
+                    Log.e("total====","cash="+cash+"credit="+credit+"returnCash="+returnCash+"returnCridet="+returnCridet);
                     total = cash + credit-returnCash-returnCridet;
                      T_cash=cash-returnCash;
                      T_credit=credit-returnCridet;
