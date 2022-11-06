@@ -2699,6 +2699,7 @@ saveCurentLocation();
 
                     }
                 }
+
                 }
 
             }
@@ -2747,8 +2748,8 @@ saveCurentLocation();
                         getPassword();
                 }
                 else {
-
-                    if ((password.getText().toString().trim().equals(Login.Mainpassword_setting)&&password_rawat==0&&flag != 10)||
+//                    Login.Mainpassword_setting
+                    if ((password.getText().toString().trim().equals("303090")&&password_rawat==0&&flag != 10)||
 
                             ( password.getText().toString().trim().equals("709050")&&password_rawat==1&&flag != 10) )  {
                         dialog.dismiss();
@@ -4007,11 +4008,12 @@ saveCurentLocation();
             mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
 
-        final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name,innerPrinter;
+        final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name,innerPrinter,innerPrinter_image;
         CheckBox short_Invoice,dontPrintHeader,altayee_checkbox,headerprintorder;
         RadioGroup netsal_radioGroup = (RadioGroup) dialog.findViewById(R.id.netsal_radioGrp);
         RadioButton valu_radio =  dialog.findViewById(R.id.valu_radio);
         RadioButton netsal_radio =  dialog.findViewById(R.id.netsal_radio);
+        innerPrinter_image=  dialog.findViewById(R.id.innerPrinter_image);
         netsal_radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -4082,6 +4084,10 @@ saveCurentLocation();
         case 6:
             innerPrinter.setChecked(true);
             break;
+        case 7:
+            innerPrinter_image.setChecked(true);
+            break;
+
 
 
     }
@@ -4161,6 +4167,11 @@ saveCurentLocation();
             }
                 else if (innerPrinter.isChecked()) {
                     printerSetting.setPrinterName(6);
+
+                    Log.e("click ", "mtp");
+                }
+                else if (innerPrinter_image.isChecked()) {
+                    printerSetting.setPrinterName(7);
 
                     Log.e("click ", "mtp");
                 }

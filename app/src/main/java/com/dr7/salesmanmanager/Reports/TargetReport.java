@@ -32,10 +32,10 @@ public class TargetReport extends AppCompatActivity {
     Spinner dateEdt;
 AppCompatButton previewButton;
 ImportJason importJason;
-public  static TextView NetsalTargetRespon,itemTargetRespon;
+public  static TextView NetsalTargetRespon,itemTargetRespon,total_value;
 String Month;
 RecyclerView NteSal_targetrec,itemtargetrec;
-    int  TargetType=0;
+    int  TargetType=1;double sum=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +69,7 @@ else {
         dateEdt=findViewById(R.id.dateEdt);
         itemTargetRespon=findViewById(R.id.itemTargetRespon);
         NetsalTargetRespon=findViewById(R.id.NetsalTargetRespon);
+        total_value=findViewById(R.id.total_value);
         itemTargetRespon.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -151,6 +152,29 @@ if(!editable.toString().trim().equals(""))
 
         Log.e("fillAdapterItemsTarget","fillAdapterItemsTarget"+ImportJason.ItemsGoalsList.size());
         itemtargetrec.setAdapter(new ItemsTargetAdapter(ImportJason.ItemsGoalsList,TargetReport.this));
+        fillTotal();
 
+    }
+
+    private void fillTotal() {
+        sum=0;
+        if(ImportJason.ItemsGoalsList.size()!=0)
+        {
+            for(int i=0;i<ImportJason.ItemsGoalsList.size();i++)
+            {
+                if(!ImportJason.ItemsGoalsList.get(i).getOrignalNetSale().equals(""))
+                {
+                    try {
+                        sum+=Double.parseDouble(ImportJason.ItemsGoalsList.get(i).getPERC());
+
+                    }catch (Exception e){
+
+                    }
+                }
+
+            }
+        }
+        Log.e("fillTotal","ItemsGoalsList="+ImportJason.ItemsGoalsList.size());
+        total_value.setText(sum+"");
     }
 }

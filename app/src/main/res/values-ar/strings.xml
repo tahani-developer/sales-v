@@ -654,6 +654,8 @@
     <string name="TARGET_NET_SALE">الهدف لصافي المبيعات</string>
     <string name="REAL_NET_SALE">  صافي المبيعات المحقق</string>
     <string name="PERC">النسبة المحققة</string>
+    <string name="commision">العمولة</string>
+    <string name="commisionRequired">العمولة المستحقة</string>
 
     <string-array name="DaysOfWeek">
         <item>السبت</item>

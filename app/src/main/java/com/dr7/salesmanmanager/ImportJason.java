@@ -5622,8 +5622,8 @@ Log.e("customerList",""+customerList.size());
                 if (!ipAddress.equals("")) {
 
                     // http://10.0.0.22:8085/ADMGetPlan?CONO=290&SALESNO=1&PDATE=17/01/2022
-                    URL_TO_HIT =
-                            "http://" + ipAddress + ":"+ ipWithPort.trim() + headerDll.trim() +"/GetGoalItems?CONO="+CONO.trim()+"&SALE_MAN_NUMBER="+SalesmanNum+"&SMONTH="+date;
+//                    URL_TO_HIT ="http://" + ipAddress + ":"+ ipWithPort.trim() + headerDll.trim() +"/GetGoalItems?CONO="+CONO.trim()+"&SALE_MAN_NUMBER="+SalesmanNum+"&SMONTH="+date;
+                    URL_TO_HIT ="http://" + ipAddress + ":"+ ipWithPort.trim() + headerDll.trim() +"/GetCommItems?CONO="+CONO.trim()+"&SALE_MAN_NUMBER="+SalesmanNum+"&SMONTH="+date;
 
                     Log.e("link", "" +  URL_TO_HIT );
                 }

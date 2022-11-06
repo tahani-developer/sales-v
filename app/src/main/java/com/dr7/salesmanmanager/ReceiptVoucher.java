@@ -1416,6 +1416,7 @@ public class ReceiptVoucher extends Fragment {
             case 5://                                                             MTP.setChecked(true);
 
             case 6:// inner printer
+            case 7:
                 convertLayoutToImage(getActivity());
                 Intent inte = new Intent(getActivity(), bMITP.class);
                 inte.putExtra("printKey", "2");

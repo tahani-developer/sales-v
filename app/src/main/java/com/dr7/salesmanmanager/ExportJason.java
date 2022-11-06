@@ -25,6 +25,7 @@ import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import static com.dr7.salesmanmanager.Login.headerDll;
 
+import com.dr7.salesmanmanager.Modles.Response_Link;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
@@ -113,6 +114,7 @@ public class ExportJason extends AppCompatActivity {
 
     GeneralMethod generalMethod;
     public int exportJustCustomer=0;
+    List<Response_Link> listOfResponse;
 
     public ExportJason(Context context) throws JSONException {
         this.context = context;
@@ -131,6 +133,7 @@ public class ExportJason extends AppCompatActivity {
         SalesManLogin= mHandler.getAllUserNo();
         fillIpAddressWithPort();
         generalMethod=new GeneralMethod(context);
+        listOfResponse=new ArrayList<>();
     }
     public void exportReturnUpdateList() {
 
@@ -908,7 +911,7 @@ public class ExportJason extends AppCompatActivity {
         private String JsonResponse = null;
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
-
+        private  Response_Link res_linkObject=new Response_Link();
         public  String salesNo="",finalJson;
         @Override
         protected void onPreExecute() {
@@ -930,7 +933,8 @@ public class ExportJason extends AppCompatActivity {
                       //  String data= "{\"JSN\":[{\"COMAPNYNO\":290,\"VOUCHERYEAR\":\"2021\",\"VOUCHERNO\":\"1212\",\"VOUCHERTYPE\":\"3\",\"VOUCHERDATE\":\"24/03/2020\",\"SALESMANNO\":\"5\",\"CUSTOMERNO\":\"123456\",\"VOUCHERDISCOUNT\":\"50\",\"VOUCHERDISCOUNTPERCENT\":\"10\",\"NOTES\":\"AAAAAA\",\"CACR\":\"1\",\"ISPOSTED\":\"0\",\"PAYMETHOD\":\"1\",\"NETSALES\":\"150.720\"}]}";
 
                             URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/ExportSALES_VOUCHER_M";
-
+                        res_linkObject.link_url="ExportSALES_VOUCHER_M";
+                        res_linkObject.order=listOfResponse.size()+1;;
 
 
                         Log.e("URL_TO_HIT",""+URL_TO_HIT);
@@ -1015,21 +1019,25 @@ public class ExportJason extends AppCompatActivity {
         @Override
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
-//            progressDialog.dismiss();
+            res_linkObject.response_link=result+"";
             Log.e("onPostExecute","---1---"+result);
+
+
 
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
                 {
-
+                    res_linkObject.state=200;
                     exportReturnUpdateList();
                 }else {
+                    res_linkObject.state=404;
                     pdVoucher.dismissWithAnimation();
                 }
 //                Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();
 
 
             } else {
+                res_linkObject.state=500;
                 pdVoucher.dismissWithAnimation();
                 Handler h = new Handler(Looper.getMainLooper());
                 h.post(new Runnable() {
@@ -1041,6 +1049,11 @@ public class ExportJason extends AppCompatActivity {
                     }
                 });
             }
+            listOfResponse.add(res_linkObject);
+            Log.e("listOfResponseresult",listOfResponse.get(0).response_link+"");
+            Log.e("listOfResponseresult",listOfResponse.get(0).link_url+"");
+            Log.e("listOfResponseresult",listOfResponse.get(0).state+"");
+
         }
     }
     private class JSONTaskDelphiPayment extends AsyncTask<String, String, String> {
@@ -1443,6 +1456,7 @@ public class ExportJason extends AppCompatActivity {
         private String JsonResponse = null;
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
+        private  Response_Link res_linkObject=new Response_Link();
 //        SweetAlertDialog pdItem=null;
 
         @Override
@@ -1460,9 +1474,12 @@ public class ExportJason extends AppCompatActivity {
 
                     String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+ "/ExportSALES_VOUCHER_D";
             Log.e("link==", link+"");
+            res_linkObject.link_url="ExportSALES_VOUCHER_D";
+            res_linkObject.order=listOfResponse.size()+1;
+
 
             String ipAddress = "";
-            Log.e("tagexPORT", "JsonResponse");
+            Log.e("ExportSALES_VOUCHER_D", "res_link"+res_linkObject.link_url+"\t"+res_linkObject.order);
 
             try {
                 ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
@@ -1529,10 +1546,14 @@ public class ExportJason extends AppCompatActivity {
             Log.e("onPostExecute,result",result+"");
 //            pdItem.dismiss();
            // Log.e("onPostExecute","ExportSALES_VOUCHER_D"+result);
+            res_linkObject.response_link=result+"";
             pdVoucher.setTitle("Export SALES_VOUCHER_Detail");
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
                 {
+                    res_linkObject.state=200;
+
+
 //                    Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();
 
 
@@ -1543,18 +1564,23 @@ public class ExportJason extends AppCompatActivity {
 
                 }
                 else {
+                    res_linkObject.state=404;
                     Log.e("elseExportSALE","---3---__");
                     pdVoucher.dismissWithAnimation();
                 Toast.makeText(context, "Export SALES_VOUCHER_Detail= "+result.toString(), Toast.LENGTH_SHORT).show();
                 }
 
             } else {
+                res_linkObject.state=500;
                 Log.e("elseExportSALES_VOUCHER_D","---3---__");
                 pdVoucher.dismissWithAnimation();
 //                Toast.makeText(context, "onPostExecute", Toast.LENGTH_SHORT).show();
             }
 
-
+            listOfResponse.add(res_linkObject);
+            Log.e("listOfResponseresult",listOfResponse.get(0).response_link+"");
+            Log.e("listOfResponseresult",listOfResponse.get(0).order+"");
+            Log.e("listOfResponseresult",listOfResponse.get(0).state+"");
         }
     }
 

@@ -133,6 +133,7 @@ public class requestAdmin {
 
 
     public void startParsing() {
+        getData();
         //old requst code
 //        List<Settings> settings = mHandler.getAllSettings();
 //        if (settings.size() != 0) {
@@ -147,7 +148,7 @@ public class requestAdmin {
 //                new JSONTask_AddRequest_IIS().execute();
 //            }
 
-        }
+//        }
     }
 
     public void getState() {
@@ -974,7 +975,7 @@ void GetObjToAddInFirebase(){
         requestAdmin1.setRequest_type(requestList.get(0).getRequest_type());
         requestAdmin1.setAmount_value(requestList.get(0).getAmount_value());
         requestAdmin1.setKey_validation(requestList.get(0).getKey_validation());
-        Log.e("requestAdmin1.getKey_validation()==", requestAdmin1.getKey_validation()+"");
+        Log.e("requestAdmin1.getKey", requestAdmin1.getKey_validation()+"");
         requestAdmin1.setStatus(requestList.get(0).getStatus());
         requestAdmin1.setSeen_row(requestList.get(0).getSeen_row());
         requestAdmin1.setNote(requestList.get(0).getNote());

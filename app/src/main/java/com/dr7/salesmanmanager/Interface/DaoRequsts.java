@@ -175,8 +175,8 @@ String ipAddress="";
 if(requstTest!=null) {
     if (requstTest.getStatus() != null)
     {  if (requstTest.getStatus().equals("1")) {
-            GeneralMethod.displayNotification(context, "Requst is Confirm", "");
-        Log.e("requstTest.getStatus()==","1");
+            GeneralMethod.displayNotification(context, ""+context.getResources().getString(R.string.acceptedRequest), "");
+        Log.e("requstTest.getSta","1");
    deleteRequst(requstTest.getKey_validation());
 
 
@@ -184,8 +184,8 @@ if(requstTest!=null) {
         } else
 
     if (requstTest.getStatus().equals("2")) {
-        GeneralMethod.displayNotification(context, "Requst is Reject", "");
-        Log.e("requstTest.getStatus()==", "2");
+        GeneralMethod.displayNotification(context, ""+context.getResources().getString(R.string.rejectedRequest), "");
+        Log.e("requstTest.getSt", "2");
       deleteRequst(requstTest.getKey_validation());
     }
         if((requstTest.getRequest_type().equals("0")||requstTest.getRequest_type().equals("2")) && checkState_recycler!=null)   checkState_recycler.setText(requstTest.getStatus().toString());

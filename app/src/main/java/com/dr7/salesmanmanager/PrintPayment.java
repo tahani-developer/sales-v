@@ -332,7 +332,7 @@ public class PrintPayment extends AppCompatActivity {
 
                                                             case 5:
                                                             case 6:
-
+                                                            case 7:
 
                                                                 paymentPrinter = obj.getRequestedPaymentsPaper(Integer.parseInt(textView.getText().toString()));
                                                                 pay1 = pay;

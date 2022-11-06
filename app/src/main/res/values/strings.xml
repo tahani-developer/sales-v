@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 200.58 </string>
+    <string name="version"> V 200.60 </string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -617,6 +617,8 @@
     <string name="goalachievementrate">achievement Sale</string>
     <string name="items_Unit">items Unit</string>
     <string name="EndTripReport">not making any sale Report</string>
+    <string name="commision">commision</string>
+    <string name="commisionRequired">commision Required</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
