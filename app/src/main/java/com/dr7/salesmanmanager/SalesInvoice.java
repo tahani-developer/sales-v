@@ -412,6 +412,7 @@ public class SalesInvoice extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_sales_invoice, container, false);
         mainlayout = (LinearLayout) view.findViewById(R.id.mainlyout);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        if(offerTalaat==0)
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         listSerialTotal=new ArrayList<>();
         listMasterSerialForBuckup=new ArrayList<>();
@@ -2639,7 +2640,7 @@ public class SalesInvoice extends Fragment {
 
                             break;
                         case 6:// inner prenter
-
+                        case 7:
 //                                                             MTP.setChecked(true);
                             vouchLast = vouchPrint;
 //                            convertLayoutToImage(vouchPrint);

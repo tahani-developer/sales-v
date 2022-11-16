@@ -22,7 +22,7 @@
 
     <LinearLayout
         android:id="@+id/ll"
-        android:layout_width="920dp"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:layoutDirection="rtl"

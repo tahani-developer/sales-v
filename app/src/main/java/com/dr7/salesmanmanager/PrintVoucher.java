@@ -429,7 +429,7 @@ GeneralMethod generalMethod;
                                                             case 5:
 
                                                             case 6:
-
+                                                            case 7:
                                                                 vouch1 = vouch;
                                                                 voucherPrint=vouch;
                                                                 Log.e("hheere44","hheere");
