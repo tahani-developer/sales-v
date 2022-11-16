@@ -15,8 +15,17 @@ public class Flag_Settings {
     private int offerCakeShop;
     private int offerTalaat;
     private int offerQasion;
+    private int offernasleh;
     private int maxvochServer;
     private int purchaseOrder;
+
+    public int getOffernasleh() {
+        return offernasleh;
+    }
+
+    public void setOffernasleh(int offernasleh) {
+        this.offernasleh = offernasleh;
+    }
 
     public int getNoTax() {
         return noTax;
@@ -75,7 +84,7 @@ public class Flag_Settings {
     public Flag_Settings(String data_Type, int export_Stock, int max_Voucher, int make_Order, int admin_Password, int total_Balance,
                          int voucher_Return, int activeSlasmanPlan, int pos_active,
                          int offerCakeShop, int offerTalaat, int offerQasion,int SalsManTrip
-            ,int maxVoServer, int purchase_Order,int no_tax) {
+            ,int maxVoServer, int purchase_Order,int no_tax,int offernasleh) {
         Data_Type = data_Type;
         Export_Stock = export_Stock;
         Max_Voucher = max_Voucher;
@@ -92,6 +101,7 @@ public class Flag_Settings {
         this.maxvochServer=maxVoServer;
         this.purchaseOrder=purchase_Order;
         this.noTax=no_tax;
+        this.offernasleh=offernasleh;
     }
 
     public int getOfferCakeShop() {

@@ -41,8 +41,11 @@ import com.dr7.salesmanmanager.BluetoothConnectMenu;
 import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.ExportToExcel;
 import com.dr7.salesmanmanager.LocaleAppUtils;
+import com.dr7.salesmanmanager.MainActivity;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
 import com.dr7.salesmanmanager.PdfConverter;
 import com.dr7.salesmanmanager.R;
@@ -84,7 +87,7 @@ public class InventoryReport extends AppCompatActivity {
     int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
     //    R.drawable.ic_save_black_24dp,
     String[] textListButtons=new String[]{};
-
+TextView unit_price,unit_name;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -94,6 +97,7 @@ public class InventoryReport extends AppCompatActivity {
         new LocaleAppUtils().changeLayot(InventoryReport.this);
         setContentView(R.layout.inventory_report);
         preview=findViewById(R.id.preview);
+
 
         LinearLayout linearMain=findViewById(R.id.linearMain);
         try{
@@ -114,12 +118,28 @@ public class InventoryReport extends AppCompatActivity {
             linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
         inflateBoomMenu();
+        unit_price=findViewById(R.id.unit_price);
+                unit_name =findViewById(R.id.unit_name);
+        unit_price.setVisibility(View.GONE);
+        unit_name.setVisibility(View.GONE);
         itemsReportinventory = new ArrayList<inventoryReportItem>();
         itemsInventoryPrint=new ArrayList<inventoryReportItem>();
         itemsInventoryPrint.clear();
         itemsReportinventory.clear();
          obj = new DatabaseHandler(InventoryReport.this);
-        itemsReportinventory = obj.getInventory_db();
+
+       if(MainActivity.UNITFLAGE==1)// not enabled units
+        {
+        itemsReportinventory = obj.getInventory_db2();
+            unit_price.setVisibility(View.VISIBLE);
+            unit_name.setVisibility(View.VISIBLE);
+        }
+else
+        {
+            itemsReportinventory = obj.getInventory_db();
+            unit_price.setVisibility(View.GONE);
+            unit_name.setVisibility(View.GONE);
+        }
         itemsInventoryPrint=itemsReportinventory;
         Log.e("itemsReportinventory",""+itemsReportinventory.size()+"itemsInventoryPrint="+itemsInventoryPrint.size());
         item_number2 = (EditText) findViewById(R.id.item_number_inventory);

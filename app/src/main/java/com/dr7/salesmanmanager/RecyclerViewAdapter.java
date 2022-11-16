@@ -96,6 +96,7 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.offerQasion;
 import static com.dr7.salesmanmanager.Login.offerTalaat;
 
+import static com.dr7.salesmanmanager.Login.offernasleh;
 import static com.dr7.salesmanmanager.SalesInvoice.discountRequest;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.items;
@@ -1480,6 +1481,9 @@ public static     int CountOfItems=1;
                                                                                                                      if (offerQasion == 1) {
                                                                                                                          disount_totalnew = (unitQty_double * appliedOffer.getBonusQty());
                                                                                                                      }
+                                                                                                                     if (offernasleh == 1) {
+                                                                                                                         disount_totalnew = appliedOffer.getBonusQty();
+                                                                                                                     }
                                                                                                                      // get discount from offers not from text
 
 
@@ -2688,6 +2692,9 @@ public static     int CountOfItems=1;
                                                                         }
                                                                         if (offerQasion == 1) {
                                                                             disount_totalnew = (unitQty_double * appliedOffer.getBonusQty());
+                                                                        }
+                                                                        if (offernasleh == 1) {
+                                                                            disount_totalnew = appliedOffer.getBonusQty();
                                                                         }
                                                                         // get discount from offers not from text
 

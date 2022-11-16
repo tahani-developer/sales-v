@@ -492,6 +492,56 @@
                         android:layout_marginEnd="5dp"
                         android:visibility="gone"
                         android:text="@string/talaat_offer_discount"/>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="10dp">
+
+                        <Switch
+                            android:id="@+id/naslehSW"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:theme="@style/MySwitch"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <TextView
+                            android:id="@+id/textV5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Nasleh Offer - Bonus"
+                            android:textColor="#717171"
+                            android:textSize="16sp"
+                            app:layout_constraintStart_toEndOf="@+id/naslehSW"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <ImageButton
+                            android:id="@+id/naslehInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/ic_info_outline_black2_24dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_marginEnd="5dp"
+                            android:backgroundTint="@color/gray_btn_bg_pressed_color"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:id="@+id/naslehExpandedText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:padding="5dp"
+                        android:gravity="start"
+                        android:textColor="#3C3C3C"
+                        android:layout_marginStart="43dp"
+                        android:layout_marginEnd="5dp"
+                        android:visibility="gone"
+                        android:text="@string/nasleh_offer_discount"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

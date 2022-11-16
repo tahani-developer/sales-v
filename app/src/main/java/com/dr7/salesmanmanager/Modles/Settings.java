@@ -60,6 +60,15 @@ public class Settings {
     private  int  showCustomerLocation;
     private  int Items_Unit;
     private  int EndTripReport;
+    private  int AcountatatmentVisable;
+
+    public int getAcountatatmentVisable() {
+        return AcountatatmentVisable;
+    }
+
+    public void setAcountatatmentVisable(int acountatatmentVisable) {
+        AcountatatmentVisable = acountatatmentVisable;
+    }
 
     public int getEndTripReport() {
         return EndTripReport;

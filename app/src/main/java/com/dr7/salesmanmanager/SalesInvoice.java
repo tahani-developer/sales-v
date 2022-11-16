@@ -1163,7 +1163,6 @@ public class SalesInvoice extends Fragment {
             notIncludeTax.setVisibility(View.GONE);
             linearTotalCashDiscount.setVisibility(View.GONE);
             offerTalaat=1;
-
             offerQasion=0;
             OfferCakeShop=1;
 
