@@ -1048,6 +1048,15 @@
                         android:text="@string/AcountatatmentVisable"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
+                    <CheckBox
+                        android:id="@+id/SharWhats_AppForm_checBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:checked="true"
+                        android:text="@string/whatsappform"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
 
 
                 </LinearLayout>

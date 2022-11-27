@@ -2066,7 +2066,8 @@ public class ExportJason extends AppCompatActivity {
         new JSONTaskDelphiDetail().execute();
     }
     public void exportSerial(){ // 4
-//        pdVoucher.setTitle("Export Serial");
+        Log.e("exportSerial//4","exportSerial");
+//     pdVoucher.setTitle("Export Serial");
         getSerialTables();
        new  JSONTask_SerialDelphi().execute();
     }
@@ -2543,7 +2544,7 @@ public class ExportJason extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             String link = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim()+"/ExportITEMSERIALS";
-
+            Log.e("link", "link"+link);
             String ipAddress = "";
             Log.e("tagexPORT", "JsonResponse");
 

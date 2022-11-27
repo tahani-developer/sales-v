@@ -61,6 +61,15 @@ public class Settings {
     private  int Items_Unit;
     private  int EndTripReport;
     private  int AcountatatmentVisable;
+    private  int   SharWhatsAppForm;
+
+    public int getSharWhatsAppForm() {
+        return SharWhatsAppForm;
+    }
+
+    public void setSharWhatsAppForm(int sharWhatsAppForm) {
+        SharWhatsAppForm = sharWhatsAppForm;
+    }
 
     public int getAcountatatmentVisable() {
         return AcountatatmentVisable;
