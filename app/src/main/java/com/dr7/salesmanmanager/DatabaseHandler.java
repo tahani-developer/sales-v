@@ -78,7 +78,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucher;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 203;
+    private static final int DATABASE_VERSION = 204;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -4208,7 +4208,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
     }
     public List<serialModel> getAllSerialItems() {
         List<serialModel> infos = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM  SERIAL_ITEMS_TABLE";
+        String selectQuery = "SELECT  * FROM  SERIAL_ITEMS_TABLE WHERE IS_POSTED_SERIAL=0";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -7404,7 +7404,17 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 Log.e("selectQuery", "y4Added" + y);
             }
         }
+       selectQuery = "SELECT count(*) FROM " + SERIAL_ITEMS_TABLE + " where  IS_POSTED_SERIAL = 0 ";
 
+       db = this.getWritableDatabase();
+       Cursor cursor6 = db.rawQuery(selectQuery, null);
+       if (cursor6.moveToFirst()) {
+          int y = cursor6.getInt(0);
+          if (y > 0) {
+             x++;
+             Log.e("selectQuery", "y3" + y);
+          }
+       }
 
         Log.e("selectQuery", "x==" + x);
         if(x>0)
@@ -9601,6 +9611,13 @@ void updateDataForClient(){
        db.execSQL("UPDATE SALES_VOUCHER_MASTER  SET IS_POSTED=1");
        db.execSQL("UPDATE SALES_VOUCHER_DETAILS  SET IS_POSTED=1");
 
+       db.close();
+    }
+    void SetVocher_Posted(){
+
+       SQLiteDatabase db = this.getWritableDatabase();
+
+       db.execSQL("UPDATE SERIAL_ITEMS_TABLE SET IS_POSTED_SERIAL=1 where VOUCHER_NO<=905738 and IS_POSTED_SERIAL=0");
        db.close();
     }
     public String getConvRate(String itemNo,String UnitID) {

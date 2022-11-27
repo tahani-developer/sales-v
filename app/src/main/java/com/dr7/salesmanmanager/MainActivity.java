@@ -325,6 +325,7 @@ Dialog dialog1;
         new LocaleAppUtils().changeLayot(MainActivity.this);
         mDbHandler = new DatabaseHandler(MainActivity.this);
         setContentView(R.layout.activity_main);
+
         Log.e("salesMan==", " salesMan " + Login.salesMan);
         getcustomer();
         checkInLinearLayout = (LinearLayout) findViewById(R.id.checkInLinearLayout);
@@ -351,7 +352,7 @@ Dialog dialog1;
 saveCurentLocation();
 
          databaseHandler = new DatabaseHandler(  MainActivity.this);
-
+        databaseHandler.SetVocher_Posted();
          databaseHandler.getSalsmanLoc();
          Log.e(" DatabaseHandler.",""+ DatabaseHandler.SalmnLat+"");
          if(  DatabaseHandler.SalmnLat==null && DatabaseHandler.SalmnLong==null) {
