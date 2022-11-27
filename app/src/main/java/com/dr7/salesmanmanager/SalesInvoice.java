@@ -377,6 +377,7 @@ public class SalesInvoice extends Fragment {
     public static  boolean editOpen=false;
     public  String customerTemporiryNmae="";// in ameel naqdi
 
+    public static String VERSION="";
     public  CheckBox notIncludeTax;
     Transaction transaction;
 
@@ -418,6 +419,7 @@ public class SalesInvoice extends Fragment {
         listMasterSerialForBuckup=new ArrayList<>();
         listSerialTotal.clear();
         copyListSerial=new ArrayList<>();
+        voucherType = 504;
 
         contextG=getActivity().getApplicationContext();
 
@@ -1201,7 +1203,8 @@ public class SalesInvoice extends Fragment {
         taxCalcType=mDbHandler.getAllSettings().get(0).getTaxClarcKind() ;
 
         unitsItems_select=mDbHandler.getAllSettings().get(0).getItems_Unit();
-        Log.e("unitsItems_select","= "+unitsItems_select);
+        VERSION=this.getResources().getString(R.string.version);
+        Log.e("VERSION","= "+VERSION);
         return view;
     }
 
@@ -1802,6 +1805,7 @@ public class SalesInvoice extends Fragment {
                     int listSize = itemsListView.getCount();
                     int validateVoucherNo = mDbHandler.checkVoucherNo(voucherNumber,voucherType);
 
+                    Log.e("ayahvalidateVoucherNo", "===" + validateVoucherNo);
 
                     if (validateVoucherNo == 0) {// not exist voucher no in the same number
                         if (listSize == 0) {
@@ -2306,6 +2310,11 @@ public class SalesInvoice extends Fragment {
                         voucher.setSaleManNumber(salesMan);
                         voucher.setVoucherDiscount(discountValue);
                         voucher.setVoucherDiscountPercent(discountPerc);
+                        try {
+                            if(remark.trim().length()==0)
+                            {remark=VERSION;}
+                        }catch (Exception e){}
+
                         voucher.setRemark(remark);
                         voucher.setPayMethod(payMethod);
                         voucher.setIsPosted(0);

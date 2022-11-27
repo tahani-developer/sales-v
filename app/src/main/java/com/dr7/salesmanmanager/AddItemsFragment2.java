@@ -83,6 +83,7 @@ import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
 
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.CountOfItems;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
+import static com.dr7.salesmanmanager.SalesInvoice.VERSION;
 import static com.dr7.salesmanmanager.SalesInvoice.addItemImgButton2;
 import static com.dr7.salesmanmanager.SalesInvoice.addNewSerial;
 import static com.dr7.salesmanmanager.SalesInvoice.addQtyTotal;
@@ -1277,8 +1278,16 @@ try {
 
             item.setTax(Float.parseFloat(generalMethod.convertToEnglish(generalMethod.getDecimalFormat(Double.parseDouble(tax.trim())))));
             item.setCategory(category);
+            try {
+                if(descriptRemark.trim().length()==0)
+                {
+                    descriptRemark=VERSION;
+                }
+            }catch ( Exception e){}
+
             item.setDescreption(descriptRemark);
 
+            Log.e("setDescreption",""+item.getDescription());
             try {
                 item.setUnit(unit);
 

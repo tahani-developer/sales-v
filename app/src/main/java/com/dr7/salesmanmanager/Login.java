@@ -144,7 +144,7 @@ public class Login extends AppCompatActivity {
     public  static int makeOrders=0;// 1= just orders app
 
     public  static int OfferCakeShop=0;// if 0 calck offer many times
-    public  static int  DayofweekPlan=1;// 1 if saleman plan based on day of week ,, 0 if saleman plan based on date
+    public  static int  DayofweekPlan=0;// 1 if saleman plan based on day of week ,, 0 if saleman plan based on date
     public  static    int  offerTalaat=0;
     public  static    int  offerQasion=0;
     public  static    int getTotalBalanceInActivities=1;
@@ -159,7 +159,7 @@ public class Login extends AppCompatActivity {
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-//    public  static    String  headerDll = "/Falcons/VAN.dll";
+// public  static    String  headerDll = "/Falcons/VAN.dll";
  public  static    String headerDll = "";
 
     public  static  int gone_noTax_totalDisc=0;
@@ -183,6 +183,7 @@ public class Login extends AppCompatActivity {
         new LocaleAppUtils().changeLayot(Login.this);
 
         setContentView(R.layout.login_free_size);
+        context=Login.this;
         initialView();
      //if(   password_talaat==1) Secondpassword_setting ="2022111";
 
@@ -609,22 +610,22 @@ public class Login extends AppCompatActivity {
                     }
                   //  mDHandler.deletAllSalesLogIn();
 
-                    mDHandler.addUserNO(storeNo_edit.getText().toString());
+                    mDHandler.addUserNO(storeNo_edit.getText().toString(),context.getResources().getString(R.string.version));
                     refreshSalesName();
 
                    Log.e("mDHandler1=",mDHandler.getAllUserNo());
                    if( mDHandler.getAllUserNo()!=null) {
                         if ( mDHandler.getAllUserNo().equals(""))
-                        {        mDHandler.addUserNO(storeNo_edit.getText().toString());
+                        {        mDHandler.addUserNO(storeNo_edit.getText().toString(),context.getResources().getString(R.string.version));
                             refreshSalesName();}
 
                         else{
                             Log.e("mDHandler6=",mDHandler.getAllUserNo());
-                            mDHandler.updateUserNO(storeNo_edit.getText().toString());
+                            mDHandler.updateUserNO(storeNo_edit.getText().toString(),context.getResources().getString(R.string.version));
                         }
                     }  else{
                        Log.e("mDHandler7=",mDHandler.getAllUserNo());
-                        mDHandler.updateUserNO(Login.salesMan);
+                        mDHandler.updateUserNO(Login.salesMan,context.getResources().getString(R.string.version));
                     }
                    if( Login.salesMan.trim().length()==0)
                     Login.salesMan=storeNo_edit.getText().toString().trim();
@@ -1037,7 +1038,26 @@ public class Login extends AppCompatActivity {
             OfferCakeShop=1;
 
         }
-    }
+        SendMail send =new SendMail();
+
+
+//            new Thread(new Runnable() {
+//
+//                public void run() {
+//                    try {
+//                        send.sendMail("test1","helo","1234developersteam@gmail","ta.email.2022.fa@gmail.com");
+//                    } catch (Exception e) {
+//                        Log.e("sendMail",""+e.getMessage());
+//                        e.printStackTrace();
+//                    }
+//                    }
+//                }).start();
+            }
+
+
+
+
+
 
     private void openCompanyDialog() {
 
@@ -1539,17 +1559,17 @@ public class Login extends AppCompatActivity {
      //   mDHandler.addUserNO(Login.salesMan);
         if( mDHandler.getAllUserNo()!=null) {
             if ( mDHandler.getAllUserNo().equals(""))
-            {  mDHandler.addUserNO(Login.salesMan);
+            {  mDHandler.addUserNO(Login.salesMan,context.getResources().getString(R.string.version));
 
             }
 
             else{
                 Log.e("mDHandler3=",mDHandler.getAllUserNo());
-                mDHandler.updateUserNO(Login.salesMan);
+                mDHandler.updateUserNO(Login.salesMan,context.getResources().getString(R.string.version));
             }
         }  else{
             Log.e("mDHandler4=",mDHandler.getAllUserNo());
-            mDHandler.updateUserNO(Login.salesMan);
+            mDHandler.updateUserNO(Login.salesMan,context.getResources().getString(R.string.version));
         }
         refreshSalesName();
 

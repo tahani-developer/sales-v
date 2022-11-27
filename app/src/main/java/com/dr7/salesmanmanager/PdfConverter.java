@@ -1130,7 +1130,7 @@ public class PdfConverter {
 
             }
 
-            PdfPCell cell1 = new PdfPCell(new Paragraph(context.getString(R.string.date) + " : " + list.get(0).getDate(), arabicFontHeaderprint));
+            PdfPCell cell1 = new PdfPCell(new Paragraph(context.getString(R.string.date) + " : " +PrintVoucher.vouchPrinted.getVoucherDate() , arabicFontHeaderprint));
             PdfPCell cell2 = new PdfPCell(new Paragraph(context.getString(R.string.company_tel) + " : " + companyInfo.getcompanyTel(), arabicFontHeaderprint));
 
             PdfPCell cell3 = new PdfPCell(new Paragraph(context.getString(R.string.tax_no) + companyInfo.getTaxNo(), arabicFontHeaderprint));
@@ -1394,7 +1394,7 @@ public class PdfConverter {
 
             table.setWidthPercentage(100f);
 
-        PdfPCell cell4 = new PdfPCell(new Paragraph("رقم العرض" + " : " + PrintVoucher.vouchPrinted.getVoucherNumber() + "   Vocher No         " + "التاريخ " + " : " + list.get(0).getDate() + "        Date", arabicFontHeaderprint));
+        PdfPCell cell4 = new PdfPCell(new Paragraph("رقم العرض" + " : " + PrintVoucher.vouchPrinted.getVoucherNumber() + "   Vocher No         " + "التاريخ " + " : " + PrintVoucher.vouchPrinted.getVoucherDate() + "        Date", arabicFontHeaderprint));
 
         cell4.setBorder(Rectangle.NO_BORDER);
         table.addCell(cell4);

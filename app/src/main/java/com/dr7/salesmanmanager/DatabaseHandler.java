@@ -77,7 +77,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucher;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 200;
+    private static final int DATABASE_VERSION = 201;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -629,6 +629,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String SalesMenLogIn = "SalesMenLogIn";
 
     private static final String UserNo_LogIn = "UserNo_LogIn";
+    private static final String VERSION_APK = "VERSION_APK";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     ////B
@@ -1341,7 +1342,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
                 + UserNo_LogIn + " TEXT,"
                 + LATITUDE + " TEXT,"
-                + LONGITUDE + " TEXT"+
+                + LONGITUDE + " TEXT ,"
+                +VERSION_APK+ " TEXT " +
                 ")";
         db.execSQL(CREATE_TABLE_SALESMEN_LOG_IN);
         try {
@@ -2607,6 +2609,19 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
                + ")";
        db.execSQL(CREATE_AdminPasswords_TABLE);
+       try {
+          db.execSQL("ALTER TABLE SalesMenLogIn ADD '" + LATITUDE + "'  Text");
+          db.execSQL("ALTER TABLE SalesMenLogIn ADD '" + LONGITUDE + "'  Text");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SalesMenLogIn ADD '" + VERSION_APK + "'  Text");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
     }
 
     ////B
@@ -3840,23 +3855,21 @@ Log.e("addCompanyInfo","addCompanyInfo");
         db.close();
     }
 
-    public void addUserNO(String  USER_NO) {
+    public void addUserNO(String  USER_NO,String version) {
+       Log.e("version","addUserNO="+version);
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
-
         values.put(UserNo_LogIn,USER_NO);
-
-
+       values.put(VERSION_APK,version);
         db.insert(SalesMenLogIn, null, values);
         db.close();
     }
-    public void updateUserNO(String  USER_NO) {
+    public void updateUserNO(String  USER_NO,String version) {
+       Log.e("version","updateUserNO="+version);
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
-
         values.put(UserNo_LogIn,USER_NO);
-
-
+       values.put(VERSION_APK,version);
         db.update(SalesMenLogIn, values,null,null);
         db.close();
     }
@@ -4308,6 +4321,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
     }
     public int getMaxSerialNumberFromVoucherMaster(int voucherType) {
+       Log.e("voucherType====",""+voucherType);
         int maxVoucher = 0;
         if (typaImport == 1)//iis
         {
@@ -9545,6 +9559,13 @@ void updateDataForClient(){
 
        return ConvRate;
     }
+    void deletevocher (){
+       SQLiteDatabase db = this.getWritableDatabase();
 
+
+       db.execSQL("delete from SALES_VOUCHER_MASTER where VOUCHER_NUMBER=200004 and IS_POSTED==0");
+       db.execSQL("delete from SALES_VOUCHER_DETAILS where VOUCHER_NUMBER=200004 and IS_POSTED==0");
+       db.close();
+    }
  }
 
