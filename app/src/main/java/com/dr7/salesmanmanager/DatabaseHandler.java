@@ -633,6 +633,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String SalesMenLogIn = "SalesMenLogIn";
 
     private static final String UserNo_LogIn = "UserNo_LogIn";
+    private static final String VERSION_APK = "VERSION_APK";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     ////B
@@ -755,31 +756,31 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
                + dateDelete + " TEXT" +
 
-               ")";
-       db.execSQL(CREATE_SERIAL_ITEMS_TABLE_backup);
-       //-------------------------------------------------------------------------
+                ")";
+        db.execSQL(CREATE_SERIAL_ITEMS_TABLE_backup);
+        //-------------------------------------------------------------------------
 
-       try {
-
-
-          String CREATE_SERIAL_TABLE = "CREATE TABLE IF NOT EXISTS " + SerialItemMaster + "("
-
-                  + StoreNo + " TEXT,"
-                  + ITEM_OCODE_M + " TEXT,"
-                  + SerialCode + " TEXT,"
-                  + Qty_serial + " TEXT"
-
-                  +
+        try {
 
 
-                  ")";
-          db.execSQL(CREATE_SERIAL_TABLE);
-       } catch (Exception e) {
-       }
+
+            String CREATE_SERIAL_TABLE= "CREATE TABLE IF NOT EXISTS " + SerialItemMaster + "("
+
+                    + StoreNo + " TEXT,"
+                    + ITEM_OCODE_M + " TEXT,"
+                    + SerialCode + " TEXT,"
+                    + Qty_serial + " TEXT"
+
+                    +
 
 
-       //-------------------------------------------------------------------------
-       try {
+                    ")";
+            db.execSQL(CREATE_SERIAL_TABLE);
+        }catch (Exception e){}
+
+
+        //-------------------------------------------------------------------------
+        try {
 
 
           String CREATE_OfferListMaster_TABLE = "CREATE TABLE IF NOT EXISTS " + price_offer_list_master + "("
@@ -1340,7 +1341,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
                 + UserNo_LogIn + " TEXT,"
                 + LATITUDE + " TEXT,"
-                + LONGITUDE + " TEXT"+
+                + LONGITUDE + " TEXT ,"
+                +VERSION_APK+ " TEXT " +
                 ")";
         db.execSQL(CREATE_TABLE_SALESMEN_LOG_IN);
         try {
@@ -2620,6 +2622,19 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
           Log.e(TAG, e.getMessage().toString());
        }
        try {
+          db.execSQL("ALTER TABLE SalesMenLogIn ADD '" + LATITUDE + "'  Text");
+          db.execSQL("ALTER TABLE SalesMenLogIn ADD '" + LONGITUDE + "'  Text");
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SalesMenLogIn ADD '" + VERSION_APK + "'  Text");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+       try {
           db.execSQL("ALTER TABLE SETTING ADD '" + SharWhatsApp_Form + "'  INTEGER DEFAULT '0'");
 
        } catch (Exception e) {
@@ -3868,23 +3883,21 @@ Log.e("addCompanyInfo","addCompanyInfo");
         db.close();
     }
 
-    public void addUserNO(String  USER_NO) {
+    public void addUserNO(String  USER_NO,String version) {
+       Log.e("version","addUserNO="+version);
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
-
         values.put(UserNo_LogIn,USER_NO);
-
-
+       values.put(VERSION_APK,version);
         db.insert(SalesMenLogIn, null, values);
         db.close();
     }
-    public void updateUserNO(String  USER_NO) {
+    public void updateUserNO(String  USER_NO,String version) {
+       Log.e("version","updateUserNO="+version);
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
-
         values.put(UserNo_LogIn,USER_NO);
-
-
+       values.put(VERSION_APK,version);
         db.update(SalesMenLogIn, values,null,null);
         db.close();
     }
@@ -9651,6 +9664,14 @@ void updateDataForClient(){
 
 
        return list;
+    }
+    void deletevocher (){
+       SQLiteDatabase db = this.getWritableDatabase();
+
+
+       db.execSQL("delete from SALES_VOUCHER_MASTER where VOUCHER_NUMBER=200004 and IS_POSTED==0");
+       db.execSQL("delete from SALES_VOUCHER_DETAILS where VOUCHER_NUMBER=200004 and IS_POSTED==0");
+       db.close();
     }
  }
 
