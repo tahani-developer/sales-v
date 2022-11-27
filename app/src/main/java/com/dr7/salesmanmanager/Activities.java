@@ -97,7 +97,7 @@ public class Activities extends AppCompatActivity implements
     public  static  String currentKeyTotalDiscount="",keyCreditLimit="",  currentKey="";
 
     private LinearLayout salesInvoiceLayout,mainlayout,linearMainActivities,mainLinearHolder,
-            linearInvoice,linearPayment,linearStock,linearBalance,linearuncollect,dashLayout,fragmentContainer;
+            linearInvoice,linearPayment,linearStock,linearBalance,linearuncollect,dashLayout,fragmentContainer,accountBalanceMainLin;
 
     private SalesInvoice salesInvoice;
     private  Transaction_Fragment transaction_fragment;
@@ -235,6 +235,7 @@ public class Activities extends AppCompatActivity implements
 //                linearStock= (LinearLayout)findViewById(R.id.linearStock);
 
         linearBalance   = (LinearLayout)findViewById(R.id.linearBalance);
+
         linearuncollect = (LinearLayout)findViewById(R.id.linearuncollect);
         dashLayout = (LinearLayout)findViewById(R.id.dashLayout);
         fragmentContainer= (LinearLayout)findViewById(R.id.fragmentContainer);
@@ -279,6 +280,8 @@ public class Activities extends AppCompatActivity implements
         saleCardView = (CardView) findViewById(R.id.saleCardView);
         receiptCardView = (CardView) findViewById(R.id.receiptCardView);
         accountBalance= (CardView) findViewById(R.id.accountBalanceCardView);
+        accountBalanceMainLin= findViewById(R.id.accountBalanceMainLin);
+        if(MainActivity.Acountatatment==0)  accountBalanceMainLin.setVisibility(View.GONE);
         uncollectChechue= (CardView) findViewById(R.id.unCollectChequesCardView);
         returnCardView= (CardView) findViewById(R.id.returnCardView);
         linearReturn=findViewById(R.id.linearReturn);

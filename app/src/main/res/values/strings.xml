@@ -555,6 +555,7 @@
     <string name="explain_offer_cakeshop_bonus">On: (bonus * 1)   Of: (qty/bonusLimit ) * bonus</string>
     <string name="qasion_explain_discount">On:(qty*discount)</string>
     <string name="talaat_offer_discount">On:(qty/discountLimit)* discount</string>
+    <string name="nasleh_offer_discount">On:(tatalitem)* discount</string>
     <string name="progress_getPlan">Get  New Plan</string>
     <string name="no_plan">"No Plan Available "</string>
     <string name="greatZero">Qty Great Zero</string>
@@ -620,6 +621,10 @@
     <string name="EndTripReport">not making any sale Report</string>
     <string name="commision">commision</string>
     <string name="commisionRequired">commision Required</string>
+    <string name="AcountatatmentVisable">Account Statment visibility</string>
+
+    <string name="unit_name">Unit</string>
+    <string name="unit_price">Unit Price</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
@@ -660,7 +665,7 @@
         <item>Jordan Islamic Bank</item>
         <item>Safwa Islamic Bank</item>
         <item>Al-Rajhi Bank</item>
-
+        <item>Capital Bank</item>
     </string-array>
     <string-array name="montharray">
         <item>1 January</item>

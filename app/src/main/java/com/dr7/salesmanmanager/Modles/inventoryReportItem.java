@@ -6,13 +6,30 @@ public class inventoryReportItem {
     private String name;
     private double qty;
     private String categoryId;
-
+    private String UNITname;
+    private String UNITprice;
 
     public inventoryReportItem(String itemNo, String name, double qty, String categoryId) {
         this.itemNo = itemNo;
         this.name = name;
         this.qty = qty;
         this.categoryId = categoryId;
+    }
+
+    public String getUNITname() {
+        return UNITname;
+    }
+
+    public void setUNITname(String UNITname) {
+        this.UNITname = UNITname;
+    }
+
+    public String getUNITprice() {
+        return UNITprice;
+    }
+
+    public void setUNITprice(String UNITprice) {
+        this.UNITprice = UNITprice;
     }
 
     public String getCategoryId() {

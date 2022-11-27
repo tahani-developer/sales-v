@@ -1,5 +1,6 @@
  package com.dr7.salesmanmanager;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -77,7 +78,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucher;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 201;
+    private static final int DATABASE_VERSION = 202;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -467,6 +468,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String SHOW_CUSTOMER_LOCATION ="SHOW_CUSTOMER_LOCATION";
     private static final String Items_Units ="Items_Units";
     private static final String EndTripReport ="EndTripReport";
+    private static final String AcountatatmentVis ="AcountatatmentVis";
+
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -650,7 +653,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String Qasion_Offer = "Qasion_Offer";
     private static final String Purchase_Order = "Purchase_Order";
     private static final String NO_TAX = "NO_TAX";
-
+    private static final String Nasleh_Offer = "Nasleh_Offer";
 
 
     //----------------------------------------------------------------------
@@ -692,65 +695,65 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String CREATE_Item_Switch_TABLE = "CREATE TABLE IF NOT EXISTS " + Item_Switch + "("
-                + ITEM_NAMEA + " TEXT,"
-                + ITEM_OCODE + " TEXT,"
-                + ITEM_NCODE + " TEXT"
+       String CREATE_Item_Switch_TABLE = "CREATE TABLE IF NOT EXISTS " + Item_Switch + "("
+               + ITEM_NAMEA + " TEXT,"
+               + ITEM_OCODE + " TEXT,"
+               + ITEM_NCODE + " TEXT"
 
-                + ")";
-        db.execSQL(CREATE_Item_Switch_TABLE);
-        //***************************************************************************************
-        String CREATE_SALESMAN_LOGIN_TABLE = "CREATE TABLE IF NOT EXISTS " + SALESMAN_LOGIN_LOGHistory + "("
-                + DATE_LOGIN + " TEXT,"
-                + TIME_LOGIN + " TEXT,"
-                + TIME_LOGOUT + " TEXT,"
-                + LONGTUDE2 + " REAL,"
-                + LATITUDE2 + " REAL,"
-                + SALESMAN_NO + " TEXT,"
-                + IS_POSTED_LOGIN + " INTEGER,"
-                + "  PRIMARY KEY (DATE_LOGIN)" +
+               + ")";
+       db.execSQL(CREATE_Item_Switch_TABLE);
+       //***************************************************************************************
+       String CREATE_SALESMAN_LOGIN_TABLE = "CREATE TABLE IF NOT EXISTS " + SALESMAN_LOGIN_LOGHistory + "("
+               + DATE_LOGIN + " TEXT,"
+               + TIME_LOGIN + " TEXT,"
+               + TIME_LOGOUT + " TEXT,"
+               + LONGTUDE2 + " REAL,"
+               + LATITUDE2 + " REAL,"
+               + SALESMAN_NO + " TEXT,"
+               + IS_POSTED_LOGIN + " INTEGER,"
+               + "  PRIMARY KEY (DATE_LOGIN)" +
 
-                ")";
-        db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);
-        //-------------------------------------------------------------------------
-
-
-        String CREATE_SERIAL_ITEMS_TABLE = "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE + "("
-                + KEY_SERIAL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + SERIAL_CODE_NO + " TEXT,"
-                + COUNTER_SERIAL + " INTEGER,"
-                + VOUCHER_NO + " INTEGER,"
-                + ITEMNO_SERIAL + " TEXT,"
-                + KIND_VOUCHER + " TEXT,"
-
-                + DATE_VOUCHER + " TEXT,"
-                + STORE_NO_SALESMAN + " INTEGER,"
-                + IS_POSTED_SERIAL + " INTEGER,"
-                + IS_BONUS_SERIAL + " INTEGER,"
-                + Price_ITEM + " real, "
-                + Price_ITEM_Sales + " real,"
-                + IS_RETURNED + " INTEGER " +
+               ")";
+       db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);
+       //-------------------------------------------------------------------------
 
 
-                ")";
-        db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
-        //-------------------------------------------------------------------------
+       String CREATE_SERIAL_ITEMS_TABLE = "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE + "("
+               + KEY_SERIAL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+               + SERIAL_CODE_NO + " TEXT,"
+               + COUNTER_SERIAL + " INTEGER,"
+               + VOUCHER_NO + " INTEGER,"
+               + ITEMNO_SERIAL + " TEXT,"
+               + KIND_VOUCHER + " TEXT,"
 
-        String CREATE_SERIAL_ITEMS_TABLE_backup = "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE_backup + "("
-                + KEY_SERIAL2 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + SERIAL_CODE_NO2 + " TEXT,"
-                + COUNTER_SERIAL2 + " INTEGER,"
-                + VOUCHER_NO2 + " INTEGER,"
-                + ITEMNO_SERIAL2 + " TEXT,"
-                + KIND_VOUCHER2 + " TEXT,"
+               + DATE_VOUCHER + " TEXT,"
+               + STORE_NO_SALESMAN + " INTEGER,"
+               + IS_POSTED_SERIAL + " INTEGER,"
+               + IS_BONUS_SERIAL + " INTEGER,"
+               + Price_ITEM + " real, "
+               + Price_ITEM_Sales + " real,"
+               + IS_RETURNED + " INTEGER " +
 
-                + DATE_VOUCHER2 + " TEXT,"
-                + STORE_NO_SALESMAN2 + " INTEGER,"
-                + IS_POSTED_SERIAL2 + " INTEGER,"
-                + IS_BONUS_SERIAL2+" INTEGER,"
-                +isItemDelete+ " INTEGER,"
 
-                +dateDelete+" TEXT"+
+               ")";
+       db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
+       //-------------------------------------------------------------------------
+
+       String CREATE_SERIAL_ITEMS_TABLE_backup = "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE_backup + "("
+               + KEY_SERIAL2 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+               + SERIAL_CODE_NO2 + " TEXT,"
+               + COUNTER_SERIAL2 + " INTEGER,"
+               + VOUCHER_NO2 + " INTEGER,"
+               + ITEMNO_SERIAL2 + " TEXT,"
+               + KIND_VOUCHER2 + " TEXT,"
+
+               + DATE_VOUCHER2 + " TEXT,"
+               + STORE_NO_SALESMAN2 + " INTEGER,"
+               + IS_POSTED_SERIAL2 + " INTEGER,"
+               + IS_BONUS_SERIAL2 + " INTEGER,"
+               + isItemDelete + " INTEGER,"
+
+               + dateDelete + " TEXT" +
 
                 ")";
         db.execSQL(CREATE_SERIAL_ITEMS_TABLE_backup);
@@ -779,347 +782,340 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
         try {
 
 
+          String CREATE_OfferListMaster_TABLE = "CREATE TABLE IF NOT EXISTS " + price_offer_list_master + "("
 
-            String CREATE_OfferListMaster_TABLE= "CREATE TABLE IF NOT EXISTS " + price_offer_list_master + "("
-
-                    + PO_LIST_NO + " INTEGER,"
-                    + PO_LIST_NAME + " TEXT,"
-                    + PO_LIST_TYPE + " INTEGER,"
-                    + FROM_DATE_master  + " TEXT,"
-                    +TO_DATE_master  +" TEXT"
-                    +
-
-
-                    ")";
-            db.execSQL(CREATE_OfferListMaster_TABLE);
-        }catch (Exception e){}
+                  + PO_LIST_NO + " INTEGER,"
+                  + PO_LIST_NAME + " TEXT,"
+                  + PO_LIST_TYPE + " INTEGER,"
+                  + FROM_DATE_master + " TEXT,"
+                  + TO_DATE_master + " TEXT"
+                  +
 
 
-        //-------------------------------------------------------------------------
-        String CREATE_TABLE_PASSWORD_TABLE= "CREATE TABLE IF NOT EXISTS " + PASSWORD_TABLE + "("
-                + PASS_TYPE + " INTEGER,"
-                + PASS_NO + " TEXT"+
-                ")";
-        db.execSQL(CREATE_TABLE_PASSWORD_TABLE);
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+                  ")";
+          db.execSQL(CREATE_OfferListMaster_TABLE);
+       } catch (Exception e) {
+       }
 
 
-        String CREATE_TABLE_CUSTOMER_LOCATION= "CREATE TABLE IF NOT EXISTS " + CUSTOMER_LOCATION + "("
-                + CUS_NO + " TEXT,"
-                + LONG + " TEXT,"
-                + LATIT + " TEXT"+
-
-                ")";
-        db.execSQL(CREATE_TABLE_CUSTOMER_LOCATION);
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-
-        String CREATE_TABLE_ACCOUNT_REPORT = "CREATE TABLE  IF NOT EXISTS " + ACCOUNT_REPORT + "("
-                + DATE + " TEXT,"
-                + TRANSFER_NAME + " TEXT,"
-                + DEBTOR + " TEXT,"
-                + CREDITOR + " TEXT,"
-                + TODATE + " TEXT,"
-                + CUST_BALANCE + " TEXT,"
-                + CUST_NUMBER_REPORT + " TEXT" +
-                ")";
-        db.execSQL(CREATE_TABLE_ACCOUNT_REPORT);
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+       //-------------------------------------------------------------------------
+       String CREATE_TABLE_PASSWORD_TABLE = "CREATE TABLE IF NOT EXISTS " + PASSWORD_TABLE + "("
+               + PASS_TYPE + " INTEGER,"
+               + PASS_NO + " TEXT" +
+               ")";
+       db.execSQL(CREATE_TABLE_PASSWORD_TABLE);
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
 
-        String CREATE_TABLE_ITEMS_QTY_OFFER = "CREATE TABLE IF NOT EXISTS " + ITEMS_QTY_OFFER + "("
-                + ITEMNAME + " TEXT,"
-                + ITEMNO + " INTEGER,"
-                + AMOUNT_QTY + " INTEGER,"
-                + FROMDATE + " TEXT,"
-                + TODATE + " TEXT,"
-                + DISCOUNT + " REAL" + ")";
-        db.execSQL(CREATE_TABLE_ITEMS_QTY_OFFER);
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+       String CREATE_TABLE_CUSTOMER_LOCATION = "CREATE TABLE IF NOT EXISTS " + CUSTOMER_LOCATION + "("
+               + CUS_NO + " TEXT,"
+               + LONG + " TEXT,"
+               + LATIT + " TEXT" +
 
-        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE IF NOT EXISTS " + QTY_OFFERS + "("
-                + QTY + " REAL,"
-                + DISCOUNT_VALUE + " REAL,"
-                + PAYMENT_TYPE + " INTEGER" + ")";
+               ")";
+       db.execSQL(CREATE_TABLE_CUSTOMER_LOCATION);
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        db.execSQL(CREATE_TABLE_QTY_OFFERS);
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-        String CREATE_TABLE_CUSTOMER_MASTER = "CREATE TABLE IF NOT EXISTS " + CUSTOMER_MASTER + "("
-                + COMPANY_NUMBER0 + " INTEGER,"
-                + CUS_ID + " TEXT,"
-                + CUS_NAME0 + " TEXT,"
-                + ADDRESS + " TEXT,"
-                + IS_SUSPENDED + " INTEGER,"
-                + PRICE_LIST_ID + " TEXT,"
-                + CASH_CREDIT + " INTEGER,"
-                + SALES_MAN_NO + " TEXT,"
-                + CREDIT_LIMIT + " INTEGER,"
-                + PAY_METHOD0 + " INTEGER,"
-                + CUST_LAT + " TEXT not null default '',"
-                + CUST_LONG + " TEXT not null default '',"
-                + MAX_DISCOUNT + " REAL,"
-                + ACCPRC + " TEXT,"
-                + HIDE_VAL + " INTEGER,"
-
-                + IS_POST + " INTEGER not null default  0,"
-                + CUS_ID_Text + " TEXT"
+       String CREATE_TABLE_ACCOUNT_REPORT = "CREATE TABLE  IF NOT EXISTS " + ACCOUNT_REPORT + "("
+               + DATE + " TEXT,"
+               + TRANSFER_NAME + " TEXT,"
+               + DEBTOR + " TEXT,"
+               + CREDITOR + " TEXT,"
+               + TODATE + " TEXT,"
+               + CUST_BALANCE + " TEXT,"
+               + CUST_NUMBER_REPORT + " TEXT" +
+               ")";
+       db.execSQL(CREATE_TABLE_ACCOUNT_REPORT);
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
 
+       String CREATE_TABLE_ITEMS_QTY_OFFER = "CREATE TABLE IF NOT EXISTS " + ITEMS_QTY_OFFER + "("
+               + ITEMNAME + " TEXT,"
+               + ITEMNO + " INTEGER,"
+               + AMOUNT_QTY + " INTEGER,"
+               + FROMDATE + " TEXT,"
+               + TODATE + " TEXT,"
+               + DISCOUNT + " REAL" + ")";
+       db.execSQL(CREATE_TABLE_ITEMS_QTY_OFFER);
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
+       String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE IF NOT EXISTS " + QTY_OFFERS + "("
+               + QTY + " REAL,"
+               + DISCOUNT_VALUE + " REAL,"
+               + PAYMENT_TYPE + " INTEGER" + ")";
+
+       db.execSQL(CREATE_TABLE_QTY_OFFERS);
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+       String CREATE_TABLE_CUSTOMER_MASTER = "CREATE TABLE IF NOT EXISTS " + CUSTOMER_MASTER + "("
+               + COMPANY_NUMBER0 + " INTEGER,"
+               + CUS_ID + " TEXT,"
+               + CUS_NAME0 + " TEXT,"
+               + ADDRESS + " TEXT,"
+               + IS_SUSPENDED + " INTEGER,"
+               + PRICE_LIST_ID + " TEXT,"
+               + CASH_CREDIT + " INTEGER,"
+               + SALES_MAN_NO + " TEXT,"
+               + CREDIT_LIMIT + " INTEGER,"
+               + PAY_METHOD0 + " INTEGER,"
+               + CUST_LAT + " TEXT not null default '',"
+               + CUST_LONG + " TEXT not null default '',"
+               + MAX_DISCOUNT + " REAL,"
+               + ACCPRC + " TEXT,"
+               + HIDE_VAL + " INTEGER,"
+
+               + IS_POST + " INTEGER not null default  0,"
+               + CUS_ID_Text + " TEXT"
 
 
-                + ")";
+               + ")";
 
-        db.execSQL(CREATE_TABLE_CUSTOMER_MASTER);
+       db.execSQL(CREATE_TABLE_CUSTOMER_MASTER);
 
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Item_Unit_Details = "CREATE TABLE IF NOT EXISTS " + Item_Unit_Details + "("
-                + ComapnyNo + " INTEGER,"
-                + ItemNo + " TEXT,"
-                + UnitID + " TEXT,"
-                + ConvRate + " INTEGER,"
-                + PriceUnit + " TEXT,"
-                + ItemBarcode + " TEXT ,"
-                + PRICECLASS_1 + " TEXT ,"
-                + PRICECLASS_2 + " TEXT ,"
-                + PRICECLASS_3 + " TEXT "
+       String CREATE_TABLE_Item_Unit_Details = "CREATE TABLE IF NOT EXISTS " + Item_Unit_Details + "("
+               + ComapnyNo + " INTEGER,"
+               + ItemNo + " TEXT,"
+               + UnitID + " TEXT,"
+               + ConvRate + " INTEGER,"
+               + PriceUnit + " TEXT,"
+               + ItemBarcode + " TEXT ,"
+               + PRICECLASS_1 + " TEXT ,"
+               + PRICECLASS_2 + " TEXT ,"
+               + PRICECLASS_3 + " TEXT "
 
-                + ")";
-        db.execSQL(CREATE_TABLE_Item_Unit_Details);
+               + ")";
+       db.execSQL(CREATE_TABLE_Item_Unit_Details);
 
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-        String CREATE_TABLE_VISIT_RATE = "CREATE TABLE  IF NOT EXISTS " + VISIT_RATE + "("
-                + VISIT_PERPOS + " INTEGER,"
-                + CUSTOMER_REGARDS + " INTEGER,"
-                + CHECK_STORE + " INTEGER,"
-                + PROMOTION_CHECK_STOCK + " INTEGER,"
-                + SPESIFY_PROPOSED_REQUEST + " INTEGER,"
-                + PERSUSION + " INTEGER,"
-                + VISIT_RATE1 + " INTEGER,"
-                + VISIT_PIC + " BLOB,"
-                + CUST_CODE_ + " TEXT,"
-                + CUST_NAME_ + " TEXT,"
-                + SALESMAN_ + " TEXT" + ")";
-        db.execSQL(CREATE_TABLE_VISIT_RATE);
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+       String CREATE_TABLE_VISIT_RATE = "CREATE TABLE  IF NOT EXISTS " + VISIT_RATE + "("
+               + VISIT_PERPOS + " INTEGER,"
+               + CUSTOMER_REGARDS + " INTEGER,"
+               + CHECK_STORE + " INTEGER,"
+               + PROMOTION_CHECK_STOCK + " INTEGER,"
+               + SPESIFY_PROPOSED_REQUEST + " INTEGER,"
+               + PERSUSION + " INTEGER,"
+               + VISIT_RATE1 + " INTEGER,"
+               + VISIT_PIC + " BLOB,"
+               + CUST_CODE_ + " TEXT,"
+               + CUST_NAME_ + " TEXT,"
+               + SALESMAN_ + " TEXT" + ")";
+       db.execSQL(CREATE_TABLE_VISIT_RATE);
 
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Items_Master = "CREATE TABLE IF NOT EXISTS " + Items_Master + "("
-                + ComapnyNo1 + " INTEGER,"
-                + ItemNo1 + " TEXT,"
-                + Name1 + " TEXT,"
-                + CateogryID1 + " TEXT,"
-                + Barcode1 + " TEXT,"
-                + IsSuspended1 + " INTEGER,"
-                + ITEM_L1 + " INTEGER,"
-                + ITEM_F_D + " REAL,"
-                + KIND_ITEM + " TEXT,"
-                + ITEM_HAS_SERIAL + " INTEGER,"
-                + ITEM_PHOTO + " TEXT"
+       String CREATE_TABLE_Items_Master = "CREATE TABLE IF NOT EXISTS " + Items_Master + "("
+               + ComapnyNo1 + " INTEGER,"
+               + ItemNo1 + " TEXT,"
+               + Name1 + " TEXT,"
+               + CateogryID1 + " TEXT,"
+               + Barcode1 + " TEXT,"
+               + IsSuspended1 + " INTEGER,"
+               + ITEM_L1 + " INTEGER,"
+               + ITEM_F_D + " REAL,"
+               + KIND_ITEM + " TEXT,"
+               + ITEM_HAS_SERIAL + " INTEGER,"
+               + ITEM_PHOTO + " TEXT"
 
-                + ")";
+               + ")";
 
-        db.execSQL(CREATE_TABLE_Items_Master);
+       db.execSQL(CREATE_TABLE_Items_Master);
 
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-        String CREATE_ACTIVE_KEY = "CREATE TABLE IF NOT EXISTS " + ACTIVE_KEY + "("
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+       String CREATE_ACTIVE_KEY = "CREATE TABLE IF NOT EXISTS " + ACTIVE_KEY + "("
 
-                + KEY_VALUE + " INTEGER" + ")";
-        db.execSQL(CREATE_ACTIVE_KEY);
-        //-----------------------------------------------------
+               + KEY_VALUE + " INTEGER" + ")";
+       db.execSQL(CREATE_ACTIVE_KEY);
+       //-----------------------------------------------------
 
-        String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE IF NOT EXISTS " + PRINTER_SETTING_TABLE + "("
-                + PRINTER_SETTING + " INTEGER ,"
-                + PRINTER_SHAPE + " INTEGER,"
-                + SHORT_INVOICE + " INTEGER,"
-                + DONT_PRINT_HEADER + " INTEGER,"
-                +TAYE_LAYOUT+ " INTEGER,"
-                +netsalFLAG+ " TEXT , "
-                +HeaderprintInOrders+ " INTEGER "
+       String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE IF NOT EXISTS " + PRINTER_SETTING_TABLE + "("
+               + PRINTER_SETTING + " INTEGER ,"
+               + PRINTER_SHAPE + " INTEGER,"
+               + SHORT_INVOICE + " INTEGER,"
+               + DONT_PRINT_HEADER + " INTEGER,"
+               + TAYE_LAYOUT + " INTEGER,"
+               + netsalFLAG + " TEXT , "
+               + HeaderprintInOrders + " INTEGER "
 
-                + ")";
-        db.execSQL(CREATE_PRINTER_SETTING_TABLE);
+               + ")";
+       db.execSQL(CREATE_PRINTER_SETTING_TABLE);
 //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Price_List_D = "CREATE TABLE IF NOT EXISTS " + Price_List_D + "("
-                + ComapnyNo2 + " INTEGER,"
-                + PrNo2 + " INTEGER,"
-                + ItemNo2 + " TEXT,"
-                + UnitID2 + " TEXT,"
-                + Price2 + " INTEGER,"
-                + TaxPerc2 + " INTEGER,"
-                + MinSalePrice2 + " INTEGER" + ")";
-        db.execSQL(CREATE_TABLE_Price_List_D);
+       String CREATE_TABLE_Price_List_D = "CREATE TABLE IF NOT EXISTS " + Price_List_D + "("
+               + ComapnyNo2 + " INTEGER,"
+               + PrNo2 + " INTEGER,"
+               + ItemNo2 + " TEXT,"
+               + UnitID2 + " TEXT,"
+               + Price2 + " INTEGER,"
+               + TaxPerc2 + " INTEGER,"
+               + MinSalePrice2 + " INTEGER" + ")";
+       db.execSQL(CREATE_TABLE_Price_List_D);
 
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Price_List_M = "CREATE TABLE IF NOT EXISTS " + Price_List_M + "("
-                + ComapnyNo3 + " INTEGER,"
-                + PrNo3 + " INTEGER,"
-                + Description3 + " TEXT,"
-                + IsSuspended3 + " INTEGER" + ")";
-        db.execSQL(CREATE_TABLE_Price_List_M);
+       String CREATE_TABLE_Price_List_M = "CREATE TABLE IF NOT EXISTS " + Price_List_M + "("
+               + ComapnyNo3 + " INTEGER,"
+               + PrNo3 + " INTEGER,"
+               + Description3 + " TEXT,"
+               + IsSuspended3 + " INTEGER" + ")";
+       db.execSQL(CREATE_TABLE_Price_List_M);
 
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Sales_Team = "CREATE TABLE IF NOT EXISTS " + Sales_Team + "("
-                + ComapnyNo4 + " INTEGER,"
-                + SalesManNo4 + " INTEGER,"
-                + SalesManName4 + " TEXT,"
-                + IsSuspended4 + " INTEGER,"
+       String CREATE_TABLE_Sales_Team = "CREATE TABLE IF NOT EXISTS " + Sales_Team + "("
+               + ComapnyNo4 + " INTEGER,"
+               + SalesManNo4 + " INTEGER,"
+               + SalesManName4 + " TEXT,"
+               + IsSuspended4 + " INTEGER,"
 
-                + IP_ADDRESS_DEVICE + " TEXT"
+               + IP_ADDRESS_DEVICE + " TEXT"
 
-                + ")";
-        db.execSQL(CREATE_TABLE_Sales_Team);
-
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-
-        String CREATE_TABLE_SalesMan_Items_Balance = "CREATE TABLE IF NOT EXISTS " + SalesMan_Items_Balance + "("
-                + ComapnyNo5 + " INTEGER,"
-                + SalesManNo5 + " INTEGER,"
-                + ItemNo5 + " TEXT,"
-                + Qty5 + " INTEGER" + ")";
-        db.execSQL(CREATE_TABLE_SalesMan_Items_Balance);
-
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-
-        String CREATE_TABLE_SalesmanAndStoreLink = "CREATE TABLE IF NOT EXISTS " + SalesmanAndStoreLink + "("
-                + ComapnyNo6 + " INTEGER,"
-                + SalesManNo6 + " INTEGER,"
-                + StoreNo6 + " INTEGER" + ")";
-        db.execSQL(CREATE_TABLE_SalesmanAndStoreLink);
-
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-
-        String CREATE_TABLE_Salesmen = "CREATE TABLE IF NOT EXISTS " + SalesMen + "("
-                + UserName + " TEXT,"
-                + Password + " TEXT," +
-              UserType+" INTEGER"
                + ")";
-        db.execSQL(CREATE_TABLE_Salesmen);
+       db.execSQL(CREATE_TABLE_Sales_Team);
 
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_CustomerPrices = "CREATE TABLE IF NOT EXISTS " + CustomerPrices + "("
-                + ItemNumber + " INTEGER,"
-                + CustomerNumber + " INTEGER,"
-                + Price + " INTEGER,"
-                + DISCOUNT_CUSTOMER + " real,"
-                + ItemNo_ + " TEXT,"
-                + Other_Discount + " TEXT,"
-                + FromDate + " TEXT,"
-                + ToDate + " TEXT,"
-                + ListNo + " TEXT,"
-                + ListType + " TEXT"
+       String CREATE_TABLE_SalesMan_Items_Balance = "CREATE TABLE IF NOT EXISTS " + SalesMan_Items_Balance + "("
+               + ComapnyNo5 + " INTEGER,"
+               + SalesManNo5 + " INTEGER,"
+               + ItemNo5 + " TEXT,"
+               + Qty5 + " INTEGER" + ")";
+       db.execSQL(CREATE_TABLE_SalesMan_Items_Balance);
 
-                + ")";
-        db.execSQL(CREATE_TABLE_CustomerPrices);
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+       String CREATE_TABLE_SalesmanAndStoreLink = "CREATE TABLE IF NOT EXISTS " + SalesmanAndStoreLink + "("
+               + ComapnyNo6 + " INTEGER,"
+               + SalesManNo6 + " INTEGER,"
+               + StoreNo6 + " INTEGER" + ")";
+       db.execSQL(CREATE_TABLE_SalesmanAndStoreLink);
 
-        String CREATE_TABLE_CustomerPrices2 = "CREATE TABLE IF NOT EXISTS " + CustomerPricesCurrent + "("
-                + ItemNumber_ + " INTEGER,"
-                + CustomerNumber_ + " INTEGER,"
-                + Price_ + " INTEGER,"
-                + DISCOUNT_CUSTOMER_ + " real,"
-                + ItemNo_N + " TEXT,"
-                + Other_Discount_ + " TEXT,"
-                + FromDate_ + " TEXT,"
-                + ToDate_ + " TEXT,"
-                + ListNo_ + " TEXT,"
-                + ListType_ + " TEXT"
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-                + ")";
-        db.execSQL(CREATE_TABLE_CustomerPrices2);
+       String CREATE_TABLE_Salesmen = "CREATE TABLE IF NOT EXISTS " + SalesMen + "("
+               + UserName + " TEXT,"
+               + Password + " TEXT," +
+               UserType + " INTEGER"
+               + ")";
+       db.execSQL(CREATE_TABLE_Salesmen);
 
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
+       String CREATE_TABLE_CustomerPrices = "CREATE TABLE IF NOT EXISTS " + CustomerPrices + "("
+               + ItemNumber + " INTEGER,"
+               + CustomerNumber + " INTEGER,"
+               + Price + " INTEGER,"
+               + DISCOUNT_CUSTOMER + " real,"
+               + ItemNo_ + " TEXT,"
+               + Other_Discount + " TEXT,"
+               + FromDate + " TEXT,"
+               + ToDate + " TEXT,"
+               + ListNo + " TEXT,"
+               + ListType + " TEXT"
 
+               + ")";
+       db.execSQL(CREATE_TABLE_CustomerPrices);
 
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
+       String CREATE_TABLE_CustomerPrices2 = "CREATE TABLE IF NOT EXISTS " + CustomerPricesCurrent + "("
+               + ItemNumber_ + " INTEGER,"
+               + CustomerNumber_ + " INTEGER,"
+               + Price_ + " INTEGER,"
+               + DISCOUNT_CUSTOMER_ + " real,"
+               + ItemNo_N + " TEXT,"
+               + Other_Discount_ + " TEXT,"
+               + FromDate_ + " TEXT,"
+               + ToDate_ + " TEXT,"
+               + ListNo_ + " TEXT,"
+               + ListType_ + " TEXT"
 
-
-
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-
-        String CREATE_TABLE_CONTACTS = "CREATE TABLE IF NOT EXISTS " + TABLE_TRANSACTIONS + "("
-                + SALES_MAN_ID + " INTEGER,"
-                + CUS_CODE + " INTEGER,"
-                + CUS_NAME + " TEXT,"
-                + CHECK_IN_DATE + " TEXT,"
-                + CHECK_IN_TIME + " TEXT,"
-                + CHECK_OUT_DATE + " TEXT,"
-                + CHECK_OUT_TIME + " TEXT,"
-                + STATUS + " INTEGER,"
-                + IS_POSTED2 + " INTEGER,"
-                + REAL_LONGTUD + " TEXT,"
-                + REAL_LATITUDE + " TEXT" + ")";
-        db.execSQL(CREATE_TABLE_CONTACTS);
-
-        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-
-        String CREATE_TABLE_SETTING = "CREATE TABLE IF NOT EXISTS " + TABLE_SETTING + "("
-                + TRANS_KIND + " INTEGER,"
-                + SERIAL_NUMBER + " INTEGER,"
-                + IP_ADDRESS + " TEXT,"
-                + TAX_CALC_KIND + " INTEGER,"
-                + PRICE_BYCUSTOMER + " INTEGER,"
-                + USE_WEIGHT_CASE + " INTEGER,"
-                + ALLOAW_MINUS + " INTEGER,"
-                + NUMBER_OF_COPIES + " INTEGER,"
-                + SALESMAN_CUSTOMERS + " INTEGER,"
-                + MIN_SALE_PRICE + " INTEGER,"
-                + PRINT_METHOD + " INTEGER,"
-                + CAN_CHANGE_PRICE + " INTEGER,"
-                + ALLOW_OUT_OF_RANGE+  " INTEGER,"
-                + READ_DISCOUNT_FROM_OFFERS + " INTEGER,"
-                + WORK_ONLINE + " INTEGER,"
-                + PAYMETHOD_CHECK + " INTEGER,"
-                + BONUS_NOT_ALLOWED + " INTEGER,"
-                + NO_OFFERS_FOR_CREDIT_INVOICE + " INTEGER, "
-                + AMOUNT_OF_MAX_DISCOUNT + " INTEGER,"
-                + Customer_Authorized + " INTEGER,"
-                + Password_Data + " INTEGER,"
-                + Arabic_Language + " INTEGER DEFAULT '1' ,"
-                + HideQty + " INTEGER,"
-                + LockCashReport + " INTEGER,"
-                + salesManName + " TEXT,"
-                + PreventOrder + " INTEGER,"
-                + RequiredNote + " INTEGER,"
-                + PreventTotalDiscount + " INTEGER,"
-                + AutomaticCheque + " INTEGER,"
-                + Tafqit + " INTEGER,"
-                + PreventChangPayMeth + " INTEGER,"
-                + ShowCustomerList + " INTEGER DEFAULT 1 ,"
-                + NoReturnInvoice + " INTEGER,"
-                + WORK_WITH_SERIAL + " INTEGER,"
-                + SHOW_IMAGE_ITEM + " INTEGER,"
-
-                + APPROVE_ADMIN + " INTEGER,"
-                + SAVE_ONLY + " INTEGER,"
-                + SHOW_QUANTITY_SOLD + " INTEGER,"
-                + READ_OFFER_FROM_ADMIN + " INTEGER,"
-                + IP_PORT + " TEXT,"
-                + CheckQtyServer + " INTEGER,"
-                + DontShowTaxOnPrinter + " INTEGER,"
-                + CONO + " TEXT,"
-                + ContinusReading + " INTEGER,"
-
-                + ActiveTotalDisc + " INTEGER,"
+               + ")";
+       db.execSQL(CREATE_TABLE_CustomerPrices2);
 
 
-                + ValueTotalDisc + " REAL, "
-                + STORE_NO + " INTEGER, "
-                + Item_Unit + " INTEGER ,"
-                +SUM_CURRENT_QTY+ " INTEGER, "
-                +DONT_DUPLICATE_ITEMS+ " INTEGER, "
-                + CAN_CHANGE_PRICE_RETURNONLY + " INTEGER, "
-                + OffersJustForSales + " INTEGER  DEFAULT 0 , "
-                + CheckQtyinOrder + " INTEGER  DEFAULT 0 , "
-                + locationtracker+" INTEGER DEFAULT 0 , "
-                +AqapaTax+" INTEGER DEFAULT 0 , "
-                +SHOW_CUSTOMER_LOCATION+" INTEGER DEFAULT 0 , "
-      + Items_Units+" INTEGER DEFAULT 0 , "
-       +EndTripReport+" INTEGER DEFAULT 0 "
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
+       String CREATE_TABLE_CONTACTS = "CREATE TABLE IF NOT EXISTS " + TABLE_TRANSACTIONS + "("
+               + SALES_MAN_ID + " INTEGER,"
+               + CUS_CODE + " INTEGER,"
+               + CUS_NAME + " TEXT,"
+               + CHECK_IN_DATE + " TEXT,"
+               + CHECK_IN_TIME + " TEXT,"
+               + CHECK_OUT_DATE + " TEXT,"
+               + CHECK_OUT_TIME + " TEXT,"
+               + STATUS + " INTEGER,"
+               + IS_POSTED2 + " INTEGER,"
+               + REAL_LONGTUD + " TEXT,"
+               + REAL_LATITUDE + " TEXT" + ")";
+       db.execSQL(CREATE_TABLE_CONTACTS);
+
+       //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
+       String CREATE_TABLE_SETTING = "CREATE TABLE IF NOT EXISTS " + TABLE_SETTING + "("
+               + TRANS_KIND + " INTEGER,"
+               + SERIAL_NUMBER + " INTEGER,"
+               + IP_ADDRESS + " TEXT,"
+               + TAX_CALC_KIND + " INTEGER,"
+               + PRICE_BYCUSTOMER + " INTEGER,"
+               + USE_WEIGHT_CASE + " INTEGER,"
+               + ALLOAW_MINUS + " INTEGER,"
+               + NUMBER_OF_COPIES + " INTEGER,"
+               + SALESMAN_CUSTOMERS + " INTEGER,"
+               + MIN_SALE_PRICE + " INTEGER,"
+               + PRINT_METHOD + " INTEGER,"
+               + CAN_CHANGE_PRICE + " INTEGER,"
+               + ALLOW_OUT_OF_RANGE + " INTEGER,"
+               + READ_DISCOUNT_FROM_OFFERS + " INTEGER,"
+               + WORK_ONLINE + " INTEGER,"
+               + PAYMETHOD_CHECK + " INTEGER,"
+               + BONUS_NOT_ALLOWED + " INTEGER,"
+               + NO_OFFERS_FOR_CREDIT_INVOICE + " INTEGER, "
+               + AMOUNT_OF_MAX_DISCOUNT + " INTEGER,"
+               + Customer_Authorized + " INTEGER,"
+               + Password_Data + " INTEGER,"
+               + Arabic_Language + " INTEGER DEFAULT '1' ,"
+               + HideQty + " INTEGER,"
+               + LockCashReport + " INTEGER,"
+               + salesManName + " TEXT,"
+               + PreventOrder + " INTEGER,"
+               + RequiredNote + " INTEGER,"
+               + PreventTotalDiscount + " INTEGER,"
+               + AutomaticCheque + " INTEGER,"
+               + Tafqit + " INTEGER,"
+               + PreventChangPayMeth + " INTEGER,"
+               + ShowCustomerList + " INTEGER DEFAULT 1 ,"
+               + NoReturnInvoice + " INTEGER,"
+               + WORK_WITH_SERIAL + " INTEGER,"
+               + SHOW_IMAGE_ITEM + " INTEGER,"
+
+               + APPROVE_ADMIN + " INTEGER,"
+               + SAVE_ONLY + " INTEGER,"
+               + SHOW_QUANTITY_SOLD + " INTEGER,"
+               + READ_OFFER_FROM_ADMIN + " INTEGER,"
+               + IP_PORT + " TEXT,"
+               + CheckQtyServer + " INTEGER,"
+               + DontShowTaxOnPrinter + " INTEGER,"
+               + CONO + " TEXT,"
+               + ContinusReading + " INTEGER,"
+
+               + ActiveTotalDisc + " INTEGER,"
+
+
+               + ValueTotalDisc + " REAL, "
+               + STORE_NO + " INTEGER, "
+               + Item_Unit + " INTEGER ,"
+               + SUM_CURRENT_QTY + " INTEGER, "
+               + DONT_DUPLICATE_ITEMS + " INTEGER, "
+               + CAN_CHANGE_PRICE_RETURNONLY + " INTEGER, "
+               + OffersJustForSales + " INTEGER  DEFAULT 0 , "
+               + CheckQtyinOrder + " INTEGER  DEFAULT 0 , "
+               + locationtracker + " INTEGER DEFAULT 0 , "
+               + AqapaTax + " INTEGER DEFAULT 0 , "
+               + SHOW_CUSTOMER_LOCATION + " INTEGER DEFAULT 0 , "
+               + Items_Units + " INTEGER DEFAULT 0 , "
+               + EndTripReport + " INTEGER DEFAULT 0 ,"
+    + AcountatatmentVis+" INTEGER DEFAULT 1 "
                 + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
@@ -1331,7 +1327,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                 + ActiveSlasmanTrips + " INTEGER DEFAULT '0' ,"
                 + Max_VoucherSever + " INTEGER DEFAULT '0' , "
                 +Purchase_Order+" INTEGER DEFAULT '0', "
-                +NO_TAX+ " INTEGER DEFAULT '0' "
+                +NO_TAX+ " INTEGER DEFAULT '0' ,"
+                + Nasleh_Offer + " INTEGER DEFAULT '0' "
 
                 + ")";
         db.execSQL(CREATE_TABLE_FlAG_SETTINGS);
@@ -2610,6 +2607,19 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                + ")";
        db.execSQL(CREATE_AdminPasswords_TABLE);
        try {
+          db.execSQL("ALTER TABLE Flag_Settings ADD '" + Nasleh_Offer + "' INTEGER DEFAULT '0'");
+
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD '" + AcountatatmentVis + "'  INTEGER DEFAULT '1'");
+
+       } catch (Exception e) {
+
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try {
           db.execSQL("ALTER TABLE SalesMenLogIn ADD '" + LATITUDE + "'  Text");
           db.execSQL("ALTER TABLE SalesMenLogIn ADD '" + LONGITUDE + "'  Text");
        } catch (Exception e) {
@@ -2646,6 +2656,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
         values.put(Max_VoucherSever, flag_settings.getMaxvochServer());
         values.put(Purchase_Order,flag_settings.getPurchaseOrder());
        values.put(NO_TAX,flag_settings.getNoTax());
+       values.put(Nasleh_Offer,flag_settings.getOffernasleh());
 
         db.insert(Flag_Settings, null, values);
         db.close();
@@ -2694,7 +2705,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                         cursor.getInt(12),
                         cursor.getInt(13),
                         cursor.getInt(14),
-                        cursor.getInt(15)
+                        cursor.getInt(15),
+                        cursor.getInt(16)
 
                 );
 
@@ -2735,7 +2747,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
     public void updateFlagSettings (String dataType, int export, int max, int order,
                                     int password, int total, int vReturn,int SalPlan,int pos,
                                     int csOffer, int tOffer, int qOffer,int SalTrip,int mavVoServer,int purchOrder
-    ,int no_tax) {
+    ,int no_tax,int offernasleh) {
 
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -2756,6 +2768,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
         values.put(Max_VoucherSever, mavVoServer);
         values.put( Purchase_Order,purchOrder);
        values.put( NO_TAX,no_tax);
+       values.put( Nasleh_Offer,offernasleh);
+
         db.update(Flag_Settings, values, null, null);
 
         Log.e("Flag Settings", "UPDATE");
@@ -3557,7 +3571,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                            int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
                            int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer,
                            int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc,String store,int itemUnit,int sumQtys,int noDuplicate,
-                           int salesoffersflage,int checkqtyinorderflage,int locationtrackerflage,int aqapaTax,int show_location,int Items_unitflage,int EndTripReportflage) {
+                           int salesoffersflage,int checkqtyinorderflage,int locationtrackerflage,int aqapaTax,int show_location,int Items_unitflage,int EndTripReportflage,int AcountatatmentVisflage) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -3629,6 +3643,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
        Log.e("EndTripReportflage","EndTripReportflage="+EndTripReportflage);
        values .put(EndTripReport,EndTripReportflage);
 
+       values .put(AcountatatmentVis,AcountatatmentVisflage);
+
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
@@ -3698,6 +3714,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
        values.put( SHOW_CUSTOMER_LOCATION, defaultValue);
        values.put( Items_Units, defaultValue);
        values.put( EndTripReport, defaultValue);
+       values.put( AcountatatmentVis, 1);
 
 
        db.insert(TABLE_SETTING, null, values);
@@ -4117,6 +4134,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 setting.setShowCustomerLocation(cursor.getInt(55));
                setting.setItems_Unit(cursor.getInt(56));
                setting.setEndTripReport(cursor.getInt(57));
+               setting.setAcountatatmentVisable(cursor.getInt(58));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -4321,7 +4339,6 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
     }
     public int getMaxSerialNumberFromVoucherMaster(int voucherType) {
-       Log.e("voucherType====",""+voucherType);
         int maxVoucher = 0;
         if (typaImport == 1)//iis
         {
@@ -5316,7 +5333,36 @@ Log.e("addCompanyInfo","addCompanyInfo");
         }
         return  items_inventory;
     }
+    public List<inventoryReportItem> getInventory_db2() {
 
+       List<inventoryReportItem> items_inventory = new ArrayList<>();
+       String salesMan =getAllUserNo();
+       // Select All Query
+       String selectQuery = " select  DISTINCT    M.ItemNo ,M.Name ,S.Qty ,M.CateogryID ,I.UnitID ,I.PriceUnit  from Items_Master M  , SalesMan_Items_Balance S ,   Item_Unit_Details I" +
+               "  where M.ItemNo  = S.ItemNo  and  S.SalesManNo = '" + salesMan +"'"+" and M.ItemNo =I.ItemNo";
+
+//       select  DISTINCT    M.ItemNo ,M.Name ,S.Qty ,M.CateogryID ,I.UnitID,I.PriceUnit from Items_Master M   ,  SalesMan_Items_Balance S ,  Item_Unit_Details I
+//       where M.ItemNo  = S.ItemNo  and  S.SalesManNo = '1' and M.ItemNo =I.ItemNo
+       db = this.getWritableDatabase();
+       Cursor cursor = db.rawQuery(selectQuery, null);
+
+       // looping through all rows and adding to list
+       if (cursor.moveToFirst()) {
+          do {
+             inventoryReportItem  itemsinven=new inventoryReportItem();
+             itemsinven.setItemNo(cursor.getString(0));
+             itemsinven.setName(cursor.getString(1));
+             itemsinven.setQty(Double.parseDouble(cursor.getString(2)));
+             itemsinven.setCategoryId(cursor.getString(3));
+             itemsinven.setUNITname(cursor.getString(4));
+             itemsinven.setUNITprice(cursor.getString(5));
+
+             items_inventory.add(itemsinven);
+          }
+          while (cursor.moveToNext());
+       }
+       return  items_inventory;
+    }
     public List<Item> getAllJsonItems(String rate,int baseList ,int countVisibleTable) {// price from price list d
         List<Item> items = new ArrayList<Item>();
         String salesMan="1";
@@ -9558,6 +9604,52 @@ void updateDataForClient(){
        }
 
        return ConvRate;
+    }
+//    public List<ItemUnitDetails> getItemUnits(String itemNo) {
+//
+//       List<ItemUnitDetails> list=new ArrayList<>();
+//       ItemUnitDetails itemUnitDetails=new ItemUnitDetails();
+//       String selectQuery = "select DISTINCT UnitID,PriceUnit  from " + Item_Unit_Details + " where ItemNo = '" + itemNo + "'";
+//       Log.e("DB=",(db==null)+"");
+//       SQLiteDatabase db = this.getWritableDatabase();
+//
+//       Cursor cursor = db.rawQuery(selectQuery, null);
+//
+//       if (cursor.moveToFirst()) {
+//          do {
+//             itemUnitDetails.setUnitId(cursor.getString(0));
+//             itemUnitDetails.setUnitPrice(cursor.getString(1));
+//             list.add(itemUnitDetails);
+//          } while (cursor.moveToNext());
+//       }
+//
+//       return list;
+//    }
+    public List< ItemUnitDetails> getItemUnits( String itemNo) {
+       List<ItemUnitDetails> list=new ArrayList<>();
+       // Select All Query
+
+       String selectQuery = "select DISTINCT UnitID,PriceUnit  from " + Item_Unit_Details + " where ItemNo = '" + itemNo + "'";
+       Log.e("selectQuery==", selectQuery+"\t\t");
+     //  db = this.getWritableDatabase();
+       Cursor cursor = db.rawQuery(selectQuery, null);
+       Log.e("cursor2==", cursor.getCount()+"\t\t");
+
+       if (cursor.moveToFirst()) {
+          Log.i("DatabaseHandler", "************************" + selectQuery);
+          do {
+
+             ItemUnitDetails     itemUnitDetails=new ItemUnitDetails();
+             itemUnitDetails.setUnitId(cursor.getString(0));
+             itemUnitDetails.setUnitPrice(cursor.getString(1));
+             list.add(itemUnitDetails);
+
+
+          } while (cursor.moveToNext());
+       }
+
+
+       return list;
     }
     void deletevocher (){
        SQLiteDatabase db = this.getWritableDatabase();

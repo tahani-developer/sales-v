@@ -326,7 +326,7 @@
         <item>البنك الاسلامي الاردني</item>
         <item>بنك صفوة الإسلامي</item>
         <item>مصرف الراجحي</item>
-
+        <item>كابيتال بنك</item>
 
     </string-array>
 
@@ -595,6 +595,7 @@
     <string name="talaat_offer_discount">
     تشغيل : (كمية المادة/  حد الكميات للعرض  )* الخصم على المادة
     </string>
+    <string name="nasleh_offer_discount">تشغيل : (مجموع المادة )* الخصم على المادة</string>
     <string name="progress_getPlan">Get  New Plan</string>
     <string name="no_plan">لا يوجد خطة </string>
     <string name="greatZero">أكبر من الصفر</string>
@@ -641,6 +642,9 @@
     <string name="goalachievementrate">المبيعات</string>
     <string name="items_Unit">الوحدات</string>
     <string name="EndTripReport">تقرير عدم اجراء أي عملية بيع </string>
+    <string name="AcountatatmentVisable">ظهور كشف الحساب</string>
+    <string name="unit_name">الوحدة</string>
+    <string name="unit_price">سعر الوحدة</string>
     <string name="Perceofunfulfilledgoal">النسبةالغير محققة للهدف</string>
     <string name="TargetReport">تقرير الأهداف</string>
     <string name="net_sales2">صافي المبيعات</string>

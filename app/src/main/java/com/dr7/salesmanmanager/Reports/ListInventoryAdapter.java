@@ -19,7 +19,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.MainActivity;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.RecyclerViewAdapter;
@@ -65,9 +68,32 @@ public class ListInventoryAdapter extends RecyclerView.Adapter<ListInventoryAdap
       //  holder.linearLayout.setBackgroundColor(android.R.color.holo_red_light));
         holder.linearLayout.setBackgroundColor(Color.parseColor(mColors[position % 2]));
         holder.linearLayout.setPadding(5 , 10, 5, 10);
+//try {
+//
+//    List<ItemUnitDetails>detailsList=MHandler.getItemUnits(inventorylist.get(holder.getAdapterPosition()).getItemNo());
+//    Log.e("detailsList",detailsList.size()+"");
+//}catch (Exception e)
+//{
+//    Log.e("Exception--",e.getMessage()+"");
+//}
+
 
         Log.e("","onBind");
+        if(MainActivity.UNITFLAGE==1)// not enabled units
+        {
 
+            holder.unit_price.setVisibility(View.VISIBLE);
+            holder.unit_name.setVisibility(View.VISIBLE);
+            holder.unit_name.setText(inventorylist.get(holder.getAdapterPosition()).getUNITname());
+            holder.unit_price.setText(inventorylist.get(holder.getAdapterPosition()).getUNITprice());
+        }
+        else
+        {
+
+            holder.unit_price.setVisibility(View.GONE);
+            holder.unit_name.setVisibility(View.GONE);
+
+        }
     }
 
     @Override
@@ -91,7 +117,7 @@ public class ListInventoryAdapter extends RecyclerView.Adapter<ListInventoryAdap
    {
        LinearLayout linearLayout;
 
-       TextView itemNumber, itemName,quantity;
+       TextView itemNumber, itemName,quantity,unit_name,unit_price;
        public ViewHolder(View itemView)
        {
            super(itemView);
@@ -100,6 +126,8 @@ public class ListInventoryAdapter extends RecyclerView.Adapter<ListInventoryAdap
            itemName = itemView.findViewById(R.id.Item_Name);
            itemNumber = itemView.findViewById(R.id.Item_number);
            quantity = itemView.findViewById(R.id.Quantity);
+           unit_name =itemView.findViewById(R.id.unit_name);
+           unit_price= itemView.findViewById(R.id.unit_price);
            Log.e("","ViewHolder const");
 
        }
