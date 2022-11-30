@@ -93,7 +93,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     public  static   List<Item> LASTVOCHER = new ArrayList<>();
     public  static   List<Item> LASTVOCHER2 = new ArrayList<>();
     public  DatabaseHandler dataBase;
-    float total=0;
+    float total=0,tataltax=0;
     String curent="";
     CheckBox returnall;
     public RadioGroup paymentTermRadioGroup;
@@ -113,7 +113,8 @@ public class ReturnByVoucherNo extends AppCompatActivity {
 
 
         initialView();
-
+        typeTax=dataBase.getAllSettings().get(0).getTaxClarcKind();
+        Log.e("typeTax",""+typeTax);
         ////B
         try {
             if (!generalMethod.checkDeviceDate()) {
@@ -257,8 +258,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
 
 
 
-            typeTax=dataBase.getAllSettings().get(0).getTaxClarcKind();
-            Log.e("typeTax",""+typeTax);
+
 
 
 
@@ -435,7 +435,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
                     returnListSerial.clear();
                     voucherNo_text.setError(null);
                     voucherNo_ReturnNo =voucherNo_text.getText().toString().trim();
-                   // Log.e("voucherNo",""+voucherNo);
+                  Log.e("voucherNo_ReturnNo",""+voucherNo_ReturnNo);
                     getDataForVoucherNo();
                     textView_save.setEnabled(true);
 
@@ -953,7 +953,7 @@ exportData(2);
       voucherReturn.setSubTotal(total);
       voucherReturn.setNetSales(total);
         voucherReturn.setORIGINALvoucherNo( Integer.parseInt(voucherNo_text.getText().toString().trim()));
-      voucherReturn.setTax(0);
+      voucherReturn.setTax(tataltax);
         if(dataBase.getAllSettings().get(0).getTaxClarcKind()==0)
         {
             voucherReturn.setTaxTypa(0);
@@ -969,11 +969,31 @@ exportData(2);
 
         Log.e("saveVoucherD",""+"saveVoucherD  "+listItemsMain.size());
         String curent=generalMethod.getCurentTimeDate(1);
-
+   double     itemTax=0;
         for(int i=0;i<listItemsMain.size();i++)
         {
-            Log.e("QTY==",""+"saveVoucherD  "+ listItemsMain.get(i).getQty());
 
+            listItemsMain.get(i).setEnter_qty(listItemsMain.get(i).getQty()+"");
+            listItemsMain.get(i).setAmount(listItemsMain.get(i).getQty()*listItemsMain.get(i).getPrice());
+            Log.e("QTY==",""+"saveVoucherD  "+ listItemsMain.get(i).getQty()+"Enter_qty"+ listItemsMain.get(i).getEnter_qty());
+
+
+         if(typeTax==0) {
+             itemTax = listItemsMain.get(i).getPrice() * listItemsMain.get(i).getQty() * listItemsMain.get(i).getTaxPercent() * 0.01;
+         }
+    else {
+             itemTax = listItemsMain.get(i).getPrice() * listItemsMain.get(i).getQty() -
+
+                     (listItemsMain.get(i).getAmount() / (1 + listItemsMain.get(i).getTaxPercent() * 0.01));
+
+             Log.e("getQty==",listItemsMain.get(i).getPrice()+"   "+listItemsMain.get(i).getQty()+"  "+listItemsMain.get(i).getAmount()+" "+(1 + listItemsMain.get(i).getTaxPercent() * 0.01));
+
+        }
+            Log.e("itemTax===",itemTax+"");
+Log.e("getQty",listItemsMain.get(i).getQty()+"");
+
+            listItemsMain.get(i).setTaxValue(itemTax);
+            tataltax+= listItemsMain.get(i).getTaxValue();
             listItemsMain.get(i).setVoucherNumber(max_voucherNumber);
             listItemsMain.get(i).setVouchDate(curent);
             listItemsMain.get(i).setVoucherType(506);
@@ -1027,6 +1047,7 @@ exportData(2);
     }
 
     private void calcTotalVoucher() {
+        tataltax=0;
         int salesMan=1;
         try {
             salesMan = Integer.parseInt(Login.salesMan.trim());
@@ -1038,6 +1059,7 @@ exportData(2);
         for (int i=0;i<listItemsMain.size();i++)
         {
             total+=listItemsMain.get(i).getQty()*listItemsMain.get(i).getPrice();
+          //  tataltax+=listItemsMain.get(i).getTaxPercent()*total*0.01;
             dataBase.updateSalesManItemsBalance2(listItemsMain.get(i).getQty(), salesMan, listItemsMain.get(i).getItemNo());
 
 
