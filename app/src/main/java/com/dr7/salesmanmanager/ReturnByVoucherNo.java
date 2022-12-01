@@ -950,7 +950,7 @@ exportData(2);
       voucherReturn.setVoucherDate(generalMethod.getCurentTimeDate(1));
       voucherReturn.setCustNumber(CustomerListShow.Customer_Account);
       voucherReturn.setCustName(CustomerListShow.Customer_Name);
-      voucherReturn.setSubTotal(total);
+      voucherReturn.setSubTotal(total-tataltax);
       voucherReturn.setNetSales(total);
         voucherReturn.setORIGINALvoucherNo( Integer.parseInt(voucherNo_text.getText().toString().trim()));
       voucherReturn.setTax(tataltax);
