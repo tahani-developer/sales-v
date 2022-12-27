@@ -5090,7 +5090,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 //                Log.e("setDescreption",""+cursor.getString(17));
                 Log.e("Avi_Qty",cursor.getString(25)+"   return=="+cursor.getString(25));
                 // Adding transaction to list
-
+               Log.i("getPrice===", "" + item.getPrice());
                 if( item.getIS_RETURNED()==0)
                 {
                     if(item.getAvi_Qty()==0)
@@ -5430,7 +5430,16 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 item.setPrice(Float.parseFloat(cursor.getString(4)));
                 item.setTaxPercent(Float.parseFloat(cursor.getString(5)));
                 item.setMinSalePrice(Double.parseDouble(cursor.getString(6)));
-                item.setBarcode(cursor.getString(7));
+//               Log.e("   item,setMinSalePric1=", item.getMinSalePrice()+"");
+//               try {
+//                  if(getAllSettings().get(0).getItems_Unit()==1)
+//                     item.setMinSalePrice(  item.getPrice());
+//                  Log.e("   item,setMinSalePric2=", item.getMinSalePrice()+"");
+//               }catch (Exception e){
+//                  Log.e("minprice,Exception",e.getMessage()+"");
+//               }
+
+               item.setBarcode(cursor.getString(7));
                 item.setItemL(Double.parseDouble(cursor.getString(8)));
 
                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
@@ -5505,7 +5514,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
         String PriceListId = CustomerListShow.PriceListId;
         String priceItem="";
         String custNum = CustomerListShow.Customer_Account;
-        String salesMan =getAllUserNo();;
+        String salesMan =getAllUserNo();
         String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE  ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC ,M.ITEM_HAS_SERIAL , M.ITEM_PHOTO , C.DISCOUNT_CUSTOMER \n" +
                 "   from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C ,CUSTOMER_MASTER cusMaster,  Price_List_D P\n" +
                 "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNo_ and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan + "'" +
@@ -6226,6 +6235,22 @@ Log.e("addCompanyInfo","addCompanyInfo");
        }
 
        return units;
+    }
+    public String getItemsUnitsQTY(String itemNo,String unitid) {
+
+       // units.add("1");
+       String selectQuery = "select ConvRate  from " + Item_Unit_Details + " where ItemNo = '" + itemNo + "' and UnitID='" + unitid + "' ";
+
+       db = this.getWritableDatabase();
+       Cursor cursor = db.rawQuery(selectQuery, null);
+
+       if (cursor.moveToFirst()) {
+          do {
+           return   cursor.getString(0).toString();
+          } while (cursor.moveToNext());
+       }
+
+       return "";
     }
     public List<Payment> getAllPayments() {
 

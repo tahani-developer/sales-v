@@ -4487,6 +4487,7 @@ public class SalesInvoice extends Fragment {
                 selectItem.setPosPrice(jsonItemsList.get(i).getPosPrice());
                 selectItem.setPrice(jsonItemsList.get(i).getPrice());
                 selectItem.setMinSalePrice(jsonItemsList.get(i).getMinSalePrice());
+                Log.e("selectItem==","selectItem");
 //                Log.e("getItemByNumber","itemNo="+itemNo+"\t"+jsonItemsList.get(i).getItemName());
 //                Log.e("getItemByNumber","getQty="+"\t"+jsonItemsList.get(i).getQty());
                 return selectItem;
