@@ -1727,10 +1727,10 @@ if(settingsList.size()>0)
 
 
         }
-//        else if (id == R.id.carstock){
-//            Intent i=new Intent(MainActivity.this,CarStocking.class);
-//            startActivity(i);
-//        }
+        else if (id == R.id.carstock){
+            Intent i=new Intent(MainActivity.this,CarStocking.class);
+            startActivity(i);
+        }
 //        else
 //            if (id == R.id.customers_location) {
 ////            locationPermissionRequest.closeLocation();

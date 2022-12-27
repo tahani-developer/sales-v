@@ -2309,10 +2309,10 @@ public class SalesInvoice extends Fragment {
                         voucher.setSaleManNumber(salesMan);
                         voucher.setVoucherDiscount(discountValue);
                         voucher.setVoucherDiscountPercent(discountPerc);
-                        try {
-                            if(remark.trim().length()==0)
-                            {remark=VERSION;}
-                        }catch (Exception e){}
+//                        try {
+//                            if(remark.trim().length()==0)
+//                            {remark=VERSION;}
+//                        }catch (Exception e){}
 
                         voucher.setRemark(remark);
                         voucher.setPayMethod(payMethod);
