@@ -962,7 +962,7 @@ exportData(2);
     }
 
     private void saveVoucherD() {
-
+        tataltax=0;
         Log.e("saveVoucherD",""+"saveVoucherD  "+listItemsMain.size());
         String curent=generalMethod.getCurentTimeDate(1);
    double     itemTax=0;

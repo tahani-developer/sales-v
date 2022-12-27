@@ -6652,7 +6652,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
-            do {
+//            do {
                 AddedCustomer customer = new AddedCustomer();
 
                 customer.setCustName(cursor.getString(0));
@@ -6669,7 +6669,8 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
 
                 customers.add(customer);
-            } while (cursor.moveToNext());
+//            }
+//            while (cursor.moveToNext());
         }
 
         return customers;

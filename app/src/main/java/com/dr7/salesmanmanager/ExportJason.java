@@ -31,8 +31,11 @@ import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.InventoryShelf;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
+
+import static com.dr7.salesmanmanager.Login.SalsManPlanFlage;
 import static com.dr7.salesmanmanager.Login.headerDll;
 
+import com.dr7.salesmanmanager.Modles.Plan_SalesMan_model;
 import com.dr7.salesmanmanager.Modles.Response_Link;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.Settings;
@@ -76,6 +79,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.offerTalaat;
 import static com.dr7.salesmanmanager.Login.rawahneh;
+import static com.dr7.salesmanmanager.Login.salesMan;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.userNo;
 import static com.dr7.salesmanmanager.MainActivity.fill_Pending_inv;
@@ -84,14 +88,15 @@ import static com.dr7.salesmanmanager.MainActivity.passwordFromAdmin;
 import static com.dr7.salesmanmanager.ReturnByVoucherNo.voucherNo_ReturnNo;
 
 public class ExportJason extends AppCompatActivity {
-
+    private JSONArray jsonArraysalesman;
+    String customerAccAdded,custName;
     public Context context;
     private ProgressDialog progressDialog;
     private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer,
             jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest,jsonArrayLocation,jsonArraySerial,
             jsonArrayStockRequestMaster,jsonArrayInventory,UpdateloadvanArray,VanRequstsjsonArray;
     DatabaseHandler mHandler;
-    JSONObject vouchersObject,VanRequstsjsonobject,Updateloadvanobject;
+    JSONObject vouchersObject,VanRequstsjsonobject,addsalesmanobject;
     public static  SweetAlertDialog pd,pdValidation;
     int taxType=0,importDataAfter=0;
     JSONObject ReturnUpdateObject;
@@ -440,6 +445,7 @@ public class ExportJason extends AppCompatActivity {
         jsonArrayAddedCustomer = new JSONArray();
         for (int i = 0; i < addedCustomer.size(); i++)
         {
+            custName=addedCustomer.get(i).getCustName();
 //                addedCustomer.get(i).setIsPosted(1);
             jsonArrayAddedCustomer.put(addedCustomer.get(i).getJSONObjectDelphi());
         }
@@ -1425,9 +1431,16 @@ public class ExportJason extends AppCompatActivity {
             pdVoucher.setTitle("Export Added Customer");
 //"ErrorCode":"1","ErrorDesc":"ORA-12899: value too large for column "A2022_295"."VE_ADDED_CUSTOMERS"."REMARK" (actual: 51, maximum: 45)"}
             if (result != null && !result.equals("")) {
+                Log.e("ExportAddedCustomer",""+result.toString());
 
 
                 if(result.contains("Saved Successfully")) {
+                    if(result.contains("="))
+                    {
+//                        {"ErrorCode":"0","ErrorDesc":"Saved Successfully=1110010600"}
+                         customerAccAdded=result.substring(result.indexOf("=")+1,result.length()-2);
+                        Log.e("ExportAddedCustomer","customerAcc"+customerAccAdded.toString());
+                    }
                     updateAddedCustomer();// 10
                     res_linkObject.state=200;
                    // Toast.makeText(context, context.getResources().getString(R.string.addCusttomerSucssesfuly), Toast.LENGTH_SHORT).show();
@@ -1459,8 +1472,21 @@ public class ExportJason extends AppCompatActivity {
                 exportJustCustomer=0;
                 if (typaImport == 1)//IIOs
                 {
-                    ImportJason importJason =new ImportJason(context);
-                    importJason.getCustomerData();
+                    if(SalsManPlanFlage==1){
+
+                        ExportJason exportJason = null;
+                        try {
+                            exportJason = new ExportJason(context);
+                            exportJason.addPlan(customerAccAdded,custName);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }else {
+                        ImportJason importJason =new ImportJason(context);
+                        importJason.getCustomerData();
+                    }
+
                 }
 
             }else {
@@ -1469,6 +1495,174 @@ public class ExportJason extends AppCompatActivity {
 
            listOfResponse.add(res_linkObject)  ; }
     }
+
+    private void addPlan(String customerAccAdded,String custName) {
+        Plan_SalesMan_model plan=new Plan_SalesMan_model();
+        plan.setAreaPlan("");
+        plan.setCustomerNumber(customerAccAdded);
+        plan.setPlan_date(generalMethod.getCurentTimeDate(1));
+        plan.setOrderd(1);
+        plan.setSalesNo(salesMan);
+        plan.setCustomerName(custName);
+        plan.setLatit_customer("");
+        plan.setLong_customer("");
+        getAddPlanObject(plan);
+
+        new JSONTaskIIs_AddPlan(context).execute();
+    }
+
+
+
+    private class JSONTaskIIs_AddPlan extends AsyncTask<String, String, String> {
+        Context  context;
+
+
+
+
+
+
+        public JSONTaskIIs_AddPlan(   Context context) {
+            this.context = context;
+
+            Log.e("savePlan","JSONTaskIIs_AddPlan-4-");
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pd.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pd.setTitleText(context.getResources().getString(R.string.update));
+            pd.setCancelable(false);
+            pd.show();
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+
+
+                if (!ipAddress.equals("")) {
+                    http://localhost:8085/ADMAddSalesMan?CONO=295
+                    URL_TO_HIT = "http://" + ipAddress+":"+ipWithPort +  headerDll.trim() +"/ADMADDPLAN";
+
+
+                    Log.e("URL_TO_HI",URL_TO_HIT);
+
+
+                }
+
+
+            } catch (Exception e) {
+                pd.dismissWithAnimation();
+            }
+
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost();
+                try {
+                    request.setURI(new URI(URL_TO_HIT));
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                nameValuePairs.add(new BasicNameValuePair("CONO", CONO));
+                nameValuePairs.add(new BasicNameValuePair("JSONSTR",addsalesmanobject.toString().trim()));
+
+
+                Log.e("JSONSTR","ADMADDPLAN="+addsalesmanobject.toString());
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+
+
+                return JsonResponse;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.e("savePlan","JSONTaskIIs_AddPlan-5-");
+            pd.dismissWithAnimation();
+            if (s != null) {
+                if (s.contains("Saved Successfully")) {
+                    Log.e("salesManInfo", "ADD_SALES_MAN_SUCCESS\t" + s.toString());
+                    showMessageSucsess("Add Plan Successful");
+//                    ImportData importData =new ImportData(context);
+//                    importData.getPlan(salesNo,datePlan,0);
+
+
+                }else{
+                    Toast.makeText(context, "Plan  not added", Toast.LENGTH_SHORT).show();
+
+                }
+//                progressDialog.dismiss();
+            }
+        }
+
+    }
+    private void  getAddPlanObject(Plan_SalesMan_model salesManInfos) {
+        jsonArraysalesman = new JSONArray();
+        jsonArraysalesman.put(salesManInfos.getJsonObject2());
+        try {
+            addsalesmanobject =new JSONObject();
+            addsalesmanobject.put("JSN", jsonArraysalesman);
+            Log.e("getAddPlanObject","getAddPlanObject=="+ addsalesmanobject.getString("CUSNAME"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void showMessageSucsess(String add_plan_successful) {
+        SweetAlertDialog pd = new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE);
+        pd.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+        pd.setTitleText(add_plan_successful);
+        pd.setCancelable(true);
+        pd.show();
+    }
+
     public String convertStandardJSONString(String data_json){
         data_json = data_json.replace("\"", "");
 //        Log.e("");
