@@ -144,7 +144,7 @@ public class Login extends AppCompatActivity {
     public  static int makeOrders=0;// 1= just orders app
 
     public  static int OfferCakeShop=0;// if 0 calck offer many times
-    public  static int  DayofweekPlan=1;// 1 if saleman plan based on day of week ,, 0if saleman plan based on date
+    public  static int  DayofweekPlan=0;// 1 if saleman plan based on day of week ,, 0if saleman plan based on date
     public  static    int  offerTalaat=0;
     public  static    int  offerQasion=0;
     public   static  int  offernasleh=1;
@@ -160,8 +160,8 @@ public class Login extends AppCompatActivity {
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-   public  static    String  headerDll = "/Falcons/VAN.dll";
-// public  static    String headerDll = "";
+ public  static    String  headerDll = "/Falcons/VAN.dll";
+//public  static    String headerDll = "";
 
     public  static  int gone_noTax_totalDisc=0;
     public  static  int password_rawat=0;

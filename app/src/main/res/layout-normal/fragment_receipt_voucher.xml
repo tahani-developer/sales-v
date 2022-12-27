@@ -155,7 +155,46 @@
                     android:textSize="12sp" />
 
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/row221"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_weight="9.5"
+                >
 
+                <TextView
+                    android:id="@+id/recivedAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="2dp"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:textColor="@color/text_view_color"
+                    android:autoSizeTextType="uniform"
+                    android:textSize="12sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:autoSizeMaxTextSize="14sp"
+                    android:autoSizeMinTextSize="12sp"
+
+                    android:text="@string/total_balance"
+                    />
+                <TextView
+                    android:id="@+id/totalBalance_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_border_edit"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/text_view_color"
+                    android:textSize="14sp" />
+
+
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/row32"
                 android:layout_width="match_parent"

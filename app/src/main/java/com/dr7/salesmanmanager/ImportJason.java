@@ -108,6 +108,7 @@ import retrofit2.Retrofit;
 import static com.dr7.salesmanmanager.AccountStatment.getAccountList_text;
 import static com.dr7.salesmanmanager.Activities.totalBalance_text;
 
+import static com.dr7.salesmanmanager.Activities.totalBalance_value;
 import static com.dr7.salesmanmanager.Login.checkIpDevice;
 import static com.dr7.salesmanmanager.Login.curentDate;
 import static com.dr7.salesmanmanager.Login.dateFromToActive;
@@ -4141,6 +4142,7 @@ Log.e("customerList",""+customerList.size());
                         } else {
                             if (listCustomerInfo.size() != 0)
                                 totalBalance_text.setText(convertToEnglish(getDecimal(listCustomerInfo.get(listCustomerInfo.size() - 1).getBalance()) + ""));
+                            totalBalance_value=convertToEnglish(getDecimal(listCustomerInfo.get(listCustomerInfo.size() - 1).getBalance()) + "");
                         }
 
 
@@ -4334,6 +4336,7 @@ Log.e("customerList",""+customerList.size());
                         } else {
                             if (listCustomerInfo.size() != 0)
                                 totalBalance_text.setText(convertToEnglish(getDecimal(listCustomerInfo.get(listCustomerInfo.size() - 1).getBalance()) + ""));
+                            totalBalance_value=convertToEnglish(getDecimal(listCustomerInfo.get(listCustomerInfo.size() - 1).getBalance()) + "");
                         }
 
 

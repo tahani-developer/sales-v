@@ -1,5 +1,6 @@
 package com.dr7.salesmanmanager;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -8,9 +9,15 @@ import android.os.Handler;
 import android.os.Looper;
 //import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.RequestQueue;
@@ -18,6 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.dr7.salesmanmanager.Adapters.ExportResultAdapter;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.InventoryShelf;
@@ -31,6 +39,11 @@ import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.serialModel;
+import com.dr7.salesmanmanager.databinding.ExportResultDailogBinding;
+import com.dr7.salesmanmanager.databinding.ExportResultDailogBindingImpl;
+
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -911,6 +924,7 @@ public class ExportJason extends AppCompatActivity {
         private String JsonResponse = null;
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
+        //55555555
         private  Response_Link res_linkObject=new Response_Link();
         public  String salesNo="",finalJson;
         @Override
@@ -1180,6 +1194,7 @@ public class ExportJason extends AppCompatActivity {
         private BufferedReader reader = null;
         SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
+        private  Response_Link res_linkObject=new Response_Link();
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -1201,7 +1216,7 @@ public class ExportJason extends AppCompatActivity {
                 if (!ipAddress.equals("")) {
 
                     URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+ "/ExportPAYMENTS_CHECKS";
-
+                    res_linkObject.link_url="ExportPAYMENTS_CHECKS";
 
 
                     Log.e("URL_TO_HIT",""+URL_TO_HIT);
@@ -1285,25 +1300,28 @@ public class ExportJason extends AppCompatActivity {
             super.onPostExecute(result);
 //            progressDialog.dismiss();
             Log.e("onPostExecute","ExportPAYMENTS---7---"+result);
-
+            res_linkObject.response_link=result;
             pdVoucher.setTitle("Export Payment Paper");
             if (result != null && !result.equals("")) {
 //                Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();
                 if(result.contains("Saved Successfully")) {
 
                    // pdVoucher.setTitle("Saved Serial");
-
+                    res_linkObject.state=200;
                     updatePayment();// 8
 
 
-                }
+                }else
+                    res_linkObject.state=404;
 
 
             } else {
+                res_linkObject.state=500;
                 pdVoucher.dismissWithAnimation();
             }
             exportAddedCustomer(); // 9
-        }
+            listOfResponse.add(res_linkObject)  ;   }
+
     }
 
     private void savePayment() {// 17
@@ -1316,6 +1334,7 @@ public class ExportJason extends AppCompatActivity {
         private BufferedReader reader = null;
         SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
+        private  Response_Link res_linkObject=new Response_Link();
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -1341,6 +1360,7 @@ public class ExportJason extends AppCompatActivity {
                 try {
                      link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/ExportADDED_CUSTOMERS";
                     Log.e("tagexPORT", "Added==Jsonlink"+link);
+                    res_linkObject.link_url="ExportADDED_CUSTOMERS";
                 } catch (Exception e) {
                     progressDialog.dismiss();
                     Toast.makeText(ExportJason.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
@@ -1400,7 +1420,7 @@ public class ExportJason extends AppCompatActivity {
         protected void onPostExecute( String result) {
             super.onPostExecute(result);
 //            progressDialog.dismiss();
-
+            res_linkObject.response_link=result;
 
             pdVoucher.setTitle("Export Added Customer");
 //"ErrorCode":"1","ErrorDesc":"ORA-12899: value too large for column "A2022_295"."VE_ADDED_CUSTOMERS"."REMARK" (actual: 51, maximum: 45)"}
@@ -1409,16 +1429,27 @@ public class ExportJason extends AppCompatActivity {
 
                 if(result.contains("Saved Successfully")) {
                     updateAddedCustomer();// 10
-
+                    res_linkObject.state=200;
                    // Toast.makeText(context, context.getResources().getString(R.string.addCusttomerSucssesfuly), Toast.LENGTH_SHORT).show();
 
-                }else {
+                }else {     res_linkObject.state=404;
                     Toast.makeText(context, "Error in Saving  Customer ="+result, Toast.LENGTH_LONG).show();
+
+                    if(exportJustCustomer==1)
+                    {
+                        generalMethod.showSweetDialog(context,0,""+context.getResources().getString(R.string.cus_savedlocaly_just),"");
+                    }
+
                 }
 
 
             } else {
+                res_linkObject.state=500;
                 pdVoucher.dismissWithAnimation();
+                if(exportJustCustomer==1)
+                {
+                    generalMethod.showSweetDialog(context,0,""+context.getResources().getString(R.string.cus_savedlocaly_just),"");
+                }
 
 //                Toast.makeText(context, "onPostExecute", Toast.LENGTH_SHORT).show();
             }
@@ -1436,7 +1467,7 @@ public class ExportJason extends AppCompatActivity {
                 exportTransaction(); // 11
             }
 
-        }
+           listOfResponse.add(res_linkObject)  ; }
     }
     public String convertStandardJSONString(String data_json){
         data_json = data_json.replace("\"", "");
@@ -1606,7 +1637,7 @@ public class ExportJason extends AppCompatActivity {
 //        SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
 
-
+        private  Response_Link res_linkObject=new Response_Link();
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -1638,6 +1669,7 @@ public class ExportJason extends AppCompatActivity {
 //LINK : http://localhost:8082/ExportITEMSERIALS?CONO=290&JSONSTR={"JSN":[{"VHFNO":"123","STORENO":"5","TRNSDATE":"01/01/2021","TRANSKIND":"1","ITEMNO":"321","SERIAL_CODE":"369258147852211","QTY":"1","VSERIAL":"1","ISPOSTED":"0"}]}
                 String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/SaveVouchers";
                 // Log.e("ipAdress", "ip -->" + ip);
+                res_linkObject.link_url="SaveVouchers";
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin+"&VHFTYPE="+taxType;
                 Log.e("tag_link", "ExportData -->" + link);
                 Log.e("tag_data", "ExportData -->" + data);
@@ -1698,16 +1730,26 @@ public class ExportJason extends AppCompatActivity {
             super.onPostExecute(result);
             progressSave.setTitle("Saved Vouchers");
             Log.e("onPostExecute","---15----"+result);
-
+            res_linkObject.response_link=result;
             if (result != null && !result.equals("")) {
+                if(result.contains("Saved Successfully"))
+                {
+                    res_linkObject.state=200;
 
+                }else {
+                    res_linkObject.state=404;
+
+                }
 
             } else {
+                res_linkObject.state=500;
                 progressSave.dismissWithAnimation();
 
             }
             saveItemSerials();// 16
-        }
+            Log.e("listOfResponse",""+res_linkObject.link_url);
+            listOfResponse.add(res_linkObject);     }
+
     }
     private class JSONTaskSaveLoadVan extends AsyncTask<String, String, String> {
         private String JsonResponse = null;
@@ -1716,7 +1758,7 @@ public class ExportJason extends AppCompatActivity {
         //        SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
 
-
+        private  Response_Link res_linkObject=new Response_Link();
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -1754,7 +1796,8 @@ public class ExportJason extends AppCompatActivity {
                 String link="";
 //                if(offerTalaat==0)
                  link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/SaveLoadVan";
-//                else
+                res_linkObject.link_url="SaveLoadVan";
+                 //                else
 //                  link = "http://" + ipAddress+":"+ipWithPort +  headerDll.trim() +"/SaveTempLoadVan";
 
                 // Log.e("ipAdress", "ip -->" + ip);
@@ -1816,14 +1859,23 @@ public class ExportJason extends AppCompatActivity {
         @Override
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
+            res_linkObject.response_link=   result;
             progressSave.setTitle("Saved Load");
             progressSave.dismissWithAnimation();
             Log.e("onPostExecute","---15----"+result);
 
             if (result != null && !result.equals("")) {
 
+                if(result.contains("Saved Successfully"))
+                {
+                    res_linkObject.state=200;
 
+                }else {
+                    res_linkObject.state=404;
+
+                }
             } else {
+                res_linkObject.state=500;
                 progressSave.dismissWithAnimation();
 
             }
@@ -1833,7 +1885,7 @@ public class ExportJason extends AppCompatActivity {
                 generalMethod.showSweetDialog(context,0,""+context.getResources().getString(R.string.checkinternetConnection),"");
             }
 
-        }
+   listOfResponse.add(res_linkObject) ;    }
     }
     private void updateVoucherExported() {// 3
         Log.e("updateVoucherExported","trueee");
@@ -1848,7 +1900,7 @@ public class ExportJason extends AppCompatActivity {
         private BufferedReader reader = null;
         //        SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
-
+        private  Response_Link res_linkObject=new Response_Link();
 
         @Override
         protected void onPreExecute() {
@@ -1867,6 +1919,7 @@ public class ExportJason extends AppCompatActivity {
 //LINK : http://localhost:8082/ExportITEMSERIALS?CONO=290&JSONSTR={"JSN":[{"VHFNO":"123","STORENO":"5","TRNSDATE":"01/01/2021","TRANSKIND":"1","ITEMNO":"321","SERIAL_CODE":"369258147852211","QTY":"1","VSERIAL":"1","ISPOSTED":"0"}]}
                 String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+ "/SavePayment";
                 // Log.e("ipAdress", "ip -->" + ip);
+                res_linkObject.link_url="SavePayment";
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
                 Log.e("tag_link", "ExportData -->" + link);
                 Log.e("tag_data", "ExportData -->" + data);
@@ -1928,14 +1981,17 @@ public class ExportJason extends AppCompatActivity {
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
             Log.e("onPostExecute","---17----"+result);
+            res_linkObject.response_link=result;
+
             progressSave.dismissWithAnimation();
             if (result != null && !result.equals("")) {
 //                Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();
                 if(result.contains("Saved Successfully")) {
+                    res_linkObject.state=200;
 
-
-                }
+                }else   res_linkObject.state=404;
             } else {
+                res_linkObject.state=500;
                 progressSave.dismissWithAnimation();
 //                Toast.makeText(context, "onPostExecute", Toast.LENGTH_SHORT).show();
             }
@@ -1945,8 +2001,8 @@ public class ExportJason extends AppCompatActivity {
 
             }else// لمحمد طلعت  من ال item balance
             exportLoadVan();
-
-        }
+            Log.e("listOfResponse",""+res_linkObject.link_url);
+listOfResponse.add(res_linkObject) ;  }
     }
 
     private void updatePayment() {// 8
@@ -1961,7 +2017,7 @@ public class ExportJason extends AppCompatActivity {
         private BufferedReader reader = null;
         //        SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
-
+        private  Response_Link res_linkObject=new Response_Link();
 
         @Override
         protected void onPreExecute() {
@@ -1986,7 +2042,7 @@ public class ExportJason extends AppCompatActivity {
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
                 Log.e("tag_link", "ExportData -->" + link);
                 Log.e("tag_data", "ExportData -->" + data);
-
+                res_linkObject.link_url="SaveItemSerials";
                 URL url = new URL(link);
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -2041,18 +2097,23 @@ public class ExportJason extends AppCompatActivity {
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
             Log.e("onPostExecute","---16----"+result);
-
+            res_linkObject.response_link=result;
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully")) {
 
-
+                    res_linkObject.state=200;
                 }
+                else
+                    res_linkObject.state=404;
             } else {
+                res_linkObject.state=500;
                 progressSave.dismissWithAnimation();
 
 //                Toast.makeText(context, "onPostExecute", Toast.LENGTH_SHORT).show();
             }
             savePayment();// 17
+            Log.e("listOfResponse",""+res_linkObject.link_url);
+            listOfResponse.add(res_linkObject) ;
         }
     }
 
@@ -2534,6 +2595,7 @@ public class ExportJason extends AppCompatActivity {
         private BufferedReader reader = null;
         SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
+        private  Response_Link res_linkObject=new Response_Link();
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -2547,7 +2609,7 @@ public class ExportJason extends AppCompatActivity {
             Log.e("link", "link"+link);
             String ipAddress = "";
             Log.e("tagexPORT", "JsonResponse");
-
+            res_linkObject.link_url="ExportITEMSERIALS";
             try {
                 ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
 
@@ -2611,24 +2673,28 @@ public class ExportJason extends AppCompatActivity {
             super.onPostExecute(result);
             Log.e("onPostExecute","updateVoucherExported---4---");
           //  Log.e("onPostExecute","Serial updateVoucherExported---4---"+result);
-
+            res_linkObject.response_link=result;
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
                 {
                     pdVoucher.setTitle("Saved Serial");
 
-
+                    res_linkObject.state=200;
                     updateSerial();// 5
 
                   //  saveItemSerials();
-                }
+                }else
+                    res_linkObject.state=404;
 
 
             } else {
                 pdVoucher.dismissWithAnimation();
-
+                res_linkObject.state=500;
             }
+            Log.e("listOfResponse",""+res_linkObject.link_url);
+            listOfResponse.add(res_linkObject);
             exportPayment();// 6
+
         }
     }
     private class JSONTask_TransactionDelphi extends AsyncTask<String, String, String> {
@@ -3073,7 +3139,7 @@ public class ExportJason extends AppCompatActivity {
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
         int flag_export=0;//0 from normal export /// 2 from dialog  re export
-
+        private  Response_Link res_linkObject=new Response_Link();
         public JSONTaskEXPORT_STOCK(int floag) {
             this.flag_export=floag;
         }
@@ -3097,7 +3163,7 @@ public class ExportJason extends AppCompatActivity {
                 String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/EXPORTTOSTOCK";
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin+"&VHFTYPE="+taxType;
                 Log.e("tag_link", "ExportData -->" + link);Log.e("tag_data", "ExportData -->" + data);
-
+                res_linkObject.response_link="EXPORTTOSTOCK";
 
 ////
                 URL url = new URL(link);
@@ -3160,11 +3226,12 @@ public class ExportJason extends AppCompatActivity {
                 if(result.contains("Saved Successfully")) {
                     Log.e("EXPORT_STOCK","result_start");
                     pdStosk.setTitle("export Payment start");
-
-                }
+                    res_linkObject.state=200;
+                }else  res_linkObject.state=404;
 
 
             } else {
+                res_linkObject.state=500;
                 pdStosk.dismissWithAnimation();
             }
 
@@ -3175,8 +3242,8 @@ public class ExportJason extends AppCompatActivity {
                 generalMethod.showSweetDialog(context,0,""+context.getResources().getString(R.string.checkinternetConnection),"");
             }
 
-
-
+            Log.e("listOfResponse",""+res_linkObject.link_url);
+listOfResponse.add(res_linkObject);
         }
     }
     public  void  exportSerial_stock(){// just for serial
@@ -3306,7 +3373,7 @@ public class ExportJason extends AppCompatActivity {
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
         int type_Export=0;// 0 fromexport pending data //1 from normal
-
+        private  Response_Link res_linkObject=new Response_Link();
         public JSONTaskEXPORT_STOCK_Payment(int expo) {
             this.type_Export=expo;
             Log.e("JSONTaskEXPORT_STOCK_Payment",""+type_Export);
@@ -3327,7 +3394,7 @@ public class ExportJason extends AppCompatActivity {
                 String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/ExportPaymentToSTK";
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
 
-
+                res_linkObject.link_url="ExportPaymentToSTK";
 ////
                 URL url = new URL(link);
 
@@ -3385,18 +3452,22 @@ public class ExportJason extends AppCompatActivity {
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
 
+            res_linkObject.response_link=result;
             Log.e("onPostExecute","EXPORTpayment=19---"+result);
 
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully")) {
+                    res_linkObject.state=200;
                     pdStosk.setTitle("EXPORT_payment Successfully");
                     pdStosk.dismissWithAnimation();
+
                     if(importDataAfter!=2)
                     showSavedSucces();
-                }
+                }else   res_linkObject.state=404;
 
-            } else {
+            } else {  res_linkObject.state=500;
             }
+            listOfResponse.add(  res_linkObject);
             pdStosk.dismissWithAnimation();
             Log.e("importDataAfter",""+importDataAfter);
             if(importDataAfter==0&&type_Export==0)
@@ -3406,6 +3477,7 @@ public class ExportJason extends AppCompatActivity {
                 ImportJason obj = new ImportJason(context);
                 obj.getSerialData(voucherNo_ReturnNo);
             }
+        //    showExportResultDailog();
         }
     }
 
@@ -3423,7 +3495,7 @@ public class ExportJason extends AppCompatActivity {
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
 
-
+        private  Response_Link res_linkObject=new Response_Link();
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -3440,7 +3512,7 @@ public class ExportJason extends AppCompatActivity {
                 if (!ipAddress.equals("")) {
 
                link = "http://"+ipAddress.trim()+":"+ipWithPort+headerDll.trim()+"/UpdateReturn";
-
+                    res_linkObject.link_url="UpdateReturn";
 
 
                     Log.e("URL_TO_HIT",""+link);
@@ -3494,14 +3566,14 @@ public class ExportJason extends AppCompatActivity {
             super.onPostExecute(result);
 //            progressDialog.dismiss();
             Log.e("onPostExecuteReturn",""+result);
-
+            res_linkObject.response_link=result;
 
             pdReturnUpdate.dismiss();
             if (result != null && !result.equals("")) {
 
                 if(result.contains("Internal Application Error")){
 
-
+                    res_linkObject.state=404;
 
 
                 }else
@@ -3509,14 +3581,14 @@ public class ExportJason extends AppCompatActivity {
                 if(result.contains("Saved Successfully"))
                 {
 
-
+                    res_linkObject.state=200;
 
 
                 }
                 else
 
                 {
-
+                    res_linkObject.state=404;
                 }
 
                 // exportReplacementList(listAllReplacment);
@@ -3524,9 +3596,10 @@ public class ExportJason extends AppCompatActivity {
 
             }
             else{
-
+                res_linkObject.state=500;
             }
-
+            Log.e("listOfResponse",""+res_linkObject.link_url);
+       listOfResponse.add(res_linkObject);
             exportSerial();// 4
 
         }
@@ -3640,5 +3713,29 @@ public class ExportJason extends AppCompatActivity {
             saveExpot(); //15
         }
 
+    }
+    void showExportResultDailog (){
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+
+           ExportResultDailogBinding dailogBinding = DataBindingUtil.inflate(LayoutInflater.from(dialog.getContext()), R.layout. export_result_dailog, null, false);
+
+        dialog.   setContentView(dailogBinding.getRoot());
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.gravity = Gravity.CENTER;
+        dialog.getWindow().setAttributes(lp);
+        dialog.show();
+        Log.e("listOfResponse",listOfResponse.size()+"");
+      dailogBinding.recycle.setLayoutManager(new LinearLayoutManager(context));
+        dailogBinding.ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dailogBinding.recycle.setAdapter(new ExportResultAdapter(listOfResponse,context));
     }
 }

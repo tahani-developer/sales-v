@@ -83,7 +83,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
-
+        Log.e("getView1===",i+"");
         final ViewHolder holder = new ViewHolder();
         view = View.inflate(context, R.layout.customers_item, null);
 
@@ -138,15 +138,18 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         });
         holder.custAccountTextView.setText("" + custList.get(i).getCustId());
         holder.custNameTextView.setText(custList.get(i).getCustName());
+        Log.e("getView2===",i+"");
         if(Login.SalsManPlanFlage==1) {
+            Log.e("case1","case1");
             if(MainActivity.plantype==2){
-
+                Log.e("case2","case2");
                 holder.linearLayout.setEnabled(true);
             }else
-            {
+            {   Log.e("DB_salesManPlanListadapter====",MainActivity.DB_salesManPlanList.size()+"");
                 if (MainActivity.DB_salesManPlanList.size() == 0) {
                 holder.linearLayout.setEnabled(true);
             } else {
+                    Log.e("custList====",custList.get(i).getCustId()+"");
                 if (IsCkeckOut(custList.get(i).getCustId()))
                     holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.red_background));
 
@@ -160,7 +163,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         }   }else
 
             {
-
+                Log.e("case3","case no salesman plan");
             // case no salesman plan
         }
 

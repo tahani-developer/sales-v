@@ -157,11 +157,12 @@ public class CustomerListShow extends DialogFragment {
 
             showCustomerLoc=mHandler.getAllSettings().get(0).getShowCustomerLocation();
             if (mHandler.getAllSettings().get(0).getShowCustomerList() == 1) {
-
+                     Log.e("c1","c1");
+                Log.e("customerList","customerList"+customerList.size());
                 customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList,showCustomerLoc);
                 itemsListView.setAdapter(customersListAdapter);
 
-            } else {
+            } else { Log.e("c2","c2");
                 customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList,showCustomerLoc);
                 itemsListView.setAdapter(customersListAdapter);
             }
@@ -220,12 +221,16 @@ public class CustomerListShow extends DialogFragment {
         if(Login.SalsManPlanFlage==1) {
 
 if(MainActivity.DB_salesManPlanList .size()!=0)
-{
+{int k=1;
 Log.e("customerList===",customerList.size()+"");
             // remove customer not in plan
             for (int i = 0; i < customerList.size(); i++)
-                if (!IsInPlan(customerList.get(i).getCustId().trim())) {
-                    customerList.remove(i);
+                if (IsInPlan(customerList.get(i).getCustId().trim())) {
+
+                }
+            else
+
+                {  customerList.remove(i);
                     i--;
 
                 }}
@@ -265,6 +270,7 @@ Log.e("customerList===",customerList.size()+"");
                             itemsListView.setAdapter(customersListAdapter);
                             //customersListAdapter.notifyDataSetChanged();
                         } else {
+                            Log.e("c5","c5");
                             customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList,showCustomerLoc);
                             itemsListView.setAdapter(customersListAdapter);
                             // customersListAdapter.notifyDataSetChanged();

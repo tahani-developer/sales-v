@@ -180,6 +180,26 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textSize="16sp" />
+        <TextView
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:text="@string/unit_qty"
+            android:textColor="@color/text_view_color"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/unit_qty"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/back_border_edit"
+            android:gravity="center"
+            android:imeOptions="actionNext"
+            android:inputType="numberDecimal"
+            android:textSize="16sp" />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/linearWeight"
