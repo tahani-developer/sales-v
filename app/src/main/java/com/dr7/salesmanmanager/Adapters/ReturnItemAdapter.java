@@ -207,6 +207,14 @@ else  if (  list.get(position).getIsClicked()==0)
                      }}}
             }
         });
+
+
+        if(databaseHandler.getAllSettings().get(0).getCanChangePrice()==1
+        ||databaseHandler.getAllSettings().get(0).getCanChangePrice_returnonly()==1)
+            holder.    price.setEnabled(true);
+        else
+            holder.    price.setEnabled(false);
+
         holder.    price.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -232,7 +240,7 @@ else  if (  list.get(position).getIsClicked()==0)
 
 
 
-                                    ReturnByVoucherNo.allitemsdata.get(position).setPriceItem(Float.parseFloat(s.toString().trim()));
+                                    ReturnByVoucherNo.allitemsdata.get(holder.getAdapterPosition()).setPriceItem(Float.parseFloat(s.toString().trim()));
                                 }
                              }else {
 
@@ -246,7 +254,7 @@ else  if (  list.get(position).getIsClicked()==0)
                                             }
                                         }).show();
 
-                        holder.price.setText(ReturnByVoucherNo.Recoverallitemsdata.get(position).getPriceItem()+"");
+                        holder.price.setText(ReturnByVoucherNo.Recoverallitemsdata.get(holder.getAdapterPosition()).getPriceItem()+"");
 
                             }
                         }}

@@ -1177,10 +1177,12 @@ try {
         {
             for (int j=0;j<listItemsReturn.size();j++)
             {
+                Log.e("listItemsReturn==",listItemsReturn.get(j).getPrice()+"  , "+returnListSerial.get(i).getPriceItem());
                 Log.e("vvv==", returnListSerial.get(i).getQty()+"  "+listItemsReturn.get(j).getItemNo().trim());
                 if(returnListSerial.get(i).getItemNo().trim().equals(listItemsReturn.get(j).getItemNo().trim()))
                 {
                     Log.e("returnListSerial","listItemsReturn.get(i)"+listItemsReturn.get(j).getQty());
+                    listItemsReturn.get(j).setPrice(returnListSerial.get(i).getPriceItem());
                     if(!returnListSerial.get(i).getSerialCode().equals(""))
                     {
                         listItemsReturn.get(j).setQty(0);
@@ -1264,12 +1266,12 @@ try {
 
 //                        if(oneDisc!=0)
                            // salePrice=listItemsReturn.get(j).getPrice()-oneDisc+oneTax;
-                        salePrice=listItemsReturn.get(j).getPrice()-oneDisc;
+                        salePrice= allitemsdata.get(i).getPriceItem()-oneDisc;
 //                       salePrice=listItemsReturn.get(j).getPrice();
 
                     }catch (Exception e){
                         // Log.e("salePrice","Exception"+e.getMessage());
-                        salePrice=listItemsReturn.get(j).getPrice();
+                        salePrice= allitemsdata.get(i).getPriceItem();
                     }
 
                 allitemsdata.get(i).setPriceItem(salePrice);
@@ -1279,6 +1281,7 @@ try {
 
                     String itemName=dataBase.getItemName(allitemsdata.get(i).getItemNo().toString().trim());
                     listItemsReturn.get(j).setItemName(itemName);
+                    Log.e("salePrice==",salePrice+"");
                     listItemsReturn.get(j).setPrice(salePrice);
                 listItemsReturn.get(j).setDisc(0);
                 listItemsReturn.get(j).setDiscPerc("0");
