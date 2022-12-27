@@ -99,6 +99,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
                 android:text="text_price"
+                android:selectAllOnFocus="true"
                 android:textColor="@color/colorblue_dark"
                 android:textStyle="bold" />
             <EditText
