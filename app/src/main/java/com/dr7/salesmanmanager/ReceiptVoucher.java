@@ -100,10 +100,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.VERTICAL;
 
+import static com.dr7.salesmanmanager.Login.getTotalBalanceInActivities;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherForPrint;
 import static java.util.Calendar.JANUARY;
-
+import static com.dr7.salesmanmanager.Activities.totalBalance_value;
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -163,7 +164,7 @@ public class ReceiptVoucher extends Fragment {
     volatile boolean stopWorker;
     int voucherNoReprint = 0;
     public static Payment payment_rePrint;
-
+    public  TextView totalBalance_text;
     public static List<Payment> paymentPrinter;
     static Payment pay1;
     public  static  boolean isArabicBank=false;
@@ -185,7 +186,7 @@ public class ReceiptVoucher extends Fragment {
 
     //B
     GeneralMethod generalMethod;
-
+LinearLayout row221;
     String[] textListButtons=new String[]{};
     public interface ReceiptInterFace {
         public void displayCustInfoFragment();
@@ -235,6 +236,16 @@ public class ReceiptVoucher extends Fragment {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        totalBalance_text= view.findViewById(R.id.totalBalance_text);
+        row221= view.findViewById(R.id.row221);
+
+
+        if(getTotalBalanceInActivities==1)
+        {
+            if(totalBalance_value!=null) totalBalance_text.setText(totalBalance_value+"");
+            else totalBalance_text.setText("0");
+            row221.setVisibility(View.VISIBLE);
+        }else  row221.setVisibility(View.GONE);
 
         mDbHandler = new DatabaseHandler(getActivity());
         payments = new ArrayList<Payment>();

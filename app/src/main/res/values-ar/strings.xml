@@ -660,6 +660,7 @@
     <string name="PERC">النسبة المحققة</string>
     <string name="commision">العمولة</string>
     <string name="commisionRequired">العمولة المستحقة</string>
+    <string name="urlname">اسم الويب سيرفيس</string>
     <string name="taxAfterDisc">الخصم بعد الضريبة</string>
 
     <string-array name="DaysOfWeek">

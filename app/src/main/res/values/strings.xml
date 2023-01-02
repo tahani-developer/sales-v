@@ -625,6 +625,8 @@
     <string name="whatsappform">مشاركة الفاتورة ك عرض سعر</string>
     <string name="unit_name">Unit</string>
     <string name="unit_price">Unit Price</string>
+    <string name="cus_savedlocaly_just">فشل الاتصال بالسيرفر، تم حفظ العميل بهذا الجهاز فقط </string>
+    <string name="urlname"> URL Name</string>
     <string name="taxAfterDisc">Tax After Disc</string>
 
     <string-array name="app_paymentTypeList">

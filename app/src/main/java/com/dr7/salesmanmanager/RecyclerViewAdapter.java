@@ -780,6 +780,7 @@ public static     int CountOfItems=1;
 
                                                            final Spinner unit = dialog.findViewById(R.id.unit);
                                                            final Spinner   Item_unit= dialog.findViewById(R.id.Item_unit);
+                                                           TextView unit_qty= dialog.findViewById(R.id.unit_qty);
                                                            final TextView textQty = dialog.findViewById(R.id.textQty);
                                                            unitQty = dialog.findViewById(R.id.unitQty);
                                                            final EditText unitWeight = dialog.findViewById(R.id.unitWeight);
@@ -1308,9 +1309,17 @@ public static     int CountOfItems=1;
                                                                @Override
                                                                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                                                                  CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
-                                                                 if(!Item_unit.getSelectedItem().toString().equals(""))
-                                                                 price.setText(mHandler.getUnitPrice(itemNumber.getText().toString(),"-1",CountOfItems));
-                                                                   Log.e("CountOfItems",CountOfItems+"");
+                                                                 if(!Item_unit.getSelectedItem().toString().equals("")) {
+                                                                     price.setText(mHandler.getUnitPrice(itemNumber.getText().toString(), "-1", CountOfItems));
+                                                                     String ITEMS_unitsQTY = mHandler.getItemsUnitsQTY(itemNumber.getText().toString(), Item_unit.getSelectedItem().toString());
+                                                                     unit_qty.setText(ITEMS_unitsQTY);
+                                                                     allItemsList.get(position).setMinSalePrice(Double.parseDouble(price.getText().toString()));
+                                                                     Log.e("CountOfItems", CountOfItems + " ,ITEMS_unitsQTY=" + ITEMS_unitsQTY);
+                                                                 }else
+                                                                 {
+                                                                     price.setText(   allItemsList.get(position).getPrice()+"");
+                                                                     allItemsList.get(position).setMinSalePrice(Double.parseDouble(price.getText().toString()));
+                                                                 }
 
                                                                }
 
@@ -1423,7 +1432,7 @@ public static     int CountOfItems=1;
 
                                                                                                      if ( voucherType==506 || mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1   &&
                                                                                                                 priceafterdis >= allItemsList.get(position).getMinSalePrice())) {
-
+                                                                                                         Log.e("ayah,getMinSalePrice", "" +allItemsList.get(position).getMinSalePrice());
                                                                                                          AddItemsFragment2 obj = new AddItemsFragment2();
                                                                                                          List<Offers> offer = checkOffers(itemNumber.getText().toString());
                                                                                                          Offers appliedOffer = null;

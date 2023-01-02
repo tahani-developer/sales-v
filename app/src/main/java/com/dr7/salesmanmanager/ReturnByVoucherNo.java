@@ -3,11 +3,7 @@ package com.dr7.salesmanmanager;
 import static com.dr7.salesmanmanager.ImportJason.listItemsReturn;
 import static com.dr7.salesmanmanager.ImportJason.returnListSerial;
 import static com.dr7.salesmanmanager.ImportJason.voucherReturn;
-import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
-import static com.dr7.salesmanmanager.Login.salesMan;
-import static com.dr7.salesmanmanager.Login.salesManNo;
-import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -93,7 +89,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     public  static   List<Item> LASTVOCHER = new ArrayList<>();
     public  static   List<Item> LASTVOCHER2 = new ArrayList<>();
     public  DatabaseHandler dataBase;
-    float total=0,tataltax=0;
+    float total=0, totaltax =0;
     String curent="";
     CheckBox returnall;
     public RadioGroup paymentTermRadioGroup;
@@ -950,10 +946,10 @@ exportData(2);
       voucherReturn.setVoucherDate(generalMethod.getCurentTimeDate(1));
       voucherReturn.setCustNumber(CustomerListShow.Customer_Account);
       voucherReturn.setCustName(CustomerListShow.Customer_Name);
-      voucherReturn.setSubTotal(total-tataltax);
+      voucherReturn.setSubTotal(total- totaltax);
       voucherReturn.setNetSales(total);
         voucherReturn.setORIGINALvoucherNo( Integer.parseInt(voucherNo_text.getText().toString().trim()));
-      voucherReturn.setTax(tataltax);
+      voucherReturn.setTax(totaltax);
         if(dataBase.getAllSettings().get(0).getTaxClarcKind()==0)
         {
             voucherReturn.setTaxTypa(0);
@@ -980,6 +976,9 @@ exportData(2);
 
          if(typeTax==0) {
              itemTax = listItemsMain.get(i).getPrice() * listItemsMain.get(i).getQty() * listItemsMain.get(i).getTaxPercent() * 0.01;
+             Log.e("itemTax==",listItemsMain.get(i).getPrice()+"   "+listItemsMain.get(i).getQty()+"   "+listItemsMain.get(i).getTaxPercent() * 0.01);
+
+
          }
     else {
              itemTax = listItemsMain.get(i).getPrice() * listItemsMain.get(i).getQty() -
@@ -993,7 +992,7 @@ exportData(2);
 Log.e("getQty",listItemsMain.get(i).getQty()+"");
 
             listItemsMain.get(i).setTaxValue(itemTax);
-            tataltax+= listItemsMain.get(i).getTaxValue();
+            totaltax += listItemsMain.get(i).getTaxValue();
             listItemsMain.get(i).setVoucherNumber(max_voucherNumber);
             listItemsMain.get(i).setVouchDate(curent);
             listItemsMain.get(i).setVoucherType(506);
@@ -1047,7 +1046,7 @@ Log.e("getQty",listItemsMain.get(i).getQty()+"");
     }
 
     private void calcTotalVoucher() {
-        tataltax=0;
+        totaltax =0;
         int salesMan=1;
         try {
             salesMan = Integer.parseInt(Login.salesMan.trim());
@@ -1178,10 +1177,12 @@ try {
         {
             for (int j=0;j<listItemsReturn.size();j++)
             {
+                Log.e("listItemsReturn==",listItemsReturn.get(j).getPrice()+"  , "+returnListSerial.get(i).getPriceItem());
                 Log.e("vvv==", returnListSerial.get(i).getQty()+"  "+listItemsReturn.get(j).getItemNo().trim());
                 if(returnListSerial.get(i).getItemNo().trim().equals(listItemsReturn.get(j).getItemNo().trim()))
                 {
                     Log.e("returnListSerial","listItemsReturn.get(i)"+listItemsReturn.get(j).getQty());
+                    listItemsReturn.get(j).setPrice(returnListSerial.get(i).getPriceItem());
                     if(!returnListSerial.get(i).getSerialCode().equals(""))
                     {
                         listItemsReturn.get(j).setQty(0);
@@ -1264,12 +1265,13 @@ try {
                         }
 
 //                        if(oneDisc!=0)
-                            salePrice=listItemsReturn.get(j).getPrice()-oneDisc+oneTax;
+                           // salePrice=listItemsReturn.get(j).getPrice()-oneDisc+oneTax;
+                        salePrice= allitemsdata.get(i).getPriceItem()-oneDisc;
 //                       salePrice=listItemsReturn.get(j).getPrice();
 
                     }catch (Exception e){
                         // Log.e("salePrice","Exception"+e.getMessage());
-                        salePrice=listItemsReturn.get(j).getPrice();
+                        salePrice= allitemsdata.get(i).getPriceItem();
                     }
 
                 allitemsdata.get(i).setPriceItem(salePrice);
@@ -1279,6 +1281,7 @@ try {
 
                     String itemName=dataBase.getItemName(allitemsdata.get(i).getItemNo().toString().trim());
                     listItemsReturn.get(j).setItemName(itemName);
+                    Log.e("salePrice==",salePrice+"");
                     listItemsReturn.get(j).setPrice(salePrice);
                 listItemsReturn.get(j).setDisc(0);
                 listItemsReturn.get(j).setDiscPerc("0");

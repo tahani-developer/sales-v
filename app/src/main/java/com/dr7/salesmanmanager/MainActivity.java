@@ -563,7 +563,7 @@ saveCurentLocation();
             Log.e("eee==",""+ DB_salesManPlanList.size());
         }
 
-        Log.e(" DB_salesManPlanList==",""+ DB_salesManPlanList.size());
+        Log.e(" DB_salesManPlanListlast==",""+ DB_salesManPlanList.size());
 
 
 
@@ -997,7 +997,7 @@ if(settingsList.size()>0)
     }
 
     void customerCheckInDialog(){
-
+        Log.e("customerCheckInDialog", "customerCheckInDialog" );
         if(SalsManPlanFlage==1) {
             checkPlan();
         }

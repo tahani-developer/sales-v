@@ -114,6 +114,7 @@ public class Activities extends AppCompatActivity implements
     static String[] araySerial;
     TextView switchLayout;
     public static TextView totalBalance_text,lastVisit_textView;
+    public static String totalBalance_value="0";
     public  static  LocationPermissionRequest locationPermissionRequestAc;
     public  GeneralMethod generalMethod;
     LinearLayout linearReturn;

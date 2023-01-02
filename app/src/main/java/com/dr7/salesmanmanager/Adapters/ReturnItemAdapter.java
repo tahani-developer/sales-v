@@ -207,6 +207,59 @@ else  if (  list.get(position).getIsClicked()==0)
                      }}}
             }
         });
+
+
+        if(databaseHandler.getAllSettings().get(0).getCanChangePrice()==1
+        ||databaseHandler.getAllSettings().get(0).getCanChangePrice_returnonly()==1)
+            holder.    price.setEnabled(true);
+        else
+            holder.    price.setEnabled(false);
+
+        holder.    price.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                {
+//                    Log.e("value1",position+" ,"+list.get(position).getQty()+"  ");
+//                    Log.e("value2",position+" ,"+Float.parseFloat(list.get(position).getQty())+"  ,");
+//                    Log.e("value3",position+" ,"+Float.parseFloat(s.toString().trim()));
+
+                    if(!s.toString().equals("")) {
+
+                            if(!s.toString().equals("0")) {
+
+
+
+                                    ReturnByVoucherNo.allitemsdata.get(holder.getAdapterPosition()).setPriceItem(Float.parseFloat(s.toString().trim()));
+                                }
+                             }else {
+
+                                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+
+                                        .setContentText(context.getString(R.string.invalidValue))
+                                        .setConfirmButton(context.getString(R.string.app_yes), new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                sweetAlertDialog.dismiss();
+                                            }
+                                        }).show();
+
+                        holder.price.setText(ReturnByVoucherNo.Recoverallitemsdata.get(holder.getAdapterPosition()).getPriceItem()+"");
+
+                            }
+                        }}
+
+        });
     }
 
     private void updateqty(ReturnItemAdapter.SerialReportViewHolder holder,String itemNo) {
@@ -254,8 +307,8 @@ else  if (  list.get(position).getIsClicked()==0)
     }
 
     class SerialReportViewHolder extends RecyclerView.ViewHolder {
-        TextView price, vouchertype, serialcode, itemnum, itemName, export,voucherDate,customerName;
-        EditText text_count;
+        TextView  vouchertype, serialcode, itemnum, itemName, export,voucherDate,customerName;
+        EditText text_count,price;
         CheckBox linearSelected;
         LinearLayout linearLayout;
 
