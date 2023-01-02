@@ -100,7 +100,7 @@ public class ESCPSample2
 	{
 		posPtr = new ESCPOSPrinter();
 		obj = new DatabaseHandler(context);
-		decimalFormat = new DecimalFormat("#.000");
+		decimalFormat = new DecimalFormat("000.000");
 		this.context=context;
 //		posPtr = new ESCPOSPrinter("EUC-KR"); // Korean.
 //		posPtr = new ESCPOSPrinter("BIG5"); // Big5

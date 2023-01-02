@@ -205,7 +205,7 @@ public class Payment {
             obj.put("SALESMANNO", saleManNumber);
             obj.put("ISPOSTED", isPosted);
             obj.put("PAYKIND", payMethod);
-            obj.put("VOUYEAR", "2021");
+            obj.put("VOUYEAR", "");
 
 
         } catch (JSONException e) {

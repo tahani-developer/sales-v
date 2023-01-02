@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 200.66 </string>
+    <string name="version"> V 200.68 </string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -625,6 +625,7 @@
     <string name="whatsappform">مشاركة الفاتورة ك عرض سعر</string>
     <string name="unit_name">Unit</string>
     <string name="unit_price">Unit Price</string>
+    <string name="taxAfterDisc">Tax After Disc</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>

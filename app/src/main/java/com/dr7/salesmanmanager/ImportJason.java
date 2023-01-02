@@ -135,8 +135,10 @@ public class ImportJason extends AppCompatActivity {
     DatabaseHandler mHandler;
     SweetAlertDialog pdValidation, pdPayments, getDataProgress;
     public String curentIpDevice = "";
+    int salesManInt=1,validUser=0;
 
-    int counter = 0, voucherTyp = 504;
+
+    int counter = 0, voucherTyp = 504,customerSales=0;
     public  GeneralMethod generalMethod;
 
     public static List<Customer> customerList = new ArrayList<>();
@@ -215,6 +217,12 @@ public class ImportJason extends AppCompatActivity {
             }catch (Exception e){
                 Log.e("apiPendingInvoice",""+e.getMessage());
             }
+
+        }
+        try {
+            salesManInt=Integer.parseInt( salesMan);
+            Log.e("salesManInt",""+salesManInt);
+        }catch (Exception e){
 
         }
 
@@ -2494,10 +2502,37 @@ public class ImportJason extends AppCompatActivity {
                 try {
                     JSONArray parentArrayCustomers = parentObject.getJSONArray("CUSTOMERS");
 
+                    if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
+                    {
+                        customerSales=1;
+                        validUser=0;
+
+                    }else {
+                        validUser=1;
+                    }
+                    int sales=1;
                     for (int i = 0; i < parentArrayCustomers.length(); i++) {
                         JSONObject finalObject = parentArrayCustomers.getJSONObject(i);
 
+                        if (customerSales == 1) {
+                            String salesNo = finalObject.getString("SALESMANNO");
+                            try {
+                                sales = Integer.parseInt(salesNo);
+                            } catch (Exception e) {
+
+                            }
+
+                            if (sales == salesManInt) {
+
+                                validUser = 1;
+                            }
+                        }
+                        Log.e("validUser", "== " + validUser);
                         Customer Customer = new Customer();
+                        if (validUser == 1) {
+
+
+
                         Customer.setCompanyNumber(finalObject.getString("COMAPNYNO"));
                         Customer.setCustId(finalObject.getString("CUSTID"));
                         Customer.setCustName(finalObject.getString("CUSTNAME"));
@@ -2510,16 +2545,13 @@ public class ImportJason extends AppCompatActivity {
                         Customer.setPriceListId(finalObject.getString("PRICELISTID"));
                         try {
                             Customer.setCashCredit(finalObject.getInt("CASHCREDIT"));
-                        }
-                        catch (Exception e){
+                        } catch (Exception e) {
                             Customer.setCashCredit(0);
                         }
                         Customer.setSalesManNumber(finalObject.getString("SALESMANNO"));
                         try {
                             Customer.setCreditLimit(finalObject.getDouble("CREDITLIMIT"));
-                        }
-                        catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             Customer.setCreditLimit(0);
                         }
                         try {
@@ -2560,6 +2592,7 @@ public class ImportJason extends AppCompatActivity {
                             Customer.setACCPRC("0");
 
                         }
+                    }
                         //*******************************
 
                         customerList.add(Customer);

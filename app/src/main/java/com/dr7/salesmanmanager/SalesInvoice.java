@@ -197,7 +197,7 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 public class SalesInvoice extends Fragment {
     public static  List<Item> jsonItemsList = new ArrayList<>();
     List<Flag_Settings> flag_settingsList;
-    public  int aqapa_tax=0;
+    public  int aqapa_tax=0,isDataSmoke=0;
     private DatabaseReference databaseReference,databaseReference2;
     public static List<Item> jsonItemsList2 = new ArrayList<>();
     public static List<Item> jsonItemsList_intermidiate= new ArrayList<>();
@@ -1204,6 +1204,8 @@ public class SalesInvoice extends Fragment {
         unitsItems_select=mDbHandler.getAllSettings().get(0).getItems_Unit();
         VERSION=this.getResources().getString(R.string.version);
         Log.e("VERSION","= "+VERSION);
+        isDataSmoke=mDbHandler.getAllSettings().get(0).getDiscAfterTax();
+        Log.e("isDataSmoke"," = "+isDataSmoke);
         return view;
     }
 
@@ -5239,7 +5241,7 @@ public class SalesInvoice extends Fragment {
         float amountBonus = 0;
         totalQty = 0.0;
         double limit_offer = 0;
-        //Excluclude tax
+        //Excluclude tax//خاضع
         if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0) {
             Log.e("getTaxClarcKind","==0");
             totalQty = 0.0;
@@ -5361,6 +5363,7 @@ public class SalesInvoice extends Fragment {
             for (int i = 0; i < items.size(); i++) {
                 itemGroup = items.get(i).getCategory();
                 if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
+                    isDataSmoke=1;
                     itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
                     itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
                     itemTotal = items.get(i).getQty() * items.get(i).getPosPrice() - itemTax;
@@ -5400,9 +5403,11 @@ public class SalesInvoice extends Fragment {
                 //************************************************************
 //                totalQty +=items.get(i).getQty();
 ////                Log.e("totalQty",""+totalQty);
+                if(isDataSmoke==0)
                 itemTotal = itemTotal - itemDiscVal;//for rawat_mazaq
                 itemGroup = items.get(i).getCategory();
                 if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
+                    isDataSmoke=1;
                     itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
                     itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
                 } else {
@@ -5571,6 +5576,7 @@ public class SalesInvoice extends Fragment {
 
 
                 if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
+                    isDataSmoke=1;
                     itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
                     itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
                     itemTotal = items.get(i).getQty() * items.get(i).getPosPrice() - itemTax;
@@ -5599,6 +5605,7 @@ public class SalesInvoice extends Fragment {
                 itemGroup = items.get(i).getCategory();
 
                 if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
+                    isDataSmoke=1;
                     itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
                     itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
                 } else {
@@ -5614,6 +5621,7 @@ public class SalesInvoice extends Fragment {
 //                itemTotal = itemTotal - itemDiscVal;
 
                 if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
+                    isDataSmoke=1;
                     itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
                     itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
                 } else {

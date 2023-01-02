@@ -78,7 +78,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucher;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 204;
+    private static final int DATABASE_VERSION = 205;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -470,6 +470,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String EndTripReport ="EndTripReport";
     private static final String AcountatatmentVis ="AcountatatmentVis";
     private static final String SharWhatsApp_Form ="SharWhatsAppForm";
+    private static final String DISC_AFTER_TAX ="DISC_AFTER_TAX";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
@@ -1117,7 +1118,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                + Items_Units + " INTEGER DEFAULT 0 , "
                + EndTripReport + " INTEGER DEFAULT 0 ,"
     + AcountatatmentVis+" INTEGER DEFAULT 1 ,"
-     +  SharWhatsApp_Form+" INTEGER DEFAULT 0 "
+     +  SharWhatsApp_Form+" INTEGER DEFAULT 0 ,"
+      + DISC_AFTER_TAX+" INTEGER DEFAULT 0 "
                 + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
@@ -2641,6 +2643,14 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
           Log.e(TAG, e.getMessage().toString());
        }
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD '" + DISC_AFTER_TAX + "'  INTEGER DEFAULT '0'");
+
+       } catch (Exception e) {
+
+          Log.e(TAG, e.getMessage().toString());
+       }
+
 
     }
 
@@ -3581,7 +3591,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                            int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
                            int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer,
                            int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc,String store,int itemUnit,int sumQtys,int noDuplicate,
-                           int salesoffersflage,int checkqtyinorderflage,int locationtrackerflage,int aqapaTax,int show_location,int Items_unitflage,int EndTripReportflage,int AcountatatmentVisflage,int SharWhatsAppform) {
+                           int salesoffersflage,int checkqtyinorderflage,int locationtrackerflage,int aqapaTax,int show_location,int Items_unitflage,int EndTripReportflage,
+                           int AcountatatmentVisflage,int SharWhatsAppform,int discAfterTax) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -3655,6 +3666,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
        values .put(AcountatatmentVis,AcountatatmentVisflage);
        values .put(SharWhatsApp_Form,SharWhatsAppform);
+       values .put(DISC_AFTER_TAX,discAfterTax);
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
@@ -3726,6 +3738,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
        values.put( EndTripReport, defaultValue);
        values.put( AcountatatmentVis, 1);
        values.put( SharWhatsApp_Form, 0);
+       values.put( DISC_AFTER_TAX, defaultValue);
 
 
        db.insert(TABLE_SETTING, null, values);
@@ -4147,6 +4160,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                setting.setEndTripReport(cursor.getInt(57));
                setting.setAcountatatmentVisable(cursor.getInt(58));
                setting.setSharWhatsAppForm(cursor.getInt(59));
+               setting.setDiscAfterTax(cursor.getInt(60));
 
                 settings.add(setting);
             } while (cursor.moveToNext());

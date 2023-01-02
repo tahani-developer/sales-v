@@ -128,7 +128,7 @@ public class Login extends AppCompatActivity {
     int salesManInt=1;
     public static Timer timer = null;
     LocationPermissionRequest locationPermissionRequest;
-   public static String currentIp="",previousIp="";
+    public static String currentIp="",previousIp="";
     String serialNo2="";
     int approveAdmin=0;
     int LocationTracker=0;

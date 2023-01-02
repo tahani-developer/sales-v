@@ -34,11 +34,11 @@
 
             android:icon="@drawable/ic_lock_outline_black_24dp"
             android:title="@string/shelf_inventory" />
-        <item
-            android:id="@+id/carstock"
-            android:visibility="invisible"
-            android:icon="@drawable/ic_lock_outline_black_24dp"
-            android:title="@string/carstock" />
+<!--        <item-->
+<!--            android:id="@+id/carstock"-->
+<!--            android:visibility="invisible"-->
+<!--            android:icon="@drawable/ic_lock_outline_black_24dp"-->
+<!--            android:title="@string/carstock" />-->
 
 <!--        <item-->
 <!--            android:id="@+id/sales_man_map"-->

@@ -62,6 +62,15 @@ public class Settings {
     private  int EndTripReport;
     private  int AcountatatmentVisable;
     private  int   SharWhatsAppForm;
+    private  int   discAfterTax;
+
+    public int getDiscAfterTax() {
+        return discAfterTax;
+    }
+
+    public void setDiscAfterTax(int discAfterTax) {
+        this.discAfterTax = discAfterTax;
+    }
 
     public int getSharWhatsAppForm() {
         return SharWhatsAppForm;
