@@ -209,13 +209,13 @@ else  if (  list.get(position).getIsClicked()==0)
         });
 
 
-        if(databaseHandler.getAllSettings().get(0).getCanChangePrice()==1
-        ||databaseHandler.getAllSettings().get(0).getCanChangePrice_returnonly()==1)
-            holder.    price.setEnabled(true);
-        else
+//        if(databaseHandler.getAllSettings().get(0).getCanChangePrice()==1
+//        ||databaseHandler.getAllSettings().get(0).getCanChangePrice_returnonly()==1)
+//            holder.    price.setEnabled(true);
+//        else
             holder.    price.setEnabled(false);
 
-        holder.    price.addTextChangedListener(new TextWatcher() {
+            holder.    price.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 

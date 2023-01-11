@@ -6959,15 +6959,16 @@ Log.e("addCompanyInfo","addCompanyInfo");
         existQty -= qty;
 
         Log.e("qty1 ***" , ""+existQty);
-        db.execSQL("update SalesMan_Items_Balance SET  Qty = '"+existQty+"' where SalesManNo = '"+salesMan+"' and  ItemNo = '"+itemNo+"'");
+        db.execSQL("update SalesMan_Items_Balance SET  Qty = '"+existQty+"' where SalesManNo = '"+salesMan+"' and  ItemNo = '"+itemNo+"' ");
 
     }
 
     public void updateSalesManItemsBalance2(float qty , int salesMan, String itemNo) {
         db = this.getWritableDatabase();
 
+
         String selectQuery = "select Qty from SalesMan_Items_Balance " +
-                " where ItemNo = " + itemNo + " and SalesManNo = " + salesMan;
+                " where ItemNo = '"+itemNo+"' and SalesManNo = " + salesMan;
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         float existQty = 0;
@@ -6982,7 +6983,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
         ContentValues values = new ContentValues();
         values.put(Qty5, existQty);
-        db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesMan + " and " + ItemNo5 + " = " + itemNo, null);
+        db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesMan + " and  " + ItemNo5 + " =  " + "'"+itemNo+"'" , null);
     }
 
     public void deletSerialItems_byVoucherNo(int vouch_no ) {
