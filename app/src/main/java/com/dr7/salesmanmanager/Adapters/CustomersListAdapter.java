@@ -104,32 +104,38 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
             @Override
             public void onClick(View v) {
 
+                Log.e("location==",""+custList.get(i).getCustLat()+" "+custList.get(i).getCustLong());
+                if(custList.get(i).getCustLat()!=null
+                && custList.get(i).getCustLong()!=null) {
+                    if (!custList.get(i).getCustLat().equals("")) {
 
+                        if (Double.parseDouble(custList.get(i).getCustLat()) != 0) {
+                            String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?q=loc:%f,%f",
+                                    Double.parseDouble(custList.get(i).getCustLat()),
+                                    Double.parseDouble(custList.get(i).getCustLong()));
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                            context.startActivity(intent);
 
-                 if(!custList.get(i).getCustLat().equals("")) {
+                        } else {
+                            new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText(context.getResources().getString(R.string.Noloction))
+                                    .setContentText("")
+                                    .show();
+                        }
+                    } else {
+                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText(context.getResources().getString(R.string.Noloction))
+                                .setContentText("")
+                                .show();
+                    }
 
-                     if(Double.parseDouble(custList.get(i).getCustLat())!=0) {
-                         String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?q=loc:%f,%f",
-                                 Double.parseDouble(custList.get(i).getCustLat()),
-                                 Double.parseDouble(custList.get(i).getCustLong()));
-                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                         context.startActivity(intent);
-
-                     }
-                     else {
-                         new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                                 .setTitleText(context.getResources().getString(R.string.Noloction))
-                                 .setContentText("")
-                                 .show();
-                     }
-                 }else{
-                     new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                             .setTitleText(context.getResources().getString(R.string.Noloction))
-                             .setContentText("")
-                             .show();
-                 }
-
-
+                }else
+                {
+                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText(context.getResources().getString(R.string.Noloction))
+                            .setContentText("")
+                            .show();
+                }
 
 
 
