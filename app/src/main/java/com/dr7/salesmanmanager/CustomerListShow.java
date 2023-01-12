@@ -158,6 +158,7 @@ public class CustomerListShow extends DialogFragment {
             showCustomerLoc=mHandler.getAllSettings().get(0).getShowCustomerLocation();
             if (mHandler.getAllSettings().get(0).getShowCustomerList() == 1) {
                      Log.e("c1","c1");
+                     for(int i=0;i<customerList.size();i++)     Log.e("customerList","customerList"+customerList.get(i).getCustId()+"  "+customerList.get(i).getCustLat());
                 Log.e("customerList","customerList"+customerList.size());
                 customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList,showCustomerLoc);
                 itemsListView.setAdapter(customersListAdapter);

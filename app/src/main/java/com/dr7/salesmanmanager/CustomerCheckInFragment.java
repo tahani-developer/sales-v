@@ -495,11 +495,11 @@ public class CustomerCheckInFragment extends DialogFragment {
         Log.e("ggg2","cusid"+ latitudeCheckIn+""+longtudeCheckIn);
         if(latitudeCheckIn!=0&&longtudeCheckIn!=0)
         {
-            Toast.makeText(getActivity(), "case1", Toast.LENGTH_SHORT).show();
+
 
             loc2.setLatitude(latitudeCheckIn);
             loc2.setLongitude(longtudeCheckIn);
-            Toast.makeText(getActivity(), "loc1=="+loc1.getLatitude()+"\n  "+ loc1.getLongitude()+"\nloc2"+loc2.getLatitude()+"\n  "+ loc2.getLongitude(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "loc1=="+loc1.getLatitude()+"\t  "+ loc1.getLongitude()+"\tloc2"+loc2.getLatitude()+"\t "+ loc2.getLongitude(), Toast.LENGTH_LONG).show();
 //            Toast.makeText(getActivity(), "loc2"+loc2.getLatitude()+"  "+ loc2.getLatitude(), Toast.LENGTH_LONG).show();
 
              distance = loc2.distanceTo(loc1);
@@ -508,7 +508,7 @@ public class CustomerCheckInFragment extends DialogFragment {
         else {
             getCurrentLocation();
             Log.e("ggg3","cusid"+ latitudeCheckIn+""+longtudeCheckIn);
-            Toast.makeText(getActivity(), "case2", Toast.LENGTH_SHORT).show();
+
             loc2.setLatitude(latitudeCheckIn);
             loc2.setLongitude(longtudeCheckIn);
             distance = loc2.distanceTo(loc1);

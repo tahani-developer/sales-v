@@ -4672,6 +4672,50 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
 
 
+    public Customer getcustomerinfo(String CUS_ID) {
+      Customer customer = new Customer();
+       // Select All Query
+       ///   SELECT* from CUSTOMER_MASTER WHERE CUS_ID=1110010131
+       String selectQuery = "SELECT  * FROM " + CUSTOMER_MASTER + " where CUS_ID = '" + CUS_ID + "'";
+
+       db = this.getWritableDatabase();
+       Cursor cursor = db.rawQuery(selectQuery, null);
+
+       // looping through all rows and adding to list
+       if (cursor.moveToFirst()) {
+          do {
+
+
+             customer.setCompanyNumber(cursor.getString(0));
+             customer.setCustId(cursor.getString(1));// test talley
+
+             customer.setCustName(cursor.getString(2));
+             customer.setAddress(cursor.getString(3));
+             customer.setIsSuspended(Integer.parseInt(cursor.getString(4)));
+             customer.setPriceListId(cursor.getString(5));
+             customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
+             customer.setSalesManNumber(cursor.getString(7));
+             customer.setCreditLimit(Integer.parseInt(cursor.getString(8)));
+             customer.setPayMethod(Integer.parseInt(cursor.getString(9)));
+
+             customer.setCustLat(cursor.getString(10));
+             customer.setCustLong(cursor.getString(11));
+             Log.e("  customer.setCustLat",customer.getCustId()+"  "+customer.getCustLong()+","+customer.getCustLat());
+             try {
+                customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
+             }catch(NumberFormatException e){
+                Log.e("setMax_discount",""+e.getMessage());
+                customer.setMax_discount(0);
+             }
+             customer.setACCPRC(cursor.getString(13));
+             customer.setHide_val(cursor.getInt(14));
+//                customer.setCustId(cursor.getString(16));// test talley
+             // Adding transaction to list
+
+          } while (cursor.moveToNext());
+       }
+       return customer;
+    }
     public List<Customer> getCustomersBySalesMan(String salesMan) {
         List<Customer> customers = new ArrayList<Customer>();
         // Select All Query
@@ -4699,6 +4743,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
                 customer.setCustLat(cursor.getString(10));
                 customer.setCustLong(cursor.getString(11));
+               Log.e("  customer.setCustLat",customer.getCustId()+"  "+customer.getCustLong()+","+customer.getCustLat());
                 try {
                     customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
                 }catch(NumberFormatException e){

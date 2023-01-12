@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.CustomerCheckInFragment;
 import com.dr7.salesmanmanager.CustomerListShow;
+import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.Login;
 import com.dr7.salesmanmanager.MainActivity;
 import com.dr7.salesmanmanager.MapsActivity;
@@ -45,14 +46,14 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
     private List<Customer> custList;
     private CustomerListShow customerListShow;
     public  int showCustomerLoc_sett;
-
+    DatabaseHandler mDHandler;
     public CustomersListAdapter(CustomerListShow customerListShow, Context context, List<Customer> custList,int showCustomerLoc) {
         this.context = context;
         this.mOriginalValues = custList;
         this.custList = custList;
         this.customerListShow = customerListShow;
         this.showCustomerLoc_sett=showCustomerLoc;
-
+        this. mDHandler = new DatabaseHandler(context);
     }
 
     public void setItemsList(List<Customer> custList) {
@@ -104,7 +105,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
             @Override
             public void onClick(View v) {
 
-                Log.e("location==",""+custList.get(i).getCustLat()+" "+custList.get(i).getCustLong());
+                Log.e("location==",CustomerListShow.latitude+"  "+custList.get(i).getCustId()+"  "+custList.get(i).getCustLat()+" "+custList.get(i).getCustLong());
                 if(custList.get(i).getCustLat()!=null
                 && custList.get(i).getCustLong()!=null) {
                     if (!custList.get(i).getCustLat().equals("")) {
@@ -131,7 +132,26 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
 
                 }else
                 {
-                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                    Customer customer=mDHandler.getcustomerinfo(custList.get(i).getCustId());
+                    if(customer.getCustLat()!=null &&customer.getCustLong()!=null) {
+                        if (!customer.getCustLat().equals("")) {
+
+                            if (Double.parseDouble(customer.getCustLat()) != 0) {
+                                String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?q=loc:%f,%f",
+                                        Double.parseDouble(customer.getCustLat()),
+                                        Double.parseDouble(customer.getCustLong()));
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                                context.startActivity(intent);
+
+                            } else {
+                                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                        .setTitleText(context.getResources().getString(R.string.Noloction))
+                                        .setContentText("")
+                                        .show();
+                            }
+                        }
+                    }
+                 else   new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText(context.getResources().getString(R.string.Noloction))
                             .setContentText("")
                             .show();
