@@ -136,7 +136,7 @@ public class ImportJason extends AppCompatActivity {
     DatabaseHandler mHandler;
     SweetAlertDialog pdValidation, pdPayments, getDataProgress;
     public String curentIpDevice = "";
-    int salesManInt=1,validUser=0;
+    int salesManInt=-1,validUser=0;
 
 
     int counter = 0, voucherTyp = 504,customerSales=0;
@@ -2522,17 +2522,22 @@ public class ImportJason extends AppCompatActivity {
                             } catch (Exception e) {
 
                             }
-
+                            Log.e("validUser", " == " + sales+" \tsalesManInt="+salesManInt);
                             if (sales == salesManInt) {
 
                                 validUser = 1;
                             }
+                            else {
+                                validUser = 0;
+                            }
+                        }else {
+                            validUser = 1;
                         }
+//                        validUser = 1;
                         Log.e("validUser", "== " + validUser);
                         Customer Customer = new Customer();
-                        if (validUser == 1) {
-
-
+                        if (validUser == 1)
+                        {
 
                         Customer.setCompanyNumber(finalObject.getString("COMAPNYNO"));
                         Customer.setCustId(finalObject.getString("CUSTID"));
@@ -2593,10 +2598,12 @@ public class ImportJason extends AppCompatActivity {
                             Customer.setACCPRC("0");
 
                         }
+                            customerList.add(Customer);
+                            Log.e("customerList",""+customerList.size());
                     }
                         //*******************************
 
-                        customerList.add(Customer);
+
                     }
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
