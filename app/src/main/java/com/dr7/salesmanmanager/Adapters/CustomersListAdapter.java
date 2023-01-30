@@ -105,7 +105,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
             @Override
             public void onClick(View v) {
 
-                Log.e("location==",CustomerListShow.latitude+"  "+custList.get(i).getCustId()+"  "+custList.get(i).getCustLat()+" "+custList.get(i).getCustLong());
+                Log.e("location==", CustomerListShow.latitude+"  "+custList.get(i).getCustId()+"  "+custList.get(i).getCustLat()+" "+custList.get(i).getCustLong());
                 if(custList.get(i).getCustLat()!=null
                 && custList.get(i).getCustLong()!=null) {
                     if (!custList.get(i).getCustLat().equals("")) {

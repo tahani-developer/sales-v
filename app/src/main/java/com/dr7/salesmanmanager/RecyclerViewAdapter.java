@@ -3417,8 +3417,15 @@ public static     int CountOfItems=1;
     }
 
     private boolean validQty(float qtyCurrent, float qtyRequired) {
-        //Log.e("validQty", "qtyCurrent=" + qtyCurrent + "\tqtyRequired=" + qtyRequired);
-        if (MHandler.getAllSettings().get(0).getAllowMinus() == 1
+       Log.e("validQty==", "qtyCurrent=" + qtyCurrent + "\tqtyRequired=" + qtyRequired);
+        if( (SalesInvoice.voucherType == 508&&  MainActivity.checkQtyForOrdersFlage==1&&MainActivity.UNITFLAGE==1)){
+            Log.e("validQty2==", "qtyCurrent2=" + qtyCurrent + "\tqtyRequired=" + qtyRequired+"CountOfItems="+CountOfItems);
+            Log.e("validQty3=="," "+ qtyCurrent/CountOfItems);
+            if (qtyRequired <=(qtyCurrent/CountOfItems) )
+                return true;
+        }
+
+     else   if (MHandler.getAllSettings().get(0).getAllowMinus() == 1
                 || SalesInvoice.voucherType == 506
                 || (SalesInvoice.voucherType == 508&&  MainActivity.checkQtyForOrdersFlage==0)
 
@@ -3436,7 +3443,7 @@ public static     int CountOfItems=1;
 //            return  true;
 //        }
 //        else {
-        if (qtyRequired <= qtyCurrent) {
+    else    if (qtyRequired <= qtyCurrent) {
             return true;
         }
 //        }

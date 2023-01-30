@@ -7581,7 +7581,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
     public double getDiscValue_From_ItemsQtyOffer(String itemNo, double total_items_quantity) {
         String selectQuery = "SELECT DISCOUNT FROM " + ITEMS_QTY_OFFER +
                 " WHERE ITEMNO =  '"+itemNo+"'  and  AMOUNT_QTY = '"+total_items_quantity+"'";
-
+       Log.e("getDiscValueselectQuery==",""+selectQuery);
         double discount_value=0;
 
         db = this.getWritableDatabase();

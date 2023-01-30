@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Criteria;
@@ -87,6 +88,10 @@ import static com.dr7.salesmanmanager.MainActivity.longitude_main;
 
 @SuppressWarnings("unchecked")
 public class Login extends AppCompatActivity {
+   public static String SETTINGS_PREFERENCES="SETTINGS_PREFERENCES";
+    public static String Items_Orent_PREF="Items_Orent_PREF";
+    public static SharedPreferences sharedPref;
+    public static boolean Items_Orent =true;
 
     public EditText storeNo_edit;
     String user="", password="";
@@ -160,8 +165,8 @@ public class Login extends AppCompatActivity {
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-    public  static    String  headerDll = "/Falcons/VAN.dll";
-//  public  static    String headerDll = "";
+    //public  static    String  headerDll = "/Falcons/VAN.dll";
+ public  static    String headerDll = "";
 
     public  static  int gone_noTax_totalDisc=0;
     public  static  int password_rawat=0;
@@ -186,6 +191,9 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login_free_size);
         context=Login.this;
         initialView();
+         sharedPref = getSharedPreferences(SETTINGS_PREFERENCES, MODE_PRIVATE);
+         Items_Orent = sharedPref.getBoolean(Items_Orent_PREF,true);
+
      //if(   password_talaat==1) Secondpassword_setting ="2022111";
 
 
