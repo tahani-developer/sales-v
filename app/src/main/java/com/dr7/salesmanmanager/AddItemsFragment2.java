@@ -15,6 +15,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
@@ -76,8 +77,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.dr7.salesmanmanager.Login.POS_ACTIVE;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.Login.sharedPref;
 import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
 //import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
 
@@ -114,6 +117,7 @@ public class AddItemsFragment2 extends DialogFragment {
     public  static  int size_customerpriceslist=0,qtyGreatZero=0;
     public  List<Item> itemsList_forFilter;
     Context context;
+    public LinearLayoutManager linearLayoutManager;
     GeneralMethod generalMethod;
      Spinner categorySpinner,Kind_item_Spinner;
     public  String voucherDate="";
@@ -129,7 +133,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //    public static List<Item> jsonItemsList2;
 //    public static List<Item> jsonItemsList_intermidiate;
     RecyclerView recyclerView;
-
+   CheckBox orientation_checkbox;
     ListView listAllItemsView;
     TextView emptyView;
     ListView verticalList;
@@ -252,8 +256,35 @@ public class AddItemsFragment2 extends DialogFragment {
 //        }
 
         //    test
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+
+
         recyclerView = view.findViewById(R.id.recyclerView);
+
+        orientation_checkbox= view.findViewById(R.id.orientation_checkbox);
+        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+
+
+        orientation_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b)
+                {
+                    linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                        SharedPreferences.Editor editor = getContext().getSharedPreferences( Login.SETTINGS_PREFERENCES, MODE_PRIVATE).edit();
+                    editor.putBoolean(Login.Items_Orent_PREF, b);
+
+                    editor.apply();
+                }
+                else
+                {    linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);}
+                recyclerView.setLayoutManager(linearLayoutManager);
+                SharedPreferences.Editor editor = getContext().getSharedPreferences( Login.SETTINGS_PREFERENCES, MODE_PRIVATE).edit();
+                editor.putBoolean(Login.Items_Orent_PREF, b);
+
+                editor.apply();
+            }
+        });
         emptyView = (TextView) view.findViewById(R.id.empty_view);
 //        listAllItemsView=view.findViewById(R.id.itemsListView);
         listAllItemsView = (ListView) view.findViewById(R.id.itemsListView);
@@ -262,6 +293,18 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
 //       if( jsonItemsList.size()!=0){
+
+
+     if  (sharedPref.getBoolean(Login.Items_Orent_PREF, true))
+         orientation_checkbox.setChecked(true);
+     else
+         orientation_checkbox.setChecked(false);
+
+        if(orientation_checkbox.isChecked()==true)
+            linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        else
+            linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+
         recyclerView.setLayoutManager(linearLayoutManager);
 //        fillListViewAllItem();
         fillItemRecycler();
@@ -372,7 +415,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 //FILTER AS YOU TYPE
 //                adapter.getFilter().filter(query);
 
-
+                filteredList_allItem.clear();
                 if (query != null && query.length() > 0) {
                     String[] arrOfStr = query.split(" ");
                     int[] countResult = new int[arrOfStr.length];
@@ -385,23 +428,35 @@ public class AddItemsFragment2 extends DialogFragment {
                     if(filteredList_allItem.size()==0){
                         filteredList_allItem.addAll(jsonItemsList);
                     }
+
+
                     Log.e("filteredList_allItem",""+filteredList_allItem.size());
                     for (int i = 0; i < filteredList_allItem.size(); i++) {
-                        for (int j = 0; j < arrOfStr.length; j++) {
-                            String lowers = arrOfStr[j].toLowerCase();
-                            String uppers = arrOfStr[j].toUpperCase();
-
-                            if (filteredList_allItem.get(i).getItemName().toLowerCase().contains(lowers) || filteredList_allItem.get(i).getItemName().toUpperCase().contains(uppers)) {
-
-                                isFound = true;
-
-                            } else {
+                        if (filteredList_allItem.get(i).getItemName().toLowerCase().contains(query.toString())
+                                || filteredList_allItem.get(i).getItemName().toUpperCase().contains(query.toString())) {
+                            isFound = true;
+                        }
+                             else {
                                 isFound = false;
-                                break;
-                            }
 
 
                         }
+//                        for (int j = 0; j < arrOfStr.length; j++) {
+//                            String lowers = arrOfStr[j].toLowerCase();
+//                            String uppers = arrOfStr[j].toUpperCase();
+//
+//                            if (filteredList_allItem.get(i).getItemName().toLowerCase().contains(lowers)
+//                                    || filteredList_allItem.get(i).getItemName().toUpperCase().contains(uppers)) {
+//
+//                                isFound = true;
+//
+//                            } else {
+//                                isFound = false;
+//                               break;
+//                            }
+//
+//
+//                        }
                         if (isFound) {
 
                             if(qtyGreatZero==1)
@@ -1011,6 +1066,22 @@ try {
     if (!barcodeValue.equals("")) {
         ArrayList<Item> filteredList = new ArrayList<>();
         for (int k = 0; k < jsonItemsList.size(); k++) {
+            Log.e("barcode11==",jsonItemsList.get(k).getItemName()+"");
+            if (jsonItemsList.get(k).getItemName().trim().contains(barcode.trim())) {
+                Log.e("barcode12==",barcode);
+                if(qtyGreatZero==1){
+                    if(jsonItemsList.get(k).getQty()>0)
+                    {
+                        filteredList.add(jsonItemsList.get(k));
+                        break;
+                    }
+                    else  filteredList.clear();
+                }else {
+                    filteredList.add(jsonItemsList.get(k));
+                    break;
+                }
+            }
+
             if (jsonItemsList.get(k).getBarcode().trim().equals(barcodeValue.trim())) {
                 if(qtyGreatZero==1){
                     if(jsonItemsList.get(k).getQty()>0)

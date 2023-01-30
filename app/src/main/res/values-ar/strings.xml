@@ -153,7 +153,7 @@
     <string name="items_report">تقرير المواد</string>
     <string name="stock_request_vouchers_report">تقرير فواتير طلب المخزون</string>
     <string name="stock_request_items_report">تقرير مواد طلب المخزون</string>
-    <string name="payments_details_report">تقرير تفاصيل المبيعات</string>
+    <string name="payments_details_report">تقرير سندات القبض</string>
     <string name="stock_request_report">تقرير طلب المخزون</string>
     <string name="inventory_report"> تقرير المخزون </string>
 
@@ -277,7 +277,7 @@
 
     <string name="visit_steps">خطوات الزيارة/البيعة</string>
     <string name="visit_purpose">التخطيط/هدف الزيارة</string>
-    <string name="payment">المدفوعات</string>
+    <string name="payment">التحصيل</string>
     <string name="bank_up">تحصيل</string>
     <string name="entering_categories">ادخال صنف</string>
     <string name="visit_presentation_space">زيارة مساحة العرض</string>
@@ -404,6 +404,7 @@
     <string name="requiredNote">الملاحظة اجبارية</string>
     <string name="itemadedbefor">تم اضافة هذه المادة من قبل</string>
     <string name="app_creditCard">بطاقة ائتمانية</string>
+    <string name="app_creditCard1">مبيعات ذمم</string>
     <string name="creditvalue">Credit value</string>
     <string name="preventTotaldisc">منع الخصم الكلي</string>
     <string name="failUsers">  لا يوجد بيانات  الرجاءالدخول ك ادمن</string>
@@ -662,7 +663,7 @@
     <string name="commisionRequired">العمولة المستحقة</string>
     <string name="urlname">اسم الويب سيرفيس</string>
     <string name="taxAfterDisc">الخصم بعد الضريبة</string>
-
+    <string name="orientation"> ترتيب المواد افقي</string>
     <string-array name="DaysOfWeek">
         <item>السبت</item>
         <item>الأحد</item>

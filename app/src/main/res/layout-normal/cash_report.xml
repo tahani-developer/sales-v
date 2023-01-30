@@ -420,7 +420,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="1dp"
-                android:text="@string/app_creditCard"
+                android:text="@string/app_creditCard1"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold" />

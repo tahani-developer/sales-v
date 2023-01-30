@@ -359,6 +359,7 @@
     <string name="requiredNote">Required Note</string>
     <string name="itemadedbefor">this Item aded befor</string>
     <string name="app_creditCard">Credit Card</string>
+    <string name="app_creditCard1">Credit Card</string>
     <string name="creditvalue">Credit value</string>
     <string name="preventTotaldisc">Prevent Total discount</string>
     <string name="failUsers">Empty Database Enter as Master</string>
@@ -628,6 +629,7 @@
     <string name="cus_savedlocaly_just">فشل الاتصال بالسيرفر، تم حفظ العميل بهذا الجهاز فقط </string>
     <string name="urlname"> URL Name</string>
     <string name="taxAfterDisc">Tax After Disc</string>
+    <string name="orientation"> Items in horizontal orientation</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
