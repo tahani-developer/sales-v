@@ -1759,6 +1759,8 @@ public class ExportJason extends AppCompatActivity {
 
             } catch (Exception e) {
                 Log.e("ExportSALES_VOUCHER_DException",e.getMessage()+"");
+
+//                Toast.makeText(ExportJason.this, "Error"+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
             return JsonResponse;
         }

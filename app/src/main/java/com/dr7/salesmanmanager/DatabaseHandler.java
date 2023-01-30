@@ -4756,6 +4756,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 // Adding transaction to list
                 customers.add(customer);
             } while (cursor.moveToNext());
+           Log.e("getCustomersBySalesMan","salesMan"+customers.size());
         }
         return customers;
     }
