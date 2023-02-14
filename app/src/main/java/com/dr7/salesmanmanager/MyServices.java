@@ -35,6 +35,7 @@ public class MyServices extends Service {
     MediaPlayer player;
     int i=0;
     Timer T;
+    ImportJason importJason;
     public int LOCATIONTRACK =-1;
     String userNo="0";
     DatabaseHandler db = new DatabaseHandler(MyServices.this);
@@ -52,6 +53,7 @@ public class MyServices extends Service {
         super.onCreate();
         Log.e(TAG, "onCreate() , service started...");
         settings = db.getAllSettings();
+         importJason = new ImportJason(MyServices.this);
         userNo= db.getAllUserNo();
         if (settings.size() != 0) {
             LOCATIONTRACK = settings.get(0).getLocationtracker();
@@ -142,8 +144,8 @@ public class MyServices extends Service {
 
                                             if (latitude !=0||longitude!=0)
                                             {
-                                                ImportJason importJason = new ImportJason(MyServices.this);
-                                            importJason.updateLocation(salesmanStations.getJSONObject());
+
+                                                importJason.  updateLocation(salesmanStations.getJSONObject());
                                         }
                                     }else {
                                         Log.e(TAG, "  no App Import");

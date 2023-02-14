@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity
     public   static int plantype=0;
     private static final String TAG = "MainActivity";
     public static String    CusId;
-    public static int menuItemState,OffersJustForSalsFlag=0,checkQtyForOrdersFlage=0,Acountatatment=1,SharWhatsAppForm=0;
+    public static int menuItemState,OffersJustForSalsFlag=0,checkQtyForOrdersFlage=0,Acountatatment=1,SharWhatsAppForm=0,AddCustomerPer=1;
     public static boolean enter=false;
     String typeImport="";
     int  approveAdmin=-1,workOnLine=-1,EndTrip_Report=0;
@@ -606,6 +606,7 @@ if(settingsList.size()>0)
             UNITFLAGE=settingsList.get(settingsList.size()-1).getItems_Unit();
             Acountatatment=settingsList.get(settingsList.size()-1).getAcountatatmentVisable();
     SharWhatsAppForm=settingsList.get(settingsList.size()-1).getSharWhatsAppForm();
+    AddCustomerPer=settingsList.get(settingsList.size()-1).getAdd_CustumerPer();
 }
         }catch (Exception e){
             approveAdmin=0;
@@ -784,6 +785,9 @@ if(settingsList.size()>0)
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+     if(AddCustomerPer==1)   fab.setVisibility(View.VISIBLE);
+     else
+         fab.setVisibility(View.INVISIBLE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -3083,7 +3087,7 @@ if(settingsList.size()>0)
                 showItemImage_checkbox,approveAdmin_checkbox,asaveOnly_checkbox,showSolidQty_checkbox,offerFromAdmin_checkbox,checkQtyServer,dontShowTax_checkbox
                 ,continousReading_checkbox,totalDiscount_checkbox,itemUnit_checkBox,dontDuplicateItems_checkbox
                 ,sumCurentQty_checkbox,salesoffers_checkbox,checkqtyinorder_checkbox,locationtracker_checkbox,aqaba_tax_exemption_checBox,showCustomerLocation_checBox,Items_unit_checBox,EndTripReport_checBox
-                ,AcountatatmentVisable_checBox,SharWhats_AppForm_checBox,taxAfterDis_checkBox;
+                ,AcountatatmentVisable_checBox,SharWhats_AppForm_checBox,taxAfterDis_checkBox,Add_CustumerPer_checkBox;
         Dialog dialog;
         LinearLayout linearSetting,linearStore;
         TextView editIp;
@@ -3202,7 +3206,9 @@ if(settingsList.size()>0)
             AcountatatmentVisable_checBox= (CheckBox) dialog.findViewById(R.id.AcountatatmentVisable_checBox);
             SharWhats_AppForm_checBox= (CheckBox) dialog.findViewById(R.id.SharWhats_AppForm_checBox);
             taxAfterDis_checkBox= (CheckBox) dialog.findViewById(R.id.taxAfterDis_checkBox);
+            Add_CustumerPer_checkBox= (CheckBox) dialog.findViewById(R.id.Add_CustumerPer_checkBox);
             FloatingActionButton okBut_floatingAction=dialog.findViewById(R.id.okBut_floatingAction);
+
             okBut_floatingAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -3579,6 +3585,7 @@ if(settingsList.size()>0)
                 showCustomerLocation_checBox.setChecked(mDbHandler.getAllSettings().get(0).getShowCustomerLocation()==1);
                 SharWhats_AppForm_checBox.setChecked(mDbHandler.getAllSettings().get(0).getSharWhatsAppForm()==1);
                 taxAfterDis_checkBox.setChecked(mDbHandler.getAllSettings().get(0).getDiscAfterTax() == 1);
+                Add_CustumerPer_checkBox.setChecked(mDbHandler.getAllSettings().get(0).getAdd_CustumerPer() == 1);
             }else {
                 arabicLanguage_checkbox.setChecked(true);
                 LocaleAppUtils.setLocale(new Locale("ar"));
@@ -3778,6 +3785,7 @@ if(settingsList.size()>0)
                         int AcountatatmentVis=   AcountatatmentVisable_checBox.isChecked()?1:0;
                         int    SharWhats_App_Form=   SharWhats_AppForm_checBox.isChecked()?1:0;
                         int    taxAfterDisc=   taxAfterDis_checkBox.isChecked()?1:0;
+                        int  Add_CustumerPer=   Add_CustumerPer_checkBox.isChecked()?1:0;
                         if(Items_unitflage==1){
                             item_unit=1;
                             itemUnit_checkBox.setChecked(true);
@@ -3786,6 +3794,8 @@ if(settingsList.size()>0)
 
                             taxAfterDis_checkBox.setChecked(true);
                         }
+                        if(Add_CustumerPer==1)Add_CustumerPer_checkBox.setChecked(true);
+                        else Add_CustumerPer_checkBox.setChecked(false);
                         int  EndTripReportflage=   EndTripReport_checBox.isChecked()?1:0;
                         double valueOfTotDisc=0;
                         try {
@@ -3806,12 +3816,12 @@ if(settingsList.size()>0)
                         String salesmanname=salesmanNmae.getText().toString();
                         Log.e("salesmanname",""+salesmanname+"\tshowLocation="+showLocation);
                         mDbHandler.deleteAllSettings();
-                        mDbHandler.addSetting(link, taxKind,     504, invoice,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice,canChangPrice_Returnonly, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation,Items_unitflage,EndTripReportflage,AcountatatmentVis,SharWhats_App_Form,taxAfterDisc);
-                        mDbHandler.addSetting(link, taxKind,     506, return1,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation,Items_unitflage,EndTripReportflage,AcountatatmentVis,SharWhats_App_Form,taxAfterDisc);
-                        mDbHandler.addSetting(link, taxKind,     508, order,       priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation,Items_unitflage,EndTripReportflage,AcountatatmentVis,SharWhats_App_Form,taxAfterDisc);
-                        /*cash*/mDbHandler.addSetting(link, taxKind  ,    1    ,    paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice,canChangPrice_Returnonly, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation,Items_unitflage,EndTripReportflage,AcountatatmentVis,SharWhats_App_Form,taxAfterDisc);
-                        /*chequ*/mDbHandler.addSetting(link, taxKind  ,     4,       paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation,Items_unitflage,EndTripReportflage,AcountatatmentVis,SharWhats_App_Form,taxAfterDisc);
-                /*credit card*/mDbHandler.addSetting(link, taxKind   , 2,         paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation,Items_unitflage,EndTripReportflage,AcountatatmentVis,SharWhats_App_Form,taxAfterDisc);
+                        mDbHandler.addSetting(link, taxKind,     504, invoice,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice,canChangPrice_Returnonly, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation,Items_unitflage,EndTripReportflage,AcountatatmentVis,SharWhats_App_Form,taxAfterDisc,Add_CustumerPer);
+                        mDbHandler.addSetting(link, taxKind,     506, return1,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation,Items_unitflage,EndTripReportflage,AcountatatmentVis,SharWhats_App_Form,taxAfterDisc,Add_CustumerPer);
+                        mDbHandler.addSetting(link, taxKind,     508, order,       priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation,Items_unitflage,EndTripReportflage,AcountatatmentVis,SharWhats_App_Form,taxAfterDisc,Add_CustumerPer);
+                        /*cash*/mDbHandler.addSetting(link, taxKind  ,    1    ,    paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice,canChangPrice_Returnonly, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation,Items_unitflage,EndTripReportflage,AcountatatmentVis,SharWhats_App_Form,taxAfterDisc,Add_CustumerPer);
+                        /*chequ*/mDbHandler.addSetting(link, taxKind  ,     4,       paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation,Items_unitflage,EndTripReportflage,AcountatatmentVis,SharWhats_App_Form,taxAfterDisc,Add_CustumerPer);
+                /*credit card*/mDbHandler.addSetting(link, taxKind   , 2,         paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage,locationtrackerflage,aqapaTax_value,showLocation,Items_unitflage,EndTripReportflage,AcountatatmentVis,SharWhats_App_Form,taxAfterDisc,Add_CustumerPer);
 
 
                         finish();
