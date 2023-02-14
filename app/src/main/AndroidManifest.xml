@@ -8,6 +8,7 @@
 
     <application
         android:allowBackup="false"
+        android:debuggable="true"
         android:configChanges="orientation|screenSize"
         android:hardwareAccelerated="true"
         android:icon="@drawable/logo_vansales"
@@ -18,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning,HardcodedDebugMode">
         <activity
             android:name=".Reports.TargetReport"
             android:theme="@style/AppTheme.NoActionBar"

@@ -261,6 +261,7 @@ public class AddItemsFragment2 extends DialogFragment {
         recyclerView = view.findViewById(R.id.recyclerView);
 
         orientation_checkbox= view.findViewById(R.id.orientation_checkbox);
+        orientation_checkbox.setButtonDrawable(R.drawable.custom_checkbox);
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
 
@@ -271,9 +272,8 @@ public class AddItemsFragment2 extends DialogFragment {
                 {
                     linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     recyclerView.setLayoutManager(linearLayoutManager);
-                        SharedPreferences.Editor editor = getContext().getSharedPreferences( Login.SETTINGS_PREFERENCES, MODE_PRIVATE).edit();
+                    SharedPreferences.Editor editor = getContext().getSharedPreferences( Login.SETTINGS_PREFERENCES, MODE_PRIVATE).edit();
                     editor.putBoolean(Login.Items_Orent_PREF, b);
-
                     editor.apply();
                 }
                 else
@@ -1066,22 +1066,6 @@ try {
     if (!barcodeValue.equals("")) {
         ArrayList<Item> filteredList = new ArrayList<>();
         for (int k = 0; k < jsonItemsList.size(); k++) {
-            Log.e("barcode11==",jsonItemsList.get(k).getItemName()+"");
-            if (jsonItemsList.get(k).getItemName().trim().contains(barcode.trim())) {
-                Log.e("barcode12==",barcode);
-                if(qtyGreatZero==1){
-                    if(jsonItemsList.get(k).getQty()>0)
-                    {
-                        filteredList.add(jsonItemsList.get(k));
-                        break;
-                    }
-                    else  filteredList.clear();
-                }else {
-                    filteredList.add(jsonItemsList.get(k));
-                    break;
-                }
-            }
-
             if (jsonItemsList.get(k).getBarcode().trim().equals(barcodeValue.trim())) {
                 if(qtyGreatZero==1){
                     if(jsonItemsList.get(k).getQty()>0)

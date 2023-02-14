@@ -64,7 +64,9 @@ import com.google.firebase.FirebaseApp;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
@@ -165,8 +167,8 @@ public class Login extends AppCompatActivity {
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-    //public  static    String  headerDll = "/Falcons/VAN.dll";
- public  static    String headerDll = "";
+   public  static    String  headerDll = "/Falcons/VAN.dll";
+//public  static    String headerDll = "";
 
     public  static  int gone_noTax_totalDisc=0;
     public  static  int password_rawat=0;
@@ -996,6 +998,9 @@ public class Login extends AppCompatActivity {
         companyInfo_btn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
+//                uploadDb();
+                upload();
                 openCompanyDialog();
             }
         });
@@ -1073,10 +1078,153 @@ public class Login extends AppCompatActivity {
 //                    }
 //                }).start();
             }
+    private File exportFile(File src, File dst) throws IOException {
+
+        //if folder does not exist
+
+//        deleteFiles(dst.getPath() + File.separator + "InventoryDBase");
+        if (!dst.exists()) {
+            if (!dst.mkdir()) {
+                return null;
+            }
+        }
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File expFile = new File(dst.getPath() + File.separator + "VanSalesDatabase");
+
+        FileChannel inChannel = null;
+        FileChannel outChannel = null;
+
+        try {
+            inChannel = new FileInputStream(src).getChannel();
+            outChannel = new FileOutputStream(expFile).getChannel();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+        } catch (Exception e) {
+
+
+                new SweetAlertDialog(Login.this, SweetAlertDialog.ERROR_TYPE)//Tools.this.getResources().getString(R.string.save_SUCCESS)
+                        .setTitleText("Exception ")
+                        .setContentText("Exception Error in read File" + e.toString() + " DataBaseFile ")
+                        .show();
+
+
+
+        } finally {
+            if (inChannel != null)
+                inChannel.close();
+            if (outChannel != null)
+                outChannel.close();
+        }
+
+//        dialogSwite.dismissWithAnimation();
+        return expFile;
+    }
+   void upload(){
+        try
+        {
+            File sd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+            File data = Environment.getDataDirectory();
+            boolean isPresent = true;
+            if (!sd.canWrite())
+            {
+                isPresent= sd.mkdir();
+
+            }
+
+
+
+            String backupDBPath = "VanSalesDatabase";
+
+            File currentDB= getApplicationContext().getDatabasePath("VanSalesDatabase");
+            File backupDB = new File(sd, backupDBPath);
+
+            if (currentDB.exists()&&isPresent) {
+                FileChannel src = new FileInputStream(currentDB).getChannel();
+                FileChannel dst = new FileOutputStream(backupDB).getChannel();
+
+                src.transferTo(0, src.size(), dst);
+//                dst.transferFrom(src, 0, src.size());
+                src.close();
+                dst.close();
+                Toast.makeText(Login.this, "Backup Succesfulley", Toast.LENGTH_SHORT).show();
+            }else {
+
+                Toast.makeText(Login.this, "Backup Failed", Toast.LENGTH_SHORT).show();
+            }
+            isPresent=false;
+
+
+            Log.e("backupDB.getA", backupDB.getAbsolutePath());
+        }
+        catch (Exception e) {
+            Log.e("Settings Backup", e.getMessage());
+        }
+    }
+    private void uploadDb() {
+
+
+        String backupDBPath = "VanSalesDatabase";
+        File sd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        File backupDB = new File(sd, backupDBPath);
+
+        File f=new File("Documents/VanSalesDatabase");
+
+
+        File Dba = new File("/data/data/com.dr7.salesmanmanager/databases");
+
+//        String dstPathw = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        File dsts = new File(sd + "VanSalesDatabase");
+        Log.e("myAppDataBasedstPath", " " + sd);
+        Log.e("myAppDataBaseDb", " " + Dba);
+        try {
+            exportFile(dsts, Dba);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
 
 
+
+        FileInputStream fis=null;
+        FileOutputStream fos=null;
+
+        try
+        {
+            fis=new FileInputStream(f);
+            fos=new FileOutputStream(f);
+            while(true)
+            {
+                int i=fis.read();
+                if(i!=-1)
+                {fos.write(i);}
+                else
+                {break;}
+            }
+            fos.flush();
+            Toast.makeText(this, "DB dump OK", Toast.LENGTH_LONG).show();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            Toast.makeText(this, "DB dump ERROR", Toast.LENGTH_LONG).show();
+        }
+        finally
+        {
+            try
+            {
+                fos.close();
+                fis.close();
+            }
+            catch(Exception ioe)
+            {}
+        }
+    }
 
 
     private void openCompanyDialog() {

@@ -1013,8 +1013,8 @@ Log.e("getQty",listItemsMain.get(i).getQty()+"");
 
             }
 
-            Log.e("deat===",""+listItemsMain.get(i).getQty()+"{...}"+listItemsMain.get(i).getItemNo());
-            Log.e("voucherNo_===",""+voucherNo_text.getText().toString());
+//            Log.e("deat===",""+listItemsMain.get(i).getQty()+"{...}"+listItemsMain.get(i).getItemNo());
+//            Log.e("voucherNo_===",""+voucherNo_text.getText().toString());
 
             dataBase.addItem(listItemsMain.get(i));
 

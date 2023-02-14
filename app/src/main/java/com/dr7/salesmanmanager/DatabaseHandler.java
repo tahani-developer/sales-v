@@ -4221,12 +4221,13 @@ Log.e("addCompanyInfo","addCompanyInfo");
         return infos;
     }
     public List<serialModel> getAllSerialItems() {
+       Log.e("getAllSerialItems==", "getAllSerialItems");
         List<serialModel> infos = new ArrayList<>();
         String selectQuery = "SELECT  * FROM  SERIAL_ITEMS_TABLE WHERE IS_POSTED_SERIAL=0";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-       Log.e("cursor", "cursor"+cursor.getCount());
+       Log.e("cursor==", "cursor"+cursor.getCount());
         if (cursor.moveToFirst()) {
             do {
                 serialModel info = new serialModel();

@@ -197,27 +197,20 @@
         android:gravity="center"
         android:paddingHorizontal="10dp"
         >
-        <CheckBox
-            android:id="@+id/orientation_checkbox"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginTop="1dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_weight="0"
-            android:checked="true"
-            android:text="@string/orientation"
-            android:textColor="@color/text_view_color"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            />
+
     </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_marginHorizontal="20dp"
-        android:background="@color/white"
-        android:padding="10dp"
-        android:visibility="gone"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/background_container"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -225,12 +218,29 @@
         >
 
     </androidx.recyclerview.widget.RecyclerView>
-    <ListView
+        <CheckBox
+            android:id="@+id/orientation_checkbox"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="1dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:button="@drawable/custom_checkbox"
+            android:checked="true"
+            android:gravity="top"
+            android:textColor="@color/text_view_color"
+
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
+    </RelativeLayout>
+   <ListView
         android:id="@+id/itemsListView"
         android:layout_marginHorizontal="20dp"
         android:background="@color/white"
         android:padding="10dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
