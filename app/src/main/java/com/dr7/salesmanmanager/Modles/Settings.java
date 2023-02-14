@@ -63,6 +63,15 @@ public class Settings {
     private  int AcountatatmentVisable;
     private  int   SharWhatsAppForm;
     private  int   discAfterTax;
+    private  int  Add_CustumerPer;
+
+    public int getAdd_CustumerPer() {
+        return Add_CustumerPer;
+    }
+
+    public void setAdd_CustumerPer(int add_CustumerPer) {
+        Add_CustumerPer = add_CustumerPer;
+    }
 
     public int getDiscAfterTax() {
         return discAfterTax;

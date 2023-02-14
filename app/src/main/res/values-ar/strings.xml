@@ -664,6 +664,7 @@
     <string name="urlname">اسم الويب سيرفيس</string>
     <string name="taxAfterDisc">الخصم بعد الضريبة</string>
     <string name="orientation"> ترتيب المواد افقي</string>
+    <string name="Add_CustumerPer">صلاحية إضافة عميل</string>
     <string-array name="DaysOfWeek">
         <item>السبت</item>
         <item>الأحد</item>

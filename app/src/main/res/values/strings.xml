@@ -630,6 +630,7 @@
     <string name="urlname"> URL Name</string>
     <string name="taxAfterDisc">Tax After Disc</string>
     <string name="orientation"> Items in horizontal orientation</string>
+    <string name="Add_CustumerPer">Add Customer Permission</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
