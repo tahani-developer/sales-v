@@ -1210,6 +1210,7 @@ if(settingsList.size()>0)
     public void saveCurrentLocation() throws InterruptedException {
         first=2;
         isClickLocation=2;
+        getLoc();
 //        requestSingleUpdate();
         Log.e("saveCurrentLocation",""+isClickLocation);
 //        getlocattTest();
@@ -1351,7 +1352,149 @@ if(settingsList.size()>0)
 //        }// END ELSE
 
     }//end
+    public void getLoc() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        // I suppressed the missing-permission warning because this wouldn't be executed in my
+        // case without location services being enabled
+        //  @SuppressLint("MissingPermission")
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this
+                , Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
 
+            // sweetMassage("Please Open Location Permission");
+
+            if (ContextCompat.checkSelfPermission(MainActivity.this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) MainActivity.this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    ActivityCompat.requestPermissions((Activity) MainActivity.this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                } else {
+                    ActivityCompat.requestPermissions((Activity) MainActivity.this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                }
+            }
+
+            return;
+        }
+        android.location.Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+
+        try {
+
+            Log.e("LocationLanLag", "  n  " + lastKnownLocation.getLatitude()+ " getLongitude= " + lastKnownLocation.getLongitude());
+            if(getLocationComp){
+                addCompanyLocation(lastKnownLocation);
+                getLocationComp=false;
+            }   else {
+                if(CustomerListShow.Customer_Account.equals("")&& isClickLocation == 2)
+                {
+                    if(first!=1)
+                    {
+                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(getResources().getString(R.string.warning_message))
+                                .setContentText(getResources().getString(R.string.pleaseSelectUser))
+                                .show();
+                    }
+
+
+                } else {
+
+
+                    if(isNetworkAvailable()){
+                        String latitude="",  longitude="" ;
+                        try {
+                            latitude = CustomerListShow.latitude;
+                            longitude = CustomerListShow.longtude;
+                            Log.e("latitude",""+latitude+longitude);
+                        }
+                        catch (Exception e)
+                        {
+                            latitude="";
+                            longitude="";
+
+                        }
+                        Log.e("latitude",""+latitude+longitude);
+
+
+                        if(!latitude.equals("")&&!longitude.equals("")&&isClickLocation==2&&!latitude.equals("0")&&!longitude.equals("0"))
+                        {
+
+                            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText(getResources().getString(R.string.warning_message))
+                                    .setContentText(getResources().getString(R.string.customerHaveLocation))
+                                    .show();
+                        }
+                        else {
+                            if (isClickLocation == 2) {
+
+                                    Log.e("MainActivity", "Location: " + lastKnownLocation.getLatitude() + " " + lastKnownLocation.getLongitude());
+                                    latitude_main = lastKnownLocation.getLatitude();
+                                    longitude_main = lastKnownLocation.getLongitude();
+                                    customerLocation_main = new CustomerLocation();
+                                    customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
+                                    customerLocation_main.setLONG(longitude_main + "");
+                                    customerLocation_main.setLATIT(latitude_main + "");
+
+
+
+                                    mDbHandler.addCustomerLocation(customerLocation_main);
+                                    mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account, latitude_main + "", longitude_main + "");
+                                    CustomerListShow.latitude = latitude_main + "";
+                                    CustomerListShow.longtude = longitude_main + "";
+                                    Handler h2 = new Handler(Looper.getMainLooper());
+                                    h2.post(new Runnable() {
+                                        public void run() {
+
+                                            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                                                    .setTitleText(getResources().getString(R.string.succsesful))
+                                                    .setContentText(getResources().getString(R.string.LocationSaved))
+                                                    .show();
+                                        }
+
+
+                                    });
+
+
+
+                                    Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
+
+
+
+
+
+                            }
+
+                        }
+
+                    }
+//            else {
+//                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+//                        .setTitleText(getResources().getString(R.string.warning_message))
+//                        .setContentText(getResources().getString(R.string.enternetConnection))
+//                        .show();
+//            }
+
+
+                }// END ELSE
+                isClickLocation=1;
+            }
+        } catch (Exception e) {
+        }
+
+//        LatLng latLng = new LatLng(v1, v2);
+        Log.e("LocationLanLag", "  loo");
+
+//        LocationData locationDatas=new LocationData(v1,v2);
+//        locationData.add(locationDatas);
+
+    }
     private void getlocattTest() {
 
         try {
@@ -1386,24 +1529,9 @@ if(settingsList.size()>0)
             {
                 for (Location location : locationResult.getLocations()) {
                     Log.e("MainActivity", "getLocationComp: " + location.getLatitude() + " " + location.getLongitude());
-                    if (mDbHandler.getAllCompanyInfo().size() != 0) {
-                        if (mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany() == 0) {
-                            latitude_main = location.getLatitude();
-                            longitude_main = location.getLongitude();
 
-                            Log.e("updatecompanyInfo", "" + mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany());
-                            mDbHandler.updatecompanyInfo(latitude_main, longitude_main);
-                            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                                    .setTitleText(getResources().getString(R.string.succsesful))
-                                    .setContentText(getResources().getString(R.string.LocationSaved))
-                                    .show();
+                    addCompanyLocation(location);
 
-
-                        }
-                    }
-                    else{
-
-                    }
 
 
 
@@ -1513,6 +1641,27 @@ if(settingsList.size()>0)
         };
 
     };
+
+    private void addCompanyLocation(Location location) {
+        if (mDbHandler.getAllCompanyInfo().size() != 0) {
+            if (mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany() == 0) {
+                latitude_main = location.getLatitude();
+                longitude_main = location.getLongitude();
+
+                Log.e("updatecompanyInfo", "" + mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany());
+                mDbHandler.updatecompanyInfo(latitude_main, longitude_main);
+                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText(getResources().getString(R.string.succsesful))
+                        .setContentText(getResources().getString(R.string.LocationSaved))
+                        .show();
+
+
+            }
+        }
+        else{
+
+        }
+    }
 
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
@@ -1652,9 +1801,9 @@ if(settingsList.size()>0)
                             if (mDbHandler.getAllSettings().get(0).getPassowrd_data() == 1) {
                                 openPasswordDialog(6);
                             } else {
-                                isPosted = mDbHandler.isAllposted();
+//                                isPosted = mDbHandler.isAllposted();
                               //  Log.e("isPostedExport","1"+isPosted);
-                                if (!isPosted) {
+//                                if (!isPosted) {
 
                                   //  Log.e("isPostedExport","2"+isPosted);
 
@@ -1669,9 +1818,9 @@ if(settingsList.size()>0)
                                     e.printStackTrace();
                                 }
 
-                            }else {
-                                    obj.saveVouchersAndExport();
-                                }
+//                            }else {
+//                                    obj.saveVouchersAndExport();
+//                                }
 
 
 
@@ -4643,7 +4792,7 @@ if(settingsList.size()>0)
 
 
 
-                String backupDBPath = "VanSalesDatabase_backup";
+                String backupDBPath = "VanSalesDatabase";
 
                 File currentDB= getApplicationContext().getDatabasePath("VanSalesDatabase");
                 File backupDB = new File(sd, backupDBPath);

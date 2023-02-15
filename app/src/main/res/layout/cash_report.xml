@@ -351,7 +351,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="1dp"
-                android:text="@string/creditvalue"
+                android:text="@string/app_creditCard1"
                 android:textColor="@color/text_view_color"
                 android:textSize="15dp"
                 android:textStyle="bold" />

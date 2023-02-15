@@ -2145,7 +2145,7 @@ public class SalesInvoice extends Fragment {
             retSalesRadioButton.setVisibility(View.GONE);
             linearTotalCashDiscount.setVisibility(View.GONE);
             notIncludeTax.setVisibility(View.GONE);
-            linearPayMethod.setVisibility(View.GONE);
+//            linearPayMethod.setVisibility(View.GONE);
             orderRadioButton.setChecked(true);
         }
 
