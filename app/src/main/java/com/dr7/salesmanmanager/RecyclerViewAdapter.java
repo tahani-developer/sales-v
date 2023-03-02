@@ -1313,12 +1313,22 @@ public static     int CountOfItems=1;
                                                                      price.setText(mHandler.getUnitPrice(itemNumber.getText().toString(), "-1", CountOfItems));
                                                                      String ITEMS_unitsQTY = mHandler.getItemsUnitsQTY(itemNumber.getText().toString(), Item_unit.getSelectedItem().toString());
                                                                      unit_qty.setText(ITEMS_unitsQTY);
-                                                                     allItemsList.get(position).setMinSalePrice(Double.parseDouble(price.getText().toString()));
-                                                                     Log.e("CountOfItems", CountOfItems + " ,ITEMS_unitsQTY=" + ITEMS_unitsQTY);
+                                                                     try {
+                                                                         allItemsList.get(position).setMinSalePrice(Double.parseDouble(price.getText().toString()));
+                                                                     }
+                                                                     catch (Exception e){Log.e("","");
+
+                                                                     }
+
                                                                  }else
                                                                  {
                                                                      price.setText(   allItemsList.get(position).getPrice()+"");
-                                                                     allItemsList.get(position).setMinSalePrice(Double.parseDouble(price.getText().toString()));
+                                                                     try {
+                                                                         allItemsList.get(position).setMinSalePrice(Double.parseDouble(price.getText().toString()));
+                                                                     }
+                                                                     catch (Exception e){Log.e("","");
+
+                                                                     }
                                                                  }
 
                                                                }

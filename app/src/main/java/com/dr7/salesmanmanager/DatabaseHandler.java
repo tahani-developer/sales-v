@@ -8751,44 +8751,54 @@ Log.e("addCompanyInfo","addCompanyInfo");
         int x=   db.update(SALES_VOUCHER_DETAILS, values, VOUCHER_NUMBER + "=" + voucherNo +" and "+ ITEM_NUMBER + " = '" + itemCode.trim()+"'", null);
         return x; }
 
-    public int  UpdateAvi_QtyInOrigenalVoch(String voucherNo, float newqty,String itemCode){
+    public int  UpdateAvi_QtyInOrigenalVoch(String voucherNo, float newqty,String itemCode,int flagBonus){
         db = this.getWritableDatabase();
 
 
-        float oldqty= getoldqty(itemCode,Integer.parseInt(voucherNo));
+        float oldqty= getoldqty(itemCode,Integer.parseInt(voucherNo),flagBonus);
         float endqty =oldqty-newqty;
-
-        Log.e("oldqty==", oldqty+"");
-        Log.e("endqty==", endqty+"");
-        Log.e("newqty==", newqty+"");
+//
+//        Log.e("oldqty==", oldqty+"");
+//        Log.e("endqty==", endqty+"");
+//        Log.e("newqty==", newqty+"");
         ContentValues values = new ContentValues();
         values.put("Avilable_Qty", endqty);
         // updating row
-        Log.e("endqty3==", voucherNo+"  "+itemCode.trim());
-        int x=   db.update(SALES_VOUCHER_DETAILS, values, VOUCHER_NUMBER + "=" + voucherNo+" and "+ ITEM_NUMBER + " = '" + itemCode.trim()+"'"+" and "+ VOUCHER_TYPE + " = '504'", null);
-        Log.e("x==", x+"");
+
+       int x=0;Log.e("1flagBonus==", flagBonus+"  "+endqty);
+        if(flagBonus==0)
+        {
+           x=   db.update(SALES_VOUCHER_DETAILS, values, VOUCHER_NUMBER + "=" + voucherNo+" and "+ ITEM_NUMBER + " = '" + itemCode.trim()+"'"+" and "+ VOUCHER_TYPE + " = '504' and ITEM_NAME<>'(bonus)'", null);
+
+        }
+      else  x=   db.update(SALES_VOUCHER_DETAILS, values, VOUCHER_NUMBER + "=" + voucherNo+" and "+ ITEM_NUMBER + " = '" + itemCode.trim()+"'"+" and "+ VOUCHER_TYPE + " = '504' and ITEM_NAME='(bonus)'", null);
+       Log.e("x==", x+"");
 
         return x;
 
     }
-    public float getoldqty(String itemNo,int voucherNo) {
+    public float getoldqty(String itemNo,int voucherNo,int flagBonus) {
         Log.e("getItemName","getItemName="+itemNo);
         String customerNo=CustomerListShow.Customer_Account;
-        String selectQuery = " select Avilable_Qty from SALES_VOUCHER_DETAILS  where ITEM_NUMBER='"+itemNo.trim()+"' and VOUCHER_NUMBER  = '" + voucherNo+ "' and VOUCHER_TYPE='504'";
+       String selectQuery="";
+        if(flagBonus==0)
+         selectQuery = " select Avilable_Qty from SALES_VOUCHER_DETAILS  where ITEM_NUMBER='"+itemNo.trim()+"' and VOUCHER_NUMBER  = '" + voucherNo+ "' and VOUCHER_TYPE='504'";
+        else  selectQuery = " select Avilable_Qty from SALES_VOUCHER_DETAILS  where ITEM_NUMBER='"+itemNo.trim()+"' and VOUCHER_NUMBER  = '" + voucherNo+ "' and VOUCHER_TYPE='504' and ITEM_NAME='(bonus)'";
+
+
         float itemUnit=0;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         try {
-            if (cursor.moveToLast()) {
+            if (cursor.moveToFirst()) {
                 if (cursor.getString(0) == null) {
                     return 0;
                 } else {
                     itemUnit = Float.parseFloat(cursor.getString(0));
-                    Log.e("itemUnit==", itemUnit+"");
                     if(itemUnit==0)
                         if(itemUnit==0)
-                            itemUnit= getoldqtyMain(itemNo,voucherNo);
+                            itemUnit= getoldqtyMain(itemNo,voucherNo,flagBonus);
                     return itemUnit;
                 }
 
@@ -8802,21 +8812,28 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
         return  itemUnit;
     }
-    public float getoldqtyMain(String itemNo,int voucherNo) {
-        Log.e("getItemName","getItemName="+itemNo);
+    public float getoldqtyMain(String itemNo,int voucherNo,int flag) {
+        Log.e("getoldqtyMain","getItemName="+itemNo);
         String customerNo=CustomerListShow.Customer_Account;
-        String selectQuery = " select UNIT_QTY from SALES_VOUCHER_DETAILS  where ITEM_NUMBER='"+itemNo.trim()+"' and VOUCHER_NUMBER  = '" + voucherNo+ "' and VOUCHER_TYPE='504'";
+       String selectQuery="";
+       if(flag==0){
+            selectQuery = " select UNIT_QTY from SALES_VOUCHER_DETAILS  where ITEM_NUMBER='"+itemNo.trim()+"' and VOUCHER_NUMBER  = '" + voucherNo+ "' and VOUCHER_TYPE='504'";
+
+        }else {
+          selectQuery = " select UNIT_QTY from SALES_VOUCHER_DETAILS  where ITEM_NUMBER='"+itemNo.trim()+"' and VOUCHER_NUMBER  = '" + voucherNo+ "' and VOUCHER_TYPE='504'  and ITEM_NAME='(bonus)'";
+
+       }
         float itemUnit=0;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         try {
-            if (cursor.moveToLast()) {
+            if (cursor.moveToFirst()) {
                 if (cursor.getString(0) == null) {
                     return 0;
                 } else {
                     itemUnit = Float.parseFloat(cursor.getString(0));
-                    Log.e("itemUnit==", itemUnit+"");
+                    Log.e("getoldqtyMainitemUnit==", itemUnit+"");
 
                     return itemUnit;
                 }
@@ -8854,7 +8871,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                     return 0;
                 } else {
                     x= Integer.parseInt(cursor.getString(0));
-                    Log.e("x","getItemPrice="+x);
+                    Log.e("x","HASSERAIAL="+x);
                     return x;
                 }
 

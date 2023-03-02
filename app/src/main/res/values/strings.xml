@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 200.72 </string>
+    <string name="version"> V 200.76 </string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -631,6 +631,7 @@
     <string name="taxAfterDisc">Tax After Disc</string>
     <string name="orientation"> Items in horizontal orientation</string>
     <string name="Add_CustumerPer">Add Customer Permission</string>
+    <string name="visaPayment">Visa</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>

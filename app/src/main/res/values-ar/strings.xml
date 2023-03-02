@@ -665,6 +665,7 @@
     <string name="taxAfterDisc">الخصم بعد الضريبة</string>
     <string name="orientation"> ترتيب المواد افقي</string>
     <string name="Add_CustumerPer">صلاحية إضافة عميل</string>
+    <string name="visaPayment">Visa</string>
     <string-array name="DaysOfWeek">
         <item>السبت</item>
         <item>الأحد</item>

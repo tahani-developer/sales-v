@@ -378,7 +378,8 @@ public class SalesInvoice extends Fragment {
     public  String customerTemporiryNmae="";// in ameel naqdi
 
     public static String VERSION="";
-    public  CheckBox notIncludeTax;
+    public  CheckBox notIncludeTax,visaPay;
+    public  int visaPayFlag=0;
     Transaction transaction;
 
     //B
@@ -557,13 +558,41 @@ public class SalesInvoice extends Fragment {
         valueTotalDiscount.setEnabled(false);
         settingsList= mDbHandler.getAllSettings();
         notIncludeTax=view.findViewById(R.id.notIncludeTax);
+        visaPay=view.findViewById(R.id.visaPay);
 
+        if(offerTalaat==1)
+        {
+            visaPay.setVisibility(View.VISIBLE);
+        }else  visaPay.setVisibility(View.GONE);
         notIncludeTax.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged( CompoundButton compoundButton , boolean b ) {
                 calculateTotals(0);
                 if(mDbHandler.getAllSettings().get(0).getTaxClarcKind()==1)
                 refreshAdapterItems();
+            }
+        });
+        visaPay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged( CompoundButton compoundButton , boolean b ) {
+                Log.e("visaPay","onCheckedChanged="+b);
+                if(b){
+                    visaPayFlag=1;
+                    cash.setChecked(true);
+                    cash.setEnabled(false);
+                    credit.setEnabled(false);
+                    payMethod = 1;
+                    calculateTotals(0);
+                }else {
+                    visaPayFlag=0;
+                    cash.setEnabled(true);
+                    credit.setEnabled(true);
+                    calculateTotals(0);
+                }
+                Log.e("visaPay","onCheckedChanged="+b+"\t"+visaPayFlag);
+//                calculateTotals(0);
+//                if(mDbHandler.getAllSettings().get(0).getTaxClarcKind()==1)
+//                    refreshAdapterItems();
             }
         });
 
@@ -652,9 +681,16 @@ public class SalesInvoice extends Fragment {
         voucherNumberTextView.setText(vn2);
         connect.setVisibility(View.GONE);
         companyInfo = new CompanyInfo();
-        offers_ItemsQtyOffer = mDbHandler.getItemsQtyOffer();
+        if(visaPayFlag==0) {
+            offers_ItemsQtyOffer = mDbHandler.getItemsQtyOffer();
+            limit_offer = mDbHandler.getMinOfferQty(total_items_quantity);
+        }
+        else {
+            offers_ItemsQtyOffer.clear();
+            limit_offer=0;
+        }
 
-        limit_offer = mDbHandler.getMinOfferQty(total_items_quantity);
+
         Log.e("total_items_quantity","=="+total_items_quantity+"\t"+limit_offer);
         refrechItemForReprint();
         //*************************************************************************
@@ -5217,7 +5253,7 @@ public class SalesInvoice extends Fragment {
             noTax=0;
 
         }else {noTax=1;}
-        Log.e("TOTAL", "noTax2==" +noTax);
+        Log.e("TOTAL", "visaPayFlag==" +visaPayFlag);
 //        discTextView.setText("0.0");
         netTotalTextView.setText("0.0");
 //        calculateTotals_cridit();
@@ -5225,8 +5261,13 @@ public class SalesInvoice extends Fragment {
                 itemTotalPerc,  posPrice, totalQty = 0,allItemQtyWithDisc=0,itemsQty=0;
         Float itemDiscVal;
         //**********************************************************************
+        if(visaPayFlag==0){
         list_discount_offers = mDbHandler.getDiscountOffers();// total discount
         itemsQtyOfferList = mDbHandler.getItemsQtyOffer();
+        }else {
+            list_discount_offers.clear();
+            itemsQtyOfferList.clear();
+        }
         String itemGroup;
         subTotal = 0.0;
         totalTaxValue = 0.0;
@@ -5248,7 +5289,9 @@ public class SalesInvoice extends Fragment {
             totalQty = 0.0;
             try {
 
+                if(visaPayFlag==0)
                 limit_offer = mDbHandler.getMinOfferQty(total_items_quantity);
+                else limit_offer=0;
                 Log.e("total_items_quantity","=="+total_items_quantity+"\t"+limit_offer);
             } catch (Exception e) {
                 limit_offer = 0;
@@ -5261,7 +5304,7 @@ public class SalesInvoice extends Fragment {
                 disc_items_total = 0;
                 disc_items_value = 0;
 
-                if (total_items_quantity >= limit_offer && limit_offer != 0 && payMethod == 1) {// all item without bonus item
+                if (total_items_quantity >= limit_offer && limit_offer != 0 && payMethod == 1&& visaPayFlag!=1) {// all item without bonus item
                     discount_oofers_total_credit=0;
                     discount_oofers_total_cash=0;
                     for (int b = 0; b < items.size(); b++) {
@@ -5313,7 +5356,7 @@ public class SalesInvoice extends Fragment {
 
                     for (int j = 0; j < list_discount_offers.size(); j++) {
 //                            totalDiscount=0;
-                        if (payMethod == 1) {
+                        if (payMethod == 1&&visaPayFlag==0) {
                             if (list_discount_offers.get(j).getPaymentType() == 1) {
                                 if (total_items_quantity>=list_discount_offers.get(j).getQTY()  ) {
                                     discount_oofers_total_cash=0;
@@ -5428,10 +5471,18 @@ public class SalesInvoice extends Fragment {
             }
 
 //            totalTaxValue=(subTotal-totalDiscount)*0.16;
-            totalDiscount+=getTotalDiscSetting(netTotal);
+                // tahani -discount_oofers_total
+
+            if(visaPayFlag==0) {
+                totalDiscount += getTotalDiscSetting(netTotal);
+
+                netTotal = netTotal - getTotalDiscSetting(netTotal);
+            }
+
 
 
             Log.e("TOTAL", "noTax2totalTaxValue==" +totalTaxValue);
+            if(visaPayFlag==1)totalDiscount=0;
             netTotal = netTotal + subTotal - totalDiscount + totalTaxValue;
 //              netTotal = netTotal + subTotal -sum_discount + totalTaxValue;
 
@@ -5441,8 +5492,10 @@ public class SalesInvoice extends Fragment {
                 Log.e("getTaxClarcKind","==1");
             totalQty = 0.0;
             try {
+                if(visaPayFlag==0)
+                    limit_offer = mDbHandler.getMinOfferQty(total_items_quantity);
+                else limit_offer=0;
 
-                limit_offer = mDbHandler.getMinOfferQty(total_items_quantity);
             } catch (Exception e) {
                 limit_offer = 0;
             }
@@ -5470,7 +5523,7 @@ public class SalesInvoice extends Fragment {
                 }
 
 //                Log.e("allItemQtyWithDisc=",total_items_quantity+""+"\ttotalQty="+totalQty);
-                if (total_items_quantity >= limit_offer && limit_offer != 0 && payMethod == 1) {// all item without bonus item
+                if (total_items_quantity >= limit_offer && limit_offer != 0 && payMethod == 1&& visaPayFlag!=1) {// all item without bonus item
                     discount_oofers_total_credit=0;
                     discount_oofers_total_cash=0;
                     for (int b = 0; b < items.size(); b++) {
@@ -5524,7 +5577,7 @@ public class SalesInvoice extends Fragment {
 
                     for (int j = 0; j < list_discount_offers.size(); j++) {// here to test   offer by cash  *****************
 //                            totalDiscount=0;
-                        if (payMethod == 1) {
+                        if (payMethod == 1&&visaPayFlag==0) {
                             if (list_discount_offers.get(j).getPaymentType() == 1) {
                                 if ( total_items_quantity>=  list_discount_offers.get(j).getQTY()  ) {
                                     discount_oofers_total_cash = 0;
@@ -5643,10 +5696,14 @@ public class SalesInvoice extends Fragment {
 
 //            totalDiscount+=getTotalDiscSetting(netTotal);
 //            Log.e("TOTAL", "noTax3totalTaxValue==" +totalTaxValue);
+                if(visaPayFlag==1)totalDiscount=0;
             netTotal = netTotal + subTotal - totalDiscount + totalTaxValue; // tahani -discount_oofers_total
-            totalDiscount+=getTotalDiscSetting(netTotal);
 
-            netTotal=netTotal-getTotalDiscSetting(netTotal);
+            if(visaPayFlag==0) {
+                totalDiscount += getTotalDiscSetting(netTotal);
+
+                netTotal = netTotal - getTotalDiscSetting(netTotal);
+            }
 
         }
 
@@ -5679,6 +5736,7 @@ public class SalesInvoice extends Fragment {
 
 
 
+        if(visaPayFlag==1)totalDiscount = 0;
         discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discTextView.getText().toString()))));
         discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(totalDiscount + ""))));
         netTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));

@@ -49,12 +49,30 @@ public class CustomerLocation {
         JSONObject obj = new JSONObject();
         try {
             obj.put("CUS_NO", CUS_NO);
-            obj.put("LATIT",LATIT );
-            obj.put("LONG",  LONG);
+            obj.put("LATIT",  LATIT );
+            obj.put("LONG",   LONG);
 
         } catch (JSONException e) {
             Log.e("TaggetJSONObject" , "JSONException");
         }
         return obj;
+    }
+    public JSONObject getJsonObject2(){
+
+        JSONObject jsonObject=new JSONObject();
+
+        try {
+            jsonObject.put("CUSTNO", CUS_NO);
+            jsonObject.put("LA",     LATIT );
+            jsonObject.put("LO",     LONG);
+
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonObject;
     }
 }

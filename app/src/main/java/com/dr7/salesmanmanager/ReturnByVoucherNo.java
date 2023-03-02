@@ -435,7 +435,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
                     returnListSerial.clear();
                     voucherNo_text.setError(null);
                     voucherNo_ReturnNo =voucherNo_text.getText().toString().trim();
-                  Log.e("voucherNo_ReturnNo",""+voucherNo_ReturnNo);
+                    Log.e("voucherNo_ReturnNo",""+voucherNo_ReturnNo);
                     getDataForVoucherNo();
                     textView_save.setEnabled(true);
 
@@ -614,6 +614,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             serialModel1.setItemName(listItemsReturn.get(i).getItemName());
             serialModel1.setDateVoucher(voucherReturn.getVoucherDate());
             serialModel1.setPriceItem(listItemsReturn.get(i).getPrice());
+            Log.e("serialModel1","****"+serialModel1.getPriceItem());
             if(dataBase.HASSERAIAL(serialModel1.getItemNo())==0) {
 
                 serialModel1.setQty(String.valueOf(listItemsReturn.get(i).getAvi_Qty()));
@@ -1003,13 +1004,19 @@ Log.e("getQty",listItemsMain.get(i).getQty()+"");
             listItemsMain.get(i).setORIGINALvoucherNo( Integer.parseInt(voucherNo_text.getText().toString().trim()));
 
             Log.e("serialModel1","2222salePrice="+listItemsMain.get(i).getPrice());
-            if( dataBase.HASSERAIAL(listItemsMain.get(i).getItemNo())==0)
-            dataBase.UpdateAvi_QtyInOrigenalVoch(voucherNo_text.getText().toString(),listItemsMain.get(i).getQty(),listItemsMain.get(i).getItemNo());
-          else
+            if( dataBase.HASSERAIAL(listItemsMain.get(i).getItemNo())==0) {
+                if (!listItemsMain.get(i).getItemName().equals("(bonus)"))
+                    dataBase.UpdateAvi_QtyInOrigenalVoch(voucherNo_text.getText().toString(), listItemsMain.get(i).getQty(), listItemsMain.get(i).getItemNo(),0);
+                else {
+                    dataBase.UpdateAvi_QtyInOrigenalVoch(voucherNo_text.getText().toString(), listItemsMain.get(i).getQty(), listItemsMain.get(i).getItemNo(),1);
+
+                }
+            }
+                else
             {
                 if(dataBase.HASSERAIAL(listItemsMain.get(i).getItemNo())==1&&
                         listItemsMain.get(i).getSerialCode().equals(""))
-                dataBase.UpdateAvi_QtyInOrigenalVoch(voucherNo_text.getText().toString(),listItemsMain.get(i).getQty(),listItemsMain.get(i).getItemNo());
+                dataBase.UpdateAvi_QtyInOrigenalVoch(voucherNo_text.getText().toString(),listItemsMain.get(i).getQty(),listItemsMain.get(i).getItemNo(),0);
 
             }
 
@@ -1179,14 +1186,21 @@ try {
             for (int j=0;j<listItemsReturn.size();j++)
             {
                 Log.e("vvv==", returnListSerial.get(i).getQty()+"  "+listItemsReturn.get(j).getItemNo().trim());
-                if(returnListSerial.get(i).getItemNo().trim().equals(listItemsReturn.get(j).getItemNo().trim()))
+                if(returnListSerial.get(i).getItemNo().trim().equals(listItemsReturn.get(j).getItemNo().trim()) )
                 {
-                    Log.e("returnListSerial","listItemsReturn.get(i)"+listItemsReturn.get(j).getQty());
+//            Log.e("returnListSerial","listItemsReturn.get(i)"+listItemsReturn.get(j).getItemName());
                     if(!returnListSerial.get(i).getSerialCode().equals(""))
                     {
                         listItemsReturn.get(j).setQty(0);
-                    }else {
+                    }else {//&&!returnListSerial.get(i).getItemName().equals("(bonus)")
+                        if( !listItemsReturn.get(j).getItemName().equals("(bonus)")&&
+                        !returnListSerial.get(i).getItemName().equals("(bonus)"))
                         listItemsReturn.get(j).setQty(Float.parseFloat(returnListSerial.get(i).getQty()));
+                        else  if(listItemsReturn.get(j).getItemName().equals("(bonus)")&&
+                                returnListSerial.get(i).getItemName().equals("(bonus)"))
+                        {
+                            listItemsReturn.get(j).setQty(Float.parseFloat(returnListSerial.get(i).getQty()));
+                        }
                 }
 
 
@@ -1252,7 +1266,11 @@ try {
         {
             for(int j=0;j<listItemsReturn.size();j++)
             {
-                if(allitemsdata.get(i).getItemNo().toString().trim().equals(listItemsReturn.get(j).getItemNo().toString().trim()))
+                Log.e("allitemsdata","="+allitemsdata.get(i).getItemName()+"\t="+listItemsReturn.get(j).getItemName());
+
+                //! allitemsdata.get(i).getItemName().equals("(bonus)")
+                if(allitemsdata.get(i).getItemNo().toString().trim().equals(listItemsReturn.get(j).getItemNo().toString().trim())
+                && !allitemsdata.get(i).getItemName().equals("(bonus)")&& !listItemsReturn.get(j).getItemName().equals("(bonus)"))
                 {
                     float salePrice=1,oneDisc=0,oneTax=0;
                     try {
@@ -1274,7 +1292,7 @@ try {
 
                 allitemsdata.get(i).setPriceItem(salePrice);
                 allitemsdata.get(i).setPriceItemSales(salePrice+"");
-
+                    Log.e("fillitemNoPrc_all==2=salePrice",salePrice+"");
 
 
                     String itemName=dataBase.getItemName(allitemsdata.get(i).getItemNo().toString().trim());
@@ -1283,13 +1301,15 @@ try {
                 listItemsReturn.get(j).setDisc(0);
                 listItemsReturn.get(j).setDiscPerc("0");
 
-               // Log.e("fillitemNoPrc_all==2=",allitemsdata.get(0).getPriceItem()+"");
+                Log.e("fillitemNoPrc_all==2=",listItemsReturn.get(i).getItemName()+"");
+                    Log.e("fillitemNoPrc_all==2=getPrice",listItemsReturn.get(i).getPrice()+"");
                 allitemsdata.get(i).setItemName( itemName);
                     // Log.e("getItemNo","returnListSerial.get(i).getItemNo()"+itemName);
                 }
-//                else {
-//
-//                }
+                else {
+                    Log.e("allitemsdata","Noooo="+allitemsdata.get(i).getItemName()+"\t="+listItemsReturn.get(j).getItemName());
+
+                }
 
             }
 

@@ -453,6 +453,15 @@
 
                         </LinearLayout>
                                 <CheckBox
+                                    android:id="@+id/visaPay"
+                                    android:text="@string/visaPayment"
+
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:textSize="12sp"
+
+                                    />
+                                <CheckBox
                                     android:id="@+id/notIncludeTax"
                                     android:text="@string/noTax"
                                     android:layout_height="wrap_content"

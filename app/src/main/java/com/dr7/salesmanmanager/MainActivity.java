@@ -1452,10 +1452,18 @@ if(settingsList.size()>0)
                                     h2.post(new Runnable() {
                                         public void run() {
 
-                                            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                                                    .setTitleText(getResources().getString(R.string.succsesful))
-                                                    .setContentText(getResources().getString(R.string.LocationSaved))
-                                                    .show();
+                                            ExportJason exportJason= null;
+                                            try {
+                                                exportJason = new ExportJason(MainActivity.this);
+                                                exportJason.updateCustomerLocatio(customerLocation_main.getCUS_NO(),customerLocation_main.getLATIT(),customerLocation_main.getLONG());
+
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+//                                            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+//                                                    .setTitleText(getResources().getString(R.string.succsesful))
+//                                                    .setContentText(getResources().getString(R.string.LocationSaved))
+//                                                    .show();
                                         }
 
 
@@ -1801,9 +1809,9 @@ if(settingsList.size()>0)
                             if (mDbHandler.getAllSettings().get(0).getPassowrd_data() == 1) {
                                 openPasswordDialog(6);
                             } else {
-//                                isPosted = mDbHandler.isAllposted();
-                              //  Log.e("isPostedExport","1"+isPosted);
-//                                if (!isPosted) {
+                                isPosted = mDbHandler.isAllposted();
+                                Log.e("isPostedExport","1"+isPosted);
+                                if (!isPosted) {
 
                                   //  Log.e("isPostedExport","2"+isPosted);
 
@@ -1818,9 +1826,9 @@ if(settingsList.size()>0)
                                     e.printStackTrace();
                                 }
 
-//                            }else {
-//                                    obj.saveVouchersAndExport();
-//                                }
+                            }else {
+                                    obj.saveVouchersAndExport();
+                                }
 
 
 

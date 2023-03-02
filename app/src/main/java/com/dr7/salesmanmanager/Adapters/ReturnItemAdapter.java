@@ -77,7 +77,7 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
         holder.itemName.setText(String.valueOf(list.get(position).getItemName()));
 
         if(list.get(position).getSerialCode().equals("")) {
-            if (HaveSerial(list.get(position).getItemNo(), position) == 1) {
+            if (HaveSerial(list.get(position).getItemNo(), position,list.get(position).getItemName()) == 1) {
                 Log.e("caseHaveSerial","==1");
                 Log.e("getItemNo",list.get(position).getItemNo()+"");
                 Log.e("getserial",list.get(position).getSerialCode()+"");
@@ -167,7 +167,7 @@ else  if (  list.get(position).getIsClicked()==0)
 //                    Log.e("value3",position+" ,"+Float.parseFloat(s.toString().trim()));
 
                     if(!s.toString().equals("")) {
-                       if( HaveSerial(list.get(position).getItemNo(), position) == 0)
+                       if( HaveSerial(list.get(position).getItemNo(), position,list.get(position).getItemName()) == 0)
                        {
 
                           if(!s.toString().equals("0")) {
@@ -267,7 +267,7 @@ else  if (  list.get(position).getIsClicked()==0)
 
             if(list.get(i).getItemNo().equals(itemNo)&&list.get(i).getSerialCode().equals(""))
             {
-                if(HaveSerial(list.get(i).getItemNo(),i) == 1) {
+                if(HaveSerial(list.get(i).getItemNo(),i,list.get(i).getItemName()) == 1) {
                     list.get(i).setQty(String.valueOf(Float.parseFloat(list.get(i).getQty()) + 1.0));
 
 
@@ -288,7 +288,7 @@ else  if (  list.get(position).getIsClicked()==0)
 
             if(list.get(i).getItemNo().equals(itemNo)&&list.get(i).getSerialCode().equals(""))
             {
-                if(HaveSerial(list.get(i).getItemNo(),i) == 1) {
+                if(HaveSerial(list.get(i).getItemNo(),i,list.get(i).getItemName()) == 1) {
                     list.get(i).setQty(String.valueOf(Float.parseFloat(list.get(i).getQty()) - 1.0));
 
                     if (!ReturnByVoucherNo.recyclerView.isComputingLayout()){
@@ -331,11 +331,18 @@ else  if (  list.get(position).getIsClicked()==0)
 
 
     }
-    int HaveSerial (String serial,int pos){
+    int HaveSerial (String serial,int pos,String itemName){
         int x=0;
-        for (int i = 0; i < list.size(); i++)
-            if (i!=pos &&serial.equals(list.get(i).getItemNo()))
-                x=1;
+        if(itemName.equals("(bonus)"))
+            x=0;
+        else {
+            for (int i = 0; i < list.size(); i++)
+                if (i != pos && serial.equals(list.get(i).getItemNo()) && !list.get(i).getItemName().equals("(bonus)")) {
+                    x = 1;
+                }
+        }
+
+            Log.e("HaveSerial","x=="+x);
             return x;
     }
     private void yourMethodName(final ReturnItemAdapter.SerialReportViewHolder holder,final int position)

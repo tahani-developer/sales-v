@@ -27,6 +27,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.dr7.salesmanmanager.Adapters.ExportResultAdapter;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
+import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.InventoryShelf;
 import com.dr7.salesmanmanager.Modles.Item;
@@ -66,6 +67,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -3933,5 +3935,154 @@ listOfResponse.add(res_linkObject);
             }
         });
         dailogBinding.recycle.setAdapter(new ExportResultAdapter(listOfResponse,context));
+    }
+    private void getJsonInfo(CustomerLocation customerInfo) {
+        JSONArray jsonArrayadmins = new JSONArray();
+
+        jsonArrayadmins.put(customerInfo.getJsonObject2());
+
+
+        try {
+            vouchersObject =new JSONObject();
+            vouchersObject.put("JSN", jsonArrayadmins);
+            Log.e("Object","updateJsonLocation"+ jsonArrayadmins.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    public void updateCustomerLocatio(String cusNumber, String latitude, String longtude) {
+        CustomerLocation customerInfo=new CustomerLocation();
+        customerInfo.setLATIT(latitude);
+        customerInfo.setLONG(longtude);
+        customerInfo.setCUS_NO(cusNumber);
+        getJsonInfo(customerInfo);
+        new JSONTask_IIsUpdateCustomerLocation(customerInfo).execute();
+    }
+    private class JSONTask_IIsUpdateCustomerLocation extends AsyncTask<String, String, String> {
+
+        public  CustomerLocation customerInfo;
+        public  JSONTask_IIsUpdateCustomerLocation(CustomerLocation myCustomer){
+            this.customerInfo=myCustomer;
+
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Handler h = new Handler(Looper.getMainLooper());
+            h.post(new Runnable() {
+                public void run() {
+                    pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+                    pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+                    pdValidation.setTitleText(context.getResources().getString(R.string.process));
+                    pdValidation.setCancelable(false);
+                    pdValidation.show();
+                }
+            });
+
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                if (!ipAddress.equals(""))// CUSTNO ,LA,LO
+                {
+//                    URL_TO_HIT = "http://" + ipAddress + ":" + portSettings + headerDll.trim() + "/ADMUpdateCustLocation?CONO=" + CONO + "&CUSTNO=" + customerInfo.getCustomerNumber() +
+//                            "&LA=" + customerInfo.getLatit_customer() + "&LO=" + customerInfo.getLong_customer();
+                    URL_TO_HIT = "http://" + ipAddress + ":" + ipWithPort + headerDll.trim() + "/ADMUpdateCustLocation";
+                    Log.e("URL_TO_HIT", "updateLocation" + URL_TO_HIT);
+                }
+            } catch (Exception e) {
+                pdValidation.dismissWithAnimation();
+            }
+
+            String JsonResponse = null;
+            HttpClient client = new DefaultHttpClient();
+            HttpPost request = new HttpPost();
+            try {
+                request.setURI(new URI(URL_TO_HIT));
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            nameValuePairs.add(new BasicNameValuePair("CONO", CONO));
+            nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
+            Log.e("URL_TO_HIT", "CONO" + CONO+vouchersObject);
+
+            try {
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+
+            HttpResponse response = null;
+            try {
+                response = client.execute(request);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            StringBuffer sb = new StringBuffer("");
+            try {
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+            }catch (Exception e){
+
+            }
+
+            JsonResponse = sb.toString();
+            Log.e("tag_requestState", "JsonResponse\t" + JsonResponse);
+
+            return JsonResponse;
+        }
+
+        @Override
+        protected void onPostExecute(String respon) {
+            super.onPostExecute(respon);
+
+            String impo = "";
+            JSONObject result=null;
+            JSONObject jsonObject1 = null;
+            Handler h = new Handler(Looper.getMainLooper());
+            h.post(new Runnable() {
+                public void run() {
+                    pdValidation.dismissWithAnimation();
+
+                }
+            });
+
+            if (respon!= null) {
+                Log.e("respon",respon);
+                if (respon.contains("Saved Successfully")) {
+                    Handler han = new Handler(Looper.getMainLooper());
+                    han.post(new Runnable() {
+                        public void run() {
+
+                            new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText(context.getResources().getString(R.string.succsesful))
+                                    .setContentText(context.getResources().getString(R.string.LocationSaved))
+                                    .show();
+                        }});
+
+
+                }
+
+            }
+        }
+
     }
 }
