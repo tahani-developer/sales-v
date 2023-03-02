@@ -233,8 +233,8 @@ public class CustomerCheckInFragment extends DialogFragment {
                         Log.e("getAllowOutOfRange",""+mDbHandler.getAllSettings().get(0).getAllowOutOfRange());
 //                        if(inRoot) {
                             if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 0
-//                                    ||
-//                                    isInRange(custObj.getCustLat(), custObj.getCustLong())
+                                    ||
+                                    isInRange(custObj.getCustLat(), custObj.getCustLong())
                             ) {
 
                                 MainActivity mainActivity = new MainActivity();

@@ -6506,7 +6506,9 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
         String selectQuery = "SELECT * FROM " + SalesMenLogIn;
 
-        db = this.getWritableDatabase();
+        db = this.getWritableDatabase();///66666666
+//       2023-03-02 13:05:00.879 24370-24370/com.dr7.salesmanmanager E/SQLiteDatabase: Failed to open database '/data/user/0/com.dr7.salesmanmanager/databases/VanSalesDatabase'.
+//               android.database.sqlite.SQLiteException: Failed to change locale for db '/data/user/0/com.dr7.salesmanmanager/databases/VanSalesDatabase' to 'ar_EG'.
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         // looping through all rows and adding to list

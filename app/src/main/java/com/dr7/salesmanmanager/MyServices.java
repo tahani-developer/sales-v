@@ -43,6 +43,7 @@ public class MyServices extends Service {
     SalesmanStations salesmanStations=new SalesmanStations();
     public static double checkOutLong=0,checkOutLat=0;
     double latitude,longitude;
+    DatabaseHandler mHandler;
     public IBinder onBind(Intent arg0) {
         Log.e(TAG, "onBind()" );
         return null;
@@ -54,6 +55,7 @@ public class MyServices extends Service {
         Log.e(TAG, "onCreate() , service started...");
         settings = db.getAllSettings();
          importJason = new ImportJason(MyServices.this);
+         mHandler=new DatabaseHandler(MyServices.this);
         userNo= db.getAllUserNo();
         if (settings.size() != 0) {
             LOCATIONTRACK = settings.get(0).getLocationtracker();
@@ -129,7 +131,7 @@ public class MyServices extends Service {
                                         Log.e(TAG, " mmmm " + salesmanStations.getJSONObject());
                                         SalesMenLocation salesMenLocation=new SalesMenLocation();
                                         salesMenLocation.setSalesmanNo(userNo+"");
-                                        DatabaseHandler mHandler=new DatabaseHandler(MyServices.this);
+
                                         String salesName=mHandler.getSalesmanName_fromSalesTeam();
                                         salesMenLocation.setSalesmanName(salesName);
                                         salesMenLocation.setLatitude(latitude+"");

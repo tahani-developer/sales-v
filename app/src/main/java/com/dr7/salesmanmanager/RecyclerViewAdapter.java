@@ -80,6 +80,7 @@ import java.util.Set;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.widget.LinearLayout.VERTICAL;
 
 import static com.dr7.salesmanmanager.Activities.currentKeyTotalDiscount;
@@ -249,6 +250,11 @@ public static     int CountOfItems=1;
         Log.e("getVivible", "" + allItemsList.get(position).getItemNo() + "\t" + allItemsList.size()
         );
         Log.e("getVivible", "" + allItemsList.get(position).getVivible());
+//        if(sharedPref==null)
+//            sharedPref = getagetSharedPreferences("SETTINGS_PREFERENCES", MODE_PRIVATE);
+        if  (sharedPref.getBoolean(Login.Smallericon_PREF, false)) {
+            holder.cardView.setVisibility(View.GONE);
+        }else
         if ((allItemsList.get(position).getVivible() == 1)||(Separation_of_the_serial==1&&allItemsList.get(position).getItemHasSerial().equals("1"))) {
 
             holder.cardView.setVisibility(View.GONE);
@@ -306,6 +312,7 @@ public static     int CountOfItems=1;
         // second solution is you can set the path inside decodeFile function
 
         holder.imagespecial.setVisibility(View.VISIBLE);
+        holder. imagespecial_.setVisibility(View.VISIBLE);
         if (showItemImageSetting == 1) {
 //            if (items.get(position).getItemPhoto() != null) {
 ////            itemBitmap = StringToBitMap(items.get(position).getItemPhoto());
@@ -1690,6 +1697,7 @@ public static     int CountOfItems=1;
             });
         } else {
             holder.imagespecial.setVisibility(View.GONE);
+            holder.imagespecial_.setVisibility(View.GONE);
         }
 
 //        if(voucherType==506)
@@ -4434,7 +4442,7 @@ public static     int CountOfItems=1;
                 return myBitmap;
             } catch (Exception e) {
                 Log.d("TAG", e.getMessage());
-                pdValidation.dismissWithAnimation();
+               if(pdValidation!=null) pdValidation.dismissWithAnimation();
             }
             return null;
         }
