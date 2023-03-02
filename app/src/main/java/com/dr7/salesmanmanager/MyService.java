@@ -249,7 +249,7 @@ List<Settings>settings;
 //                h.post(new Runnable() {
 //                    public void run() {
                         Log.e("STICK_LOCATION2", "  nnn");
-                        Log.e("STICK_LOCATION1", "  " + salesmanStations.getJSONObject());
+//                        Log.e("STICK_LOCATION1", "  " + salesmanStations.getJSONObject());
                         ImportJason importJason = new ImportJason(MyService.this);
                         importJason.updateLocation(salesmanStations.getJSONObject());
 //                    }
@@ -280,7 +280,7 @@ List<Settings>settings;
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             } catch (Exception e) {
-                Log.e("STICK_LOCATION", " hhhh ");
+                Log.e("STICK_LOCATION", " "+e.getMessage());
             }
 
     }

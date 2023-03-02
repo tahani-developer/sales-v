@@ -384,8 +384,18 @@ public class AddItemsFragment2 extends DialogFragment {
             recyclerView.setLayoutManager(linearLayoutManager);
         }
         else
-        {linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);}
+        {
+
+            if(orientation_checkbox.isChecked()==true) {
+                linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                recyclerView.setLayoutManager(linearLayoutManager);
+            }   else {
+                linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+                recyclerView.setLayoutManager(linearLayoutManager);
+            }
+
+
+        }
 
 
 

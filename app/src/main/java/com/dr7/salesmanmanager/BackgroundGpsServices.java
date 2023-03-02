@@ -61,8 +61,8 @@ public  class BackgroundGpsServices extends Service implements LocationListener 
 //                Handler h = new Handler(Looper.getMainLooper());
 //                h.post(new Runnable() {
 //                    public void run() {
-        Log.e("STICK_LOCATION2", "  nnn");
-        Log.e("STICK_LOCATION1", "  " + salesmanStations.getJSONObject());
+
+//        Log.e("STICK_LOCATION1", "  " + salesmanStations.getJSONObject());
         ImportJason importJason = new ImportJason(this);
         importJason.updateLocation(salesmanStations.getJSONObject());
 //                    }
@@ -70,7 +70,7 @@ public  class BackgroundGpsServices extends Service implements LocationListener 
 //                checkOutLong=longitude;
 //                checkOutLat=latitude;
 
-        Log.e("STICK_LOCATION", "  " + salesmanStations.getJSONObject());
+     //   Log.e("STICK_LOCATION", "  " + salesmanStations.getJSONObject());
     }
 
     @Override

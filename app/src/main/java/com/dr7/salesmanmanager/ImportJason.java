@@ -4543,7 +4543,7 @@ Log.e("customerList",""+customerList.size());
                  jsonArrayRequest.put(jsonObject);
                 JSONObject  vouchersObject=new JSONObject();
                 vouchersObject.put("JSN", jsonArrayRequest);
-                Log.e("getAddedCustomer","JSN"+vouchersObject);
+               // Log.e("getAddedCustomer","JSN"+vouchersObject);
 
 //ADMUpdateLocation                        JSONSTR={"JSN"                        --> LATITUDE,LONGITUDE,SALESNO
                 String JsonResponse = null;

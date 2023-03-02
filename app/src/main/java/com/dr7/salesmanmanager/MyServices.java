@@ -60,7 +60,7 @@ public class MyServices extends Service {
         if (settings.size() != 0) {
             LOCATIONTRACK = settings.get(0).getLocationtracker();
 
-            Log.e(TAG,"spical"+ LOCATIONTRACK +"   ");
+        //    Log.e(TAG,"spical"+ LOCATIONTRACK +"   ");
         }
 
 
@@ -71,7 +71,7 @@ public class MyServices extends Service {
         userNo= db.getAllUserNo();
         if (settings.size() != 0) {
             LOCATIONTRACK = settings.get(0).getLocationtracker();
-            Log.e(TAG,"spical"+ LOCATIONTRACK +"   ");
+ //           Log.e(TAG,"spical"+ LOCATIONTRACK +"   ");
         }
 
 
@@ -97,18 +97,18 @@ public class MyServices extends Service {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void run() {
-                Log.e(TAG, "Timer() , service started..."+i++);
+           //     Log.e(TAG, "Timer() , service started..."+i++);
 
 
-                Log.e(TAG,"approveAdmin = "+ LOCATIONTRACK +"   ="+getApplicationContext().toString());
+          //      Log.e(TAG,"approveAdmin = "+ LOCATIONTRACK +"   ="+getApplicationContext().toString());
 
                 if(LOCATIONTRACK ==1) {
-                    Log.e(TAG,"approveAdmin IN  = "+ LOCATIONTRACK);
+             //       Log.e(TAG,"approveAdmin IN  = "+ LOCATIONTRACK);
 
                     Handler h = new Handler(Looper.getMainLooper());
                     h.post(new Runnable() {
                         public void run() {
-                            Log.e(TAG,"getLoc = "+ LOCATIONTRACK);
+                         //   Log.e(TAG,"getLoc = "+ LOCATIONTRACK);
                             Handler h = new Handler(Looper.getMainLooper());
                             h.post(new Runnable() {
                                 public void run() {
@@ -128,7 +128,7 @@ public class MyServices extends Service {
                                         salesmanStations.setLatitude("" + latitude);
                                         salesmanStations.setLongitude("" + longitude);
                                         Log.e(TAG, "  nnn");
-                                        Log.e(TAG, " mmmm " + salesmanStations.getJSONObject());
+                                     //   Log.e(TAG, " mmmm " + salesmanStations.getJSONObject());
                                         SalesMenLocation salesMenLocation=new SalesMenLocation();
                                         salesMenLocation.setSalesmanNo(userNo+"");
 
@@ -224,7 +224,7 @@ public class MyServices extends Service {
         locationManager = (LocationManager) MyServices.this.getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(MyServices.this, ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            Log.e(TAG, "getLocFalse = " + LOCATIONTRACK);
+ //           Log.e(TAG, "getLocFalse = " + LOCATIONTRACK);
 
 //
 //            ActivityCompat.requestPermissions( (Activity) this,
@@ -267,7 +267,7 @@ public class MyServices extends Service {
 
                //     Log.e(TAG,"approveAdminnn = "+approveAdmin+"   "+userNo);
 
-                    Log.e(TAG,"LOCATIONTRACK = "+ LOCATIONTRACK +"   =");
+         //           Log.e(TAG,"LOCATIONTRACK = "+ LOCATIONTRACK +"   =");
 
 //                Handler h = new Handler(Looper.getMainLooper());
 //                h.post(new Runnable() {
@@ -308,7 +308,7 @@ public class MyServices extends Service {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         } catch (Exception e) {
-            Log.e(TAG, " hhhh ");
+            Log.e(TAG, "  "+e.getMessage());
         }
 
     }
