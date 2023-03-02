@@ -127,13 +127,13 @@ public class MyServices extends Service {
                                         salesmanStations.setLongitude("" + longitude);
                                         Log.e(TAG, "  nnn");
                                         Log.e(TAG, " mmmm " + salesmanStations.getJSONObject());
-//                                        SalesMenLocation salesMenLocation=new SalesMenLocation();
-//                                        salesMenLocation.setSalesmanNo(userNo+"");
-//                                        DatabaseHandler mHandler=new DatabaseHandler(MyServices.this);
-//                                        String salesName=mHandler.getSalesmanName_fromSalesTeam();
-//                                        salesMenLocation.setSalesmanName(salesName);
-//                                        salesMenLocation.setLatitude(latitude+"");
-//                                        salesMenLocation.setLongitude(longitude+"");
+                                        SalesMenLocation salesMenLocation=new SalesMenLocation();
+                                        salesMenLocation.setSalesmanNo(userNo+"");
+                                        DatabaseHandler mHandler=new DatabaseHandler(MyServices.this);
+                                        String salesName=mHandler.getSalesmanName_fromSalesTeam();
+                                        salesMenLocation.setSalesmanName(salesName);
+                                        salesMenLocation.setLatitude(latitude+"");
+                                        salesMenLocation.setLongitude(longitude+"");
 //                                   try {
 //                                       Log.e("salesMan==", " salesMan " + userNo);
 //                                       LocationDao daoRequsts =new LocationDao(MyServices.this);

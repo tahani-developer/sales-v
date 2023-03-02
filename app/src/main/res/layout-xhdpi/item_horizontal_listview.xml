@@ -392,4 +392,68 @@
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/layer7"
+        android:id="@+id/NewLin"
+        android:orientation="horizontal"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textViewItemName_"
+            android:layout_width="match_parent"
+            android:background="@drawable/background_container"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:lines="1"
+            android:maxLines="1"
+            android:gravity="center"
+            android:scrollbars = "vertical"
+            android:textColor="@color/colorBlack"
+            android:textSize="14sp"
+            />
+
+        <TextView
+            android:id="@+id/textViewUnit_qty_"
+            android:background="@drawable/background_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="3dp"
+            android:lines="1"
+            android:maxLines="1"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:scrollbars = "vertical"
+            android:textColor="@color/colorBlack"
+            android:textSize="14sp"
+            />
+
+        <TextView
+            android:id="@+id/textViewPrice_"
+            android:layout_width="match_parent"
+            android:background="@drawable/background_container"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/colorBlack"
+
+            android:textStyle="bold"
+            android:text="200  JD"
+            android:textSize="14sp"
+            />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imagespecial_"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:src="@drawable/ic_photo_red_24dp"
+            android:text="Test Item"
+
+            app:civ_border_color="@color/colorPrimaryDark" />
+    </LinearLayout>
 </LinearLayout>

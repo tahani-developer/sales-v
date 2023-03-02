@@ -170,7 +170,7 @@ public class PdfConverter {
 
             if (doc != null) doc.add(pdfPTableHeader);
             if (doc != null) doc.add(pdfPTable);
-            if (report != 13 && report != 14&& report != 16&& report != 17)
+            if (report != 13 && report != 14&& report != 16&& report != 17&& report != 18)
                 Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_LONG).show();
 
         } catch (DocumentException e) {
@@ -181,7 +181,7 @@ public class PdfConverter {
         if (Build.VERSION.SDK_INT >= 23) {
             if (context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                     && (context.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-                if (report != 13 && report != 14 && report != 16&& report != 17) showPdf(pdfFileName);
+                if (report != 13 && report != 14 && report != 16&& report != 17&& report != 18) showPdf(pdfFileName);
                 Log.v("", "Permission is granted");
             } else {
 
@@ -299,6 +299,27 @@ public class PdfConverter {
                 GeneralMethod generalMethod1=new GeneralMethod(context);
                 generalMethod1.shareWhatsAppA(pdfFileName,2);
                 break;
+
+            case 18:
+                Log.e("createReturnVocher", "" + list.size());
+                //    tableContent=
+                createSaleInvoiceForPrint((List<Item>) list);
+                Log.e("path==", String.valueOf(pdfFileName));
+
+                PrintManager printManager2 = (PrintManager) context.getSystemService(Context.PRINT_SERVICE);
+                try {
+                    PrintDocumentAdapter printAdapter = new PdfDocumentAdapter(context, String.valueOf(pdfFileName));
+                    Log.e("path2==", String.valueOf(pdfFileName));
+                    printManager2.print("Document", printAdapter, new PrintAttributes.Builder().build());
+                    Log.e("path3==", String.valueOf(pdfFileName));
+
+                    GeneralMethod generalMethod2=new GeneralMethod(context);
+                    generalMethod2.shareWhatsAppA(pdfFileName,2);
+
+
+                } catch (Exception e) {
+                    Log.e("Exception==", e.getMessage());
+                }
         }
         return tableContent;
     }
@@ -980,7 +1001,7 @@ public class PdfConverter {
         pdfPTableHeader.setSpacingAfter(20);
         pdfPTableHeader.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
 //        pdfPTableHeader.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
-        if (reportType != 13 && reportType != 14&& reportType != 16&& reportType != 17)
+        if (reportType != 13 && reportType != 14&& reportType != 16&& reportType != 17&& reportType != 18)
             insertCell(pdfPTableHeader, context.getString(R.string.date) + " : " + date, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
         if (reportType == 10)
             insertCell(pdfPTableHeader, context.getString(R.string.cust_name) + " : " + CustomerListShow.Customer_Name, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);

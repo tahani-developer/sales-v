@@ -97,6 +97,7 @@ import static com.dr7.salesmanmanager.Login.offerQasion;
 import static com.dr7.salesmanmanager.Login.offerTalaat;
 
 import static com.dr7.salesmanmanager.Login.offernasleh;
+import static com.dr7.salesmanmanager.Login.sharedPref;
 import static com.dr7.salesmanmanager.SalesInvoice.discountRequest;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.items;
@@ -219,7 +220,19 @@ public static     int CountOfItems=1;
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_horizontal_listview, parent, false);
+        View view;
+        if  (sharedPref.getBoolean(Login.Smallericon_PREF, false))
+        {     Log.e("Smallericon_checkbox11==","case1");
+             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_new, parent, false);
+
+        }
+        else
+        {
+             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_horizontal_listview, parent, false);
+        }
+
+
+
         return new viewHolder(view);
     }
 
@@ -246,6 +259,13 @@ public static     int CountOfItems=1;
         holder.itemName.setMovementMethod(new ScrollingMovementMethod());
         holder.tradeMark.setText(allItemsList.get(position).getItemName());
         holder.category.setText("" + allItemsList.get(position).getCategory());
+        holder.textViewItemName_.setText("" + allItemsList.get(position).getItemName());
+        holder.     textViewPrice_.setText("" + allItemsList.get(position).getPrice());
+        holder.   textViewUnit_qty_.setText("" +allItemsList.get(position).getItemName());
+
+
+
+
 
         if (MHandler.getAllSettings().get(0).getHide_qty() == 1) {
             holder.row_qty.setVisibility(View.GONE);
@@ -257,6 +277,7 @@ public static     int CountOfItems=1;
                     // Log.e("sumCurentQty","solidQty=="+solidQty);
                     float qtyCurent = Float.parseFloat(solidQty);
                     holder.unitQty.setText("" + (allItemsList.get(position).getQty() - qtyCurent));
+                    holder.textViewUnit_qty_.setText("" + (allItemsList.get(position).getQty() - qtyCurent));
                 } catch (Exception e) {
 
                 }
@@ -264,6 +285,8 @@ public static     int CountOfItems=1;
 
             } else {
                 holder.unitQty.setText("" + allItemsList.get(position).getQty());
+                holder.textViewUnit_qty_.setText("" + allItemsList.get(position).getQty());
+
             }
 
         }
@@ -292,6 +315,1363 @@ public static     int CountOfItems=1;
 //            }
 
 //
+                        holder.newlin.setOnClickListener(new View.OnClickListener() {
+                                                             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+                                                             @Override
+                                                             public void onClick(final View view) {
+                                                                 clearDataCurrent();
+                                                                 holder.cardView.setEnabled(false);
+
+                                                                 getTimeAndDate();
+//                                                   checkDuplicate(position);
+                                                                 for (int i = 0; i < localItemNumber.size(); i++) {
+                                                                     if (localItemNumber.get(i).equals(allItemsList.get(position).getItemNo())) {
+//                                                           if(canChangePrice==0)
+//                                                           {
+                                                                         // showAlertDialog();
+                                                                         itemInlocalList = true;
+                                                                         break;
+//                                                           }
+
+                                                                     }
+                                                                 }
+
+
+//                                                   checkDuplicatInAllItems(position);
+                                                                 if (dontDuplicateItems == 1) {
+                                                                     for (int i = 0; i < items.size(); i++) {
+                                                                         if (items.get(i).getItemNo().equals(allItemsList.get(position).getItemNo())) {
+                                                                             itemInlocalList = true;
+                                                                             break;
+//                                                           }
+
+                                                                         }
+                                                                     }
+//                                                       Log.e("items",""+items.size());
+//                                                       Log.e("allItemsList",""+allItemsList.size());
+                                                                 }
+//                                                   openDialogQtyItem(position,view.getContext());
+
+                                                                 if (itemInlocalList == false) {
+                                                                     final Dialog dialog = new Dialog(view.getContext());
+                                                                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                                                     dialog.setCancelable(false);
+                                                                     itemNoSelected = allItemsList.get(position).getItemNo();
+
+                                                                     try {
+
+
+                                                                         if ((allItemsList.get(position).getItemHasSerial().equals("1")) && voucherType != 508) {
+                                                                             current_itemHasSerial = 1;
+
+                                                                             dialog.setContentView(R.layout.add_item_serial_dialog);
+                                                                             serialValue = dialog.findViewById(R.id.serialValue);
+                                                                             UnitSpinnerLinear= dialog.findViewById(R.id.linearUnit);
+                                                                             UnitSpinnerLinear.setVisibility(View.GONE);
+                                                                             if(MHandler.getAllSettings().get(0).getItems_Unit()==1)UnitSpinnerLinear.setVisibility(View.VISIBLE);
+                                                                             mainRequestLinear = dialog.findViewById(R.id.mainRequestLinear);
+                                                                             checkStateResult = dialog.findViewById(R.id.checkStateResult);
+                                                                             rejectDiscount = dialog.findViewById(R.id.rejectDiscount);
+                                                                             mainRequestLinear.setVisibility(View.VISIBLE);
+                                                                             unitQty = dialog.findViewById(R.id.unitQty);
+
+                                                                             unitQty.setEnabled(false);
+
+                                                                             if (contiusReading == 0) {
+                                                                                 serialValue.requestFocus();
+                                                                                 serialValue.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                                                                                                                           @Override
+                                                                                                                           public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                                                                                                                               if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_SEARCH
+                                                                                                                                       || actionId == EditorInfo.IME_NULL) {
+                                                                                                                                   if (!serialValue.getText().toString().equals("")) {
+                                                                                                                                       barcodeValue = serialValue.getText().toString().trim();
+//                                                                               serialValue_Model.setText(s.toString().trim());
+                                                                                                                                       updateValue(barcodeValue, serialListitems);
+                                                                                                                                       new Handler().post(new Runnable() {
+                                                                                                                                           @Override
+                                                                                                                                           public void run() {
+
+                                                                                                                                               serialValue.requestFocus();
+
+                                                                                                                                           }
+                                                                                                                                       });
+
+
+                                                                                                                                   }
+
+                                                                                                                               }
+                                                                                                                               return false;
+                                                                                                                           }
+
+                                                                                                                       }
+
+                                                                                 );
+                                                                             } else {
+                                                                                 try {
+                                                                                     serialValue.addTextChangedListener(new TextWatcher() {
+                                                                                         @Override
+                                                                                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                                                                         }
+
+                                                                                         @Override
+                                                                                         public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                                                                                         }
+
+                                                                                         @Override
+                                                                                         public void afterTextChanged(Editable s) {
+                                                                                             if (!s.toString().equals("")) {
+                                                                                                 barcodeValue = s.toString().trim();
+//                                                                               serialValue_Model.setText(s.toString().trim());
+                                                                                                 updateValue(barcodeValue, serialListitems);
+
+                                                                                             }
+
+
+                                                                                         }
+                                                                                     });
+                                                                                 } catch (Exception e) {
+                                                                                 }
+                                                                             }
+
+
+                                                                             mainLinear = dialog.findViewById(R.id.mainLinearAddItem);
+                                                                             bonusLinearLayout = dialog.findViewById(R.id.linear_bonus);
+                                                                             bonusLinearLayout.setVisibility(View.GONE);
+                                                                             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                                                                             lp.copyFrom(dialog.getWindow().getAttributes());
+
+                                                                             lp.gravity = Gravity.CENTER;
+                                                                             lp.windowAnimations = R.style.DialogAnimation;
+                                                                             dialog.getWindow().setAttributes(lp);
+                                                                             bonus = dialog.findViewById(R.id.bonus);
+                                                                             addToList = dialog.findViewById(R.id.addToList);
+                                                                             addToList.setVisibility(View.INVISIBLE);
+                                                                             bonus.setEnabled(false);
+                                                                             addToList.setEnabled(false);
+                                                                             serial_No_recyclerView = dialog.findViewById(R.id.serial_No_recyclerView);
+                                                                             final LinearLayout unitWeightLinearLayout = dialog.findViewById(R.id.linearWeight);
+                                                                             unitWeightLinearLayout.setVisibility(View.GONE);
+                                                                             item_serial = dialog.findViewById(R.id.item_serial);
+                                                                             final ImageView serialScanBunos = dialog.findViewById(R.id.serialScanBunos);
+                                                                             serialScanBunos.setVisibility(View.GONE);
+                                                                             TextView generateSerial = (TextView) dialog.findViewById(R.id.generateSerial);
+
+                                                                             generateSerial.setOnClickListener(new View.OnClickListener() {
+                                                                                 @Override
+                                                                                 public void onClick(View v) {
+
+                                                                                     int qtySerial = 0;
+
+                                                                                     if (!unitQty.getText().toString().equals("") && serialListitems.size() == 0) {
+                                                                                         try {
+                                                                                             qtySerial = (int) Double.parseDouble(unitQty.getText().toString());
+                                                                                         } catch (Exception e) {
+                                                                                             qtySerial = Integer.parseInt(unitQty.getText().toString());
+                                                                                         }
+                                                                                         if (qtySerial <= 100) {
+                                                                                             counterSerial = qtySerial;
+                                                                                             if (qtySerial != 0) {
+                                                                                                 flag = 1;
+                                                                                                 addToList.setEnabled(true);
+                                                                                                 addToList.setVisibility(View.VISIBLE);
+//                                            counterSerial++;
+//                                            unitQty.setText(counterSerial+"");
+                                                                                                 final LinearLayoutManager layoutManager;
+                                                                                                 layoutManager = new LinearLayoutManager(view.getContext());
+//                                            layoutManager.setOrientation(VERTICAL);
+
+                                                                                                 for (int i = 1; i <= qtySerial; i++) {
+                                                                                                     serial = new serialModel();
+                                                                                                     serial.setCounterSerial(i);
+                                                                                                     serial.setSerialCode("");
+                                                                                                     serial.setIsBonus("0");
+                                                                                                     serial.setIsDeleted("0");
+                                                                                                     serial.setVoucherNo(vouch + "");
+                                                                                                     serial.setKindVoucher(kindVoucher + "");
+                                                                                                     serial.setStoreNo(Login.salesMan);
+                                                                                                     serial.setDateVoucher(voucherDate);
+                                                                                                     serial.setItemNo(itemNoSelected);
+                                                                                                     serialListitems.add(serial);
+
+                                                                                                 }
+
+
+                                                                                                 serial_No_recyclerView.setLayoutManager(layoutManager);
+
+                                                                                                 serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
+                                                                                                 unitQty.setEnabled(false);
+                                                                                                 generateSerial.setEnabled(false);
+                                                                                             } else {
+                                                                                                 unitQty.setError("Invalid Zero");
+                                                                                             }
+                                                                                         } else {
+                                                                                             unitQty.setError("Invalid");
+                                                                                         }
+
+
+                                                                                     }
+
+
+                                                                                 }
+                                                                             });
+                                                                             item_serial.addTextChangedListener(new TextWatcher() {
+                                                                                 @Override
+                                                                                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                                                                 }
+
+                                                                                 @Override
+                                                                                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                                                                                 }
+
+                                                                                 @SuppressLint("WrongConstant")
+                                                                                 @Override
+                                                                                 public void afterTextChanged(Editable s) {
+//
+//                                    flag = 1;
+                                                                                     isFoundSerial = false;
+
+                                                                                     for (int h = 0; h < serialListitems.size(); h++) {
+
+                                                                                         if (serialListitems.get(h).getSerialCode().equals(s.toString())) {
+                                                                                             isFoundSerial = true;
+                                                                                         }
+                                                                                     }
+                                                                                     Log.e("isFoundSerial", "" + isFoundSerial + s.toString());
+                                                                                     if (isFoundSerial == false) {
+                                                                                         List<serialModel> listitems_adapter = new ArrayList<>();
+                                                                                         int id = ((Serial_Adapter) serial_No_recyclerView.getAdapter()).selectedBarcode;
+                                                                                         listitems_adapter = ((Serial_Adapter) serial_No_recyclerView.getAdapter()).list;
+
+                                                                                         Log.e("curentSerial", "" + id + s.toString());
+                                                                                         final LinearLayoutManager layoutManager;
+                                                                                         layoutManager = new LinearLayoutManager(view.getContext());
+                                                                                         layoutManager.setOrientation(VERTICAL);
+                                                                                         serial_No_recyclerView.setLayoutManager(layoutManager);
+                                                                                         if (s.toString().contains(","))//  update old data and add new data
+                                                                                         {
+                                                                                             serialModel serialMod;
+                                                                                             araySerial = s.toString().split(",");
+                                                                                             listitems_adapter.get(id).setSerialCode(araySerial[0]);
+                                                                                             String isbonus = listitems_adapter.get(id).getIsBonus();
+                                                                                             for (int i = 1; i < araySerial.length; i++) {
+                                                                                                 serialMod = new serialModel();
+                                                                                                 serialMod.setSerialCode(araySerial[i]);
+                                                                                                 if (isbonus.equals("0")) {
+                                                                                                     serialMod.setCounterSerial(++counterSerial);
+                                                                                                     serialMod.setVoucherNo(vouch + "");
+                                                                                                     serialMod.setKindVoucher(kindVoucher + "");
+                                                                                                     serialMod.setStoreNo(Login.salesMan);
+                                                                                                     serialMod.setDateVoucher(voucherDate);
+                                                                                                     serialMod.setKindVoucher(voucherType + "");
+                                                                                                     serialMod.setItemNo(itemNoSelected);
+                                                                                                     unitQty.setText(counterSerial + "");
+
+
+                                                                                                 } else {
+                                                                                                     serialMod.setCounterSerial(++counterBonus);
+                                                                                                     serialMod.setVoucherNo(vouch + "");
+                                                                                                     serialMod.setKindVoucher(kindVoucher + "");
+                                                                                                     serialMod.setStoreNo(Login.salesMan);
+                                                                                                     serialMod.setDateVoucher(voucherDate);
+                                                                                                     serialMod.setItemNo(itemNoSelected);
+                                                                                                     bonus.setText(counterBonus + "");
+                                                                                                 }
+
+                                                                                                 serialMod.setIsBonus(isbonus + "");
+                                                                                                 listitems_adapter.add(serialMod);
+                                                                                                 Log.e("listitems_adapter", "" + s.toString());
+                                                                                             }
+
+                                                                                         } else {// just update on old data row
+
+                                                                                             listitems_adapter.get(id).setSerialCode(s.toString());
+                                                                                             Log.e("listitems_adapter", "" + s.toString());
+                                                                                         }
+
+
+                                                                                         serial_No_recyclerView.setAdapter(new Serial_Adapter(listitems_adapter, cont));
+
+                                                                                     } else {
+                                                                                         new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+                                                                                                 .setTitleText(view.getContext().getString(R.string.warning_message))
+                                                                                                 .setContentText(view.getContext().getString(R.string.itemadedbefor))
+                                                                                                 .show();
+                                                                                     }
+//                                    exist=  MHandler.isSerialCodeExist(s.toString());
+//                                    Log.e("exist",""+exist);
+
+//                                    if(!isFoundSerial && (exist.equals("not")))
+//                                    {
+//                                        listitems_adapter.get(id).setSerialCode(s.toString());
+//
+//
+//
+//
+//                                    }
+//                                    else {
+//                                        listitems_adapter.get(id).setSerialCode("");
+//                                        new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+//                                                .setTitleText(view.getContext().getString(R.string.warning_message))
+//                                                .setContentText(view.getContext().getString(R.string.itemadedbefor))
+//                                                .show();
+//                                    }
+
+                                                                                 }
+                                                                             });
+                                                                             //******************************************************************************************
+                                                                             serialScanBunos.setOnClickListener(new View.OnClickListener() {
+                                                                                 @SuppressLint("WrongConstant")
+                                                                                 @Override
+                                                                                 public void onClick(View v) {
+//                            *********************************
+
+                                                                                     flag = 1;
+                                                                                     unitQty.setEnabled(false);
+                                                                                     counterBonus++;
+                                                                                     bonus.setText("" + counterBonus);
+                                                                                     bonus.setEnabled(false);
+                                                                                     addToList.setVisibility(View.VISIBLE);
+                                                                                     addToList.setEnabled(true);
+                                                                                     //                            counterSerial++;
+                                                                                     //                            unitQty.setText(counterSerial+"");
+                                                                                     final LinearLayoutManager layoutManager;
+                                                                                     layoutManager = new LinearLayoutManager(view.getContext());
+                                                                                     layoutManager.setOrientation(VERTICAL);
+
+                                                                                     serial = new serialModel();
+                                                                                     serial.setCounterSerial(counterBonus);
+                                                                                     serial.setSerialCode("");
+                                                                                     serial.setIsBonus("1");
+                                                                                     serial.setIsDeleted("0");
+                                                                                     serial.setVoucherNo(vouch + "");
+                                                                                     serial.setKindVoucher(kindVoucher + "");
+                                                                                     serialListitems.add(serial);
+
+
+                                                                                     serial_No_recyclerView.setLayoutManager(layoutManager);
+
+                                                                                     serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
+//
+
+                                                                                 }
+                                                                             });
+                                                                             addEditBarcode = dialog.findViewById(R.id.addEditBarcode);
+                                                                             addEditBarcode.setOnClickListener(new View.OnClickListener() {
+                                                                                 @Override
+                                                                                 public void onClick(View view) {
+                                                                                     openeditDialog();
+                                                                                 }
+                                                                             });
+
+
+                                                                         } else {
+                                                                             current_itemHasSerial = 0;
+                                                                             dialog.setContentView(R.layout.add_item_dialog_small);
+                                                                             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                                                                             lp.copyFrom(dialog.getWindow().getAttributes());
+
+                                                                             UnitSpinnerLinear= dialog.findViewById(R.id.linearUnit);
+                                                                             UnitSpinnerLinear.setVisibility(View.GONE);
+                                                                             if(MHandler.getAllSettings().get(0).getItems_Unit()==1)UnitSpinnerLinear.setVisibility(View.VISIBLE);
+                                                                             lp.gravity = Gravity.CENTER;
+                                                                             lp.windowAnimations = R.style.DialogAnimation;
+                                                                             dialog.getWindow().setAttributes(lp);
+                                                                         }
+                                                                     } catch (Exception e) {
+
+                                                                     }
+                                                                     serialValue = dialog.findViewById(R.id.serialValue);
+                                                                     resultLinear = dialog.findViewById(R.id.resultLinear);
+                                                                     acceptDiscount = dialog.findViewById(R.id.acceptDiscount);
+                                                                     rejectDiscount = dialog.findViewById(R.id.rejectDiscount);
+                                                                     checkStateResult = dialog.findViewById(R.id.checkStateResult);
+                                                                     mainRequestLinear = dialog.findViewById(R.id.mainRequestLinear);
+                                                                     TextView discount_text = dialog.findViewById(R.id.discount_text);
+                                                                     TextView bonuss_text = dialog.findViewById(R.id.bonuss_text);
+                                                                     checkState_recycler = dialog.findViewById(R.id.checkState);
+                                                                     mainLinear = dialog.findViewById(R.id.mainLinearAddItem);
+
+                                                                     try {
+                                                                         if (languagelocalApp.equals("ar")) {
+                                                                             mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                                                                         } else {
+                                                                             if (languagelocalApp.equals("en")) {
+                                                                                 mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                                                                             }
+
+                                                                         }
+//
+                                                                     } catch (Exception e) {
+                                                                         mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                                                                     }
+
+                                                                     final TextView itemNumber = dialog.findViewById(R.id.item_number);
+//                  final TextView categoryTextView =  dialog.findViewById(R.id.item_number);
+                                                                     final TextView itemName = dialog.findViewById(R.id.item_name);
+                                                                     price = dialog.findViewById(R.id.price);
+
+                                                                     final Spinner unit = dialog.findViewById(R.id.unit);
+                                                                     final Spinner   Item_unit= dialog.findViewById(R.id.Item_unit);
+                                                                     TextView unit_qty= dialog.findViewById(R.id.unit_qty);
+                                                                     final TextView textQty = dialog.findViewById(R.id.textQty);
+                                                                     unitQty = dialog.findViewById(R.id.unitQty);
+                                                                     final EditText unitWeight = dialog.findViewById(R.id.unitWeight);
+                                                                     final CheckBox useWeightValue = dialog.findViewById(R.id.use_weight);
+
+                                                                     final CheckBox use_OneUnit = dialog.findViewById(R.id.use_OneUnit);
+
+                                                                     bonus = dialog.findViewById(R.id.bonus);
+                                                                     final EditText discount = dialog.findViewById(R.id.discount);
+                                                                     final RadioGroup radioGroup = dialog.findViewById(R.id.discTypeRadioGroup);
+                                                                     radioGroup.setVisibility(View.VISIBLE);
+                                                                     final LinearLayout discountLinearLayout = dialog.findViewById(R.id.discount_linear);
+                                                                     final LinearLayout unitWeightLinearLayout = dialog.findViewById(R.id.linearWeight);
+                                                                     bonusLinearLayout = dialog.findViewById(R.id.linear_bonus);
+                                                                     final LinearLayout discribtionItem_linear = dialog.findViewById(R.id.discribtionItem_linear);
+                                                                     final LinearLayout serialNo_linear = dialog.findViewById(R.id.serialNo_linear);
+                                                                     final EditText item_remark = dialog.findViewById(R.id.item_note);
+                                                                     final ImageView serialScan = dialog.findViewById(R.id.serialScan);
+                                                                     RadioButton discPercRadioButton = dialog.findViewById(R.id.discPercRadioButton);
+                                                                     RadioButton discValueRadioButton = dialog.findViewById(R.id.discValueRadioButton);
+                                                                     linearPrice = dialog.findViewById(R.id.linearPrice);
+                                                                     Log.e("Purchase_Order","222="+Purchase_Order);
+                                                                     if(Purchase_Order==1)
+                                                                     {
+                                                                         discountLinearLayout.setVisibility(View.GONE);
+                                                                         bonusLinearLayout.setVisibility(View.GONE);
+                                                                         if(CustomerListShow.paymentTerm==0) {
+                                                                             price.setVisibility(View.GONE);
+                                                                             linearPrice.setVisibility(View.GONE);
+                                                                         }
+                                                                     }
+//                                                       use_OneUnit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                                                           @Override
+//                                                           public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+////                                                             String priceFromList_oneUnit=MHandler.getPriceItem_forUser(items.get(position).getItemNo(),rate_customer);
+//                                                           }
+//                                                       });
+
+                                                                     serialScan.setOnClickListener(new View.OnClickListener() {
+                                                                         @SuppressLint("WrongConstant")
+                                                                         @Override
+                                                                         public void onClick(View v) {
+                                                                             //                            context.readB();
+                                                                             openSmallScanerTextView();
+//                                                               addToList.setVisibility(View.VISIBLE);
+//                                                               addToList.setEnabled(true);
+//                                                               unitQty.setEnabled(false);
+//                                                               flag = 1;
+//                                                               counterSerial++;
+//                                                               unitQty.setText(counterSerial + "");
+//                                                               final LinearLayoutManager layoutManager;
+//                                                               layoutManager = new LinearLayoutManager(view.getContext());
+//                                                               layoutManager.setOrientation(VERTICAL);
+//
+//                                                               serial = new serialModel();
+//                                                               serial.setCounterSerial(counterSerial);
+//                                                               serial.setSerialCode("");
+//                                                               serial.setIsBonus("0");
+//                                                               serial.setIsDeleted("0");
+//                                                               serial.setVoucherNo(vouch+"");
+//                                                               serial.setKindVoucher(kindVoucher+"");
+//                                                               serial.setStoreNo(Login.salesMan);
+//                                                               serial.setDateVoucher(voucherDate);
+//                                                               serial.setItemNo(itemNoSelected);
+//                                                               serialListitems.add(serial);
+//
+//
+//
+//                                                               serial_No_recyclerView.setLayoutManager(layoutManager);
+//
+//                                                               serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
+////
+//                                                               if(contiusReading==1)
+//                                                               openSmallScanerTextView();
+
+                                                                         }
+                                                                     });
+
+
+                                                                     //***************************************************************************************
+                                                                     addToList = dialog.findViewById(R.id.addToList);
+                                                                     Button cancel = dialog.findViewById(R.id.cancelAdd);
+                                                                     if (MHandler.getAllSettings().get(0).getRequiNote() == 1) {
+                                                                         discribtionItem_linear.setVisibility(View.VISIBLE);
+
+                                                                     } else {
+                                                                         discribtionItem_linear.setVisibility(View.INVISIBLE);
+
+                                                                     }
+
+
+                                                                     approveAdmin = MHandler.getAllSettings().get(0).getApproveAdmin();
+                                                                     //**********************************************************************************************
+                                                                     if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {
+                                                                         if (allItemsList.get(position).getDiscountCustomer() != 0.0) {
+                                                                             haveCstomerDisc = true;
+                                                                             discountCustomer = allItemsList.get(position).getDiscountCustomer() + "";
+
+                                                                             discount.setText(allItemsList.get(position).getDiscountCustomer() + "");
+//                                                               discount.setEnabled(false);
+                                                                             radioGroup.check(R.id.discPercRadioButton);
+                                                                             radioGroup.setEnabled(false);
+                                                                             discPercRadioButton.setEnabled(false);
+                                                                             discValueRadioButton.setEnabled(false);
+
+//                                                               radioGroup.setVisibility(View.GONE);
+
+                                                                         }
+                                                                     }
+
+                                                                     //************************************************************************************************
+
+                                                                     //***********************************Request Discount ****************************************************
+
+                                                                     checkState_recycler.addTextChangedListener(new TextWatcher() {
+                                                                         @Override
+                                                                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                                                         }
+
+                                                                         @Override
+                                                                         public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                                                                         }
+
+                                                                         @Override
+                                                                         public void afterTextChanged(Editable s) {
+                                                                             Log.e("afterTextChanged", "haveResult" + s.toString());
+                                                                             if (s.toString().equals("0")) {
+
+                                                                             } else if ((s.toString().charAt(0) + "").equals("1")) {
+                                                                                 Log.e("afterTextChanged", "haveResult" + s.toString());
+                                                                                 haveResult = 1;
+                                                                                 String key = s.toString().substring(1, s.length());
+//                                                                   if(key.equals(currentKey))
+//                                                                   {
+                                                                                 resultLinear.setVisibility(View.VISIBLE);
+                                                                                 mainRequestLinear.setVisibility(View.GONE);
+                                                                                 checkStateResult.setVisibility(View.VISIBLE);
+                                                                                 checkStateResult.setText("Accepted Request");
+                                                                                 acceptDiscount.setVisibility(View.VISIBLE);
+                                                                                 rejectDiscount.setVisibility(View.GONE);
+                                                                                 addToList.setEnabled(true);
+//                                                                   }
+
+
+                                                                             } else if ((s.toString().charAt(0) + "").equals("2")) {
+                                                                                 haveResult = 2;
+                                                                                 mainRequestLinear.setVisibility(View.GONE);
+                                                                                 resultLinear.setVisibility(View.VISIBLE);
+
+                                                                                 checkStateResult.setVisibility(View.VISIBLE);
+                                                                                 checkStateResult.setText("Rejected Request");
+
+                                                                                 acceptDiscount.setVisibility(View.GONE);
+                                                                                 rejectDiscount.setVisibility(View.VISIBLE);
+                                                                                 discount.setText("");
+                                                                                 bonus.setText("");
+                                                                                 addToList.setEnabled(true);
+                                                                                 unitQty.setEnabled(true);
+                                                                                 if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                                                     if (voucherType == 506) {
+                                                                                         price.setEnabled(true);
+                                                                                     }else {  price.setEnabled(false);}
+                                                                                 } else {
+                                                                                     if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                                                                         price.setEnabled(true);
+                                                                                     }
+                                                                                 }
+
+
+                                                                                 discPercRadioButton.setEnabled(true);
+                                                                                 discValueRadioButton.setEnabled(true);
+
+
+                                                                             }
+
+                                                                         }
+                                                                     });
+                                                                     LinearLayout _linear_switch = dialog.findViewById(R.id._linear_switch);
+                                                                     ImageView requestDiscount = dialog.findViewById(R.id.requestDiscount);
+                                                                     request = new requestAdmin(cont);
+                                                                     if (MHandler.getAllSettings().size() != 0) {
+                                                                         if (MHandler.getAllSettings().get(0).getBonusNotAlowed() == 0) {//you can  add bonus
+                                                                             bonusLinearLayout.setVisibility(View.VISIBLE);
+//                        bonusLinearLayout.setVisibility(View.GONE);//test Fro serial
+                                                                         } else {
+                                                                             bonus.setText("0");
+                                                                             bonusLinearLayout.setVisibility(View.INVISIBLE);
+                                                                             bonus.setEnabled(false);
+
+                                                                         }
+
+                                                                         if (MHandler.getAllSettings().get(0).getApproveAdmin() == 0) {
+                                                                             mainRequestLinear.setVisibility(View.GONE);
+                                                                             _linear_switch.setVisibility(View.GONE);
+
+//                          okButton.setVisibility(View.VISIBLE);
+                                                                         } else {// you need to approve admin for discount or bunos
+                                                                             typeRequest = 1;
+                                                                             if (allItemsList.get(position).getItemHasSerial().equals("1")) {
+                                                                                 mainRequestLinear.setVisibility(View.VISIBLE);
+                                                                                 _linear_switch.setVisibility(View.VISIBLE);
+                                                                                 discountLinearLayout.setVisibility(View.VISIBLE);
+                                                                                 bonusLinearLayout.setVisibility(View.GONE);
+//                                                                   if (MHandler.getAllSettings().get(0).getBonusNotAlowed() == 0)// you can add bunos
+//                                                                   {
+//                                                                       bonusLinearLayout.setVisibility(View.VISIBLE);
+//                                                                   } else {
+//                                                                       bonus.setText("0");
+//                                                                       bonusLinearLayout.setVisibility(View.INVISIBLE);
+//                                                                       bonus.setEnabled(false);
+//                                                                   }
+
+                                                                             } else {
+                                                                                 mainRequestLinear.setVisibility(View.VISIBLE);
+                                                                                 discountLinearLayout.setVisibility(View.VISIBLE);
+                                                                                 bonusLinearLayout.setVisibility(View.GONE);
+                                                                             }
+
+
+                                                                             discount_text.setOnClickListener(new View.OnClickListener() {
+                                                                                 @Override
+                                                                                 public void onClick(View v) {
+                                                                                     typeRequest = 1;
+                                                                                     discountLinearLayout.setVisibility(View.VISIBLE);
+                                                                                     discount_text.setBackground(context.getResources().getDrawable(R.drawable.back_border_dark));
+                                                                                     bonuss_text.setBackground(context.getResources().getDrawable(R.drawable.back_border_shape));
+                                                                                     bonusLinearLayout.setVisibility(View.GONE);
+                                                                                 }
+                                                                             });
+                                                                             bonuss_text.setOnClickListener(new View.OnClickListener() {
+                                                                                 @Override
+                                                                                 public void onClick(View v) {
+                                                                                     if(MHandler.getAllSettings().get(0).getBonusNotAlowed()==0)
+                                                                                     {
+                                                                                         typeRequest = 2;
+                                                                                         discountLinearLayout.setVisibility(View.GONE);
+                                                                                         bonuss_text.setBackground(context.getResources().getDrawable(R.drawable.back_border_dark));
+                                                                                         discount_text.setBackground(context.getResources().getDrawable(R.drawable.back_border_shape));
+                                                                                         bonusLinearLayout.setVisibility(View.VISIBLE);
+                                                                                         bonus.setText("");
+                                                                                         bonus.setEnabled(true);
+                                                                                     }
+
+
+                                                                                 }
+                                                                             });
+                                                                             requestDiscount.setOnClickListener(new View.OnClickListener() {
+                                                                                 @Override
+                                                                                 public void onClick(View v) {
+
+                                                                                     String discountText = "";
+                                                                                     discountPerVal = 0;
+                                                                                     if ((typeRequest == 1 && !discount.getText().toString().equals("")))// discount
+                                                                                     {
+                                                                                         bonus.setText("0");
+                                                                                         Log.e("request", "" + typeRequest);
+                                                                                         if (!discount.getText().toString().equals("")) {
+                                                                                             if (discPercRadioButton.isChecked()) {
+                                                                                                 discountPerVal = 1;
+                                                                                             } else {
+                                                                                                 if (discValueRadioButton.isChecked()) {
+                                                                                                     discountPerVal = 2;
+                                                                                                 }
+                                                                                             }
+                                                                                             if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {
+                                                                                                 if (allItemsList.get(position).getDiscountCustomer() != 0.0) {
+                                                                                                     discountText = discount.getText().toString();
+                                                                                                     haveCstomerDisc = true;
+                                                                                                     addToList.setEnabled(false);
+                                                                                                     price.setEnabled(false);
+                                                                                                     discountCustomer = allItemsList.get(position).getDiscountCustomer() + "";
+
+                                                                                                     if (haveCstomerDisc) {
+
+                                                                                                         if (!discountCustomer.equals(discountText)) {
+
+                                                                                                             try {
+                                                                                                                 currentKey = "";
+                                                                                                                 requestDiscount.setEnabled(false);
+                                                                                                                 getDataForDiscountTotal(allItemsList.get(position).getItemName(), "0", allItemsList.get(position).getPrice() + "", discount.getText().toString(), unitQty.getText().toString());
+                                                                                                                 addToList.setEnabled(false);
+                                                                                                                 discount.setEnabled(false);
+                                                                                                                 unitQty.setEnabled(false);
+                                                                                                                 price.setEnabled(false);
+                                                                                                                 discPercRadioButton.setEnabled(false);
+                                                                                                                 discValueRadioButton.setEnabled(false);
+                                                                                                                 request.startParsing();
+                                                                                                             } catch (Exception e) {
+                                                                                                                 Log.e("request", "" + e.getMessage());
+
+                                                                                                             }
+                                                                                                         } else {
+                                                                                                             new SweetAlertDialog(view.getContext(), SweetAlertDialog.WARNING_TYPE)
+                                                                                                                     .setTitleText(view.getContext().getString(R.string.warning_message))
+                                                                                                                     .setContentText(view.getContext().getString(R.string.YouHaveItemDiscount))
+                                                                                                                     .show();
+                                                                                                         }
+
+
+                                                                                                     }
+
+
+                                                                                                 } else {
+                                                                                                     try {
+                                                                                                         getDataForDiscountTotal(allItemsList.get(position).getItemName(), "0", allItemsList.get(position).getPrice() + "", discount.getText().toString(), unitQty.getText().toString());
+                                                                                                         addToList.setEnabled(false);
+                                                                                                         discount.setEnabled(false);
+                                                                                                         currentKey = "";
+                                                                                                         unitQty.setEnabled(false);
+                                                                                                         price.setEnabled(false);
+                                                                                                         requestDiscount.setEnabled(false);
+                                                                                                         discPercRadioButton.setEnabled(false);
+                                                                                                         discValueRadioButton.setEnabled(false);
+                                                                                                         request.startParsing();
+                                                                                                     } catch (Exception e) {
+                                                                                                         Log.e("request", "" + e.getMessage());
+
+                                                                                                     }
+                                                                                                 }
+                                                                                             } else {
+                                                                                                 try {
+                                                                                                     getDataForDiscountTotal(allItemsList.get(position).getItemName(), "0", allItemsList.get(position).getPrice() + "", discount.getText().toString(), unitQty.getText().toString());
+                                                                                                     addToList.setEnabled(false);
+                                                                                                     discount.setEnabled(false);
+                                                                                                     currentKey = "";
+                                                                                                     unitQty.setEnabled(false);
+                                                                                                     price.setEnabled(false);
+                                                                                                     requestDiscount.setEnabled(false);
+                                                                                                     discPercRadioButton.setEnabled(false);
+                                                                                                     discValueRadioButton.setEnabled(false);
+                                                                                                     request.startParsing();
+                                                                                                 } catch (Exception e) {
+                                                                                                     Log.e("request", "" + e.getMessage());
+
+                                                                                                 }
+                                                                                             }
+
+
+                                                                                         } else {
+                                                                                             discount.setError("required");
+                                                                                             discount.requestFocus();
+                                                                                             unitQty.setEnabled(true);
+                                                                                             if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                                                                 if (voucherType == 506) {
+                                                                                                     price.setEnabled(true);
+                                                                                                 }else {  price.setEnabled(false);}
+                                                                                             } else {
+
+
+                                                                                                 if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                                                                                     price.setEnabled(true);
+                                                                                                 }
+                                                                                             }
+                                                                                         }
+
+                                                                                     } else if ((typeRequest == 2 && !bonus.getText().toString().equals(""))) {
+
+                                                                                         discount.setText("0");
+                                                                                         if (!bonus.getText().toString().equals("")) {
+                                                                                             try {
+                                                                                                 Log.e("bonus_request=", "" + bonus.getText().toString());
+                                                                                                 getDataForDiscountTotal(allItemsList.get(position).getItemName(), "2", allItemsList.get(position).getPrice() + "", bonus.getText().toString(), unitQty.getText().toString());
+                                                                                                 addToList.setEnabled(false);
+                                                                                                 bonus.setEnabled(false);
+                                                                                                 unitQty.setEnabled(false);
+                                                                                                 price.setEnabled(false);
+                                                                                                 currentKey = "";
+                                                                                                 discPercRadioButton.setEnabled(false);
+                                                                                                 discValueRadioButton.setEnabled(false);
+                                                                                                 requestDiscount.setEnabled(false);
+                                                                                                 request.startParsing();
+                                                                                             } catch (Exception e) {
+                                                                                                 Log.e("request", "" + e.getMessage());
+
+                                                                                             }
+
+                                                                                         } else {
+                                                                                             bonus.setError("required");
+                                                                                             bonus.requestFocus();
+                                                                                             unitQty.setEnabled(true);
+                                                                                             if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                                                                 if (voucherType == 506) {
+                                                                                                     price.setEnabled(true);
+                                                                                                 }else {  price.setEnabled(false);}
+                                                                                             } else {
+                                                                                                 if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                                                                                     price.setEnabled(true);
+                                                                                                 }
+                                                                                             }
+                                                                                         }
+
+                                                                                     }// end else
+
+                                                                                 }
+                                                                             });
+
+                                                                         }
+
+                                                                     }
+                                                                     //***************************************************************************************
+
+                                                                     cancel.setOnClickListener(new View.OnClickListener() {
+                                                                         @Override
+                                                                         public void onClick(View v) {
+                                                                             holder.cardView.setEnabled(true);
+                                                                             if (serialListitems.size() != 0) {
+                                                                                 // delete serial if exist and alert screen if full list
+                                                                                 AlertDialog.Builder builder2 = new AlertDialog.Builder(context.getActivity());
+                                                                                 builder2.setTitle(context.getResources().getString(R.string.app_confirm_dialog));
+                                                                                 builder2.setCancelable(false);
+                                                                                 builder2.setMessage(context.getResources().getString(R.string.app_confirm_dialog_clear));
+                                                                                 builder2.setIcon(android.R.drawable.ic_dialog_alert);
+                                                                                 builder2.setPositiveButton(context.getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
+
+                                                                                     @Override
+                                                                                     public void onClick(DialogInterface dialogInterface, int i) {
+
+                                                                                         // int vouch = Integer.parseInt(voucherNumberTextView.getText().toString());
+                                                                                         try {
+                                                                                             Log.e("cancel3", "serialListitemsInCardView" + serialListitems.size());
+                                                                                             for (int k = 0; k < listMasterSerialForBuckup.size(); k++) {
+                                                                                                 MHandler.add_SerialBackup(listMasterSerialForBuckup.get(k), 1);
+                                                                                             }
+                                                                                             Log.e("listMasterSerialFor", "addToList=" + listMasterSerialForBuckup.size());
+                                                                                         } catch (Exception e) {
+                                                                                         }
+
+                                                                                         serialListitems.clear();
+                                                                                         Log.e("cancel3", "" + serialListitems.size());
+//                                                                           MHandler.deletSerialItems_byVoucherNo(vouch);
+
+                                                                                         float count = 0;
+                                                                                         // delete from main list
+//
+                                                                                         total_items_quantity -= count;
+                                                                                         totalQty_textView.setText(total_items_quantity + "");
+                                                                                         dialog.dismiss();
+
+
+                                                                                     }
+                                                                                 });
+
+                                                                                 builder2.setNegativeButton(context.getResources().getString(R.string.app_no), null);
+                                                                                 builder2.create().show();
+
+                                                                             } else {
+
+                                                                                 dialog.dismiss();
+                                                                             }
+
+
+                                                                         }
+                                                                     });
+                                                                     itemNumber.setText(allItemsList.get(position).getItemNo());
+                                                                     itemName.setText(allItemsList.get(position).getItemName());
+                                                                     final DatabaseHandler mHandler = new DatabaseHandler(cont);
+                                                                     //*********************************** change Price with customer or not accourding to setting  ************************************
+
+                                                                     if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                                         price.setText("" + allItemsList.get(position).getPrice());
+                                                                         if (voucherType == 506) {
+                                                                             price.setEnabled(true);
+                                                                         }else {  price.setEnabled(false);}
+                                                                     } else {
+                                                                         if (mHandler.getAllSettings().get(0).getCanChangePrice() == 0) {
+                                                                             price.setText("" + allItemsList.get(position).getPrice());
+                                                                             price.setEnabled(false);
+                                                                             //    price.setText("Desable");
+
+                                                                         } else {
+                                                                             price.setText("" + allItemsList.get(position).getPrice());
+                                                                         }
+                                                                     }
+                                                                     if (mHandler.getAllSettings().get(0).getItemUnit() == 1&&unitsItems_select==0) {
+//                                                           if(items.get(position).getPrice()!=0)
+//                                                           {
+//                                                               price.setText("" + items.get(position).getPrice());
+//                                                           }else {
+                                                                         String itemUnitPrice = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer,0);
+                                                                         if (!itemUnitPrice.equals(""))
+                                                                             price.setText(itemUnitPrice);
+//                                                           }
+
+                                                                     }
+
+//                                                       if(voucherType==506)
+//                                                       {
+//                                                           price.setEnabled(false);
+//                                                           Log.e("getpreviusePriceSale",""+items.get(position).getItemNo());
+//                                                           price.setText(mHandler.getpreviusePriceSale(items.get(position).getItemNo()));
+//                                                       }
+
+                                                                     if (mHandler.getAllSettings().get(0).getTaxClarcKind() == 1)
+//                    discountLinearLayout.setVisibility(View.INVISIBLE);
+
+                                                                         if (mHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1) {
+                                                                             discountLinearLayout.setVisibility(View.VISIBLE);
+                                                                         }
+
+
+                                                                     if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
+                                                                         unitWeightLinearLayout.setVisibility(View.GONE);// For Serial
+                                                                         textQty.setText(view.getContext().getResources().getString(R.string.app_qty));
+                                                                         // useWeight.setChecked(false);
+                                                                     } else
+                                                                         unitQty.setText("" + allItemsList.get(position).getItemL());
+
+
+                                                                     List<String> units = mHandler.getAllexistingUnits(itemNumber.getText().toString());
+                                                                     List<String> ITEMS_units = mHandler.getItemsUnits(itemNumber.getText().toString());
+                                                                     ITEMS_units.add(0,"");
+                                                                     ArrayAdapter<String> unitsList = new ArrayAdapter<String>(cont, R.layout.spinner_style, units);
+                                                                     unit.setAdapter(unitsList);
+
+                                                                     ArrayAdapter<String> itemsunitsList = new ArrayAdapter<String>(cont, R.layout.spinner_style, ITEMS_units);
+                                                                     Item_unit.setAdapter(itemsunitsList);
+
+                                                                     try {
+                                                                         CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
+                                                                         Log.e("CountOfItems",CountOfItems+"");
+                                                                     }catch (Exception e){}
+
+                                                                     Item_unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                                         @Override
+                                                                         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                                                             CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
+                                                                             if(!Item_unit.getSelectedItem().toString().equals("")) {
+                                                                                 price.setText(mHandler.getUnitPrice(itemNumber.getText().toString(), "-1", CountOfItems));
+                                                                                 String ITEMS_unitsQTY = mHandler.getItemsUnitsQTY(itemNumber.getText().toString(), Item_unit.getSelectedItem().toString());
+                                                                                 unit_qty.setText(ITEMS_unitsQTY);
+                                                                                 allItemsList.get(position).setMinSalePrice(Double.parseDouble(price.getText().toString()));
+                                                                                 Log.e("CountOfItems", CountOfItems + " ,ITEMS_unitsQTY=" + ITEMS_unitsQTY);
+                                                                             }else
+                                                                             {
+                                                                                 price.setText(   allItemsList.get(position).getPrice()+"");
+                                                                                 allItemsList.get(position).setMinSalePrice(Double.parseDouble(price.getText().toString()));
+                                                                             }
+
+                                                                         }
+
+                                                                         @Override
+                                                                         public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                                                         }
+                                                                     });
+
+                                                                     if ((allItemsList.get(position).getItemHasSerial().equals("1"))) {
+                                                                         unit.setVisibility(View.GONE);
+                                                                     }
+                                                                     unit.setVisibility(View.GONE);
+                                                                     //****************************************************************************************************
+
+
+                                                                     addToList.setOnClickListener(new View.OnClickListener() {
+                                                                         @SuppressLint("ResourceAsColor")
+                                                                         @Override
+                                                                         public void onClick(View v) {
+
+                                                                             Log.e("orderRadioButton", "orderRadioButton");
+                                                                             holder.cardView.setEnabled(true);
+                                                                             //listMasterSerialForBuckup.addAll(serialListitems);
+                                                                             for (int i = 0; i < listMasterSerialForBuckup.size(); i++) {
+                                                                                 mHandler.add_SerialBackup(listMasterSerialForBuckup.get(i), 0);
+                                                                             }
+                                                                             Log.e("listMasterSerialFor", "addToList=" + listMasterSerialForBuckup.size());
+                                                                             String qtyText = "", discountText = "", bunosText = "", priceText = "";
+                                                                             int countInvalidSerial = 0;
+                                                                             if (serialListitems.size() != 0) {
+                                                                                 countInvalidSerial = checkSerialDB();
+                                                                             }
+
+                                                                             qtyText = unitQty.getText().toString();
+                                                                             discountText = discount.getText().toString();
+                                                                             bunosText = bonus.getText().toString();
+                                                                             priceText = price.getText().toString();
+                                                                             oneUnit = (use_OneUnit.isChecked()) ? 1 : 0;
+                                                                             Log.e("oneUnit", "" + oneUnit);
+
+                                                                             if (haveCstomerDisc) {
+
+                                                                                 if (!discountCustomer.equals(discountText)) {
+
+                                                                                     haveChangeCustDisc = true;
+                                                                                 } else {
+                                                                                     haveResult = 1;
+                                                                                 }
+
+
+                                                                             }
+
+                                                                             if (current_itemHasSerial == 0 || (current_itemHasSerial == 1 && countInvalidSerial == 0)) {
+
+                                                                                 if (!TextUtils.isEmpty(qtyText) || mHandler.getAllSettings().get(0).getWork_serialNo() == 0) {
+                                                                                     if (!price.getText().toString().equals("") && !(unitQty.getText().toString()).equals("")) {
+                                                                                         if (Double.parseDouble(price.getText().toString()) != 0) {
+                                                                                             if ((approveAdmin == 0) || (approveAdmin == 1 && TextUtils.isEmpty(bunosText) && typeRequest == 2)
+                                                                                                     || (approveAdmin == 1 && TextUtils.isEmpty(discountText) && typeRequest == 1)
+                                                                                                     || (approveAdmin == 1 && !TextUtils.isEmpty(bunosText) && haveResult != 0)
+                                                                                                     || (approveAdmin == 1 && !TextUtils.isEmpty(discountText) && haveResult != 0 && !haveChangeCustDisc)) {
+                                                                                                 if (Double.parseDouble(unitQty.getText().toString()) != 0.0) {
+
+                                                                                                     Boolean check = check_Discount(unitWeight, unitQty, price, bonus, discount, radioGroup);
+                                                                                                     if (!check)
+                                                                                                         Toast.makeText(view.getContext(), "Invalid Disco" +
+                                                                                                                 "unt Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
+                                                                                                     else {
+
+                                                                                                         String unitValue;
+                                                                                                         Log.e("useWeightValue", "" + useWeightValue.isChecked());
+                                                                                                         if (useWeightValue.isChecked()) {
+                                                                                                             useWeight = 1;
+                                                                                                         } else {
+                                                                                                             useWeight = 0;
+                                                                                                         }
+                                                                                                         currentKey = "";
+                                                                                                         if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
+                                                                                                             unitValue = unit.getSelectedItem().toString();
+                                                                                                             // Log.e("unitValue", "" + unitValue);
+//                                                                                               if (items.get(holder.getAdapterPosition()).getQty() >= Double.parseDouble(unitQty.getText().toString())
+//                                                                                                       || mHandler.getAllSettings().get(0).getAllowMinus() == 1
+//                                                                                                       || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508)
+
+                                                                                                             if (validQty(allItemsList.get(position).getQty(), Float.parseFloat(unitQty.getText().toString()))) {
+                                                                                                                 Log.e("ayah,price", "" + price.getText().toString()+" ,, "+allItemsList.get(position).getMinSalePrice());
+                                                                                                                 double dis__;
+                                                                                                                 if(!discountText.toString().toString().equals(""))
+                                                                                                                     dis__=Double.parseDouble(discountText.toString().trim());
+                                                                                                                 else
+                                                                                                                     dis__=0;
+
+
+                                                                                                                 double priceafterdis=0;
+                                                                                                                 if (radioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
+                                                                                                                     // priceafterdis=Double.parseDouble(price.getText().toString())-   ( Double.parseDouble(price.getText().toString())* (Double.parseDouble(dis__)*0.01));
+                                                                                                                     double  disforOneItem= (dis__*0.01)/Double.parseDouble(unitQty.getText().toString());
+                                                                                                                     Log.e("ayah,disforOneItem", "" +disforOneItem);
+                                                                                                                     priceafterdis=Double.parseDouble(price.getText().toString())-(Double.parseDouble(price.getText().toString())*disforOneItem);
+
+                                                                                                                 } else {
+                                                                                                                     double  disforOneItem= (dis__)/Double.parseDouble(unitQty.getText().toString());
+                                                                                                                     Log.e("ayah,disforOneItem", "" +disforOneItem);
+                                                                                                                     priceafterdis=Double.parseDouble(price.getText().toString())-    disforOneItem;
+
+
+                                                                                                                 }
+                                                                                                                 Log.e("ayah,priceafterdis", "" +priceafterdis);
+
+                                                                                                                 if ( voucherType==506 || mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1   &&
+                                                                                                                         priceafterdis >= allItemsList.get(position).getMinSalePrice())) {
+                                                                                                                     Log.e("ayah,getMinSalePrice", "" +allItemsList.get(position).getMinSalePrice());
+                                                                                                                     AddItemsFragment2 obj = new AddItemsFragment2();
+                                                                                                                     List<Offers> offer = checkOffers(itemNumber.getText().toString());
+                                                                                                                     Offers appliedOffer = null;
+                                                                                                                     Log.e("appliedOffer", "1111===" + offer.size());
+////&& voucherType==504
+                                                                                                                     if (offer.size() != 0) {
+
+                                                                                                                         if (offer.get(0).getPromotionType() == 0) {// bonus promotion
+
+                                                                                                                             added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                                                                                                                     holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
+                                                                                                                                     bonus.getText().toString(),
+                                                                                                                                     discount.getText().toString(),
+                                                                                                                                     radioGroup, allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + "", useWeight,
+                                                                                                                                     view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial, oneUnit);
+
+                                                                                                                             appliedOffer = getAppliedOffer(itemNumber.getText().toString(), unitQty.getText().toString(), 0);
+
+                                                                                                                             if (!appliedOffer.getItemNo().equals("-1")) {
+                                                                                                                                 double bonus_calc = 0;
+
+                                                                                                                                 if (
+                                                                                                                                         OfferCakeShop == 0) {
+                                                                                                                                     bonus_calc = ((int) (Double.parseDouble(unitQty.getText().toString()) / appliedOffer.getItemQty())) * appliedOffer.getBonusQty();
+
+                                                                                                                                 } else {
+                                                                                                                                     bonus_calc = appliedOffer.getBonusQty();
+                                                                                                                                 }
+                                                                                                                                 // Log.e("bonus_calc=", "added1" + added);
+                                                                                                                                 Log.e("bonus_calc=", "" + bonus_calc);
+                                                                                                                                 added = obj.addItem(offer.get(0).getBonusItemNo(), "(bonus)",
+                                                                                                                                         "0", "1", "" + bonus_calc, "0",
+                                                                                                                                         "0", "0", radioGroup, allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + "", useWeight, view.getContext()
+                                                                                                                                         , item_remark.getText().toString(), serialListitems, current_itemHasSerial, oneUnit);
+
+                                                                                                                                 Log.e("bonus_calc=", "added2" + added);
+                                                                                                                             }
+
+                                                                                                                         } else {
+                                                                                                                             //  Log.e("getPromotionType", "" + offer.get(0).getPromotionType());
+                                                                                                                             //(appliedOffer.getBonusQty()*Double.parseDouble(unitQty.getText().toString()))   //******calculate discount item before 11/9
+                                                                                                                             double disount_totalnew = 0, unitQty_double = 0;
+
+                                                                                                                             appliedOffer = getAppliedOffer(itemNumber.getText().toString(), unitQty.getText().toString(), 1);
+                                                                                                                             Log.e("appliedOffer", "" + appliedOffer.getItemNo());
+                                                                                                                             if (!appliedOffer.getItemNo().equals("-1")) {
+//                                                                                                               if (appliedOffer != null) {
+                                                                                                                                 Log.e("appliedOffer", "appliedOffer.getItemQty()" + appliedOffer.getItemQty() + appliedOffer.getBonusQty());
+                                                                                                                                 unitQty_double = Double.parseDouble(unitQty.getText().toString());
+                                                                                                                                 if (offerTalaat == 1) {
+                                                                                                                                     disount_totalnew = ((int) (unitQty_double / appliedOffer.getItemQty())) * appliedOffer.getBonusQty();
+                                                                                                                                 } else {
+                                                                                                                                     disount_totalnew = (unitQty_double * appliedOffer.getBonusQty());
+                                                                                                                                 }
+                                                                                                                                 if (offerQasion == 1) {
+                                                                                                                                     disount_totalnew = (unitQty_double * appliedOffer.getBonusQty());
+                                                                                                                                 }
+                                                                                                                                 if (offernasleh == 1) {
+                                                                                                                                     disount_totalnew = appliedOffer.getBonusQty();
+                                                                                                                                 }
+                                                                                                                                 // get discount from offers not from text
+
+
+                                                                                                                                 String priceAfterDiscount = "" + (Double.parseDouble(price.getText().toString()) - appliedOffer.getBonusQty());
+
+
+                                                                                                                                 Log.e("appliedOffer11=", "" + disount_totalnew);
+
+                                                                                                                                 if (appliedOffer.getDiscountItemType() == 0)
+                                                                                                                                     radioGroup.check(R.id.discValueRadioButton);// just if promotion is discount
+                                                                                                                                 else if (appliedOffer.getDiscountItemType() == 1)
+                                                                                                                                     radioGroup.check(R.id.discPercRadioButton);// just if promotion is discount
+
+
+                                                                                                                                 added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                                                                                                                         holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
+                                                                                                                                         bonus.getText().toString(), "" + disount_totalnew, radioGroup
+                                                                                                                                         , allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + "",
+                                                                                                                                         useWeight, view.getContext(), item_remark.getText().toString(), serialListitems,
+                                                                                                                                         current_itemHasSerial, oneUnit);
+                                                                                                                             } else {// not exist offer for this qty
+                                                                                                                                 added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                                                                                                                         holder.tax.getText().toString(), unitValue, unitQty.getText().toString() + "", price.getText().toString(),
+                                                                                                                                         bonus.getText().toString(), discount.getText().toString(), radioGroup,
+                                                                                                                                         allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + "",
+                                                                                                                                         useWeight, view.getContext(), item_remark.getText().toString(), serialListitems,
+                                                                                                                                         current_itemHasSerial, oneUnit);
+
+
+                                                                                                                                 Log.e("else", "appliedOffer==null");
+                                                                                                                             }
+                                                                                                                         }
+                                                                                                                     } else {
+                                                                                                                         double totalQty = 0;
+                                                                                                                         totalQty = Double.parseDouble(unitQty.getText().toString()) + Double.parseDouble(bonus.getText().toString());
+                                                                                                                         // Log.e("totalQty+recyclerview", "" + totalQty + "\t bomus" + bonus.getText().toString());
+
+                                                                                                                         added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                                                                                                                 holder.tax.getText().toString(), unitValue, unitQty.getText().toString() + "", price.getText().toString(),
+                                                                                                                                 bonus.getText().toString(), discount.getText().toString(), radioGroup,
+                                                                                                                                 allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + "",
+                                                                                                                                 useWeight, view.getContext(), item_remark.getText().toString(), serialListitems,
+                                                                                                                                 current_itemHasSerial, oneUnit);
+                                                                                                                     }
+                                                                                                                     if (added) {
+                                                                                                                         if (offer.size() != 0 && !appliedOffer.getItemNo().equals("-1"))
+                                                                                                                             if(ActiveStateOfOffers())    openOfferDialog(appliedOffer);
+
+                                                                                                                         holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.layer5));
+                                                                                                                         isClicked.set(position, 1);
+                                                                                                                         localItemNumber.add(allItemsList.get(position).getItemNo());
+                                                                                                                         itemInlocalList = false;
+                                                                                                                         dialog.dismiss();
+                                                                                                                     }
+                                                                                                                 } else {
+                                                                                                                     Toast.makeText(view.getContext(), "Item hasn't been added, Min sale price for this item is " + allItemsList.get(position).getMinSalePrice(), Toast.LENGTH_LONG).show();
+                                                                                                                     Log.e("bonus not added ", "" + allItemsList.get(position).getMinSalePrice());
+                                                                                                                     price.setError(view.getResources().getString(R.string.invalidValue));
+
+                                                                                                                 }
+                                                                                                             } else {
+                                                                                                                 unitQty.setError(view.getContext().getResources().getString(R.string.insufficientQuantity));
+                                                                                                                 Toast.makeText(view.getContext(), view.getContext().getResources().getString(R.string.insufficientQuantity), Toast.LENGTH_LONG).show();
+
+                                                                                                             }
+
+                                                                                                         } else {
+                                                                                                             if (unitWeight.getText().toString().equals(""))
+                                                                                                                 Toast.makeText(view.getContext(), "please enter unit weight", Toast.LENGTH_LONG).show();
+                                                                                                             else {
+                                                                                                                 unitValue = unitWeight.getText().toString();
+//                                        String qtyValue = "" + (Double.parseDouble(unitWeight.getText().toString()) * Double.parseDouble(unitQty.getText().toString()));
+                                                                                                                 String qty = (useWeightValue.isChecked() ? "" + (Double.parseDouble(unitQty.getText().toString())) : unitQty.getText().toString());
+//                                                                                                   String qty = (useWeightValue.isChecked() ? "" + (Double.parseDouble(unitQty.getText().toString()) * Double.parseDouble(unitValue)) : unitQty.getText().toString());
+
+                                                                                                                 Log.e("here**", "" + position);
+                                                                                                                 if (position > -1) {
+                                                                                                                     if (allItemsList.get(position).getQty() >= Double.parseDouble(qty)
+                                                                                                                             || mHandler.getAllSettings().get(0).getAllowMinus() == 1
+                                                                                                                             || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508) {
+                                                                                                                         if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
+                                                                                                                                 Double.parseDouble(price.getText().toString()) >= allItemsList.get(position).getMinSalePrice())) {
+
+                                                                                                                             AddItemsFragment2 obj = new AddItemsFragment2();
+                                                                                                                             List<Offers> offer = checkOffers(itemNumber.getText().toString());
+                                                                                                                             Offers appliedOffer = null;
+
+                                                                                                                             if (offer.size() != 0 ) {
+                                                                                                                                 if (offer.get(0).getPromotionType() == 0) {
+
+                                                                                                                                     added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                                                                                                                             holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
+                                                                                                                                             bonus.getText().toString(), discount.getText().toString(),
+                                                                                                                                             radioGroup, allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + "",
+                                                                                                                                             useWeight, view.getContext(), item_remark.getText().toString(), serialListitems,
+                                                                                                                                             current_itemHasSerial, oneUnit);
+
+                                                                                                                                     appliedOffer = getAppliedOffer(itemNumber.getText().toString(), qty, 0);
+                                                                                                                                     if (!appliedOffer.getItemNo().equals("-1")) {
+
+
+                                                                                                                                         added = obj.addItem(appliedOffer.getBonusItemNo(), "(bonus)",
+                                                                                                                                                 "0", "1", "" + appliedOffer.getBonusQty(), "0",
+                                                                                                                                                 "0", "0", radioGroup
+                                                                                                                                                 , allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + ""
+                                                                                                                                                 , useWeight, view.getContext(), item_remark.getText().toString(), serialListitems,
+                                                                                                                                                 current_itemHasSerial, oneUnit);
+                                                                                                                                     }
+
+                                                                                                                                 } else {
+                                                                                                                                     appliedOffer = getAppliedOffer(itemNumber.getText().toString(), qty, 1);
+                                                                                                                                     if (!appliedOffer.getItemNo().equals("-1")) {
+                                                                                                                                         String priceAfterDiscount = "" + (Double.parseDouble(price.getText().toString()) - appliedOffer.getBonusQty());
+                                                                                                                                         added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                                                                                                                                 holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
+                                                                                                                                                 bonus.getText().toString(), "" + (appliedOffer.getBonusQty() * Double.parseDouble(qty)), radioGroup,
+                                                                                                                                                 allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + ""
+                                                                                                                                                 , useWeight, view.getContext(), item_remark.getText().toString(), serialListitems,
+                                                                                                                                                 current_itemHasSerial, oneUnit);
+                                                                                                                                     }
+                                                                                                                                 }
+                                                                                                                             } else {
+                                                                                                                                 added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                                                                                                                         holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
+                                                                                                                                         bonus.getText().toString(), discount.getText().toString(),
+                                                                                                                                         radioGroup, allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + "",
+                                                                                                                                         useWeight, view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial, oneUnit);
+                                                                                                                             }
+                                                                                                                             if (added) {
+                                                                                                                                 if (offer.size() != 0 && !appliedOffer.getItemNo().equals("-1"))
+                                                                                                                                     if(ActiveStateOfOffers())       openOfferDialog(appliedOffer);
+                                                                                                                                 holder.linearLayout.setBackgroundColor(R.color.done_button);
+                                                                                                                                 isClicked.set(position, 1);
+                                                                                                                                 dialog.dismiss();
+                                                                                                                             }
+                                                                                                                         } else
+                                                                                                                             Toast.makeText(view.getContext(), "Item hasn't been added, Min sale price for this item is " + allItemsList.get(position).getMinSalePrice(), Toast.LENGTH_LONG).show();
+                                                                                                                     } else
+                                                                                                                         Toast.makeText(view.getContext(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
+                                                                                                                 } else
+                                                                                                                     Toast.makeText(view.getContext(), "Please enter the item again", Toast.LENGTH_LONG).show();
+                                                                                                             }
+                                                                                                         }
+
+                                                                                                     }
+
+//                                                                                       dialog.dismiss();
+                                                                                                 } else {
+                                                                                                     Toast.makeText(view.getContext(), "Invalid  Qty", Toast.LENGTH_LONG).show();
+                                                                                                 }
+                                                                                             } else {
+                                                                                                 if (haveResult == 0) {
+                                                                                                     new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+                                                                                                             .setTitleText(view.getContext().getString(R.string.warning_message))
+                                                                                                             .setContentText(view.getContext().getString(R.string.youHaveRequestToAdmin))
+                                                                                                             .show();
+                                                                                                 }
+
+
+                                                                                             }
+
+                                                                                         } else {
+                                                                                             price.setError(view.getResources().getString(R.string.invalidValue));
+                                                                                             price.requestFocus();
+                                                                                         }
+                                                                                     } else {
+                                                                                         if (TextUtils.isEmpty(qtyText)) {
+                                                                                             unitQty.setError("*Required");
+                                                                                         }
+
+                                                                                         if (TextUtils.isEmpty(priceText)) {
+                                                                                             price.setError("*Required");
+                                                                                         }
+                                                                                     }
+
+                                                                                 } else {
+                                                                                     unitQty.setError("*Required");
+                                                                                     price.requestFocus();
+                                                                                 }
+                                                                             } else {// item  serial_No is duplcate +++++ dont save
+
+                                                                                 if (countInvalidSerial == -1) {
+                                                                                     new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+                                                                                             .setTitleText(view.getContext().getString(R.string.warning_message))
+                                                                                             .setContentText(view.getContext().getString(R.string.reqired_filled))
+                                                                                             .show();
+                                                                                 } else {
+                                                                                     if (countInvalidSerial == 100) {
+                                                                                         new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+                                                                                                 .setTitleText(view.getContext().getString(R.string.warning_message))
+                                                                                                 .setContentText(view.getContext().getString(R.string.thereIsduplicatedSerial))
+                                                                                                 .show();
+
+                                                                                     } else if (countInvalidSerial == 1000) {
+                                                                                         new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+                                                                                                 .setTitleText(context.getString(R.string.warning_message))
+                                                                                                 .setContentText(context.getString(R.string.duplicate) + "\t" + context.getResources().getString(R.string.inThisVoucher))
+
+                                                                                                 .show();
+                                                                                     } else {
+                                                                                         new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+                                                                                                 .setTitleText(view.getContext().getString(R.string.warning_message))
+                                                                                                 .setContentText(view.getContext().getString(R.string.itemadedbefor))
+                                                                                                 .show();
+                                                                                     }
+
+                                                                                 }
+
+
+                                                                             }
+                                                                             haveChangeCustDisc = false;
+
+                                                                         }// end on click
+                                                                     });
+                                                                     dialog.show();
+
+                                                                 } else {
+                                                                     new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+                                                                             .setTitleText(view.getContext().getString(R.string.warning_message))
+                                                                             .setContentText(view.getContext().getString(R.string.itemadedbefor))
+                                                                             .show();
+                                                                 }
+                                                             }
+                                                         }//on click
+
+                        );
+            holder.imagespecial_.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+//                    itemBitmap=StringToBitMap(items.position).getItemPhoto()get(holder.getAdapterPosition()).getItemPhoto());
+                    //   showImageOfCheck(items.get(position).getItemPhoto());
+                    String url = allItemsList.get(position).getItemPhoto();
+                    Log.e("url", "imagespecial" + url);
+                    if (url.contains("Products")) {
+                        int index = url.indexOf("Products");
+                        url = url.substring(index);
+                    }
+                    Log.e("url", "imagespecial2" + url);
+                    getImage(url);
+                }
+            });
             holder.imagespecial.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -336,11 +1716,11 @@ public static     int CountOfItems=1;
             }
 
             holder.price.setText(convertToEnglish(threeDForm.format(priceUnit)) + "\t\tJD");
-
+            holder.   textViewPrice_.setText(convertToEnglish(threeDForm.format(priceUnit)) + "\t\tJD");
 //            }
         } else {
             holder.price.setText(convertToEnglish(threeDForm.format(allItemsList.get(position).getPrice())) + "\t\tJD");
-
+            holder.textViewPrice_.setText(convertToEnglish(threeDForm.format(allItemsList.get(position).getPrice())) + "\t\tJD");
         }
         if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {// for ejabi ***** test
             String priceCus = MHandler.getItemPrice(allItemsList.get(position).getItemNo());
@@ -3428,7 +4808,7 @@ public static     int CountOfItems=1;
 
     private boolean validQty(float qtyCurrent, float qtyRequired) {
        Log.e("validQty==", "qtyCurrent=" + qtyCurrent + "\tqtyRequired=" + qtyRequired);
-        if( (SalesInvoice.voucherType == 508&&  MainActivity.checkQtyForOrdersFlage==1&&MainActivity.UNITFLAGE==1)){
+        if( (((SalesInvoice.voucherType == 504)||(SalesInvoice.voucherType == 508&&  MainActivity.checkQtyForOrdersFlage==1))&&MainActivity.UNITFLAGE==1&&MHandler.getAllSettings().get(0).getAllowMinus() == 0)){
             Log.e("validQty2==", "qtyCurrent2=" + qtyCurrent + "\tqtyRequired=" + qtyRequired+"CountOfItems="+CountOfItems);
             Log.e("validQty3=="," "+ qtyCurrent/CountOfItems);
             if (qtyRequired <=(qtyCurrent/CountOfItems) )
@@ -3776,23 +5156,30 @@ public static     int CountOfItems=1;
 
     public class viewHolder extends RecyclerView.ViewHolder {
 
-        LinearLayout linearLayout;
+        LinearLayout linearLayout,newlin;
         CardView cardView;
-        TableRow row_qty, table_solidQty;
+        TableRow row_qty, table_solidQty,taxrow,Categoryrow,itemnumrow,pricerow;
         TextView itemNumber, itemName, tradeMark, category, unitQty, price, tax, barcode, posprice, textViewTax, textViewsolidQty;
-        ImageView imagespecial;
+        ImageView imagespecial,imagespecial_;
 
-
+        TextView  textViewPrice_,textViewUnit_qty_,textViewItemName_;
         public viewHolder(View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.cardView);
+            imagespecial_= itemView.findViewById(R.id.imagespecial_);
+            newlin= itemView.findViewById(R.id.NewLin);
             linearLayout = itemView.findViewById(R.id.linear);
             itemNumber = itemView.findViewById(R.id.textViewItemNumber);
             itemName = itemView.findViewById(R.id.textViewItemName);
             tradeMark = itemView.findViewById(R.id.textViewTradeMark);
             category = itemView.findViewById(R.id.textViewCategory);
             unitQty = itemView.findViewById(R.id.textViewUnit_qty);
+            taxrow= itemView.findViewById(R.id.taxrow);
+            pricerow= itemView.findViewById(R.id.pricerow);
             price = itemView.findViewById(R.id.textViewPrice);
+            textViewPrice_= itemView.findViewById(R.id.textViewPrice_);
+            textViewUnit_qty_= itemView.findViewById(R.id.textViewUnit_qty_);
+            textViewItemName_= itemView.findViewById(R.id.textViewItemName_);
             if(Purchase_Order==1)
             {
                 if(CustomerListShow.paymentTerm==0)
@@ -3804,11 +5191,16 @@ public static     int CountOfItems=1;
             posprice = itemView.findViewById(R.id.textViewPosPrice);
             row_qty = itemView.findViewById(R.id.row_qty);
             table_solidQty = itemView.findViewById(R.id.table_solidQty);
+            Categoryrow= itemView.findViewById(R.id.categoryrow);
+            itemnumrow= itemView.findViewById(R.id.itemnumrow);
             textViewsolidQty = itemView.findViewById(R.id.textViewsolidQty);
             imagespecial = itemView.findViewById(R.id.imagespecial);
             threeDForm = new DecimalFormat("00.000");
             textViewTax = itemView.findViewById(R.id.textTitleTax);
             showSolidQty = MHandler.getAllSettings().get(0).getShow_quantity_sold();
+
+
+
         }
     }
 

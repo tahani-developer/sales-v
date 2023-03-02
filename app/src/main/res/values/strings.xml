@@ -185,6 +185,8 @@
     <string name="get_salesman_customers_only">Get SalesMan Customers Only</string>
     <string name="min_sale_price">Min Sale Price</string>
     <string name="allow_cust_check_out_range">Validate customer location</string>
+    <string name="outofrange">You are outside the scope of the client site </string>
+    <string name="requstapprove">Do you want to request admin approval?</string>
     <!--    <string name="allow_cust_check_out_range">Allow Customer Check Out Of Range</string>-->
     <string name="read_discount_from_offers">Read Discount From Offers</string>
     <string name="work_online">Work Online</string>
@@ -397,6 +399,8 @@
     <string name="bonus_item_qty">Bonus Item Qty</string>
     <string name="reqired_filled">Reqired Filled Empty</string>
     <string name="cancel">Cancel</string>
+    <string name="Smaller_icons">Smaller icons</string>
+
     <string name="qty">Qty</string>
     <string name="read_new_offer">Read New Offer</string>
     <string name="address">Address</string>
@@ -418,6 +422,10 @@
     <string name="requestForAdmin">Request For Admin</string>
     <string name="acceptedRequest">Accepted Request</string>
     <string name="rejectedRequest">Rejected Request</string>
+    <string name="rejectedRequest2"> تم رفض طلب  الدخول للعميل</string>
+    <string name="adminallowed_Wait"> بانتظار موافقة الأدمن</string>
+
+    <string name="acceptedRequest2">تم قبول طلب  الدخول للعميل</string>
     <string name="acceptYourRequest">acceptYourRequest</string>
     <string name="sorry">Sorry</string>
     <string name="ApproveAdmin">Approve Admin</string>
@@ -631,6 +639,8 @@
     <string name="taxAfterDisc">Tax After Disc</string>
     <string name="orientation"> Items in horizontal orientation</string>
     <string name="Add_CustumerPer">Add Customer Permission</string>
+    <string name="Shar">Shar</string>
+    <string name="log_in_cus_outrange">Log in Customer Out of range</string>
     <string name="visaPayment">Visa</string>
 
     <string-array name="app_paymentTypeList">

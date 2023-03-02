@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -81,7 +82,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dr7.salesmanmanager.Adapters.CustomerselectedAdapter;
 import com.dr7.salesmanmanager.Adapters.Pending_item_Adapter;
 import com.dr7.salesmanmanager.Adapters.Pending_seriak_adapter;
+import com.dr7.salesmanmanager.Interface.DaoRequsts;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
+import com.dr7.salesmanmanager.Modles.MyServicesForNotification;
+import com.dr7.salesmanmanager.Modles.RequstTest;
 import com.dr7.salesmanmanager.Modles.TransactionsInfo;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
@@ -134,6 +138,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 import java.util.Timer;
 
@@ -148,10 +153,12 @@ import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.SalsManPlanFlage;
 import static com.dr7.salesmanmanager.Login.SalsManTripFlage;
+import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.passwordSettingAdmin;
 import static com.dr7.salesmanmanager.Login.password_rawat;
+import static com.dr7.salesmanmanager.Login.salesManNo;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.updateOnlySelectedCustomer;
 
@@ -269,6 +276,26 @@ Dialog dialog1;
 
     }
 
+    public void intentToMain(){
+        Log.e("intentToMain","intentToMain");
+
+        if(!isMyServiceRunning(MyServicesForNotification.class)){
+            {
+                Log.e("isMyServiceRunning","no");
+                startService(new Intent(MainActivity.this, MyServicesForNotification.class));
+            }
+        }
+
+    }
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public void showCustomersList() {
@@ -315,7 +342,21 @@ Dialog dialog1;
     public static ArrayList<String> customersSpinnerArray = new ArrayList<>();
 
     public static   List<Customer> allCustomersList = new ArrayList<>();
+    public Date formatDate(String date) throws ParseException {
+        Date d = new Date();
+        SimpleDateFormat sdf;
+        String myFormat = "dd/MM/yyyy";
+        try {
+            //In which you need put here
+            sdf = new SimpleDateFormat(myFormat, Locale.US);
+            d = sdf.parse(date);
+        } catch (Exception e) {
+            Log.e("", "");
+        }
 
+
+        return d;
+    }
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
@@ -375,8 +416,8 @@ saveCurentLocation();
       }
         hideItem();
 
-
-
+        deleteOldRequst() ;
+        intentToMain();
         endtripText=findViewById(R.id.   endtripText);
 
         starttripText=findViewById(R.id.   starttripText);;
@@ -5259,6 +5300,32 @@ Log.e("Exception==",e.getMessage());
         }
         return false;    }
 
+
+ void   deleteOldRequst() {
+        try{
+            currentTimeAndDate = Calendar.getInstance().getTime();
+            df= new SimpleDateFormat("dd/MM/yyyy");
+            curentDate = df.format(currentTimeAndDate);
+
+
+            DaoRequsts daoRequsts=new DaoRequsts(contextG);
+
+            daoRequsts.getStatusofLogedrequsts(contextG);
+
+            daoRequsts.getlistofAllrequst();
+            for(int x=0;x<DaoRequsts.AllRequsts.size();x++) {
+                Log.e("AllRequsts==",DaoRequsts.AllRequsts.get(x).getDate()+" curentDate="+curentDate);
+                if (formatDate(convertToEnglish(DaoRequsts.AllRequsts.get(x).getDate())).before(formatDate(curentDate))) {
+                    daoRequsts.deleteRequst(DaoRequsts.AllRequsts.get(x).getKey_validation());
+
+
+                }
+            }
+        }catch (Exception  exception){
+            Log.e("Exception",exception.getMessage());
+        }
+    }
+
    void  NewcustomerStarttripDialog(){
        NewCustomerSelecteddialog = new Dialog(MainActivity.this);
        NewCustomerSelecteddialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -5290,4 +5357,5 @@ Log.e("Exception==",e.getMessage());
 //           }
 //       });
    }
+
 }

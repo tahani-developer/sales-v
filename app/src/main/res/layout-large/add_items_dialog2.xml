@@ -196,16 +196,17 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/background_container"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
-            android:layout_weight="3"
-            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="3"
+            android:background="@drawable/background_container"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:visibility="visible"
+            app:spanCount="2">
 
         </androidx.recyclerview.widget.RecyclerView>
         <ListView
@@ -240,7 +241,68 @@
             android:textStyle="bold"
             android:visibility="visible" />
 
+        <CheckBox
+            android:id="@+id/Smallericon_checkbox"
 
+            android:clickable="true"
+            android:gravity="top"
+            android:layout_below="@+id/orientation_checkbox"
+            android:textColor="@color/text_view_color"
+
+            android:textSize="12sp"
+            android:textStyle="bold"
+
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="1dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+
+            />
+        <TableRow
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:background="@color/colorblue_dark"
+
+            android:id="@+id/HeaderNewLin"
+
+            android:padding="2dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/item_name"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/qty"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/app_price"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+
+                android:gravity="center"
+
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+        </TableRow>
     </RelativeLayout>
 
     <TextView

@@ -1021,14 +1021,14 @@
 
 
         </LinearLayout>
+
         <com.nightonke.boommenu.BoomMenuButton
             android:id="@+id/bmb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:bmb_normalColor="@color/colorblue1"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             app:bmb_draggable="true"
-            />
+            app:bmb_normalColor="@color/colorblue1" />
     </RelativeLayout>
 </LinearLayout>

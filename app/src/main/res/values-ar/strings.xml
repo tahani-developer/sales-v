@@ -181,6 +181,9 @@
     <string name="get_salesman_customers_only">سحب عملاء المندوب فقط</string>
     <string name="min_sale_price">الحد الادنى لسعر البيع</string>
     <string name="allow_cust_check_out_range">التأكد من موقع العميل عند التخزين </string>
+    <string name="outofrange">أنت خارج نطاق موقع العميل </string>
+    <string name="requstapprove">هل تريد طلب موافقة الأدمن؟</string>
+
 <!--    <string name="allow_cust_check_out_range">السماح بدخول العميل من خارج النطاق</string>-->
     <string name="read_discount_from_offers">الحصول على الخصومات من العروض </string>
     <string name="work_online">العمل اونلاين</string>
@@ -437,6 +440,7 @@
     <string name="bonus_item_qty"> كمية المادةالمجانية</string>
     <string name="reqired_filled">حقل اجباري فارغ </string>
     <string name="cancel">الغاء</string>
+    <string name="Smaller_icons">إظهار عدد أكبر من المواد</string>
     <string name="qty">الكميات</string>
     <string name="read_new_offer">Read New Offer</string>
     <string name="address">العنوان</string>
@@ -461,6 +465,9 @@
     <string name="requestForAdmin">تقديم طلب للمسؤول</string>
     <string name="acceptedRequest">تم قبول طلبك</string>
     <string name="rejectedRequest">تم رفض الطلب</string>
+    <string name="rejectedRequest2"> تم رفض طلب  الدخول للعميل</string>
+    <string name="adminallowed_Wait"> بانتظار موافقة الأدمن</string>
+    <string name="acceptedRequest2">تم قبول طلب  الدخول للعميل</string>
     <string name="acceptYourRequest">acceptYourRequest</string>
     <string name="sorry">عذرا</string>
     <string name="ApproveAdmin">طلب موافقة الادمن</string>
@@ -665,6 +672,8 @@
     <string name="taxAfterDisc">الخصم بعد الضريبة</string>
     <string name="orientation"> ترتيب المواد افقي</string>
     <string name="Add_CustumerPer">صلاحية إضافة عميل</string>
+    <string name="Shar">مشاركة</string>
+    <string name="log_in_cus_outrange">تسجيل الدخول لعميل خارج النطاق</string>
     <string name="visaPayment">Visa</string>
     <string-array name="DaysOfWeek">
         <item>السبت</item>

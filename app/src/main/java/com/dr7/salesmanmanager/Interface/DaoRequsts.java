@@ -2,7 +2,6 @@ package com.dr7.salesmanmanager.Interface;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,10 +11,7 @@ import com.dr7.salesmanmanager.GeneralMethod;
 import com.dr7.salesmanmanager.Login;
 import com.dr7.salesmanmanager.Modles.RequestAdmin;
 import com.dr7.salesmanmanager.Modles.RequstTest;
-import com.dr7.salesmanmanager.Modles.SalesMenLocation;
-import com.dr7.salesmanmanager.MyServices;
 import com.dr7.salesmanmanager.R;
-import com.dr7.salesmanmanager.SalesInvoice;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -25,14 +21,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 import static com.dr7.salesmanmanager.Activities.currentKey;
 import static com.dr7.salesmanmanager.Activities.currentKeyTotalDiscount;
 import static com.dr7.salesmanmanager.Activities.keyCreditLimit;
 import static com.dr7.salesmanmanager.DiscountFragment.checkState;
-import static com.dr7.salesmanmanager.RecyclerViewAdapter.addToList;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.checkState_recycler;
 import static com.dr7.salesmanmanager.SalesInvoice.checkState_LimitCredit;
-import static com.dr7.salesmanmanager.SalesInvoice.discountRequest;
 
 public class DaoRequsts {
     private DatabaseReference databaseReference,databaseReference2;
@@ -40,7 +36,10 @@ public class DaoRequsts {
     DatabaseHandler mHandler;
 String ipAddress="";
   public static String  Firebase_ipAddress;
- public static    String Key;
+ public static    String Key,LogedReq_Key="";
+
+    public static ArrayList<RequstTest> AllowedCut_List=new ArrayList<>();
+    public static ArrayList<RequstTest> AllRequsts=new ArrayList<>();
     public DaoRequsts(Context context) {
         this.mHandler = new DatabaseHandler(context);
         this.context = context;
@@ -73,7 +72,7 @@ String ipAddress="";
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.hasChild(value)) {
                     {
-                        Log.e("true","true");
+                        Log.e("true",snapshot.getRef()+" "+snapshot.getValue());
                         flage[0] =true;
                     }
                 } else {
@@ -87,7 +86,8 @@ String ipAddress="";
 
             }
         });
-        return flage[0];  }
+        return flage[0];
+    }
     public void add(RequestAdmin requsts) {
         Log.e("add==","add");
 //        if (!ChildIsExists(requsts.getSalesman_no())) {
@@ -207,7 +207,276 @@ if(requstTest!=null) {
         databaseReference2.child(Firebase_ipAddress).child(Login.salesMan).addValueEventListener(postListener);
 
     }
-    void deleteRequst(String RequstID){
+    public void  getStatusofLogedrequsts(Context context){
+        Log.e("getStatusofLogedrequsts==","getStatusofLogedrequsts");
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String key = ds.getKey();
+                    Log.e("key==",key+"");
+                    getlistofdata(key);
+//                    DatabaseReference usersRef = rootRef.child("users").child(key);
+//                    ValueEventListener eventListener = new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(DataSnapshot dataSnapshot) {
+//                            for(DataSnapshot dSnapshot : dataSnapshot.getChildren()) {
+//                                String username = dSnapshot.child("username").getValue(String.class);
+//                                Log.d("TAG", username);
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(DatabaseError databaseError) {}
+//                    };
+//                    usersRef.addListenerForSingleValueEvent(eventListener);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+        databaseReference2.child(Firebase_ipAddress).child(Login.salesMan).addListenerForSingleValueEvent(valueEventListener);
+
+
+
+
+        //////
+
+
+
+    }
+    void oldmethod(){
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e("getStatusofLogedrequsts,onDataChange", "getStatusofLogedrequsts");
+                // Get Post object and use the values to update the UI
+
+                RequstTest requstTest = dataSnapshot.getValue(RequstTest.class);
+
+                Log.e("requstTest,getRef", dataSnapshot.child(Login.salesMan).getRef()+ "");
+                if(requstTest!=null) {
+                    Log.e("requstTest,requstTest",requstTest.getStatus()+ "");
+                    if (requstTest.getStatus() != null)
+                    {
+                        if(requstTest.getRequest_type().equals("5")) {
+                            Log.e("requstTest,getRequest_type", "5");
+                            if (requstTest.getStatus().equals("1")) {
+                                Log.e("getStatus,getStatus", "1");
+
+
+
+                            } else if (requstTest.getStatus().equals("2")) {
+                                Log.e("getStatus,getStatus", "2");
+
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.e("databaseError", "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        databaseReference2.child(Firebase_ipAddress).addValueEventListener(postListener);
+    }
+    public void getlistofAllrequst() {
+        Log.e("getlistofdata==", "getlistofdata");
+        AllowedCut_List.clear();
+
+        ChildEventListener childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.e("onChildAdded", "getKey:" + dataSnapshot.getKey());
+                // A new comment has been added, add it to the displayed list
+                try {
+
+
+                    RequstTest requstTest = dataSnapshot.getValue(RequstTest.class);
+                    if(requstTest!=null) {
+                        Log.e("requstTest,requstTest",requstTest.getStatus()+ "");
+                        AllRequsts.add(requstTest);
+                    }
+                }catch (Exception e){
+                    Log.e("Exception", "Exception:" + e.getMessage());
+                }
+
+                // ...
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+
+
+                // ...
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        databaseReference2.child(Firebase_ipAddress).child(Login.salesMan).addChildEventListener(childEventListener);
+
+    }
+    private void getlistofdata(String key) {
+        Log.e("getlistofdata==", "getlistofdata");
+        AllowedCut_List.clear();
+
+        ChildEventListener childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.e("onChildAdded", "getKey:" + dataSnapshot.getKey());
+                // A new comment has been added, add it to the displayed list
+                try {
+
+
+                    RequstTest requstTest = dataSnapshot.getValue(RequstTest.class);
+                    if(requstTest!=null) {
+                        Log.e("requstTest,requstTest",requstTest.getStatus()+ "");
+                        if (requstTest.getStatus() != null)
+                        {
+                            if(requstTest.getRequest_type().equals("5")) {
+                                Log.e("requstTest,getRequest_type", "5");
+//                                if (requstTest.getStatus().equals("1"))
+                                {
+                                    Log.e("getStatus,getStatus", "1");
+                                    AllowedCut_List.add(requstTest);
+                                    Log.e("getStatus,AllowedCut_List", AllowedCut_List.size()+"");
+
+                                }
+
+                            }
+                        }
+                    }
+                }catch (Exception e){
+                    Log.e("Exception", "Exception:" + e.getMessage());
+                }
+
+                // ...
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.e("onChildAdded", "onChildChanged:" + dataSnapshot.getKey());
+                try {    RequstTest requstTest = dataSnapshot.getValue(RequstTest.class);
+                for (int i=0;i<DaoRequsts.AllowedCut_List.size();i++){
+                    if (DaoRequsts.AllowedCut_List.get(i).getKey_validation().equals(requstTest.getKey_validation()))
+                        DaoRequsts.AllowedCut_List.get(i).setStatus(requstTest.getStatus());
+                }
+
+            }catch (Exception e){
+                Log.e("Exception", "Exception:" + e.getMessage());
+            }
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.e("onChildAdded", "onChildRemoved:" + dataSnapshot.getKey());
+
+                // A comment has changed, use the key to determine if we are displaying this
+                // comment and if so remove it.
+                try {    RequstTest requstTest = dataSnapshot.getValue(RequstTest.class);
+                    for (int i=0;i<DaoRequsts.AllowedCut_List.size();i++){
+                        if (DaoRequsts.AllowedCut_List.get(i).getKey_validation().equals(requstTest.getKey_validation())) {
+                            DaoRequsts.AllowedCut_List.remove(i);
+                            i--;
+                        }
+                    }
+
+                }catch (Exception e){
+                    Log.e("Exception", "Exception:" + e.getMessage());
+                }
+
+
+                // ...
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.e("onChildAdded", "onChildMoved:" + dataSnapshot.getKey());
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("onChildAdded", "postComments:onCancelled", databaseError.toException());
+
+
+            }
+        };
+        databaseReference2.child(Firebase_ipAddress).child(Login.salesMan).addChildEventListener(childEventListener);
+
+    }
+
+
+    public void  getStatusofLogedrequst(Context context){
+
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e("getStatusofLogedrequst,onDataChange", "onDataChange");
+                // Get Post object and use the values to update the UI
+
+
+                RequstTest requstTest = dataSnapshot.child(LogedReq_Key).getValue(RequstTest.class);
+
+
+                if(requstTest!=null) {
+                    Log.e("getStatusofLogedrequst,requstTest", "requstTest");
+                    if (requstTest.getStatus() != null)
+                    {  if (requstTest.getStatus().equals("1")) {
+                        GeneralMethod.displayNotification(context, ""+context.getResources().getString(R.string.acceptedRequest), "");
+                        Log.e("requstTest.getSta","1");
+                    //    deleteRequst(requstTest.getKey_validation());
+//                      CustomerCheckInFragment.AllowedCut_List.add(requstTest.getCustomer_no());
+
+
+                    } else
+
+                    if (requstTest.getStatus().equals("2")) {
+                        GeneralMethod.displayNotification(context, ""+context.getResources().getString(R.string.rejectedRequest), "");
+                        Log.e("requstTest.getSt", "2");
+//                        deleteRequst(requstTest.getKey_validation());
+                    }
+
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.e("databaseError", "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        databaseReference2.child(Firebase_ipAddress).child(Login.salesMan).addValueEventListener(postListener);
+
+    }
+
+   public void  deleteRequst(String RequstID){
         Log.e("deleteRequst", "deleteRequst:deleteRequst");
         databaseReference2
                 .child(Firebase_ipAddress).child(Login.salesMan).child(RequstID)
