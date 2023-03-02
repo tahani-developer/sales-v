@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    app:cardElevation="10dp"
+    app:cardCornerRadius="25dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layoutDirection="locale"
+        android:layout_gravity="center"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="20dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="start|center_vertical"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:src="@drawable/ic_baseline_wrong_location_24" />
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/inter_bold_700"
+                android:text="@string/outofrange"
+                android:textColor="#384949"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp">
+
+            <TextView
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/colorBlack"
+             android:text="@string/requstapprove"
+                android:padding="10dp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:paddingVertical="15dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/done"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/done_button"
+                android:fontFamily="@font/inter_bold_700"
+                android:imeOptions="actionDone"
+                android:text="@string/app_done"
+                android:textColor="@color/white"
+                tools:ignore="TextViewEdits" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/cancel"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:background="@drawable/cancel_button"
+                android:fontFamily="@font/inter_bold_700"
+                android:text="@string/cancel"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginStart="10dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

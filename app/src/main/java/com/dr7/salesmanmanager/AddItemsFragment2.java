@@ -3,36 +3,26 @@ package com.dr7.salesmanmanager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.serialModel;
-import com.dr7.salesmanmanager.Reports.Reports;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-import android.app.Dialog;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.MediaStore;
 
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -51,57 +41,44 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dr7.salesmanmanager.Modles.Item;
-import com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter;
-import com.google.zxing.common.StringUtils;
 
-import org.w3c.dom.Text;
-
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.dr7.salesmanmanager.Login.POS_ACTIVE;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.sharedPref;
-import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
 //import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
 
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.CountOfItems;
-import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.SalesInvoice.VERSION;
 import static com.dr7.salesmanmanager.SalesInvoice.addItemImgButton2;
-import static com.dr7.salesmanmanager.SalesInvoice.addNewSerial;
-import static com.dr7.salesmanmanager.SalesInvoice.addQtyTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.canChangePrice;
-import static com.dr7.salesmanmanager.SalesInvoice.checkQtyServer;
-import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
 import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList2;
-import static com.dr7.salesmanmanager.SalesInvoice.listItemImage;
-import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
-import static com.dr7.salesmanmanager.SalesInvoice.listOfferNo;
 import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.minusQtyTotal;
-import static com.dr7.salesmanmanager.SalesInvoice.noTax;
-import static com.dr7.salesmanmanager.SalesInvoice.payMethod;
 import static com.dr7.salesmanmanager.SalesInvoice.priceListTypeVoucher;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
@@ -113,7 +90,9 @@ public class AddItemsFragment2 extends DialogFragment {
     ArrayList<Item> filteredList_allItem = new ArrayList<>();
     public  CheckBox greaterZero_checkbox;
     public static List<Item> List;
+    TableRow HeaderNewLin;
     public  static  int endAddItem=0;
+    int  Spancount=2;
     public  static  int size_customerpriceslist=0,qtyGreatZero=0;
     public  List<Item> itemsList_forFilter;
     Context context;
@@ -134,6 +113,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //    public static List<Item> jsonItemsList_intermidiate;
     RecyclerView recyclerView;
    CheckBox orientation_checkbox;
+        AppCompatCheckBox Smallericon_checkbox;
     ListView listAllItemsView;
     TextView emptyView;
     ListView verticalList;
@@ -261,6 +241,9 @@ public class AddItemsFragment2 extends DialogFragment {
         recyclerView = view.findViewById(R.id.recyclerView);
 
         orientation_checkbox= view.findViewById(R.id.orientation_checkbox);
+        Smallericon_checkbox= view.findViewById(R.id.Smallericon_checkbox);
+        HeaderNewLin= view.findViewById(R.id.HeaderNewLin);
+
         orientation_checkbox.setButtonDrawable(R.drawable.custom_checkbox);
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
@@ -268,10 +251,17 @@ public class AddItemsFragment2 extends DialogFragment {
         orientation_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Log.e("orientation_checkbox="," orientation_checkbox");
                 if(b)
                 {
+
                     linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     recyclerView.setLayoutManager(linearLayoutManager);
+
+                    int numberOfColumns = 6;
+                    recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), numberOfColumns));
+
+
                     SharedPreferences.Editor editor = getContext().getSharedPreferences( Login.SETTINGS_PREFERENCES, MODE_PRIVATE).edit();
                     editor.putBoolean(Login.Items_Orent_PREF, b);
                     editor.apply();
@@ -285,6 +275,72 @@ public class AddItemsFragment2 extends DialogFragment {
                 editor.apply();
             }
         });
+
+//        Smallericon_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                Log.e("Smallericon_checkbox="," Smallericon_checkbox");
+//                if(b)
+//                {
+//                    Smallericon_checkbox.setButtonDrawable(getResources().getDrawable(R.drawable.ic_baseline_grid_on_24));
+//                    recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), Spancount));
+//
+//Log.e("Smallericon_checkbox=",b+" ");
+//
+//                    SharedPreferences.Editor editor = getContext().getSharedPreferences( Login.SETTINGS_PREFERENCES, MODE_PRIVATE).edit();
+//                    editor.putBoolean(Login.Smallericon_PREF, b);
+//                    editor.apply();
+//                }
+//                else
+//                {
+//                    Smallericon_checkbox.setButtonDrawable(getResources().getDrawable(R.drawable.ic_baseline_grid_off_24));
+//                SharedPreferences.Editor editor = getContext().getSharedPreferences( Login.SETTINGS_PREFERENCES, MODE_PRIVATE).edit();
+//                editor.putBoolean(Login.Smallericon_PREF, b);
+//
+//                editor.apply();
+//                    if(orientation_checkbox.isChecked()==true) {
+//                        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+//                        recyclerView.setLayoutManager(linearLayoutManager);
+//                    }   else {
+//                        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+//                        recyclerView.setLayoutManager(linearLayoutManager);
+//                    }
+//
+//            }}
+//        });
+        Smallericon_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Log.e("Smallericon_checkbox="," Smallericon_checkbox");
+                if(b)
+                {
+                    Smallericon_checkbox.setButtonDrawable(getResources().getDrawable(R.drawable.blueic_baseline_table_view_24));
+                    linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    Smallericon_checkbox.setButtonDrawable(getResources().getDrawable(R.drawable.blueic_baseline_table_view_24));
+                    HeaderNewLin.setVisibility(View.VISIBLE);
+                    SharedPreferences.Editor editor = getContext().getSharedPreferences( Login.SETTINGS_PREFERENCES, MODE_PRIVATE).edit();
+                    editor.putBoolean(Login.Smallericon_PREF, b);
+                    editor.apply();
+                }
+                else
+                {
+                    Smallericon_checkbox.setButtonDrawable(getResources().getDrawable(R.drawable.grayic_baseline_table_view_24));
+                    SharedPreferences.Editor editor = getContext().getSharedPreferences( Login.SETTINGS_PREFERENCES, MODE_PRIVATE).edit();
+                    editor.putBoolean(Login.Smallericon_PREF, b);
+                    Smallericon_checkbox.setButtonDrawable(getResources().getDrawable(R.drawable.grayic_baseline_table_view_24));
+                    editor.apply();
+                    HeaderNewLin.setVisibility(View.GONE);
+                    if(orientation_checkbox.isChecked()==true) {
+                        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                    }   else {
+                        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                    }
+
+                }}
+        });
         emptyView = (TextView) view.findViewById(R.id.empty_view);
 //        listAllItemsView=view.findViewById(R.id.itemsListView);
         listAllItemsView = (ListView) view.findViewById(R.id.itemsListView);
@@ -294,18 +350,46 @@ public class AddItemsFragment2 extends DialogFragment {
 
 //       if( jsonItemsList.size()!=0){
 
+      if(sharedPref==null)  sharedPref = getActivity().getSharedPreferences("SETTINGS_PREFERENCES", MODE_PRIVATE);
+        if  (sharedPref.getBoolean(Login.Smallericon_PREF, false))
+        {     Log.e("Smallericon_checkbox11==","case1");
+            Smallericon_checkbox.setChecked(true);
+            HeaderNewLin.setVisibility(View.VISIBLE);
+            Smallericon_checkbox.setButtonDrawable(getResources().getDrawable(R.drawable.blueic_baseline_table_view_24));
+
+        }
+        else
+        {  Smallericon_checkbox.setChecked(false);
+            HeaderNewLin.setVisibility(View.GONE);
+            Log.e("Smallericon_checkbox11==","case2");
+            Smallericon_checkbox.setButtonDrawable(getResources().getDrawable(R.drawable.grayic_baseline_table_view_24));
+        }
 
      if  (sharedPref.getBoolean(Login.Items_Orent_PREF, true))
          orientation_checkbox.setChecked(true);
      else
          orientation_checkbox.setChecked(false);
 
-        if(orientation_checkbox.isChecked()==true)
+        if(orientation_checkbox.isChecked()==true) {
             linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        else
+            recyclerView.setLayoutManager(linearLayoutManager);
+        }   else {
             linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+            recyclerView.setLayoutManager(linearLayoutManager);
+        }
+        Log.e("Smallericon_checkbox11==",Smallericon_checkbox.isChecked()+"");
 
-        recyclerView.setLayoutManager(linearLayoutManager);
+        if(Smallericon_checkbox.isChecked()==true) {
+            linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+            recyclerView.setLayoutManager(linearLayoutManager);
+        }
+        else
+        {linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);}
+
+
+
+
 //        fillListViewAllItem();
         fillItemRecycler();
 
@@ -414,6 +498,27 @@ public class AddItemsFragment2 extends DialogFragment {
             public boolean onQueryTextChange(String query) {
                 //FILTER AS YOU TYPE
 //                adapter.getFilter().filter(query);
+                boolean isFound = false;
+//                try {
+//
+//                    Log.e("jsonItemsList=", jsonItemsList.size()+"" );
+//                    for(int i=0;i<jsonItemsList.size();i++) {
+//                        Log.e("getItemName=", "" +jsonItemsList.get(i).getItemName());
+//
+//                        if (fisrtchar(jsonItemsList.get(i).getItemName(), query.toString())) {
+//                            Log.e("fisrtchar=", "" + "true");
+//                            isFound = true;
+//                        } else {
+//                            Log.e("fisrtchar=", "" + "false");
+//                            isFound = false;
+//                        }
+//                    }
+//
+//                }catch (Exception e){
+//                    Log.e("ifmatch=",""+"Exception");
+//                }
+
+
 
                 filteredList_allItem.clear();
                 if (query != null && query.length() > 0) {
@@ -424,16 +529,19 @@ public class AddItemsFragment2 extends DialogFragment {
                     ArrayList<Item> filteredList = new ArrayList<>();
 //                    filteredList_allItem
 
-                    boolean isFound = false;
+
                     if(filteredList_allItem.size()==0){
                         filteredList_allItem.addAll(jsonItemsList);
                     }
 
 
-                    Log.e("filteredList_allItem",""+filteredList_allItem.size());
                     for (int i = 0; i < filteredList_allItem.size(); i++) {
+
                         if (filteredList_allItem.get(i).getItemName().toLowerCase().contains(query.toString())
-                                || filteredList_allItem.get(i).getItemName().toUpperCase().contains(query.toString())) {
+                                || filteredList_allItem.get(i).getItemName().toUpperCase().contains(query.toString())
+                        ||
+                                FisrtCharsFromString(jsonItemsList.get(i).getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
+                        ) {
                             isFound = true;
                         }
                              else {
@@ -1731,6 +1839,26 @@ try {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
     }
+
+boolean FisrtCharsFromString(String ItemName, String SerachText){
+
+    String initialsOfSubName = "";
+    boolean flage = true;
+    for (int i = 0; i < ItemName.length(); i++) {
+
+        if (ItemName.charAt(i) == ' ')
+            flage = true;
+        else if (ItemName.charAt(i) != ' ' && flage == true) {
+            initialsOfSubName += (ItemName.charAt(i));
+
+            flage = false;
+        }
+    }
+
+  if(initialsOfSubName.trim().contains(SerachText.replaceAll("\\s", "")))  return true;
+  else return false;
+
+}
     }
 
 

@@ -47,6 +47,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
     private CustomerListShow customerListShow;
     public  int showCustomerLoc_sett;
     DatabaseHandler mDHandler;
+
     public CustomersListAdapter(CustomerListShow customerListShow, Context context, List<Customer> custList,int showCustomerLoc) {
         this.context = context;
         this.mOriginalValues = custList;

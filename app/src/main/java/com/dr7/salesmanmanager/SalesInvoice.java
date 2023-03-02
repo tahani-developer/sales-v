@@ -367,7 +367,7 @@ public class SalesInvoice extends Fragment {
     int[] listImageIcone=new int[]{R.drawable.ic_delete_forever_black_24dp,
             R.drawable.ic_refresh_white_24dp,
           R.drawable.ic_print_white_24dp,R.drawable.ic_create_white_24dp
-            ,R.drawable.ic_account_balance_white_24dp};
+            ,R.drawable.ic_account_balance_white_24dp,R.drawable.ic_baseline_share_24};
 //    R.drawable.ic_save_black_24dp,
     String[] textListButtons=new String[]{};
    public static RequestAdmin discountRequest;
@@ -1534,15 +1534,15 @@ public class SalesInvoice extends Fragment {
 //    }
 
     private void inflateBoomMenu(View view) {
-        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.print),getResources().getString(R.string.request),getResources().getString(R.string.last_visit)};
+        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.print),getResources().getString(R.string.request),getResources().getString(R.string.last_visit),getResources().getString(R.string.Shar)};
 
 
         BoomMenuButton bmb = (BoomMenuButton)view.findViewById(R.id.bmb);
 
         bmb.setButtonEnum(ButtonEnum.TextOutsideCircle);
-        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_5_3);
-        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_5_3);
-
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_6_3);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_6_3);
+Log.e("bmb.size="," "+bmb.getPiecePlaceEnum().pieceNumber());
         for (int j = 0; j < bmb.getPiecePlaceEnum().pieceNumber(); j++) {
             TextOutsideCircleButton.Builder builder = new TextOutsideCircleButton.Builder()
                     .normalImageRes(listImageIcone[j])
@@ -1602,6 +1602,24 @@ public class SalesInvoice extends Fragment {
                                     break;
                                 case 4:
                                     showLastVisitDialog();
+                                case 5:
+                                    try {
+                                        voucherNo = mDbHandler.getLastVoucherNo(voucherType);
+                                        if (voucherNo != 0 && voucherNo != -1) {
+                                            voucherForPrint = mDbHandler.getAllVouchers_VoucherNo(voucherNo,voucherType);
+                                            Log.e("no", "" + voucherForPrint.getCustName() + "\t voucherType" + voucherType);
+                                            sharwhats();
+                                        } else {
+                                            Toast.makeText(getActivity(), "there is no voucher for this customer and this type of voucher ", Toast.LENGTH_SHORT).show();
+
+                                        }
+
+                                    } catch (Exception e) {
+                                        Log.e("ExceptionReprint", "" + e.getMessage());
+                                        voucherNo = 0;
+                                    }
+
+                                 //   shareWhatsApp();
                                     break;
 
                             }
@@ -1696,7 +1714,14 @@ public class SalesInvoice extends Fragment {
 
         }
     }
+    public  void   shareWhatsApp() {
 
+
+        Log.e("shareWhatsApp==", "shareWhatsApp" );
+
+
+
+    }
     private void showLastVisitDialog() {
         String lastVisit=getLastVaisit();
         new SweetAlertDialog(getActivity(), SweetAlertDialog.NORMAL_TYPE)
@@ -6891,7 +6916,20 @@ try {
 //        dialog.show();
 
     }
+    public void sharwhats() {
 
+        try {
+       SaleInvoicePrinted = voucherForPrint;
+            List<Item> itemVOCHER = new ArrayList<>();
+            itemVOCHER = mDbHandler.getAllItemsBYVOCHER(String.valueOf(SaleInvoicePrinted.getVoucherNumber()), SaleInvoicePrinted.getVoucherType());
+
+            // Log.e("itemVOCHER==", "" + itemVOCHER.size());
+            PdfConverter pdf = new PdfConverter(SalesInvoice.this.getActivity());
+            pdf.exportListToPdf(itemVOCHER, "Vocher", "", 18);
+        } catch (Exception e) {
+            Log.e("Exception22==", "" + e.getMessage());
+        }
+    }
     void findBT() {
 
 //        try {

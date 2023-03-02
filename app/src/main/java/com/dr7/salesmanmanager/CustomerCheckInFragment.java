@@ -3,7 +3,7 @@ package com.dr7.salesmanmanager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -11,6 +11,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -37,17 +39,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
+import com.dr7.salesmanmanager.Interface.DaoRequsts;
 import com.dr7.salesmanmanager.Modles.Customer;
-import com.dr7.salesmanmanager.Modles.CustomerLocation;
+import com.dr7.salesmanmanager.Modles.RequstTest;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
-import com.dr7.salesmanmanager.Reports.Reports;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,21 +64,19 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
 
+import static com.dr7.salesmanmanager.Login.curentTime;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
-import static com.dr7.salesmanmanager.MainActivity.customerLocation_main;
+import static com.dr7.salesmanmanager.MainActivity.curentDate;
 import static com.dr7.salesmanmanager.MainActivity.latitudeCheckIn;
-import static com.dr7.salesmanmanager.MainActivity.latitude_main;
-import static com.dr7.salesmanmanager.MainActivity.location_main;
-import static com.dr7.salesmanmanager.MainActivity.longitude_main;
 import static com.dr7.salesmanmanager.MainActivity.longtudeCheckIn;
-import static com.dr7.salesmanmanager.MainActivity.transactions;
 import static com.dr7.salesmanmanager.MyServices.checkOutLat;
 import static com.dr7.salesmanmanager.MyServices.checkOutLong;
 
@@ -118,7 +115,7 @@ public class CustomerCheckInFragment extends DialogFragment {
     public Context context;
     LinearLayout discLayout;
     int  approveAdmin=-1;
-
+    int requstIndix=0;
     public interface CustomerCheckInInterface {
         public void showCustomersList();
 
@@ -235,8 +232,10 @@ public class CustomerCheckInFragment extends DialogFragment {
                         }
                         Log.e("getAllowOutOfRange",""+mDbHandler.getAllSettings().get(0).getAllowOutOfRange());
 //                        if(inRoot) {
-                            if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 0 ||
-                                    isInRange(custObj.getCustLat(), custObj.getCustLong())) {
+                            if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 0
+//                                    ||
+//                                    isInRange(custObj.getCustLat(), custObj.getCustLong())
+                            ) {
 
                                 MainActivity mainActivity = new MainActivity();
                                 mainActivity.settext2();
@@ -285,7 +284,83 @@ public class CustomerCheckInFragment extends DialogFragment {
 
 
                             } else {
-                                Toast.makeText(getActivity(), "Not in range", Toast.LENGTH_SHORT).show();
+                                //show requst dailog
+                                Log.e("AllowedCut_List==",""+DaoRequsts.AllowedCut_List.size());
+                              //  Log.e("notallowedAllowedCut_List==",""+DaoRequsts.NotAllowedCut_List.size());
+
+
+                                if(contains(custObj.getCustId())==1)
+                                {   Log.e("AllowedCut_List","true");
+
+                                    DaoRequsts daoRequsts=new DaoRequsts(getActivity());
+                                    daoRequsts.deleteRequst(DaoRequsts.AllowedCut_List.get(requstIndix).getKey_validation());
+
+                                    MainActivity mainActivity = new MainActivity();
+                                    mainActivity.settext2();
+
+                                    Date currentTimeAndDate = Calendar.getInstance().getTime();
+                                    SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
+                                    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+                                    String currentTime = tf.format(currentTimeAndDate);
+                                    String currentDate = df.format(currentTimeAndDate);
+                                    currentDate=convertToEnglish(currentDate);
+                                    currentTime=convertToEnglish(currentTime);
+                                    int salesMan =1;
+                                    try {
+                                        salesMan = Integer.parseInt(Login.salesMan);
+                                    }
+                                    catch (NumberFormatException e)
+                                    {
+                                        Log.e("NumberFormatException",""+e.getMessage());
+                                        salesMan=1;
+                                    }
+
+
+
+                                    mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
+                                            currentDate, "0", 0,0));
+
+//                              if(mDbHandler.getAllSettings().get(0).getPriceByCust()==1){
+//                                  String rate_customer = mDbHandler.getRateOfCustomer();
+//                                  mDbHandler.addPriceCurrent(cusCode);
+//                                  mDbHandler.deletePriceListDCustomerRate(rate_customer);
+//                              }
+
+//                                MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
+//                                MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
+                                    dismiss();
+//                                if(mDbHandler.getAllSettings().get(0).getApproveAdmin()==1)
+//                                {
+//                                    Intent intent = new Intent(context, AccountStatment.class);
+//                                    context.startActivity(intent);
+//                                }
+//                                else {
+                                    Intent intent = new Intent(context, Activities.class);
+                                    context.startActivity(intent);
+                                }
+                                else if (contains(custObj.getCustId())==2) {
+                                    GeneralMethod.showSweetDialog(getActivity(),3,""+getResources().getString(R.string.rejectedRequest2),"");
+
+                                    DaoRequsts daoRequsts=new DaoRequsts(getActivity());
+                                    daoRequsts.deleteRequst(DaoRequsts.AllowedCut_List.get(requstIndix).getKey_validation());
+
+                                  //  Toast.makeText(getActivity(), "Not in range", Toast.LENGTH_SHORT).show();
+                                }
+                                else if (contains(custObj.getCustId())==0){
+                                    GeneralMethod.showSweetDialog(getActivity(),3,""+getResources().getString(R.string.adminallowed_Wait),"");
+
+                                }
+                                    else
+
+                                {
+
+                                    Log.e("AllowedCut_List","false");
+                               ShowRequstApprovaldailog();
+
+                                }
+
+                            //    Toast.makeText(getActivity(), "Not in range", Toast.LENGTH_SHORT).show();
                             }
 //                        } else {
 //                            Toast.makeText(getActivity(), "This customer is not in your root, please check your map", Toast.LENGTH_LONG).show();
@@ -811,5 +886,117 @@ public class CustomerCheckInFragment extends DialogFragment {
             }
         }
 
+    }
+    void GetObjToAddInFirebase(String cust_num,String cust_name){
+        try{
+            //ayah
+            Log.e("GetObjToAddInFirebase==","GetObjToAddInFirebase");
+            DaoRequsts daoRequsts=new DaoRequsts(context);
+
+            RequstTest requestAdmin1=new RequstTest();
+            requestAdmin1.setSalesman_no(Login.salesMan);
+            String salesName=mDbHandler.getSalesmanName_fromSalesTeam();
+            requestAdmin1.setSalesman_name(salesName);
+            requestAdmin1.setCustomer_no(cust_num);
+            requestAdmin1.setVoucher_no("-1");
+
+
+            Date    currentTimeAndDate = Calendar.getInstance().getTime();
+            SimpleDateFormat   df= new SimpleDateFormat("dd/MM/yyyy");
+           String curentDate = df.format(currentTimeAndDate);
+            SimpleDateFormat    df2 = new SimpleDateFormat("hh:mm:ss");
+            String  curentTime=df2.format(currentTimeAndDate);
+
+            Log.e("curentDate==",curentDate+"");
+            requestAdmin1.setDate(curentDate);
+            requestAdmin1.setTime(curentTime);
+            requestAdmin1.setCustomer_name(cust_name);
+            requestAdmin1.setRequest_type("5");
+            requestAdmin1.setAmount_value("0");
+            requestAdmin1.setKey_validation(getRandomNumberString() + "");
+            Log.e("requestAdmin1.getKey", requestAdmin1.getKey_validation()+"");
+           DaoRequsts. LogedReq_Key=requestAdmin1.getKey_validation();
+            requestAdmin1.setStatus("0");
+            requestAdmin1.setSeen_row("0");
+            requestAdmin1.setNote(getResources().getString(R.string.log_in_cus_outrange));
+            requestAdmin1.setTotal_voucher("0");
+            daoRequsts.addRequst(requestAdmin1);
+            //SalesInvoice.lastrequst=requestAdmin1.getKey_validation();
+
+        }catch (Exception e){
+            Log.e("Exception==", e.getMessage()+"");
+        }
+
+    }
+    public void ShowRequstApprovaldailog(){
+        Log.e("ShowRequstApprovaldailog","ShowRequstApprovaldailog");
+        Dialog dialog = new Dialog(context);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.location_requstdailog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView closeBtn = dialog.findViewById(R.id.cancel);
+
+        Button okBtn = dialog.findViewById(R.id.done);
+        dialog.show();
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+            }
+        });
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                GetObjToAddInFirebase(custObj.getCustId(),custObj.getCustName());
+                dialog.dismiss();
+
+
+
+            }
+        });
+
+
+
+
+    }
+    public int getRandomNumberString() {
+        // It will generate 6 digit random Number.
+        // from 0 to 999999
+        Random rnd = new Random();
+        int number = rnd.nextInt(999999);
+        Log.e("Random", "" + number);
+        // this will convert any number sequence into 6 character.
+//        return String.format("%06d", number);
+        return number;
+    }
+    public int contains(String cusCode){
+        Log.e("contains,AllowedCut_List==",""+DaoRequsts.AllowedCut_List.size());
+        for (int i=0;i<DaoRequsts.AllowedCut_List.size();i++){
+            Log.e("contains", "" + DaoRequsts.AllowedCut_List.get(i).getCustomer_name()+"  "+DaoRequsts.AllowedCut_List.get(i).getStatus());
+            if (DaoRequsts.AllowedCut_List.get(i).getCustomer_no().equals(cusCode))
+
+        if (DaoRequsts.AllowedCut_List.get(i).getStatus().equals("0"))
+            { requstIndix=i;
+                return 0;
+
+            }
+
+            else if (DaoRequsts.AllowedCut_List.get(i).getStatus().equals("1")) {
+                requstIndix=i;
+                return 1;
+
+            }
+            else if (DaoRequsts.AllowedCut_List.get(i).getStatus().equals("2")) {
+                requstIndix=i;
+                return 2;
+
+
+            }
+        }
+        return -1;
     }
 }
