@@ -57,7 +57,7 @@ public class LocationDao {
 
             @Override
             public void onSuccess(Void aVoid) {
-               Log.e("addLocation==", "databaseReference"+databaseReference.getRoot());
+             //  Log.e("addLocation==", "databaseReference"+databaseReference.getRoot());
                Log.e("onSuccess==", "New salesMenLocation Data stored successfully");
 
             }

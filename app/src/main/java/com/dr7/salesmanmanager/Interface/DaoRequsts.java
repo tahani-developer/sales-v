@@ -155,56 +155,60 @@ String ipAddress="";
 
     }
     public void  getStatusofrequst(Context context){
+try {
+    ValueEventListener postListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            Log.e("getStatusofrequst,onDataChange", "onDataChange");
+            // Get Post object and use the values to update the UI
 
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e("getStatusofrequst,onDataChange", "onDataChange");
-                // Get Post object and use the values to update the UI
-
-             Log.e("keys==",currentKeyTotalDiscount+" , "+keyCreditLimit+" , "+currentKey);
+            Log.e("keys==",currentKeyTotalDiscount+" , "+keyCreditLimit+" , "+currentKey);
             Key="";
-             if(!currentKeyTotalDiscount.equals(""))Key=currentKeyTotalDiscount;
-             else    if(!keyCreditLimit.equals(""))Key=keyCreditLimit;
-             else    if(!currentKey.equals(""))Key=currentKey;
+            if(!currentKeyTotalDiscount.equals(""))Key=currentKeyTotalDiscount;
+            else    if(!keyCreditLimit.equals(""))Key=keyCreditLimit;
+            else    if(!currentKey.equals(""))Key=currentKey;
 
 
-                RequstTest requstTest = dataSnapshot.child(Key).getValue(RequstTest.class);
+            RequstTest requstTest = dataSnapshot.child(Key).getValue(RequstTest.class);
 
 
-if(requstTest!=null) {
-    if (requstTest.getStatus() != null)
-    {  if (requstTest.getStatus().equals("1")) {
-            GeneralMethod.displayNotification(context, ""+context.getResources().getString(R.string.acceptedRequest), "");
-        Log.e("requstTest.getSta","1");
-   deleteRequst(requstTest.getKey_validation());
+            if(requstTest!=null) {
+                if (requstTest.getStatus() != null)
+                {  if (requstTest.getStatus().equals("1")) {
+                    GeneralMethod.displayNotification(context, ""+context.getResources().getString(R.string.acceptedRequest), "");
+                    Log.e("requstTest.getSta","1");
+                    deleteRequst(requstTest.getKey_validation());
 
 
 
-        } else
+                } else
 
-    if (requstTest.getStatus().equals("2")) {
-        GeneralMethod.displayNotification(context, ""+context.getResources().getString(R.string.rejectedRequest), "");
-        Log.e("requstTest.getSt", "2");
-      deleteRequst(requstTest.getKey_validation());
-    }
-        if((requstTest.getRequest_type().equals("0")||requstTest.getRequest_type().equals("2")) && checkState_recycler!=null)   checkState_recycler.setText(requstTest.getStatus().toString());
-        if(requstTest.getRequest_type().equals("1")&&checkState!=null)  checkState.setText(requstTest.getStatus().toString());
-        if(requstTest.getRequest_type().equals("10")&&checkState!=null)checkState.setText(requstTest.getStatus().toString());
-            if(requstTest.getRequest_type().equals("100")&&checkState_LimitCredit!=null)     checkState_LimitCredit.setText(requstTest.getStatus().toString());
+                if (requstTest.getStatus().equals("2")) {
+                    GeneralMethod.displayNotification(context, ""+context.getResources().getString(R.string.rejectedRequest), "");
+                    Log.e("requstTest.getSt", "2");
+                    deleteRequst(requstTest.getKey_validation());
+                }
+                    if((requstTest.getRequest_type().equals("0")||requstTest.getRequest_type().equals("2")) && checkState_recycler!=null)   checkState_recycler.setText(requstTest.getStatus().toString());
+                    if(requstTest.getRequest_type().equals("1")&&checkState!=null)  checkState.setText(requstTest.getStatus().toString());
+                    if(requstTest.getRequest_type().equals("10")&&checkState!=null)checkState.setText(requstTest.getStatus().toString());
+                    if(requstTest.getRequest_type().equals("100")&&checkState_LimitCredit!=null)     checkState_LimitCredit.setText(requstTest.getStatus().toString());
 
 
-    }
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            // Getting Post failed, log a message
+            Log.e("databaseError", "loadPost:onCancelled", databaseError.toException());
+        }
+    };
+    databaseReference2.child(Firebase_ipAddress).child(Login.salesMan).addValueEventListener(postListener);
+
+}catch (Exception e){
+    Log.e("getStatusofrequst,Exception==",""+e.getMessage());
 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.e("databaseError", "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-        databaseReference2.child(Firebase_ipAddress).child(Login.salesMan).addValueEventListener(postListener);
 
     }
     public void  getStatusofLogedrequsts(Context context){

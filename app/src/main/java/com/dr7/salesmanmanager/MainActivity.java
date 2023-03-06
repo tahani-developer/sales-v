@@ -1251,7 +1251,7 @@ if(settingsList.size()>0)
     public void saveCurrentLocation() throws InterruptedException {
         first=2;
         isClickLocation=2;
-        getLoc();
+  //      getLoc();
 //        requestSingleUpdate();
         Log.e("saveCurrentLocation",""+isClickLocation);
 //        getlocattTest();

@@ -425,8 +425,19 @@ public class SalesInvoice extends Fragment {
         contextG=getActivity().getApplicationContext();
 
         try{
-            DaoRequsts daoRequsts=new DaoRequsts(contextG);
-            daoRequsts.getStatusofrequst(contextG);
+
+
+            try {
+                approveAdmin = settingsList.get(0).getApproveAdmin();
+            }catch (Exception e){
+                approveAdmin=0;
+            }
+            if(approveAdmin==1)
+            {
+                DaoRequsts daoRequsts=new DaoRequsts(contextG);
+                daoRequsts.getStatusofrequst(contextG);
+            }
+
         }catch (Exception  exception){
             Log.e("Exception",exception.getMessage());
         }
