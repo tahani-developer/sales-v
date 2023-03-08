@@ -38,12 +38,15 @@ public class MyServices extends Service {
     ImportJason importJason;
     public int LOCATIONTRACK =-1;
     String userNo="0";
+    String salesName="";
     DatabaseHandler db = new DatabaseHandler(MyServices.this);
     List<Settings> settings=new ArrayList<>();
     SalesmanStations salesmanStations=new SalesmanStations();
     public static double checkOutLong=0,checkOutLat=0;
     double latitude,longitude;
     DatabaseHandler mHandler;
+    LocationDao daoRequsts;
+    SalesMenLocation salesMenLocation;
     public IBinder onBind(Intent arg0) {
         Log.e(TAG, "onBind()" );
         return null;
@@ -57,6 +60,8 @@ public class MyServices extends Service {
          importJason = new ImportJason(MyServices.this);
          mHandler=new DatabaseHandler(MyServices.this);
         userNo= db.getAllUserNo();
+         daoRequsts =new LocationDao(MyServices.this);
+         salesMenLocation=new SalesMenLocation();
         if (settings.size() != 0) {
             LOCATIONTRACK = settings.get(0).getLocationtracker();
 
@@ -129,25 +134,27 @@ public class MyServices extends Service {
                                         salesmanStations.setLongitude("" + longitude);
                                         Log.e(TAG, "  nnn");
                                      //   Log.e(TAG, " mmmm " + salesmanStations.getJSONObject());
-                                        SalesMenLocation salesMenLocation=new SalesMenLocation();
+
                                         salesMenLocation.setSalesmanNo(userNo+"");
 
-                                        String salesName=mHandler.getSalesmanName_fromSalesTeam();
+                                         salesName=mHandler.getSalesmanName_fromSalesTeam();
                                         salesMenLocation.setSalesmanName(salesName);
                                         salesMenLocation.setLatitude(latitude+"");
                                         salesMenLocation.setLongitude(longitude+"");
-//                                   try {
-//                                       Log.e("salesMan==", " salesMan " + userNo);
-//                                       LocationDao daoRequsts =new LocationDao(MyServices.this);
-//                                       daoRequsts.addLocation(salesMenLocation);
-//                                   }catch (Exception e){
-//                                       Log.e("Exception", ""+e.getMessage());
-//                                   }
+                                   try {  // code for track salesman location in FireBase Added by aya
+                                       Log.e("salesMan==", " salesMan " + userNo);
+
+                                       if (latitude !=0||longitude!=0) {
+                                           daoRequsts.addLocation(salesMenLocation);
+                                       }
+                                   }catch (Exception e){
+                                       Log.e("Exception", ""+e.getMessage());
+                                   }
 
                                             if (latitude !=0||longitude!=0)
                                             {
 
-                                                importJason.  updateLocation(salesmanStations.getJSONObject());
+                                              //  importJason.  updateLocation(salesmanStations.getJSONObject());
                                         }
                                     }else {
                                         Log.e(TAG, "  no App Import");

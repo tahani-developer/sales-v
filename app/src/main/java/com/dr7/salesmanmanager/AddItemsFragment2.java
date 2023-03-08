@@ -547,8 +547,8 @@ public class AddItemsFragment2 extends DialogFragment {
 
                     for (int i = 0; i < filteredList_allItem.size(); i++) {
 
-                        if (filteredList_allItem.get(i).getItemName().toLowerCase().contains(query.toString())
-                                || filteredList_allItem.get(i).getItemName().toUpperCase().contains(query.toString())
+                        if (filteredList_allItem.get(i).getItemName().toLowerCase().trim().contains(query.toString().trim())
+                                || filteredList_allItem.get(i).getItemName().toUpperCase().trim().contains(query.toString().trim())
                         ||
                                 FisrtCharsFromString(jsonItemsList.get(i).getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
                         ) {
@@ -599,7 +599,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
                     RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
                     recyclerView.setAdapter(adapter);
-
+                 //   Toast.makeText(context, ""+filteredList.size(), Toast.LENGTH_SHORT).show();
 
                 } else {
                     ArrayList<Item> filteredList = new ArrayList<>();
