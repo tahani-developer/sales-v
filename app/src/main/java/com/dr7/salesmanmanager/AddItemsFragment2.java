@@ -547,8 +547,8 @@ public class AddItemsFragment2 extends DialogFragment {
 
                     for (int i = 0; i < filteredList_allItem.size(); i++) {
 
-                        if (filteredList_allItem.get(i).getItemName().toLowerCase().trim().contains(query.toString().trim())
-                                || filteredList_allItem.get(i).getItemName().toUpperCase().trim().contains(query.toString().trim())
+                        if (filteredList_allItem.get(i).getItemName().toLowerCase().trim().replaceAll("\\s", "").contains(query.toString().trim().replaceAll("\\s", ""))
+                                || filteredList_allItem.get(i).getItemName().toUpperCase().trim().replaceAll("\\s", "").contains(query.toString().trim().replaceAll("\\s", ""))
                         ||
                                 FisrtCharsFromString(jsonItemsList.get(i).getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
                         ) {
