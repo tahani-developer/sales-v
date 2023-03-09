@@ -642,7 +642,11 @@
     <string name="Shar">Shar</string>
     <string name="log_in_cus_outrange">Log in Customer Out of range</string>
     <string name="visaPayment">Visa</string>
-
+    <string name="detective">ACHIVED</string>
+    <string name="Range">Target</string>
+    <string name="difference">difference</string>
+    <string name="custperformance"> Customers Performance Report</string>
+    <string name="getingData">Getting Data</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

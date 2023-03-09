@@ -675,6 +675,11 @@
     <string name="Shar">مشاركة</string>
     <string name="log_in_cus_outrange">تسجيل الدخول لعميل خارج النطاق</string>
     <string name="visaPayment">Visa</string>
+    <string name="detective">المحقق</string>
+    <string name="Range">الهدف</string>
+    <string name="difference">الفرق</string>
+    <string name="custperformance">تقرير الأهداف والقيم المحققة</string>
+    <string name="getingData">جاري جلب البيانات</string>
     <string-array name="DaysOfWeek">
         <item>السبت</item>
         <item>الأحد</item>

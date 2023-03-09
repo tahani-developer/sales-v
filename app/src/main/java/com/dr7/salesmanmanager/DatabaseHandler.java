@@ -4683,7 +4683,27 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
 
 
+    public String getcustomerbyname(String CUS_name) {
+       String customer = "";
 
+       String selectQuery = "SELECT  CUS_ID FROM " + CUSTOMER_MASTER + " where CUS_NAME0 = '" + CUS_name + "'";
+
+       db = this.getWritableDatabase();
+       Cursor cursor = db.rawQuery(selectQuery, null);
+
+       // looping through all rows and adding to list
+       if (cursor.moveToFirst()) {
+          do {
+
+
+
+             customer=      cursor.getString(0);
+
+
+          } while (cursor.moveToNext());
+       }
+       return customer;
+    }
     public Customer getcustomerinfo(String CUS_ID) {
       Customer customer = new Customer();
        // Select All Query

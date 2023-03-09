@@ -46,7 +46,7 @@ public class Reports extends AppCompatActivity {
 
 
     LinearLayout showplanLin,customer_log_report,transactions_report,stock_request_report,Inventory_report,cash_reoprt,
-            return_report,serial_report,shelf_inventory_report,custwithouttrans_report,Target_Report;
+            custperformance  , return_report,serial_report,shelf_inventory_report,custwithouttrans_report,Target_Report;
 
     DatabaseHandler MHandler;
     LinearLayout inventory_layout,mainLayout;
@@ -89,6 +89,7 @@ public class Reports extends AppCompatActivity {
         }
         customer_log_report = (LinearLayout) findViewById(R.id.customer_log_report);
         transactions_report = (LinearLayout) findViewById(R.id.transactions_report);
+        custperformance= (LinearLayout) findViewById(R.id.custperformance);
         return_report = (LinearLayout) findViewById(R.id.return_report);
         Inventory_report = (LinearLayout) findViewById(R.id.inventory_report);
         serial_report = (LinearLayout) findViewById(R.id.serial_report);
@@ -104,6 +105,7 @@ public class Reports extends AppCompatActivity {
 //          if(MHandler.getAllSettings().get(0).getEndTripReport()==1)
 //              custwithouttrans_report.setVisibility(View.VISIBLE);
         customer_log_report.setOnClickListener(onClickListener);
+        custperformance.setOnClickListener(onClickListener);
         serial_report.setOnClickListener(onClickListener);
         cash_reoprt.setOnClickListener(onClickListener);
         transactions_report.setOnClickListener(onClickListener);
@@ -192,6 +194,11 @@ public class Reports extends AppCompatActivity {
                     Intent intent11 = new Intent(Reports.this, TargetReport.class);
                     startActivity(intent11);
                     break;
+                case R.id.custperformance:
+                    Intent intent12 = new Intent(Reports.this, CustomersPerformanceReport.class);
+                    startActivity(intent12);
+                    break;
+
             }
 
         }

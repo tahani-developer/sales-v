@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerPrice;
+import com.dr7.salesmanmanager.Modles.CustomersPerformance;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.ItemSwitch;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
@@ -65,6 +67,7 @@ import com.dr7.salesmanmanager.Modles.TargetDetalis;
 import com.dr7.salesmanmanager.Modles.UnCollect_Modell;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.serialModel;
+import com.dr7.salesmanmanager.Reports.CustomersPerformanceReport;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 import com.dr7.salesmanmanager.Reports.TargetReport;
 
@@ -134,7 +137,7 @@ public class ImportJason extends AppCompatActivity {
     private Context context;
     private ProgressDialog progressDialog;
     DatabaseHandler mHandler;
-    SweetAlertDialog pdValidation, pdPayments, getDataProgress;
+    SweetAlertDialog pdValidation, pdPayments, getDataProgress,savingDialog3;
     public String curentIpDevice = "";
     int salesManInt=-1,validUser=0;
 
@@ -5941,6 +5944,191 @@ Log.e("customerList",""+customerList.size());
             if (passtype.equals("1")) {
 
                 new JSONTask_IIsgetPassword("2").execute();
+
+            }
+        }
+
+
+    }
+  public void  GetPerformanceInfo (String cusno, String month){
+            savingDialog3 = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+                       savingDialog3.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+                       savingDialog3.setTitleText(context.getString(R.string.getingData));
+                       savingDialog3.setCancelable(false);
+                       savingDialog3.show();
+                           new JSONTask_GetPerformanceInfo(cusno,month).execute();
+
+}
+
+    private class JSONTask_GetPerformanceInfo extends AsyncTask<String, String, String> {
+
+        String cusno="";
+        String month;
+
+        public JSONTask_GetPerformanceInfo(String cusno, String month) {
+            this.cusno = cusno;
+            this.month = month;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            String do_ = "my";
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                if (!ipAddress.equals("")) {
+
+//
+//                if(replacementlist.size()!=0)
+//                    VHFNO=replacementlist.get(0).getTransNumber();
+                    link = "http://" + ipAddress + ":" + ipWithPort + headerDll.trim() + "/GetTargertNS?CONO=" + CONO.trim()+"&ACCNO=" +cusno+"&MONTH=" +(Integer.parseInt(month)+1)+"";
+
+                    Log.e("link===", "" + link);
+                }
+            } catch (Exception e) {
+                Log.e("getAllSto", e.getMessage());
+                savingDialog3 .dismiss();
+            }
+
+            try {
+
+                //*************************************
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(link));
+
+//
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+                Log.e("finalJson***Import", sb.toString());
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                // JsonResponse = sb.toString();
+
+                String finalJson = sb.toString();
+
+
+                //JSONArray parentObject = new JSONArray(finalJson);
+
+                return finalJson;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        savingDialog3.dismiss();
+                        Toast.makeText(context,"Ip Connection Failed", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Exception===", "" + e.getMessage());
+                savingDialog3.dismiss();
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        try {
+                            Toast.makeText(context, "The target server failed to respond", Toast.LENGTH_SHORT).show();
+                        } catch (WindowManager.BadTokenException e) {
+                            //use a log message
+                        }
+                    }
+                });
+//                progressDialog.dismiss();
+                return null;
+            }
+
+
+            //***************************
+
+        }
+
+        @Override
+        protected void onPostExecute(String array) {
+            super.onPostExecute(array);
+            savingDialog3.dismiss();
+            if (array != null) {
+
+                JSONObject jsonObject1 = null;
+                if (array.contains("ACHIVED")) {
+                    try {
+                        CustomersPerformance customersPerformance=new CustomersPerformance();
+
+                        JSONArray requestArray = null;
+                        requestArray = new JSONArray(array);
+
+                        for (int i = 0; i < requestArray.length(); i++) {
+//,"TARGET":"430","ACHIVED":"7446.45","VAL_VARIANCE":"7016.45"
+                             customersPerformance = new CustomersPerformance();
+                            jsonObject1 = requestArray.getJSONObject(i);
+                            customersPerformance.setDetective(jsonObject1.getString("ACHIVED"));
+                            customersPerformance.setRange(jsonObject1.getString("TARGET"));
+                            customersPerformance.setDifference(jsonObject1.getString("VAL_VARIANCE"));
+
+
+
+                        }
+
+                       CustomersPerformanceReport. differencevalue.setText(customersPerformance.getDifference());
+                        CustomersPerformanceReport    . Rangevalue.setText(customersPerformance.getRange());
+                        CustomersPerformanceReport.    detectivevalue.setText(customersPerformance.getDetective());
+
+
+                    } catch (JSONException e) {
+//                        progressDialog.dismiss();
+                        e.printStackTrace();
+                    }
+
+
+                }else
+                {
+                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("No data Found")
+
+                            .show();
+
+                    CustomersPerformanceReport. differencevalue.setText("");
+                    CustomersPerformanceReport    . Rangevalue.setText("");
+                    CustomersPerformanceReport.    detectivevalue.setText("");
+
+                }
+            } else {
+                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText( context.getResources().getString(R.string.checkinternetConnection))
+
+                        .show();
+
+                CustomersPerformanceReport. differencevalue.setText("");
+                CustomersPerformanceReport    . Rangevalue.setText("");
+                CustomersPerformanceReport.    detectivevalue.setText("");
 
             }
         }
