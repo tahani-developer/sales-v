@@ -146,7 +146,7 @@ public class MyServices extends Service {
 
 //                                       if (latitude !=0||longitude!=0) {
 //                                           daoRequsts.addLocation(salesMenLocation);
-                                       }
+//                                       }
                                    }catch (Exception e){
                                        Log.e("Exception", ""+e.getMessage());
                                    }

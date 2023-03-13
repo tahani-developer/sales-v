@@ -414,6 +414,7 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
         try {
                 flag_settingsList = mDHandler.getFlagSettings();
         if (flag_settingsList.size() == 0) {
+            getPasswords();
             showMoreSettingDialog();
         }
         }catch (Exception e){
@@ -852,7 +853,7 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
                         OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer,Purchase_Order,gone_noTax_totalDisc,offernasleh);
             }
 
-
+            getPasswords();
 
 
             moreDialog.dismiss();

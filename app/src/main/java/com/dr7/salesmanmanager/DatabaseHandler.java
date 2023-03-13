@@ -9517,10 +9517,10 @@ Log.e("addCompanyInfo","addCompanyInfo");
     }
     public void deleteAllPreviusYear() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL(" delete from SALES_VOUCHER_MASTER where VOUCHER_DATE LIKE '%2021%'");
-        db.execSQL("delete from SALES_VOUCHER_DETAILS where ITEM_YEAR LIKE '%2021%'");
-        db.execSQL(" delete from TRANSACTIONS where CHECK_IN_DATE LIKE '%2021%'");
-        db.execSQL(" delete from SERIAL_ITEMS_TABLE where DATE_VOUCHER LIKE '%2021%'");
+        db.execSQL(" delete from SALES_VOUCHER_MASTER where VOUCHER_DATE LIKE '%2022%'");
+        db.execSQL("delete from SALES_VOUCHER_DETAILS where ITEM_YEAR LIKE '%2022%'");
+        db.execSQL(" delete from TRANSACTIONS where CHECK_IN_DATE LIKE '%2022%'");
+        db.execSQL(" delete from SERIAL_ITEMS_TABLE where DATE_VOUCHER LIKE '%2022%'");
         db.close();
     }
 
