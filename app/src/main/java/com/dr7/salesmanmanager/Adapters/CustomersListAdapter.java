@@ -85,7 +85,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
-        Log.e("getView1===",i+"");
+       // Log.e("getView1===",i+"");
         final ViewHolder holder = new ViewHolder();
         view = View.inflate(context, R.layout.customers_item, null);
 
@@ -106,7 +106,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
             @Override
             public void onClick(View v) {
 
-                Log.e("location==", CustomerListShow.latitude+"  "+custList.get(i).getCustId()+"  "+custList.get(i).getCustLat()+" "+custList.get(i).getCustLong());
+             //  Log.e("location==", CustomerListShow.latitude+"  "+custList.get(i).getCustId()+"  "+custList.get(i).getCustLat()+" "+custList.get(i).getCustLong());
                 if(custList.get(i).getCustLat()!=null
                 && custList.get(i).getCustLong()!=null) {
                     if (!custList.get(i).getCustLat().equals("")) {
@@ -165,18 +165,18 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         });
         holder.custAccountTextView.setText("" + custList.get(i).getCustId());
         holder.custNameTextView.setText(custList.get(i).getCustName());
-        Log.e("getView2===",i+"");
+      //  Log.e("getView2===",i+"");
         if(Login.SalsManPlanFlage==1) {
-            Log.e("case1","case1");
+        //    Log.e("case1","case1");
             if(MainActivity.plantype==2){
-                Log.e("case2","case2");
+              //  Log.e("case2","case2");
                 holder.linearLayout.setEnabled(true);
             }else
             {   Log.e("DB_salesManPlanListadapter====",MainActivity.DB_salesManPlanList.size()+"");
                 if (MainActivity.DB_salesManPlanList.size() == 0) {
                 holder.linearLayout.setEnabled(true);
             } else {
-                    Log.e("custList====",custList.get(i).getCustId()+"");
+                  //  Log.e("custList====",custList.get(i).getCustId()+"");
                 if (IsCkeckOut(custList.get(i).getCustId()))
                     holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.red_background));
 
@@ -190,7 +190,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         }   }else
 
             {
-                Log.e("case3","case no salesman plan");
+               // Log.e("case3","case no salesman plan");
             // case no salesman plan
         }
 
@@ -301,10 +301,10 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                         String data = mOriginalValues.get(i).getCustName();
                         int paymetho = mOriginalValues.get(i).getPayMethod();
 
-                        Log.e("mOriginalpaymetho" , "paymetho"+paymetho);
+                      //  Log.e("mOriginalpaymetho" , "paymetho"+paymetho);
                         if (data.toLowerCase().contains(constraint.toString())) {
                             FilteredArrList.add(new Customer(mOriginalValues.get(i).getCustId(),mOriginalValues.get(i).getCustName(),mOriginalValues.get(i).getPayMethod()));
-                            Log.e("mOriginalValues" , "*********2" + constraint + "*" + mOriginalValues.get(i).getPayMethod());
+                          //  Log.e("mOriginalValues" , "*********2" + constraint + "*" + mOriginalValues.get(i).getPayMethod());
                         }
                     }
                     // set the Filtered result to return

@@ -549,7 +549,7 @@ else
                     else {
                         filteredList.clear();
                         if(    qtySpinner.getSelectedItem().equals("أكبر من الصفر") ) {
-                            Log.e("case2==","case2==");
+                           // Log.e("case2==","case2==");
                             for (int k = 0; k < itemsReportinventory.size(); k++) {
 
                                 if (itemsReportinventory.get(k).getCategoryId().equals(categorySpinner.getSelectedItem().toString())
@@ -562,7 +562,7 @@ else
                         else if( qtySpinner.getSelectedItem().equals("تساوي الصفر"))
                         {
                             filteredList.clear();
-                            Log.e("case3==","case3==");
+                         //   Log.e("case3==","case3==");
                             for (int k = 0; k < itemsReportinventory.size(); k++) {
 
                                 if (itemsReportinventory.get(k).getCategoryId().equals(categorySpinner.getSelectedItem().toString())
@@ -572,7 +572,7 @@ else
 
                         }else if( qtySpinner.getSelectedItem().equals("أصغر من الصفر"))
                         {   filteredList.clear();
-                            Log.e("case4==","case4==");
+                   //        Log.e("case4==","case4==");
                             for (int k = 0; k < itemsReportinventory.size(); k++) {
 
                                 if (itemsReportinventory.get(k).getCategoryId().equals(categorySpinner.getSelectedItem().toString())
@@ -606,7 +606,7 @@ else
                         }
                         else if( qtySpinner.getSelectedItem().equals("تساوي الصفر"))
                         {   filteredList.clear();
-                            Log.e("case31==","case3==");
+                          //  Log.e("case31==","case3==");
 
                             //Log.e("itemsReportinventory==",itemsReportinventory.size()+"");
                             for (int k = 0; k < itemsReportinventory.size(); k++) {

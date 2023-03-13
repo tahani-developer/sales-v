@@ -39,6 +39,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
+import com.dr7.salesmanmanager.Modles.Flag_Settings;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Reports.Reports;
@@ -282,6 +283,14 @@ public class Activities extends AppCompatActivity implements
         receiptCardView = (CardView) findViewById(R.id.receiptCardView);
         accountBalance= (CardView) findViewById(R.id.accountBalanceCardView);
         accountBalanceMainLin= findViewById(R.id.accountBalanceMainLin);
+
+
+
+        List<Flag_Settings> flag_settingsList;
+        flag_settingsList = databaseHandler.getFlagSettings();
+        voucherReturn_spreat = flag_settingsList.get(0).getVoucher_Return();
+        Purchase_Order = flag_settingsList.get(0).getPurchaseOrder();
+
         if(MainActivity.Acountatatment==0)  accountBalanceMainLin.setVisibility(View.GONE);
         uncollectChechue= (CardView) findViewById(R.id.unCollectChequesCardView);
         returnCardView= (CardView) findViewById(R.id.returnCardView);

@@ -70,7 +70,7 @@ public class MyServicesForNotification extends Service {
             if(Firebase_ipAddress.contains(":"))
                 Firebase_ipAddress= Firebase_ipAddress.substring(0, Firebase_ipAddress.indexOf(":"));
 
-            Log.e("ipAddress==",Firebase_ipAddress);
+          //  Log.e("ipAddress==",Firebase_ipAddress);
         }
 
         FirebaseApp.initializeApp(MyServicesForNotification.this);
@@ -78,7 +78,7 @@ public class MyServicesForNotification extends Service {
 databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(Firebase_ipAddress);
 
         allTaskInFireBasewithoutnotify();
-        Log.e(TAG, "onCreate() , MyServicesForNotification started..."+id);
+       // Log.e(TAG, "onCreate() , MyServicesForNotification started..."+id);
 
     }
 
@@ -87,7 +87,7 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
 
         allTaskInFireBase();
         onDestroy();
-        Log.e(TAG, "onStartCommand() , MyServicesForNotification started..."+id);
+      //  Log.e(TAG, "onStartCommand() , MyServicesForNotification started..."+id);
 
         return START_STICKY;
 
@@ -95,7 +95,7 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
     @Override
     public boolean stopService(Intent name) {
         // TODO Auto-generated method stub
-        Log.e(TAG, "onStop() , MyServicesForNotification Stop..."+id);
+    //    Log.e(TAG, "onStop() , MyServicesForNotification Stop..."+id);
         return super.stopService(name);
 
     }
@@ -108,12 +108,12 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
     public void onDestroy() {
 
         allTaskInFireBasewithoutnotify();
-        Log.e(TAG, "onCreated() , MyServicesForNotification stopped..."+id);
+      //  Log.e(TAG, "onCreated() , MyServicesForNotification stopped..."+id);
     }
 
     @Override
     public void onLowMemory() {
-        Log.e(TAG, "onLowMemory()");
+     //   Log.e(TAG, "onLowMemory()");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -121,10 +121,10 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
         allTaskInFireBase();
-        Log.e(TAG, "In onTaskRemoved");
+    //    Log.e(TAG, "In onTaskRemoved");
     }
     void allTaskInFireBase() {
-        Log.e("allTaskInFireBase==","allTaskInFireBase"+"");
+     //   Log.e("allTaskInFireBase==","allTaskInFireBase"+"");
         FirebaseDatabase dbroot = FirebaseDatabase.getInstance();
         databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(Firebase_ipAddress);
 
@@ -133,7 +133,7 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     String key = ds.getKey();
-                    Log.e("key==",key+"");
+                   // Log.e("key==",key+"");
         getlistofdata(key);
                 }
             }
@@ -154,7 +154,7 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     String key = ds.getKey();
-                    Log.e("key==",key+"");
+                //    Log.e("key==",key+"");
                     getlistofdatawithoutnotify(key);
                 }
             }
@@ -167,11 +167,11 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
 
     }
     private void getlistofdata(String key) {
-        Log.e("getlistofdata==", "getlistofdata");
+     //   Log.e("getlistofdata==", "getlistofdata");
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.e("onChildAdded", "onChildAdded:" + dataSnapshot.getKey());
+             //   Log.e("onChildAdded", "onChildAdded:" + dataSnapshot.getKey());
                 try {
                     RequstTest requstTest = dataSnapshot.getValue(RequstTest.class);
                     if(requstTest!=null) {
@@ -198,7 +198,7 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.e("onChildChanged", "onChildChanged:" + dataSnapshot.getKey());
+              //  Log.e("onChildChanged", "onChildChanged:" + dataSnapshot.getKey());
 
                 try {
                     RequstTest requstTest = dataSnapshot.getValue(RequstTest.class);
@@ -225,7 +225,7 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.e("onChildAdded", "onChildRemoved:" + dataSnapshot.getKey());
+            //    Log.e("onChildAdded", "onChildRemoved:" + dataSnapshot.getKey());
 
                 // A comment has changed, use the key to determine if we are displaying this
                 // comment and if so remove it.
@@ -236,7 +236,7 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.e("onChildAdded", "onChildMoved:" + dataSnapshot.getKey());
+            //    Log.e("onChildAdded", "onChildMoved:" + dataSnapshot.getKey());
 
                 // A comment has changed position, use the key to determine if we are
                 // displaying this comment and if so move it.
@@ -256,11 +256,11 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
         databaseReference.child(key).addChildEventListener(childEventListener);
     }
     private void getlistofdatawithoutnotify(String key) {
-        Log.e("getlistofdata==", "getlistofdata");
+    //    Log.e("getlistofdata==", "getlistofdata");
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.e("onChildAdded", "onChildAdded:" + dataSnapshot.getKey());
+           //     Log.e("onChildAdded", "onChildAdded:" + dataSnapshot.getKey());
 
                 // A new comment has been added, add it to the displayed list
                 try {
@@ -283,7 +283,7 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.e("onChildAdded", "onChildChanged:" + dataSnapshot.getKey());
+              //  Log.e("onChildAdded", "onChildChanged:" + dataSnapshot.getKey());
 
                 // A comment has changed, use the key to determine if we are displaying this
                 // comment and if so displayed the changed comment.
@@ -293,7 +293,7 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.e("onChildAdded", "onChildRemoved:" + dataSnapshot.getKey());
+          //      Log.e("onChildAdded", "onChildRemoved:" + dataSnapshot.getKey());
 
                 // A comment has changed, use the key to determine if we are displaying this
                 // comment and if so remove it.
@@ -304,7 +304,7 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.e("onChildAdded", "onChildMoved:" + dataSnapshot.getKey());
+             //   Log.e("onChildAdded", "onChildMoved:" + dataSnapshot.getKey());
 
                 // A comment has changed position, use the key to determine if we are
                 // displaying this comment and if so move it.
@@ -317,7 +317,7 @@ databaseReference = dbroot.getReference(RequstTest.class.getSimpleName()).child(
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("onChildAdded", "postComments:onCancelled", databaseError.toException());
+             //   Log.e("onChildAdded", "postComments:onCancelled", databaseError.toException());
 
             }
         };

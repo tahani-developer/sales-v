@@ -168,8 +168,8 @@ public class Login extends AppCompatActivity {
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-//public  static    String  headerDll = "/Falcons/VAN.dll";
-public  static    String headerDll = "";
+public  static    String  headerDll = "/Falcons/VAN.dll";
+//public  static    String headerDll = "";
 
     public  static  int gone_noTax_totalDisc=0;
     public  static  int password_rawat=0;
@@ -194,6 +194,8 @@ public  static    String headerDll = "";
         setContentView(R.layout.login_free_size);
         context=Login.this;
         initialView();
+
+
          sharedPref = getSharedPreferences(SETTINGS_PREFERENCES, MODE_PRIVATE);
          Items_Orent = sharedPref.getBoolean(Items_Orent_PREF,true);
 
@@ -214,9 +216,13 @@ public  static    String headerDll = "";
 //        getIpAddressForDevice();
         validLocation();
 
-        getPasswords();
+ //       getPasswords();
         try {
                 if (mDHandler.getAllSettings().size() != 0) {
+                    if (mDHandler.getAllSettings().get(0).getPassowrd_data()== 1) {
+                        importData.getPassowrdSetting("2");
+                    }
+
                 if (mDHandler.getAllSettings().get(0).getArabic_language() == 1) {
                     languagelocalApp = "ar";
                     LocaleAppUtils.setLocale(new Locale("ar"));
@@ -513,7 +519,7 @@ public  static    String headerDll = "";
         final EditText cono = (EditText) dialog.findViewById(R.id.cono);
 
         final Button cancel_button = (Button) dialog.findViewById(R.id.cancelBtn);
-        final Button importData = (Button) dialog.findViewById(R.id.importData);
+        final Button importDataBtn = (Button) dialog.findViewById(R.id.importData);
 
         //B
         final TextView more = dialog.findViewById(R.id.more);
@@ -544,6 +550,7 @@ public  static    String headerDll = "";
         editIp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+              ///
                 showPasswordDialog(1);
 
 
@@ -600,6 +607,7 @@ public  static    String headerDll = "";
             public void onClick(View v) {
                 if (validateNotEmpty(ipEditText) && validateNotEmpty(storeNo_edit)) {
                     addIpSetting(ipEditText.getText().toString(), portSetting.getText().toString(), cono.getText().toString());
+                    importData.getPassowrdSetting("2");//88
                     dialog.dismiss();
                     Log.e("validateNotEmpty", "validateNotEmpty");
                 } else {
@@ -607,7 +615,7 @@ public  static    String headerDll = "";
                 }
             }
         });
-        importData.setOnClickListener(new OnClickListener() {
+        importDataBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(validateNotEmpty(ipEditText)&&validateNotEmpty(storeNo_edit))
@@ -983,7 +991,7 @@ public  static    String headerDll = "";
 
                              if(passwordrespon.getText().toString().trim().equals("PASSWORDTYPE")){
                                  Log.e("passwordrespon=","passwordrespon");
-                                 getPasswords();
+                             //    getPasswords();
                              }
                          }
             }

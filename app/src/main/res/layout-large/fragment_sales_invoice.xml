@@ -95,14 +95,14 @@
                         android:id="@+id/items_quntity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/addItemImgButton2"
                         android:layout_alignLeft="@+id/addItemImgButton2"
+                        android:layout_alignTop="@+id/addItemImgButton2"
                         android:layout_alignRight="@+id/addItemImgButton2"
 
 
                         android:layout_marginLeft="10dp"
-                        android:layout_marginRight="1dp"
                         android:layout_marginTop="1dp"
+                        android:layout_marginRight="1dp"
                         android:padding="3dp"
                         android:text="+"
                         android:textColor="@color/cancel_button"

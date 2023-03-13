@@ -466,7 +466,7 @@ public class ItemsReport extends AppCompatActivity {
 
         try {
             if (!textItemNumber.equals("")) {
-                Log.e("case1==", "case1");
+                //Log.e("case1==", "case1");
                 if (((itemNumber.contains(textItemNumber)) || itemName.toLowerCase().contains(textItemNumber.toLowerCase()) )
                         && vType == voucherType &&
                         (formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
@@ -475,7 +475,7 @@ public class ItemsReport extends AppCompatActivity {
                     if (selectedIdCustomer == ListView.INVALID_POSITION && selectedIdCategory == 0)
                         return true;
                     else if (selectedIdCustomer != ListView.INVALID_POSITION && selectedIdCategory == 0) {
-                        Log.e("case2==", "case2");
+                   //     Log.e("case2==", "case2");
 
                         vNos = obj.getVoucherByCustomerNo(customerId);
 
@@ -483,7 +483,7 @@ public class ItemsReport extends AppCompatActivity {
                             return true;
 
                     } else if (selectedIdCustomer == ListView.INVALID_POSITION && selectedIdCategory != 0) {
-                        Log.e("case3==", "case3");
+                     //   Log.e("case3==", "case3");
                         itemNos = obj.getItemNoByCategory(itemCategory);
 
                         if (itemNos.contains(items.get(n).getItemNo()) && items.get(n).getItemNo().equals(textItemNumber))
@@ -491,7 +491,7 @@ public class ItemsReport extends AppCompatActivity {
 
                     } else {
 
-                        Log.e("case4==", "case4");
+                     //   Log.e("case4==", "case4");
                         vNos = obj.getVoucherByCustomerNo(customerId);
 
                         itemNos = obj.getItemNoByCategory(itemCategory);

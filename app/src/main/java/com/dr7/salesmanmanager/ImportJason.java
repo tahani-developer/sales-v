@@ -1060,14 +1060,16 @@ public class ImportJason extends AppCompatActivity {
                                 voucher.setSerialCode("0");
                                 voucher.setDescreption("");
                                 voucher.setIsPosted(0);
-
+                                voucher.setItemName("");
                                 voucher.setWhich_unit(infoDetail.get("WHICHUNIT").toString());
                                 voucher.setWhich_unit_str(infoDetail.get("WHICHUNITSTR").toString());
                                 voucher.setWhichu_qty(infoDetail.get("WHICHUQTY").toString());
                                 voucher.setEnter_qty(infoDetail.get("ENTERQTY").toString());
                                 voucher.setEnter_price(infoDetail.get("ENTERPRICE").toString());
                                 voucher.setUnit_barcode(infoDetail.get("UNITBARCOD").toString());
-                                  if(infoDetail.get("IS_RETURNED").toString().equals("0"))
+                              if(infoDetail.get("IS_RETURNED").toString().equals(""))
+                                  voucher.setAvi_Qty(Float.parseFloat(infoDetail.get("ENTERQTY").toString()));
+                             else     if(infoDetail.get("IS_RETURNED").toString().equals("0"))
                                       voucher.setAvi_Qty(Float.parseFloat(infoDetail.get("ENTERQTY").toString()));
                                    else
                                 voucher.setAvi_Qty(Float.parseFloat(infoDetail.get("AVLQTY").toString()));
@@ -5905,13 +5907,13 @@ Log.e("customerList",""+customerList.size());
                 if (respon.contains("PASSWORDTYPE")) {
                     try {
 
-
+                        Password password  = new Password();;
                         JSONArray requestArray = null;
                         requestArray = new JSONArray(respon);
 
                         for (int i = 0; i < requestArray.length(); i++) {
 
-                            Password password = new Password();
+
                             jsonObject1 = requestArray.getJSONObject(i);
                             password.setPassword_type(Integer.parseInt(jsonObject1.getString("PASSWORDTYPE")));
                             password.setPassword_no(jsonObject1.getString("PASSWORDKEY"));
@@ -5920,8 +5922,8 @@ Log.e("customerList",""+customerList.size());
                         }
 
                         if (passtype.equals("2")) {
-
-                          Login.  passwordrespon.setText("PASSWORDTYPE");
+                            Login.    Secondpassword_setting=   password.getPassword_no();
+                        //  Login.  passwordrespon.setText("PASSWORDTYPE");
 
                         }
 

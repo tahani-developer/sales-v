@@ -235,10 +235,10 @@ public class CashReport  extends AppCompatActivity {
                     returnCash_COPY=returnCash;
                     returnCridet_COPY=    returnCridet;
                 if(Ret_Cal_CkB.isChecked()==true)   {
-                    Log.e("case1","case1");
+               //     Log.e("case1","case1");
                 }
                 else{
-                    Log.e("case2","case2");
+               //     Log.e("case2","case2");
                     returnCash=0;
                     returnCridet=0;
                 }

@@ -1031,84 +1031,80 @@ public class SalesInvoice extends Fragment {
             @Override
             public void onClick(View view) {
                 addItemImgButton2.setEnabled(false);
-                if(!mDbHandler.isTableEmpty("SalesMan_Items_Balance").equals("0"))
-                {
-                    if(!mDbHandler.isTableEmpty("Items_Master").equals("0"))
-                    {
-                        if(!mDbHandler.isTableEmpty("Price_List_D").equals("0"))
-                        {
-                            if(!mDbHandler.isTableEmpty("CUSTOMER_MASTER").equals("0"))
-                            {
-                                if(checkQtyServer==0)
-                                {
-                                    Log.e("itemCountTable",""+itemCountTable);
-                                    if (itemCountTable >= 500) {
-                                        new SalesInvoice.Task().execute();
-
-                                    } else {
-                                        try {
-                                            salesInvoiceInterfaceListener.displayFindItemFragment2();//for test
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            Log.e("salesInvoiceInterfac","Errrrr"+e.getMessage());
-                                        }
-
-                                    }
+                try {
 
 
-
-
-                                }
-                                else {
-                                    if(mDbHandler.getIsPosted(sales)==0)
-                                    {
-                                        Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.exportingData), Toast.LENGTH_SHORT).show();
-                                        finishPrint.setText("finish");
-                                    }
-                                    else {
+                    if (!mDbHandler.isTableEmpty("SalesMan_Items_Balance").equals("0")) {
+                        if (!mDbHandler.isTableEmpty("Items_Master").equals("0")) {
+                            if (!mDbHandler.isTableEmpty("Price_List_D").equals("0")) {
+                                if (!mDbHandler.isTableEmpty("CUSTOMER_MASTER").equals("0")) {
+                                    if (checkQtyServer == 0) {
+                                        Log.e("itemCountTable", "" + itemCountTable);
                                         if (itemCountTable >= 500) {
                                             new SalesInvoice.Task().execute();
 
                                         } else {
                                             try {
                                                 salesInvoiceInterfaceListener.displayFindItemFragment2();//for test
+                                            } catch (Exception e) {
+                                                Log.e("salesInvoiceInterfac", "Errrrr" + e.getMessage());
                                             }
-                                            catch (Exception e)
-                                            {         }
 
                                         }
+
+
+                                    } else {
+                                        if (mDbHandler.getIsPosted(sales) == 0) {
+                                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.exportingData), Toast.LENGTH_SHORT).show();
+                                            finishPrint.setText("finish");
+                                        } else {
+                                            if (itemCountTable >= 500) {
+                                                new SalesInvoice.Task().execute();
+
+                                            } else {
+                                                try {
+                                                    salesInvoiceInterfaceListener.displayFindItemFragment2();//for test
+                                                } catch (Exception e) {
+                                                }
+
+                                            }
+                                        }
+
                                     }
-
+                                } else {
+                                    showDialogEmptyTable("CUSTOMER_MASTER");
                                 }
+
+                            } else {
+                                showDialogEmptyTable("Price_List_D");
                             }
-                            else {
-                                showDialogEmptyTable("CUSTOMER_MASTER");
-                            }
 
-                        }
-                        else {
-                            showDialogEmptyTable("Price_List_D");
+                        } else {
+                            showDialogEmptyTable("Items_Master");
                         }
 
-                    }
-                    else {
-                        showDialogEmptyTable("Items_Master");
-                    }
 
-
-                }else {
-                    showDialogEmptyTable("SalesMan_Items_Balance");
-                    //Toast.makeText(getActivity(), "SalesMan_Items_Balance Empty", Toast.LENGTH_SHORT).show();
+                    } else {
+                        showDialogEmptyTable("SalesMan_Items_Balance");
+                        //Toast.makeText(getActivity(), "SalesMan_Items_Balance Empty", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception exception){
+                    Log.e("exception",exception.getMessage());
+                   // Toast.makeText(SalesInvoice.this, ""+exception.getMessage(), Toast.LENGTH_LONG).show();
+                   // Toast.makeText(SalesInvoice.this, ""+exception.getMessage(), Toast.LENGTH_LONG).show();
                 }
-
 
 
 
             }
         });
 
-
+//        addItemImgButton2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mDbHandler. getAllJsonItemsStock(1);
+//            }
+//        });
 //
 //                salesInvoiceInterfaceListener.displayFindItemFragment2();
 //

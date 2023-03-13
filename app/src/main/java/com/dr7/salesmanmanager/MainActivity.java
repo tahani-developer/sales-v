@@ -456,7 +456,7 @@ saveCurentLocation();
 //                if (transactions.get(transactions.size()-1).getStatus()==1)
                 {
 
-                    Log.e("case1", "case1");
+            //        Log.e("case1", "case1");
                     SaleManTrips trip = new SaleManTrips();
 
                     Date currentTimeAndDate = Calendar.getInstance().getTime();

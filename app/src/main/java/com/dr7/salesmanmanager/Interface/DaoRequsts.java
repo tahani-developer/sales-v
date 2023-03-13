@@ -51,7 +51,7 @@ String ipAddress="";
             ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
             Firebase_ipAddress= ipAddress.replace(".", "_");
           if(Firebase_ipAddress.contains(":"))  Firebase_ipAddress= Firebase_ipAddress.substring(0, Firebase_ipAddress.indexOf(":"));
-            Log.e("ipAddress==",Firebase_ipAddress);
+          //  Log.e("ipAddress==",Firebase_ipAddress);
         }
        // databaseReference = dbroot.getReference(RequestAdmin.class.getSimpleName());
         databaseReference2 = dbroot.getReference(RequstTest.class.getSimpleName());
@@ -59,24 +59,24 @@ String ipAddress="";
 
 
 
-        Log.e("addRequst==","addRequst");
+      //  Log.e("addRequst==","addRequst");
 
 
 
     }
     public boolean ChildIsExists(String value) {
-        Log.e("ChildIsExists","ChildIsExists");
+    //    Log.e("ChildIsExists","ChildIsExists");
         final boolean[] flage = {false};
         databaseReference2.child(Firebase_ipAddress).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.hasChild(value)) {
                     {
-                        Log.e("true",snapshot.getRef()+" "+snapshot.getValue());
+                      //  Log.e("true",snapshot.getRef()+" "+snapshot.getValue());
                         flage[0] =true;
                     }
                 } else {
-                    Log.e("false","false");
+              //      Log.e("false","false");
                     flage[0] =false;
                 }
             }
@@ -89,20 +89,20 @@ String ipAddress="";
         return flage[0];
     }
     public void add(RequestAdmin requsts) {
-        Log.e("add==","add");
+      //  Log.e("add==","add");
 //        if (!ChildIsExists(requsts.getSalesman_no())) {
             databaseReference.child(ipAddress).setValue(requsts).addOnSuccessListener(new OnSuccessListener<Void>() {
 
                 @Override
                 public void onSuccess(Void aVoid) {
                     Toast.makeText(context, "New requst Data stored successfully", Toast.LENGTH_SHORT).show();
-                    Log.e("onSuccess==","add");
+                 //   Log.e("onSuccess==","add");
                 }
             });
         databaseReference.setValue(requsts).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e("Exception==",e.getMessage()+"");
+             //   Log.e("Exception==",e.getMessage()+"");
             }
         });
 //        }
@@ -133,7 +133,7 @@ String ipAddress="";
                @Override
                public void onSuccess(Void aVoid) {
                    Toast.makeText(context, "New requst Data stored successfully", Toast.LENGTH_SHORT).show();
-                   Log.e("onSuccess==", "add");
+               //    Log.e("onSuccess==", "add");
                    try {
           //   getStatusofrequst(context);
                    }
@@ -145,7 +145,7 @@ String ipAddress="";
            databaseReference2.child(Firebase_ipAddress).child(Login.salesMan).child(requsts.getKey_validation()).setValue(requsts).addOnFailureListener(new OnFailureListener() {
                @Override
                public void onFailure(@NonNull Exception e) {
-                   Log.e("Exception==", e.getMessage() + "");
+                 //  Log.e("Exception==", e.getMessage() + "");
                }
            });
 
@@ -159,10 +159,10 @@ try {
     ValueEventListener postListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            Log.e("getStatusofrequst,onDataChange", "onDataChange");
+        //    Log.e("getStatusofrequst,onDataChange", "onDataChange");
             // Get Post object and use the values to update the UI
 
-            Log.e("keys==",currentKeyTotalDiscount+" , "+keyCreditLimit+" , "+currentKey);
+         //   Log.e("keys==",currentKeyTotalDiscount+" , "+keyCreditLimit+" , "+currentKey);
             Key="";
             if(!currentKeyTotalDiscount.equals(""))Key=currentKeyTotalDiscount;
             else    if(!keyCreditLimit.equals(""))Key=keyCreditLimit;
@@ -176,7 +176,7 @@ try {
                 if (requstTest.getStatus() != null)
                 {  if (requstTest.getStatus().equals("1")) {
                     GeneralMethod.displayNotification(context, ""+context.getResources().getString(R.string.acceptedRequest), "");
-                    Log.e("requstTest.getSta","1");
+               //     Log.e("requstTest.getSta","1");
                     deleteRequst(requstTest.getKey_validation());
 
 
@@ -185,7 +185,7 @@ try {
 
                 if (requstTest.getStatus().equals("2")) {
                     GeneralMethod.displayNotification(context, ""+context.getResources().getString(R.string.rejectedRequest), "");
-                    Log.e("requstTest.getSt", "2");
+             //       Log.e("requstTest.getSt", "2");
                     deleteRequst(requstTest.getKey_validation());
                 }
                     if((requstTest.getRequest_type().equals("0")||requstTest.getRequest_type().equals("2")) && checkState_recycler!=null)   checkState_recycler.setText(requstTest.getStatus().toString());
@@ -212,13 +212,13 @@ try {
 
     }
     public void  getStatusofLogedrequsts(Context context){
-        Log.e("getStatusofLogedrequsts==","getStatusofLogedrequsts");
+       // Log.e("getStatusofLogedrequsts==","getStatusofLogedrequsts");
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     String key = ds.getKey();
-                    Log.e("key==",key+"");
+           //         Log.e("key==",key+"");
                     getlistofdata(key);
 //                    DatabaseReference usersRef = rootRef.child("users").child(key);
 //                    ValueEventListener eventListener = new ValueEventListener() {
@@ -254,25 +254,25 @@ try {
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e("getStatusofLogedrequsts,onDataChange", "getStatusofLogedrequsts");
+         //       Log.e("getStatusofLogedrequsts,onDataChange", "getStatusofLogedrequsts");
                 // Get Post object and use the values to update the UI
 
                 RequstTest requstTest = dataSnapshot.getValue(RequstTest.class);
 
-                Log.e("requstTest,getRef", dataSnapshot.child(Login.salesMan).getRef()+ "");
+           //     Log.e("requstTest,getRef", dataSnapshot.child(Login.salesMan).getRef()+ "");
                 if(requstTest!=null) {
-                    Log.e("requstTest,requstTest",requstTest.getStatus()+ "");
+        //            Log.e("requstTest,requstTest",requstTest.getStatus()+ "");
                     if (requstTest.getStatus() != null)
                     {
                         if(requstTest.getRequest_type().equals("5")) {
-                            Log.e("requstTest,getRequest_type", "5");
+                    //       Log.e("requstTest,getRequest_type", "5");
                             if (requstTest.getStatus().equals("1")) {
-                                Log.e("getStatus,getStatus", "1");
+                 //               Log.e("getStatus,getStatus", "1");
 
 
 
                             } else if (requstTest.getStatus().equals("2")) {
-                                Log.e("getStatus,getStatus", "2");
+                              //  Log.e("getStatus,getStatus", "2");
 
                             }
 
@@ -296,14 +296,14 @@ try {
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.e("onChildAdded", "getKey:" + dataSnapshot.getKey());
+             //   Log.e("onChildAdded", "getKey:" + dataSnapshot.getKey());
                 // A new comment has been added, add it to the displayed list
                 try {
 
 
                     RequstTest requstTest = dataSnapshot.getValue(RequstTest.class);
                     if(requstTest!=null) {
-                        Log.e("requstTest,requstTest",requstTest.getStatus()+ "");
+                    //    Log.e("requstTest,requstTest",requstTest.getStatus()+ "");
                         AllRequsts.add(requstTest);
                     }
                 }catch (Exception e){
@@ -343,29 +343,29 @@ try {
 
     }
     private void getlistofdata(String key) {
-        Log.e("getlistofdata==", "getlistofdata");
+      //  Log.e("getlistofdata==", "getlistofdata");
         AllowedCut_List.clear();
 
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.e("onChildAdded", "getKey:" + dataSnapshot.getKey());
+            //    Log.e("onChildAdded", "getKey:" + dataSnapshot.getKey());
                 // A new comment has been added, add it to the displayed list
                 try {
 
 
                     RequstTest requstTest = dataSnapshot.getValue(RequstTest.class);
                     if(requstTest!=null) {
-                        Log.e("requstTest,requstTest",requstTest.getStatus()+ "");
+                     //   Log.e("requstTest,requstTest",requstTest.getStatus()+ "");
                         if (requstTest.getStatus() != null)
                         {
                             if(requstTest.getRequest_type().equals("5")) {
-                                Log.e("requstTest,getRequest_type", "5");
+                              //  Log.e("requstTest,getRequest_type", "5");
 //                                if (requstTest.getStatus().equals("1"))
                                 {
-                                    Log.e("getStatus,getStatus", "1");
+                             //       Log.e("getStatus,getStatus", "1");
                                     AllowedCut_List.add(requstTest);
-                                    Log.e("getStatus,AllowedCut_List", AllowedCut_List.size()+"");
+                               //     Log.e("getStatus,AllowedCut_List", AllowedCut_List.size()+"");
 
                                 }
 
@@ -381,7 +381,7 @@ try {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.e("onChildAdded", "onChildChanged:" + dataSnapshot.getKey());
+              //  Log.e("onChildAdded", "onChildChanged:" + dataSnapshot.getKey());
                 try {    RequstTest requstTest = dataSnapshot.getValue(RequstTest.class);
                 for (int i=0;i<DaoRequsts.AllowedCut_List.size();i++){
                     if (DaoRequsts.AllowedCut_List.get(i).getKey_validation().equals(requstTest.getKey_validation()))
@@ -448,11 +448,11 @@ try {
 
 
                 if(requstTest!=null) {
-                    Log.e("getStatusofLogedrequst,requstTest", "requstTest");
+               //     Log.e("getStatusofLogedrequst,requstTest", "requstTest");
                     if (requstTest.getStatus() != null)
                     {  if (requstTest.getStatus().equals("1")) {
                         GeneralMethod.displayNotification(context, ""+context.getResources().getString(R.string.acceptedRequest), "");
-                        Log.e("requstTest.getSta","1");
+                 //       Log.e("requstTest.getSta","1");
                     //    deleteRequst(requstTest.getKey_validation());
 //                      CustomerCheckInFragment.AllowedCut_List.add(requstTest.getCustomer_no());
 

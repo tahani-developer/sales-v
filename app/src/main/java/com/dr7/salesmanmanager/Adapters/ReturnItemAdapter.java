@@ -87,7 +87,7 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
 
                 if(c==0)
                 {
-                    Log.e("case4","==4");
+                    //Log.e("case4","==4");
                     holder.text_count.setVisibility(View.INVISIBLE);
 
                 }

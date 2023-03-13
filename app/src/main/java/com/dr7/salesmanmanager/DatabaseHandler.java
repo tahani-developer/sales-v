@@ -4593,7 +4593,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 salesMan.setUserType(cursor.getInt(2));
                 // Adding transaction to list
                 salesMen.add(salesMan);
-                Log.e("getAllSalesMen",""+salesMen.size());
+               // Log.e("getAllSalesMen",""+salesMen.size());
             } while (cursor.moveToNext());
         }
         return salesMen;
@@ -5738,7 +5738,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
-            Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
+      //      Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
             do {
                 Item item = new Item();
                 Bitmap  itemBitmap=null;
@@ -5769,7 +5769,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                     if(cursor.getString(12)==null)
                     {
                         item.setItemHasSerial("0");
-                        Log.e("setItemHasSerial",""+item.getItemHasSerial()+"null");
+                   //     Log.e("setItemHasSerial",""+item.getItemHasSerial()+"null");
                     }
                     else {
                         item.setItemHasSerial(cursor.getString(12));
@@ -5778,7 +5778,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 {
                     item.setItemHasSerial("0");
 
-                    Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
+                   // Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
 
                 }
 //                item.setItemPhoto(cursor.getString(13));
@@ -5809,7 +5809,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                     }
 
 
-                    Log.e("setDiscountCustomer",""+cursor.getDouble(14));
+             //       Log.e("setDiscountCustomer",""+cursor.getDouble(14));
                 }
                 catch (Exception e)
                 {
@@ -5830,6 +5830,118 @@ Log.e("addCompanyInfo","addCompanyInfo");
         return items;
     }
     //***********************************************************************************
+//AYAH2023
+    public List<Item> AYAHgetAllJsonItems(String rate,int baseList ,int countVisibleTable ) {
+       List<Item> items = new ArrayList<Item>();
+       // Select All Query
+       String salesMan = getAllUserNo();
+       String selectQuery="";
+//        String cusNo="5";
+       String PriceListId = CustomerListShow.PriceListId;
+    //   Log.e("getAllJsonItemsStock","=="+flag);
+
+//             selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
+//                     "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
+//                     "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+0+"'  and cusMaster.ACCPRC = '"+0+"' and S.SalesManNo = '" + salesMan +"'";
+//
+//                 "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+0+"'  and cusMaster.ACCPRC = '"+0+"' and S.SalesManNo = '" + salesMan +"'";
+
+
+       selectQuery ="select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO \n"+
+       "from (SELECT * FROM SalesMan_Items_Balance LIMIT 400 offset 0) AS S \n"
+       +"JOIN  Items_Master M ,CUSTOMER_MASTER cusMaster, Price_List_D P \n"
+       +"oN M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='0'  and cusMaster.ACCPRC = '0' and S.SalesManNo = '1'";
+
+
+       Log.e("***" , selectQuery);
+       db = this.getWritableDatabase();
+       Cursor cursor = db.rawQuery(selectQuery, null);
+
+       // looping through all rows and adding to list
+       if (cursor.moveToFirst()) {
+          Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
+          do {
+             Item item = new Item();
+
+             item.setItemNo(cursor.getString(0));
+             item.setItemName(cursor.getString(1));
+             item.setCategory(cursor.getString(2));
+//                if(flag==0||flag==2)
+//                {
+             item.setQty(0);
+
+//                }
+//                else {
+//                    item.setQty(Float.parseFloat(cursor.getString(3)));
+//
+//                }
+             item.setCurrentQty(Float.parseFloat(cursor.getString(3)));
+             item.setPrice(Float.parseFloat(cursor.getString(4)));
+             item.setTaxPercent(Float.parseFloat(cursor.getString(5)));
+             item.setMinSalePrice(Double.parseDouble(cursor.getString(6)));
+             item.setBarcode(cursor.getString(7));
+             item.setItemL(Double.parseDouble(cursor.getString(8)));
+
+             item.setPosPrice(Double.parseDouble(cursor.getString(9)));
+             item.setKind_item(cursor.getString(10));
+
+             // Adding transaction to list
+             items.add(item);
+          } while (cursor.moveToNext());
+       }
+
+//SECOND STEP
+//
+//       {//
+//
+//          selectQuery ="select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO \n"+
+//                  "from (SELECT * FROM SalesMan_Items_Balance LIMIT 1000 offset 400) AS S \n"
+//                  +"JOIN  Items_Master M ,CUSTOMER_MASTER cusMaster, Price_List_D P \n"
+//                  +"oN M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='0'  and cusMaster.ACCPRC = '0' and S.SalesManNo = '1'";
+//
+//
+//          Log.e("***" , selectQuery);
+//          db = this.getWritableDatabase();
+//          Cursor cursor2 = db.rawQuery(selectQuery, null);
+//
+//          // looping through all rows and adding to list
+//          if (cursor2.moveToFirst()) {
+//             Log.i("DatabaseHandler", "***************************************" + cursor2.getCount());
+//             do {
+//                Item item = new Item();
+//
+//                item.setItemNo(cursor2.getString(0));
+//                item.setItemName(cursor2.getString(1));
+//                item.setCategory(cursor2.getString(2));
+////                if(flag==0||flag==2)
+////                {
+//                item.setQty(0);
+//
+////                }
+////                else {
+////                    item.setQty(Float.parseFloat(cursor.getString(3)));
+////
+////                }
+//                item.setCurrentQty(Float.parseFloat(cursor2.getString(3)));
+//                item.setPrice(Float.parseFloat(cursor2.getString(4)));
+//                item.setTaxPercent(Float.parseFloat(cursor2.getString(5)));
+//                item.setMinSalePrice(Double.parseDouble(cursor2.getString(6)));
+//                item.setBarcode(cursor2.getString(7));
+//                item.setItemL(Double.parseDouble(cursor2.getString(8)));
+//
+//                item.setPosPrice(Double.parseDouble(cursor2.getString(9)));
+//                item.setKind_item(cursor2.getString(10));
+//
+//                // Adding transaction to list
+//                items.add(item);
+//             } while (cursor2.moveToNext());
+//          }
+//
+//
+//       }//
+
+       return items;
+    }
 
     public List<Item> getAllJsonItemsStock(int flag ) {
         List<Item> items = new ArrayList<Item>();
@@ -8517,7 +8629,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                     return 1;
                 } else {
                     itemUnit = (cursor.getInt(0));
-                    Log.e("getUnitForItem","="+itemUnit);
+                   // Log.e("getUnitForItem","="+itemUnit);
                     return itemUnit;
                 }
 
@@ -8531,7 +8643,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
     }
 
     public String getUnitPrice(String itemNo,String rate,double countItems) {
-         Log.e("getUnitPrice","itemNo"+itemNo+"\trate="+rate);
+       //  Log.e("getUnitPrice","itemNo"+itemNo+"\trate="+rate);
         String selectQuery="";
         switch (rate){
             case "0":
@@ -8564,7 +8676,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                     return "";
                 } else {
                     itemUnit = (cursor.getString(0));
-                    Log.e("getUnitForItem","price="+itemUnit);
+                //    Log.e("getUnitForItem","price="+itemUnit);
                     return itemUnit;
                 }
 
@@ -8595,10 +8707,10 @@ Log.e("addCompanyInfo","addCompanyInfo");
                     itemUnit.setConvRate(Double.parseDouble(cursor.getString(3)));
                     itemUnit.setUnitPrice(cursor.getString(4));
                     itemUnit.setItemBarcode(cursor.getString(5));
-                    Log.e("getUnitForItem","price="+itemUnit);
-                    Log.e("getUnitForItem","getConvRate="+    itemUnit.getConvRate());
-                    Log.e("getUnitForItem","getUnitId="+    itemUnit.getUnitId());
-                    Log.e("getUnitForItem","price="+    itemUnit.getUnitPrice());
+//                    Log.e("getUnitForItem","price="+itemUnit);
+//                    Log.e("getUnitForItem","getConvRate="+    itemUnit.getConvRate());
+//                    Log.e("getUnitForItem","getUnitId="+    itemUnit.getUnitId());
+//                    Log.e("getUnitForItem","price="+    itemUnit.getUnitPrice());
                 }while (cursor.moveToNext());
 
             }

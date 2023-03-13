@@ -72,6 +72,7 @@ import static com.dr7.salesmanmanager.Login.sharedPref;
 //import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
 
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.CountOfItems;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.flag;
 import static com.dr7.salesmanmanager.SalesInvoice.VERSION;
 import static com.dr7.salesmanmanager.SalesInvoice.addItemImgButton2;
 import static com.dr7.salesmanmanager.SalesInvoice.canChangePrice;
@@ -251,7 +252,7 @@ public class AddItemsFragment2 extends DialogFragment {
         orientation_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Log.e("orientation_checkbox="," orientation_checkbox");
+
                 if(b)
                 {
 
@@ -311,7 +312,7 @@ public class AddItemsFragment2 extends DialogFragment {
         Smallericon_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Log.e("Smallericon_checkbox="," Smallericon_checkbox");
+              //  Log.e("Smallericon_checkbox="," Smallericon_checkbox");
                 if(b)
                 {
                     Smallericon_checkbox.setButtonDrawable(getResources().getDrawable(R.drawable.blueic_baseline_table_view_24));
@@ -352,7 +353,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
       if(sharedPref==null)  sharedPref = getActivity().getSharedPreferences("SETTINGS_PREFERENCES", MODE_PRIVATE);
         if  (sharedPref.getBoolean(Login.Smallericon_PREF, false))
-        {     Log.e("Smallericon_checkbox11==","case1");
+        {
             Smallericon_checkbox.setChecked(true);
             HeaderNewLin.setVisibility(View.VISIBLE);
             Smallericon_checkbox.setButtonDrawable(getResources().getDrawable(R.drawable.blueic_baseline_table_view_24));
@@ -361,7 +362,7 @@ public class AddItemsFragment2 extends DialogFragment {
         else
         {  Smallericon_checkbox.setChecked(false);
             HeaderNewLin.setVisibility(View.GONE);
-            Log.e("Smallericon_checkbox11==","case2");
+
             Smallericon_checkbox.setButtonDrawable(getResources().getDrawable(R.drawable.grayic_baseline_table_view_24));
         }
 
@@ -377,7 +378,7 @@ public class AddItemsFragment2 extends DialogFragment {
             linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(linearLayoutManager);
         }
-        Log.e("Smallericon_checkbox11==",Smallericon_checkbox.isChecked()+"");
+
 
         if(Smallericon_checkbox.isChecked()==true) {
             linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -446,7 +447,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
                 } else {
-                    Log.e("categorySpinner", "else" + categorySpinner.getSelectedItemPosition());
+                  //  Log.e("categorySpinner", "else" + categorySpinner.getSelectedItemPosition());
                     if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
                         filterCategoury();// filter about categoury
 
@@ -551,6 +552,9 @@ public class AddItemsFragment2 extends DialogFragment {
                                 || filteredList_allItem.get(i).getItemName().toUpperCase().trim().replaceAll("\\s", "").contains(query.toString().trim().replaceAll("\\s", ""))
                         ||
                                 FisrtCharsFromString(jsonItemsList.get(i).getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
+                                ||
+                                SubStringtoMoreThanOne(jsonItemsList.get(i).getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
+
                         ) {
                             isFound = true;
                         }
@@ -634,7 +638,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
                     if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {//just for first time
-                        Log.e("requestresult", "PERMISSION_GRANTED");
+                    //    Log.e("requestresult", "PERMISSION_GRANTED");
                         Intent i = new Intent(getActivity(), ScanActivity.class);
                         i.putExtra("key", "1");
                         startActivity(i);
@@ -677,7 +681,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
                     try {
                         if (!s.toString().equals("")) {
-                            Log.e("afterTextChanged", "" + s.toString());
+                          //  Log.e("afterTextChanged", "" + s.toString());
 
                             try {
                                 searchByBarcodeNo(s.toString().trim() + "");
@@ -890,7 +894,7 @@ public class AddItemsFragment2 extends DialogFragment {
         greaterZero_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Log.e("onCheckedChanged",""+b);
+
 
                 if(b){qtyGreatZero=1;}else {
                     qtyGreatZero=0;
@@ -913,7 +917,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
         } else {
-            Log.e("categorySpinner", "else" + categorySpinner.getSelectedItemPosition());
+//            Log.e("categorySpinner", "else" + categorySpinner.getSelectedItemPosition());
             if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
                 filterCategoury();// filter about categoury
 
@@ -939,7 +943,7 @@ public class AddItemsFragment2 extends DialogFragment {
         recyclerView.setVisibility(View.VISIBLE);
 
         RecyclerViewAdapter adapter;
-        try {
+
            // Log.e("forAdapter",""+jsonItemsList.size());
 
 
@@ -955,10 +959,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //                }
 //            },100);
 
-        }catch (Exception e){
 
-            Log.e("recyclerView","exce="+e.getMessage());
-        }
     }
 
     private void fillListViewAllItem() {
@@ -989,8 +990,8 @@ public class AddItemsFragment2 extends DialogFragment {
             }
 
         }
-        Log.e("filterTow",filteredList_allItem.size()+ "     *    "  +Kind_item_Spinner.getSelectedItem().toString() );
-        Log.e("filterTow",filteredList_allItem.size()+ "     *    "  +categorySpinner.getSelectedItem().toString() );
+       // Log.e("filterTow",filteredList_allItem.size()+ "     *    "  +Kind_item_Spinner.getSelectedItem().toString() );
+     //   Log.e("filterTow",filteredList_allItem.size()+ "     *    "  +categorySpinner.getSelectedItem().toString() );
 
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList_allItem, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
@@ -1014,8 +1015,8 @@ public class AddItemsFragment2 extends DialogFragment {
             }
 
 //        }
-        Log.e("filterTow",filteredList.size()+ "     *    "  +Kind_item_Spinner.getSelectedItem().toString() );
-        Log.e("filterTow",filteredList.size()+ "     *    "  +categorySpinner.getSelectedItem().toString() );
+   //     Log.e("filterTow",filteredList.size()+ "     *    "  +Kind_item_Spinner.getSelectedItem().toString() );
+    //    Log.e("filterTow",filteredList.size()+ "     *    "  +categorySpinner.getSelectedItem().toString() );
 
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
@@ -1023,9 +1024,9 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
     public  ArrayList<Item> getFilteredZero(){
-        Log.e("getFilteredZero","getFilteredZero");
+     //   Log.e("getFilteredZero","getFilteredZero");
         ArrayList<Item> filteredList = new ArrayList<>();
-        Log.e("filteredList","filteredList=="+filteredList.size());
+      //  Log.e("filteredList","filteredList=="+filteredList.size());
         if(filteredList_allItem.size()==0){
             filteredList_allItem.addAll(jsonItemsList);
         }
@@ -1067,7 +1068,7 @@ public class AddItemsFragment2 extends DialogFragment {
             }
 
         }
-        Log.e("filterKindItem",filteredList_allItem.size() + "     *    "  +Kind_item_Spinner.getSelectedItem().toString() );
+     //   Log.e("filterKindItem",filteredList_allItem.size() + "     *    "  +Kind_item_Spinner.getSelectedItem().toString() );
 
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList_allItem, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
@@ -1239,7 +1240,7 @@ try {
 
 
     } else {
-        Log.e("jsonItemsList","2="+jsonItemsList.size());
+//        Log.e("jsonItemsList","2="+jsonItemsList.size());
         ArrayList<Item> filteredList = new ArrayList<>();
         filteredList=   getFilteredZero();
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
@@ -1279,9 +1280,9 @@ try {
 
         }
        // Log.e("fillListItemJson",""+rate_customer);// customer rate to display price of this customer
-        Log.e("jsonItemsList","countListVisible"+countListVisible);
+//        Log.e("jsonItemsList","countListVisible"+countListVisible);
         if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0) {
-            Log.e("jsonItemsList","000000");
+//            Log.e("jsonItemsList","000000");
             jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1,countListVisible);
 
            // Log.e("jsonItemsList", "zero"+jsonItemsList.get(0).getItemName()+"\t"+jsonItemsList.get(0).getItemHasSerial());
@@ -1397,7 +1398,7 @@ try {
         }catch (Exception e){
 
 
-            Log.e("curentPrice","price="+price+"\t"+e.getMessage());
+//            Log.e("curentPrice","price="+price+"\t"+e.getMessage());
             curentPrice=0;}
 
 //        price=convertToEnglish(decimalFormat.format(curentPrice));
@@ -1460,7 +1461,7 @@ try {
 
             item.setDescreption(descriptRemark);
 
-            Log.e("setDescreption",""+item.getDescription());
+//            Log.e("setDescreption",""+item.getDescription());
             try {
                 item.setUnit(unit);
 
@@ -1494,7 +1495,7 @@ try {
                     if(mDbHandler.getAllSettings().get(0).getItems_Unit()==1)
                     { itemUnit=CountOfItems;
 
-                        Log.e("getItemUnitInfo2","itemUnit="+itemUnit);
+//                        Log.e("getItemUnitInfo2","itemUnit="+itemUnit);
                     }
                     else {
                         itemUnit = mDbHandler.getUnitForItem(itemNumber);// get convrate
@@ -1530,7 +1531,7 @@ try {
                         if(oneUnit==1)//one unit not
                         {
                             float priceUnitItem=priceItem/itemUnit;
-                            Log.e("oneUnit",""+oneUnit+"\tpriceItem="+priceItem+"\tqty="+qty);
+//                            Log.e("oneUnit",""+oneUnit+"\tpriceItem="+priceItem+"\tqty="+qty);
                             item.setWhich_unit("0");
                             item.setWhich_unit_str("");
                             item.setWhichu_qty(0+"");
@@ -1652,7 +1653,7 @@ try {
 //                item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - descPerc);
                     item.setAmount(item.getQty() * item.getPrice() - descPerc);
 
-                    Log.e("log222=", "amount==="+item.getAmount() );
+//                    Log.e("log222=", "amount==="+item.getAmount() );
                    // Log.e("log ==", item.getQty() + " * " + item.getPrice() + " -" + descPerc);
                 }
             } catch (NumberFormatException e) {
@@ -1665,7 +1666,7 @@ try {
             if (item.getItemName().equals("(bonus)")) {
                 flagBonus = List.get(List.size() - 1).getQty();
                 total_items_quantity -= flagBonus;
-                Log.e("flagBonus", "" + flagBonus);
+//                Log.e("flagBonus", "" + flagBonus);
 
             }
             else {
@@ -1739,7 +1740,7 @@ try {
     }
 
     private ItemUnitDetails getItemUnitInfo(String itemNumber,int countItem) {
-        Log.e("getItemUnitInfo","itemNumber="+itemNumber+"\tcountItem= "+countItem);
+//        Log.e("getItemUnitInfo","itemNumber="+itemNumber+"\tcountItem= "+countItem);
         ItemUnitDetails item= new ItemUnitDetails();
         item=mDbHandler.getItemUnitDetails(itemNumber,countItem);
         return  item;
@@ -1748,7 +1749,7 @@ try {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.e("onDestroy","================");
+//        Log.e("onDestroy","================");
     }
 
     @Override
@@ -1756,12 +1757,12 @@ try {
         super.onStop();
 //        int vouch=Integer.parseInt(voucherNumberTextView.getText().toString());
 //        mDbHandler.deletSerialItems_byVoucherNo(vouch);
-        Log.e("onStop","================"+voucherNumberTextView.getText().toString());
+//        Log.e("onStop","================"+voucherNumberTextView.getText().toString());
     }
 
     public  void readB(){
-        Log.e("barcode_099", "in");
-        Log.e("currentUpdate",""+"readB");
+//        Log.e("barcode_099", "in");
+//        Log.e("currentUpdate",""+"readB");
        // openIntegratorLandScapeActivity();
 
        // openSannActivity();
@@ -1818,7 +1819,7 @@ try {
             ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
             {//just for first time
-                Log.e("requestresult" ,"PERMISSION_GRANTED");
+//                Log.e("requestresult" ,"PERMISSION_GRANTED");
                 Intent i=new Intent(getActivity(),ScanActivity.class);
                 i.putExtra("key","3");
                 startActivity(i);
@@ -1869,6 +1870,34 @@ boolean FisrtCharsFromString(String ItemName, String SerachText){
   else return false;
 
 }
+    boolean SubStringtoMoreThanOne(String ItemName, String SerachText){
+boolean falge=false;
+        String[] sArray = ItemName.split("\\s{1,}");
+        String[] sArray2 = SerachText.split("\\s{1,}");
+
+        for(int j=0; j<sArray2.length;j++)  {
+
+            for(int i=0; i<sArray.length; i++)
+            {
+                if(sArray[i].equals(sArray2[j]))
+                {
+                    falge=true;
+                    break;
+
+                }
+                else{
+                    falge=false;
+
+                       }
+
+
+
+            }
+            if (falge==false) break; }
+
+   return falge; }
+
+
     }
 
 

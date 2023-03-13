@@ -142,10 +142,10 @@ public class MyServices extends Service {
                                         salesMenLocation.setLatitude(latitude+"");
                                         salesMenLocation.setLongitude(longitude+"");
                                    try {  // code for track salesman location in FireBase Added by aya
-                                       Log.e("salesMan==", " salesMan " + userNo);
+                                    //   Log.e("salesMan==", " salesMan " + userNo);
 
-                                       if (latitude !=0||longitude!=0) {
-                                           daoRequsts.addLocation(salesMenLocation);
+//                                       if (latitude !=0||longitude!=0) {
+//                                           daoRequsts.addLocation(salesMenLocation);
                                        }
                                    }catch (Exception e){
                                        Log.e("Exception", ""+e.getMessage());
@@ -154,7 +154,7 @@ public class MyServices extends Service {
                                             if (latitude !=0||longitude!=0)
                                             {
 
-                                              //  importJason.  updateLocation(salesmanStations.getJSONObject());
+                                            importJason.  updateLocation(salesmanStations.getJSONObject());
                                         }
                                     }else {
                                         Log.e(TAG, "  no App Import");
@@ -169,7 +169,7 @@ public class MyServices extends Service {
                     T.cancel();
                     T=null;
 
-                    Log.e(TAG,"no approveAdmin = "+ LOCATIONTRACK);
+                //    Log.e(TAG,"no approveAdmin = "+ LOCATIONTRACK);
 
                 }
             }
@@ -198,12 +198,12 @@ public class MyServices extends Service {
 //        player.stop();
 //        player.release();
 //        Toast.makeText(this, "Service stopped...", Toast.LENGTH_SHORT).show();
-        Log.e(TAG, "onDestroy() ,LOCATIONTRACK..."+LOCATIONTRACK);
+    //    Log.e(TAG, "onDestroy() ,LOCATIONTRACK..."+LOCATIONTRACK);
 //        if(LOCATIONTRACK ==1) {
 //            Timer();
 //        }
 
-        Log.e(TAG, "onDestroy() , service stopped...");
+     //   Log.e(TAG, "onDestroy() , service stopped...");
     }
 
     @Override
@@ -222,8 +222,8 @@ public class MyServices extends Service {
 
     public void getLoc(){
 
-        Log.e(TAG, " first ");
-        Log.e(TAG, "getLocinin = " + LOCATIONTRACK);
+       // Log.e(TAG, " first ");
+       // Log.e(TAG, "getLocinin = " + LOCATIONTRACK);
 
         LocationManager locationManager;
         LocationListener locationListener;
