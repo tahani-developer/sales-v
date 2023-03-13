@@ -280,6 +280,15 @@
                     android:textSize="12sp"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
+                <TextView
+                    android:layout_width="130dp"
+                    android:id="@+id/Triptime"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="مدة الرحلة"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
             </TableRow>
 
         </TableLayout>

@@ -144,9 +144,9 @@ public class MyServices extends Service {
                                    try {  // code for track salesman location in FireBase Added by aya
                                        Log.e("salesMan==", " salesMan " + userNo);
 
-                                       if (latitude !=0||longitude!=0) {
-                                           daoRequsts.addLocation(salesMenLocation);
-                                       }
+//                                       if (latitude !=0||longitude!=0) {
+//                                           daoRequsts.addLocation(salesMenLocation);
+//                                       }
                                    }catch (Exception e){
                                        Log.e("Exception", ""+e.getMessage());
                                    }
@@ -154,7 +154,7 @@ public class MyServices extends Service {
                                             if (latitude !=0||longitude!=0)
                                             {
 
-                                              //  importJason.  updateLocation(salesmanStations.getJSONObject());
+                                            importJason.  updateLocation(salesmanStations.getJSONObject());
                                         }
                                     }else {
                                         Log.e(TAG, "  no App Import");

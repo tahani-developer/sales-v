@@ -3415,7 +3415,6 @@ Log.e("customerList",""+customerList.size());
 //                if (mHandler.getIsPosted(Integer.parseInt(Login.salesMan)) == 1) {
                 mHandler.deleteAllSalesManItemsBalance();
                 mHandler.addSalesMan_Items_Balance(salesManItemsBalanceList);
-                Log.e("In***", " inaddSalesMan_Items_Balance");
                 runOnUiThread(new Runnable() {
 
                     @Override

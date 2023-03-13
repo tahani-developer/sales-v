@@ -3720,7 +3720,11 @@ Log.e("bmb.size="," "+bmb.getPiecePlaceEnum().pieceNumber());
         }
         if (mDbHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
             if (voucherType == 506) {
-                price.setEnabled(true);
+                price_update.setEnabled(true);
+            }
+            else {
+                price_update.setEnabled(false);
+                price_update.setAlpha(0.8f);
             }
         }else {
             if(mDbHandler.getAllSettings().get(0).getCanChangePrice()==0)
