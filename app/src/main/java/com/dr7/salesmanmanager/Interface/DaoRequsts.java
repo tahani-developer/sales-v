@@ -481,7 +481,7 @@ try {
     }
 
    public void  deleteRequst(String RequstID){
-        Log.e("deleteRequst", "deleteRequst:deleteRequst");
+        //Log.e("deleteRequst", "deleteRequst:deleteRequst");
         databaseReference2
                 .child(Firebase_ipAddress).child(Login.salesMan).child(RequstID)
                 .removeValue();

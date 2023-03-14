@@ -5314,7 +5314,7 @@ Log.e("Exception==",e.getMessage());
 
             daoRequsts.getlistofAllrequst();
             for(int x=0;x<DaoRequsts.AllRequsts.size();x++) {
-                Log.e("AllRequsts==",DaoRequsts.AllRequsts.get(x).getDate()+" curentDate="+curentDate);
+                //Log.e("AllRequsts==",DaoRequsts.AllRequsts.get(x).getDate()+" curentDate="+curentDate);
                 if (formatDate(convertToEnglish(DaoRequsts.AllRequsts.get(x).getDate())).before(formatDate(curentDate))) {
                     daoRequsts.deleteRequst(DaoRequsts.AllRequsts.get(x).getKey_validation());
 
