@@ -1880,7 +1880,7 @@ boolean falge=false;
 
             for(int i=0; i<sArray.length; i++)
             {
-                if(sArray[i].equals(sArray2[j]))
+                if(sArray[i].contains(sArray2[j]))
                 {
                     falge=true;
                     break;
