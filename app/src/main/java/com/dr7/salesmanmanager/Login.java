@@ -655,6 +655,7 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
                    if(isPosted)
                    {
 
+
                        ImportJason importJason=new ImportJason(Login.this);
                        importJason.startParsing(storeNo_edit.getText().toString());
                    }else {
@@ -1770,9 +1771,16 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
         }catch (Exception e){
             salesManInt=1;
         }
+        try{
+            getMaxVoucherServer=mDHandler.getFlagSettings().get(0).getMax_Voucher();
+
+        }catch(Exception e){
+
+        }
+        Log.e("getMaxVoucherServer","="+getMaxVoucherServer);
         if(typaImport==1&&getMaxVoucherServer==1&&Purchase_Order==0)//iis
         {
-                    boolean isPosted=mDHandler.isAllVoucher_posted();
+           boolean isPosted=mDHandler.isAllVoucher_posted();
         if(isPosted)
         {
             getMaxVoucherFromServer(salesManInt);

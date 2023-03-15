@@ -1872,7 +1872,7 @@ boolean FisrtCharsFromString(String ItemName, String SerachText){
 }
 //
     boolean SubStringtoMoreThanOne(String ItemName, String SerachText){
-boolean falge=false;
+    boolean falge=false;
         String[] sArray = ItemName.split("\\s{1,}");
         String[] sArray2 = SerachText.split("\\s{1,}");
 

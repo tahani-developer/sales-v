@@ -552,8 +552,15 @@ public class SalesInvoice extends Fragment {
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-
         decimalFormat = new DecimalFormat("00.000");
+
+//        if(taLayoutAndPassowrd==1)
+//        {
+//
+//        }else  decimalFormat = new DecimalFormat("00.000");
+//        String emptyString = new String();
+//        result = StringUtils.defaultIfEmpty(emptyString, "default");
+//        System.out.println(result);
         mDbHandler = new DatabaseHandler(getActivity());
         Purchase_Order=mDbHandler.getFlagSettings().get(0).getPurchaseOrder();
         Log.e("Purchase_Order","111="+Purchase_Order);
