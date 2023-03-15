@@ -1269,8 +1269,10 @@ try {
                 Log.e("allitemsdata","="+allitemsdata.get(i).getItemName()+"\t="+listItemsReturn.get(j).getItemName());
 
                 //! allitemsdata.get(i).getItemName().equals("(bonus)")
+            if( allitemsdata.get(i).getItemName()==null)allitemsdata.get(i).setItemName("");
+                if( listItemsReturn.get(j).getItemName()==null)listItemsReturn.get(j).setItemName("");
                 if(allitemsdata.get(i).getItemNo().toString().trim().equals(listItemsReturn.get(j).getItemNo().toString().trim())
-                && !allitemsdata.get(i).getItemName().equals("(bonus)")&& !listItemsReturn.get(j).getItemName().equals("(bonus)"))
+                         && !allitemsdata.get(i).getItemName().equals("(bonus)")&& !listItemsReturn.get(j).getItemName().equals("(bonus)"))
                 {
                     float salePrice=1,oneDisc=0,oneTax=0;
                     try {
@@ -1301,13 +1303,13 @@ try {
                 listItemsReturn.get(j).setDisc(0);
                 listItemsReturn.get(j).setDiscPerc("0");
 
-                Log.e("fillitemNoPrc_all==2=",listItemsReturn.get(i).getItemName()+"");
-                    Log.e("fillitemNoPrc_all==2=getPrice",listItemsReturn.get(i).getPrice()+"");
+             //   Log.e("fillitemNoPrc_all==2=",listItemsReturn.get(i).getItemName()+"");
+            //        Log.e("fillitemNoPrc_all==2=getPrice",listItemsReturn.get(i).getPrice()+"");
                 allitemsdata.get(i).setItemName( itemName);
                     // Log.e("getItemNo","returnListSerial.get(i).getItemNo()"+itemName);
                 }
                 else {
-                    Log.e("allitemsdata","Noooo="+allitemsdata.get(i).getItemName()+"\t="+listItemsReturn.get(j).getItemName());
+               //     Log.e("allitemsdata","Noooo="+allitemsdata.get(i).getItemName()+"\t="+listItemsReturn.get(j).getItemName());
 
                 }
 
