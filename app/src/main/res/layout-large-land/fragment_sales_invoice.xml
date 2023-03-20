@@ -470,6 +470,16 @@
                                     android:textSize="14sp"
 
                                     />
+                                <CheckBox
+                                    android:id="@+id/exported_tax"
+                                    android:text="@string/exported_tax"
+
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:layout_weight="9"
+                                    android:textSize="14sp"
+
+                                    />
 
                                 <LinearLayout
                                     android:id="@+id/linearRegulerOfferList"

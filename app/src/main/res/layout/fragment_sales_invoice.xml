@@ -344,7 +344,14 @@
                                 android:layout_width="wrap_content"
 
                                 />
+                            <CheckBox
+                                android:id="@+id/exported_tax"
+                                android:text="@string/exported_tax"
 
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+
+                                />
                             <LinearLayout
                                 android:layout_width="2dp"
                                 android:layout_height="match_parent"

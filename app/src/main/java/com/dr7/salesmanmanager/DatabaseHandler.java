@@ -78,7 +78,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucher;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 206;
+    private static final int DATABASE_VERSION = 207;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -655,6 +655,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String Qasion_Offer = "Qasion_Offer";
     private static final String Purchase_Order = "Purchase_Order";
     private static final String NO_TAX = "NO_TAX";
+    private static final String exportedVochTax = "exportedVochTax";
+
     private static final String Nasleh_Offer = "Nasleh_Offer";
 
 
@@ -1334,7 +1336,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                 + Max_VoucherSever + " INTEGER DEFAULT '0' , "
                 +Purchase_Order+" INTEGER DEFAULT '0', "
                 +NO_TAX+ " INTEGER DEFAULT '0' ,"
-                + Nasleh_Offer + " INTEGER DEFAULT '0' "
+                + Nasleh_Offer + " INTEGER DEFAULT '0' ,"
+                + exportedVochTax + " INTEGER DEFAULT '0' "
 
                 + ")";
         db.execSQL(CREATE_TABLE_FlAG_SETTINGS);
@@ -2659,7 +2662,12 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
           Log.e(TAG, e.getMessage().toString());
        }
+       try {
+          db.execSQL("ALTER TABLE Flag_Settings ADD '" + exportedVochTax + "'  INTEGER  DEFAULT '0' ");
 
+       } catch (Exception e) {
+          Log.e(TAG, e.getMessage().toString());
+       }
     }
 
     ////B
@@ -2684,6 +2692,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
         values.put(Max_VoucherSever, flag_settings.getMaxvochServer());
         values.put(Purchase_Order,flag_settings.getPurchaseOrder());
        values.put(NO_TAX,flag_settings.getNoTax());
+       values.put(exportedVochTax,flag_settings.getExportedVoch_Tax());
+
        values.put(Nasleh_Offer,flag_settings.getOffernasleh());
 
         db.insert(Flag_Settings, null, values);
@@ -2734,8 +2744,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                         cursor.getInt(13),
                         cursor.getInt(14),
                         cursor.getInt(15),
-                        cursor.getInt(16)
-
+                        cursor.getInt(16),
+                        cursor.getInt(17)
                 );
 
                 flagSettings.add(mySettings);
@@ -2775,7 +2785,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
     public void updateFlagSettings (String dataType, int export, int max, int order,
                                     int password, int total, int vReturn,int SalPlan,int pos,
                                     int csOffer, int tOffer, int qOffer,int SalTrip,int mavVoServer,int purchOrder
-    ,int no_tax,int offernasleh) {
+    ,int no_tax,int offernasleh,int exportedVoch_Tax) {
 
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -2796,6 +2806,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
         values.put(Max_VoucherSever, mavVoServer);
         values.put( Purchase_Order,purchOrder);
        values.put( NO_TAX,no_tax);
+       values.put( exportedVochTax,exportedVoch_Tax);
+
        values.put( Nasleh_Offer,offernasleh);
 
         db.update(Flag_Settings, values, null, null);

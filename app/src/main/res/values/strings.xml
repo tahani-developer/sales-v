@@ -592,6 +592,9 @@
     <string name="youAreNotConnectedToStock">You Are Not Connected To Stock!!</string>
     <string name="aqaba_tax_exemption">Aqaba Tax Exemption</string>
     <string name="no_tax">No Tax</string>
+    <string name="ExportedVoucher">فواتير تصديرية </string>
+    <string name="exported_tax">تصديرية </string>
+
     <string name="pendingInvoice">Pending Invoice</string>
     <string name="pendingSerial">Pending Serial</string>
     <string name="re_export_voucher">Re Export Voucher</string>
