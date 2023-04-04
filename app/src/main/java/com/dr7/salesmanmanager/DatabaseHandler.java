@@ -79,7 +79,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucher;
     private static String TAG = "DatabaseHandler";
     // Database Version
     private static final int DATABASE_VERSION = 208;
-
+//
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
