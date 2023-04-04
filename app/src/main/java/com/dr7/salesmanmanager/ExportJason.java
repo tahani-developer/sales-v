@@ -448,6 +448,8 @@ public class ExportJason extends AppCompatActivity {
         for (int i = 0; i < addedCustomer.size(); i++)
         {
             custName=addedCustomer.get(i).getCustName();
+            Log.e("getAddedCustomer","custName"+custName.toString());
+
 //                addedCustomer.get(i).setIsPosted(1);
             jsonArrayAddedCustomer.put(addedCustomer.get(i).getJSONObjectDelphi());
         }
@@ -844,7 +846,7 @@ public class ExportJason extends AppCompatActivity {
                     mHandler.updateVoucherDetails();
                     mHandler.updatePayment();
                     mHandler.updatePaymentPaper();
-                    mHandler.updateAddedCustomers();
+                    mHandler.updateAddedCustomers("");
                     mHandler.updateTransactions();
                     mHandler.updateCustomersMaster();
                     mHandler.updateSerialTableIsposted();
@@ -1674,7 +1676,7 @@ public class ExportJason extends AppCompatActivity {
         return data_json;
     }
     private void updateAddedCustomer() {
-        mHandler.updateAddedCustomers();
+        mHandler.updateAddedCustomers(custName);
         Log.e("onPostExecute","updateAddedCustomer---10---");
     }
 

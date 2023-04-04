@@ -1129,7 +1129,7 @@ public class DeExportJason extends AppCompatActivity {
                         mHandler.updatePaymentPaper();
                     }
                     if (flag == 2) {
-                        mHandler.updateAddedCustomers();
+                        mHandler.updateAddedCustomers("");
                         mHandler.updateSerialTableIsposted();
                     }
 

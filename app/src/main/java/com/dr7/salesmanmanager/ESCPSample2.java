@@ -88,7 +88,7 @@ public class ESCPSample2
 	Voucher voucherforPrint;
 	List<Item> itemforPrint;
 	DatabaseHandler obj;
-	DecimalFormat decimalFormat;
+	DecimalFormat decimalFormat,formatNoZero;
 	List<Payment>payList;
 	List<Item>itemList;
 	Voucher voucherStockItems;
@@ -100,7 +100,8 @@ public class ESCPSample2
 	{
 		posPtr = new ESCPOSPrinter();
 		obj = new DatabaseHandler(context);
-		decimalFormat = new DecimalFormat("000.000");
+		decimalFormat = new DecimalFormat("###.###");
+//		formatNoZero=new DecimalFormat("#.#");
 		this.context=context;
 //		posPtr = new ESCPOSPrinter("EUC-KR"); // Korean.
 //		posPtr = new ESCPOSPrinter("BIG5"); // Big5
@@ -1816,6 +1817,7 @@ public class ESCPSample2
 		item_bonus.setText(""+bonus);
 //	prices=convertToEnglish(decimalFormat.format(prices));
 //		totals=convertToEnglish(decimalFormat.format(totals));
+//		*********************** here
 		String discountStr=convertToEnglish(decimalFormat.format(discount));
 //		prices=convertToEnglish(decimalFormat.format(prices));
 	price.setText(prices);
@@ -1826,10 +1828,10 @@ public class ESCPSample2
 			total.setText(convertToEnglish(decimalFormat.format((totals-taxValue)))+"");
 			else total.setText(convertToEnglish(decimalFormat.format((totals))));
 		}else {
-			total.setText(totals+"");
+			total.setText(convertToEnglish(decimalFormat.format(totals)+""));
 		}
 	}catch (Exception e){
-		total.setText(totals+"");
+		total.setText(convertToEnglish(decimalFormat.format(totals)+""));
 		Log.e("IOException","printtotal=e="+e.getMessage());
 	}
 

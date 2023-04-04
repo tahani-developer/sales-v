@@ -4235,10 +4235,10 @@ Log.e("addCompanyInfo","addCompanyInfo");
        Log.e("getAllSerialItems==", "getAllSerialItems");
         List<serialModel> infos = new ArrayList<>();
         String selectQuery = "SELECT  * FROM  SERIAL_ITEMS_TABLE WHERE IS_POSTED_SERIAL=0";
-
+       Log.e("selectQuery==", selectQuery+"");
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-       Log.e("cursor==", "cursor"+cursor.getCount());
+       Log.e("getAllSerialItems,cursor==", "cursor"+cursor.getCount());
         if (cursor.moveToFirst()) {
             do {
                 serialModel info = new serialModel();
@@ -7094,12 +7094,12 @@ Log.e("addCompanyInfo","addCompanyInfo");
         db.update(PAYMENTS_PAPER, values, IS_POSTED + "=" + 0, null);
     }
 
-    public void updateAddedCustomers() {
+    public void updateAddedCustomers(String cusName) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(IS_POSTED, 1);
-        db.update(ADDED_CUSTOMER, values, IS_POSTED + "=" + 0, null);
+        db.update(ADDED_CUSTOMER, values, IS_POSTED + " = 0 and CUST_NAME = '"+cusName+"' "  , null);
     }
     public void updateCustomersMaster() {
         db = this.getWritableDatabase();
@@ -9863,13 +9863,6 @@ void updateDataForClient(){
 
        db.close();
     }
-    void SetVocher_Posted(){
-
-       SQLiteDatabase db = this.getWritableDatabase();
-
-       db.execSQL("UPDATE SERIAL_ITEMS_TABLE SET IS_POSTED_SERIAL=1 where VOUCHER_NO<=905738 and IS_POSTED_SERIAL=0");
-       db.close();
-    }
     public String getConvRate(String itemNo,String UnitID) {
       String ConvRate="1";
        // units.add("1");
@@ -9939,6 +9932,52 @@ void updateDataForClient(){
        db.execSQL("delete from SALES_VOUCHER_MASTER where VOUCHER_NUMBER=200004 and IS_POSTED==0");
        db.execSQL("delete from SALES_VOUCHER_DETAILS where VOUCHER_NUMBER=200004 and IS_POSTED==0");
        db.close();
+    }
+
+    public double getSalesManQty(String itemNo) {
+     //SELECT Qty FROM "SalesMan_Items_Balance" WHERE "ItemNo"='67'
+       List<ItemUnitDetails> list=new ArrayList<>();
+       // Select All Query
+
+       String selectQuery = "SELECT Qty FROM SalesMan_Items_Balance where ItemNo = '" + itemNo + "'";
+       Log.e("selectQuerygetSalesManQty==", selectQuery+"\t\t");
+       //  db = this.getWritableDatabase();
+       Cursor cursor = db.rawQuery(selectQuery, null);
+       Log.e("cursor2==", cursor.getCount()+"\t\t");
+       double available=0;
+       if (cursor.moveToFirst()) {
+          Log.i("DatabaseHandler", "************************" + selectQuery);
+          do {
+
+               available=(cursor.getDouble(0));
+
+
+
+          } while (cursor.moveToNext());
+       }
+
+       return    available;
+    }
+    public String getLastPriceforCustomer(String itemNo) {
+
+       // Select All Query
+       String salesMan = getAllUserNo();
+       String price="";
+       String customerNo=CustomerListShow.Customer_Account;
+       String selectQuery2 ="SELECT detail.UNIT_PRICE ,master.VOUCHER_NUMBER from SALES_VOUCHER_DETAILS detail,SALES_VOUCHER_MASTER master" +
+               " where detail.VOUCHER_NUMBER=master.VOUCHER_NUMBER and  detail.ITEM_NUMBER='"+itemNo+"' "+
+       "and  master.CUST_NUMBER = '"+customerNo+"' ORDER BY detail.VOUCHER_NUMBER DESC LIMIT 1";
+//       String selectQuery2 ="select  Price from PRICE_LIST_D where ItemNo = '"+itemNo+"' and PrNo='"+rate+"' ";
+
+       db = this.getWritableDatabase();
+       Log.e("selectQuery2",""+selectQuery2);
+       Cursor cursor_price = db.rawQuery(selectQuery2, null);
+       if (cursor_price.moveToFirst()){
+          price=cursor_price.getString(0);
+       }
+       cursor_price.close();
+       Log.e("selectQuery2","price="+price);
+       return price;
     }
  }
 
