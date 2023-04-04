@@ -147,6 +147,7 @@ import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 
 import static com.dr7.salesmanmanager.DiscountFragment.discountPerc;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
+import static com.dr7.salesmanmanager.Login.ExportedVochTaxFlage;
 import static com.dr7.salesmanmanager.Login.OfferCakeShop;
 import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.Separation_of_the_serial;
@@ -176,6 +177,7 @@ import androidx.print.PrintHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.datatransport.runtime.dagger.multibindings.ElementsIntoSet;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
@@ -206,7 +208,7 @@ public class SalesInvoice extends Fragment {
     ArrayList<MainGroup_Id_Count> listMainIdCount;
     List<Integer> listAppliedGroup;
     RecyclerView serial_No_recyclerView;
-    public static int noTax=0,priceByCustomer=0;
+    public static int noTax=0,priceByCustomer=0,Exported_Tax=0;
     SimpleDateFormat dateFormat, timeformat;
     String dateCurent="",timevocher;
     public static  int updatedSerial=0,addNewSerial=0,taxCalcType=0;
@@ -378,7 +380,7 @@ public class SalesInvoice extends Fragment {
     public  String customerTemporiryNmae="";// in ameel naqdi
 
     public static String VERSION="";
-    public  CheckBox notIncludeTax,visaPay;
+    public  CheckBox notIncludeTax,visaPay,exported_tax;
     public  int visaPayFlag=0;
     Transaction transaction;
 
@@ -569,6 +571,7 @@ public class SalesInvoice extends Fragment {
         valueTotalDiscount.setEnabled(false);
         settingsList= mDbHandler.getAllSettings();
         notIncludeTax=view.findViewById(R.id.notIncludeTax);
+        exported_tax=view.findViewById(R.id.exported_tax);
         visaPay=view.findViewById(R.id.visaPay);
 
         if(offerTalaat==1)
@@ -583,6 +586,15 @@ public class SalesInvoice extends Fragment {
                 refreshAdapterItems();
             }
         });
+        exported_tax.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged( CompoundButton compoundButton , boolean b ) {
+                calculateTotals(0);
+                if(mDbHandler.getAllSettings().get(0).getTaxClarcKind()==1)
+                    refreshAdapterItems();
+            }
+        });
+
         visaPay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged( CompoundButton compoundButton , boolean b ) {
@@ -1233,6 +1245,14 @@ public class SalesInvoice extends Fragment {
             mDbHandler.getAllSettings().get(0).setBonusNotAlowed(1);
         }
         Log.e("gone_noTax_totalDisc","="+gone_noTax_totalDisc);
+
+        if(ExportedVochTaxFlage==1){
+            exported_tax.setVisibility(View.VISIBLE);
+        }
+        else{
+            exported_tax.setVisibility(View.GONE);
+        }
+
         if(gone_noTax_totalDisc==0){
             notIncludeTax.setVisibility(View.GONE);
             linearTotalCashDiscount.setVisibility(View.GONE);
@@ -2408,7 +2428,18 @@ Log.e("bmb.size="," "+bmb.getPiecePlaceEnum().pieceNumber());
                             }else     voucher.setTaxTypa(1);
                         }
 
-
+                        if(Exported_Tax==0)
+                            voucher.setTaxTypa(3);
+                        else {
+                            if(noTax==0)
+                                voucher.setTaxTypa(2);
+                            else {
+                                if(mDbHandler.getAllSettings().get(0).getTaxClarcKind()==0)
+                                {
+                                    voucher.setTaxTypa(0);
+                                }else     voucher.setTaxTypa(1);
+                            }
+                        }
 
                         if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1) {
 
@@ -5307,6 +5338,23 @@ Log.e("bmb.size="," "+bmb.getPiecePlaceEnum().pieceNumber());
             noTax=0;
 
         }else {noTax=1;}
+        if(exported_tax.isChecked())
+        {
+            Exported_Tax=0;
+            noTax=0;
+
+        }else {
+
+            if(notIncludeTax.isChecked())
+            {
+                noTax=0;
+
+            }else {noTax=1;}
+            Exported_Tax=1;
+
+        }
+
+
         Log.e("TOTAL", "visaPayFlag==" +visaPayFlag);
 //        discTextView.setText("0.0");
         netTotalTextView.setText("0.0");
@@ -7013,9 +7061,9 @@ try {
             // Log.e("itemVOCHER==", "" + itemVOCHER.size());
             PdfConverter pdf = new PdfConverter(SalesInvoice.this.getActivity());
             pdf.exportListToPdf(itemVOCHER, "Vocher", "", 18);
-        } catch (Exception e) {
+      } catch (Exception e) {
             Log.e("Exception22==", "" + e.getMessage());
-        }
+       }
     }
     void findBT() {
 

@@ -250,6 +250,7 @@
     <string name="category">Category</string>
     <string name="barcode">Barcode</string>
     <string name="box_packing">Box Packing</string>
+    <string name="packing"> التعبئة</string>
     <string name="update">Update</string>
 
     <string name="company_name">Company Name: </string>
@@ -592,6 +593,9 @@
     <string name="youAreNotConnectedToStock">You Are Not Connected To Stock!!</string>
     <string name="aqaba_tax_exemption">Aqaba Tax Exemption</string>
     <string name="no_tax">No Tax</string>
+    <string name="ExportedVoucher">فواتير تصديرية </string>
+    <string name="exported_tax">تصديرية </string>
+
     <string name="pendingInvoice">Pending Invoice</string>
     <string name="pendingSerial">Pending Serial</string>
     <string name="re_export_voucher">Re Export Voucher</string>
@@ -647,6 +651,8 @@
     <string name="difference">difference</string>
     <string name="custperformance"> Customers Performance Report</string>
     <string name="getingData">Getting Data</string>
+    <string name="LastCustPrice">Last Customer Price</string>
+
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

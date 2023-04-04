@@ -247,6 +247,8 @@
     <string name="category">الفئة</string>
     <string name="barcode">الباركود</string>
     <string name="box_packing">صندوق التعبئة</string>
+
+    <string name="packing"> التعبئة</string>
     <string name="update">تحديث</string>
 
     <string name="company_name">اسم الشركة: </string>
@@ -630,6 +632,8 @@
     <string name="youAreNotConnectedToStock">أنت غير مرتبط مع برنامج المستودعات !!</string>
     <string name="aqaba_tax_exemption">اعفاء ضريبة العقبة</string>
     <string name="no_tax">اعفاء ضريبي </string>
+    <string name="ExportedVoucher">فواتير تصديرية </string>
+    <string name="exported_tax">تصديرية </string>
     <string name="pendingInvoice">الفواتير المعلقة</string>
     <string name="pendingSerial">السيريلات المعلقة</string>
     <string name="re_export_voucher"> تصدير الفواتير</string>
@@ -680,6 +684,7 @@
     <string name="difference">الفرق</string>
     <string name="custperformance">تقرير الأهداف والقيم المحققة</string>
     <string name="getingData">جاري جلب البيانات</string>
+    <string name="LastCustPrice">اخر سعر بيع للعميل</string>
     <string-array name="DaysOfWeek">
         <item>السبت</item>
         <item>الأحد</item>

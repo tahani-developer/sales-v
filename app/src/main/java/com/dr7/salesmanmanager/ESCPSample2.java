@@ -70,6 +70,7 @@ import static com.dr7.salesmanmanager.Reports.CashReport.total;
 import static com.dr7.salesmanmanager.Reports.CashReport.total_cash;
 import static com.dr7.salesmanmanager.Reports.InventoryReport.itemsInventoryPrint;
 import static com.dr7.salesmanmanager.Reports.InventoryReport.typeQty;
+import static com.dr7.salesmanmanager.SalesInvoice.Exported_Tax;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
 
 import static com.dr7.salesmanmanager.SalesInvoice.noTax;
