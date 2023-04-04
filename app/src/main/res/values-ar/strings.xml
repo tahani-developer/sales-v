@@ -247,6 +247,8 @@
     <string name="category">الفئة</string>
     <string name="barcode">الباركود</string>
     <string name="box_packing">صندوق التعبئة</string>
+
+    <string name="packing"> التعبئة</string>
     <string name="update">تحديث</string>
 
     <string name="company_name">اسم الشركة: </string>
@@ -682,6 +684,7 @@
     <string name="difference">الفرق</string>
     <string name="custperformance">تقرير الأهداف والقيم المحققة</string>
     <string name="getingData">جاري جلب البيانات</string>
+    <string name="LastCustPrice">اخر سعر بيع للعميل</string>
     <string-array name="DaysOfWeek">
         <item>السبت</item>
         <item>الأحد</item>

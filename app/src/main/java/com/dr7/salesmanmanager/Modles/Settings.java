@@ -64,6 +64,15 @@ public class Settings {
     private  int   SharWhatsAppForm;
     private  int   discAfterTax;
     private  int  Add_CustumerPer;
+    private  int  LastCustPrice;
+
+    public int getLastCustPrice() {
+        return LastCustPrice;
+    }
+
+    public void setLastCustPrice(int lastCustPrice) {
+        LastCustPrice = lastCustPrice;
+    }
 
     public int getAdd_CustumerPer() {
         return Add_CustumerPer;

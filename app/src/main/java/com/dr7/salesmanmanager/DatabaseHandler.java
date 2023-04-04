@@ -78,7 +78,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucher;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 207;
+    private static final int DATABASE_VERSION = 208;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -472,6 +472,10 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String SharWhatsApp_Form ="SharWhatsAppForm";
     private static final String DISC_AFTER_TAX ="DISC_AFTER_TAX";
     private static final String Add_CustumerPer ="Add_CustumerPer";
+    private static final String LastCustPrice ="LastCustPrice";
+
+
+
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -1122,8 +1126,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
     + AcountatatmentVis+" INTEGER DEFAULT 1 ,"
      +  SharWhatsApp_Form+" INTEGER DEFAULT 0 ,"
       + DISC_AFTER_TAX+" INTEGER DEFAULT 0 ,"
-               + Add_CustumerPer+" INTEGER DEFAULT 1 "
-
+               + Add_CustumerPer+" INTEGER DEFAULT 1 ,"
+      + LastCustPrice +" INTEGER DEFAULT 0 "
                 + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
@@ -2668,6 +2672,15 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
        } catch (Exception e) {
           Log.e(TAG, e.getMessage().toString());
        }
+
+       try {
+          db.execSQL("ALTER TABLE SETTING ADD '" + LastCustPrice + "'  INTEGER DEFAULT '0'");
+
+       } catch (Exception e) {
+
+          Log.e(TAG, e.getMessage().toString());
+       }
+
     }
 
     ////B
@@ -3612,7 +3625,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                            int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer,
                            int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc,String store,int itemUnit,int sumQtys,int noDuplicate,
                            int salesoffersflage,int checkqtyinorderflage,int locationtrackerflage,int aqapaTax,int show_location,int Items_unitflage,int EndTripReportflage,
-                           int AcountatatmentVisflage,int SharWhatsAppform,int discAfterTax,int add_custumerPer) {
+                           int AcountatatmentVisflage,int SharWhatsAppform,int discAfterTax,int add_custumerPer,int LastCustPricevalu) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -3688,6 +3701,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
        values .put(SharWhatsApp_Form,SharWhatsAppform);
        values .put(DISC_AFTER_TAX,discAfterTax);
        values .put(Add_CustumerPer,add_custumerPer);
+       values .put(LastCustPrice,LastCustPricevalu);
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
@@ -3762,6 +3776,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
        values.put( SharWhatsApp_Form, 0);
        values.put( DISC_AFTER_TAX, defaultValue);
        values.put( Add_CustumerPer, 1);
+       values.put(      LastCustPrice, 0);
 
 
        db.insert(TABLE_SETTING, null, values);
@@ -4185,6 +4200,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                setting.setSharWhatsAppForm(cursor.getInt(59));
                setting.setDiscAfterTax(cursor.getInt(60));
                setting.setAdd_CustumerPer(cursor.getInt(61));
+               setting.setLastCustPrice(cursor.getInt(62));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
