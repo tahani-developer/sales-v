@@ -390,9 +390,10 @@ Dialog dialog1;
      try {
 
 
-saveCurentLocation();
+         saveCurentLocation();
 
          databaseHandler = new DatabaseHandler(  MainActivity.this);
+
          databaseHandler.getSalsmanLoc();
          Log.e(" DatabaseHandler.",""+ DatabaseHandler.SalmnLat+"");
          if(  DatabaseHandler.SalmnLat==null && DatabaseHandler.SalmnLong==null) {
@@ -2407,38 +2408,42 @@ if(settingsList.size()>0)
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+                == PackageManager.PERMISSION_GRANTED) {
 
+            locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    latitude_main = location.getLatitude();
+                    longitude_main = location.getLongitude();
+                    Log.e("onLocationChanged",""+longitude_main);
+                }
 
-            ActivityCompat.requestPermissions(this, new String[]
-                    {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            dialog.dismiss();
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            };
+
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+//            ActivityCompat.requestPermissions(this, new String[]
+//                    {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+//            dialog.dismiss();
+        }else {
+//            ActivityCompat.requestPermissions(this, new String[]
+//                    {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
 
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                latitude_main = location.getLatitude();
-                longitude_main = location.getLongitude();
-            }
 
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
         done.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -561,13 +561,6 @@ public class SalesInvoice extends Fragment {
 
         decimalFormat = new DecimalFormat("00.000");
 
-//        if(taLayoutAndPassowrd==1)
-//        {
-//
-//        }else  decimalFormat = new DecimalFormat("00.000");
-//        String emptyString = new String();
-//        result = StringUtils.defaultIfEmpty(emptyString, "default");
-//        System.out.println(result);
         mDbHandler = new DatabaseHandler(getActivity());
         Purchase_Order=mDbHandler.getFlagSettings().get(0).getPurchaseOrder();
         Log.e("Purchase_Order","111="+Purchase_Order);
@@ -646,7 +639,7 @@ public class SalesInvoice extends Fragment {
         itemsQtyOfferList = new ArrayList<>();
         object = new bluetoothprinter();
         itemForPrint = new ArrayList<>();
-        threeDForm = new DecimalFormat("00.000");
+        threeDForm = new DecimalFormat("#.#");
         valueCheckHidPrice = CustomerListShow.CustHideValu;
         initialView(view);
 
@@ -4038,7 +4031,13 @@ if(editable.toString().trim().equals("refreshtext")){
                                         }
                                     }
                                     else {
+                                        // remove items not in offer (bonus item)
 //                                        items.get(position+1)
+                                           if((position+1 )!= items.size()) {
+                                            if (items.get(position + 1).getItemName().equals("(bonus)")) {
+                                                items.remove(position + 1);
+                                            }
+                                        }
                                         disount_totalnew=0;
                                         items.get(position).setDisc(0);
                                         items.get(position).setDiscPerc("0");
@@ -5204,6 +5203,7 @@ if(editable.toString().trim().equals("refreshtext")){
         double qtyy = Double.parseDouble(qty);
         List<Offers> offer = checkOffers(itemNo);
 
+        double currentQty=mDbHandler.getSalesManQty(itemNo);
         List<Double> itemQtys = new ArrayList<>();
         for (int i = 0; i < offer.size(); i++) {
             itemQtys.add(offer.get(i).getItemQty());
@@ -5218,9 +5218,20 @@ if(editable.toString().trim().equals("refreshtext")){
             }
         }
 
+        double bonus_calc=0;
         for (int i = 0; i < offer.size(); i++) {
             if (iq == offer.get(i).getItemQty())
             {
+//                Log.e("getSalesManQty",""+mDbHandler.getSalesManQty(offer.get(i).getBonusItemNo()));
+//                Log.e("getSalesManQty",""+offer.get(i).getBonusQty());
+//                Log.e("getSalesManQty","qtyy="+qtyy);
+                if (OfferCakeShop == 0) {
+                    bonus_calc = ((int) (qtyy / offer.get(i).getItemQty())) * offer.get(i).getBonusQty();
+
+                } else {
+                    bonus_calc = offer.get(i).getBonusQty();
+                }
+                if(mDbHandler.getSalesManQty(offer.get(i).getBonusItemNo())>=(bonus_calc))
                 return offer.get(i);
         }
         }

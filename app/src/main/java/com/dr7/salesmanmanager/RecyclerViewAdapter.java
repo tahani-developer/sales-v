@@ -122,7 +122,7 @@ public static     int CountOfItems=1;
     private ArrayList<Integer> isClicked = new ArrayList<>();
     private List<Item> filterList;
     private Context cont;
-    int current_itemHasSerial = 0;
+    int current_itemHasSerial = 0,getlastPriceforCust=0;
     private AddItemsFragment2 context;
     Date currentTimeAndDate;
     public static EditText price;
@@ -215,6 +215,7 @@ public static     int CountOfItems=1;
         rate_customer = MHandler.getRateOfCustomer();
         dontDuplicateItems = MHandler.getAllSettings().get(0).getDontduplicateItem();
         sumCurentQty = MHandler.getAllSettings().get(0).getSumCurrentQty();
+        getlastPriceforCust=MHandler.getAllSettings().get(0).getPriceByCust();
         getTimeAndDate();
 
 
@@ -1735,6 +1736,14 @@ public static     int CountOfItems=1;
             String priceCus = MHandler.getItemPrice(allItemsList.get(position).getItemNo());
             if (!priceCus.equals("")) {
                 holder.price.setText(priceCus);
+                allItemsList.get(position).setPrice(Float.parseFloat(priceCus));
+            }
+
+        }
+        if(getlastPriceforCust == 1){
+            String priceCus = MHandler.getLastPriceforCustomer(allItemsList.get(position).getItemNo());
+            if (!priceCus.equals("")) {
+                holder.price.setText(priceCus+"\t JD");
                 allItemsList.get(position).setPrice(Float.parseFloat(priceCus));
             }
 
@@ -5069,8 +5078,16 @@ public static     int CountOfItems=1;
 
         }
 
+        double bonus_calc=0;
         for (int i = 0; i < offer.size(); i++) {
             if (iq == offer.get(i).getItemQty()) {
+                if (OfferCakeShop == 0) {
+                    bonus_calc = ((int) (qtyy / offer.get(i).getItemQty())) * offer.get(i).getBonusQty();
+
+                } else {
+                    bonus_calc = offer.get(i).getBonusQty();
+                }
+                if(MHandler.getSalesManQty(offer.get(i).getBonusItemNo())>=(bonus_calc))
                 return offer.get(i);
             }
 

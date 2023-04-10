@@ -436,7 +436,13 @@ public class ReturnByVoucherNo extends AppCompatActivity {
                     voucherNo_text.setError(null);
                     voucherNo_ReturnNo =voucherNo_text.getText().toString().trim();
                     Log.e("voucherNo_ReturnNo",""+voucherNo_ReturnNo);
-                    getDataForVoucherNo();
+                    try{
+                        getDataForVoucherNo();
+                    }catch(Exception e){
+                        Toast.makeText(ReturnByVoucherNo.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
+
                     textView_save.setEnabled(true);
 
 
