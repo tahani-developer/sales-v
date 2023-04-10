@@ -2243,7 +2243,7 @@ public class PdfConverter {
             headertable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
             PdfPCell cell13 = new PdfPCell(new Paragraph("                    " + companyInfo.getCompanyName() + "\n", arabicFontHeaderVochprint));
             cell13.setBorder(Rectangle.NO_BORDER);
-          //  headertable.addCell(cell13);
+
 
 
 
@@ -2284,8 +2284,7 @@ public class PdfConverter {
             cell_102.setBorder(Rectangle.NO_BORDER);
 
             table.addCell(cell1);
-           // table.addCell(cell2);
-          //  table.addCell(cell3);
+
             table.addCell(cell4);
             doc.add(table);
             if (companyInfo.getLogo() != null && !companyInfo.getLogo().equals("")) {
@@ -2299,7 +2298,7 @@ public class PdfConverter {
 
                     Image imageView = Image.getInstance(bytes);
                     imageView.setAlignment(ALIGN_CENTER);
-                    //   imageView.scaleToFit(10,10);
+
 
                     doc.add(imageView);
 
@@ -2307,7 +2306,7 @@ public class PdfConverter {
                 }
 
 
-            //    doc.add(headertable);
+
 
             }
 
@@ -2315,8 +2314,7 @@ public class PdfConverter {
             table21.addCell(cell_101);
             table21.addCell(cell_102);
             table21.addCell(cell5);
-           // table.addCell(cell6);
-            //table.addCell(cell14);
+
 
             doc.add(table21);
 
@@ -2344,46 +2342,7 @@ public class PdfConverter {
                 pdfPTable3.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
                 pdfPTable4.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
 
-//                insertCell(pdfPTable, context.getResources().getString(R.string.total), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-//                insertCell(pdfPTable, context.getResources().getString(R.string.app_price), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-//                insertCell(pdfPTable, context.getResources().getString(R.string.qty), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-//                insertCell(pdfPTable, context.getResources().getString(R.string.item_name), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-//
-//                doc.add(pdfPTable);
-//
-//
-//                PdfPTable pdfPTable3 = new PdfPTable(4);
-//                pdfPTable3.setWidthPercentage(100f);
-//                pdfPTable3.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
-//
-//                // pdfPTable3.setHeaderRows(1);
-//                Log.e("list.size()==", list.size() + "");
-//                //  list.add(list.get(list.size()-1));
-//                for (int i = 0; i < list.size(); i++) {
-//
-//
-//                    if (SalesInvoice.SaleInvoicePrinted.getVoucherNumber() == list.get(i).getVoucherNumber()
-//                            && SalesInvoice.SaleInvoicePrinted.getVoucherType() == list.get(i).getVoucherType()) {
-//                        Log.e("getVoucherNumber5==", list.get(i).getVoucherNumber() + "");
-//                        Log.e("itenu==", list.get(i).getItemNo() + "");
-//                        Log.e("itemname==", list.get(i).getItemName() + "");
-//                        Log.e("qty==", list.get(i).getQty() + "");
-//                        Log.e("getprice==", list.get(i).getPrice() + "");
-//
-//
-//                        String amount = "" + (list.get(i).getQty() * list.get(i).getPrice() - list.get(i).getDisc());
-//                        Log.e("amount==", amount + "");
-//                        insertCell(pdfPTable3, amount, ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-//
-//                        insertCell(pdfPTable3, String.valueOf(list.get(i).getPrice()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-//                        insertCell(pdfPTable3, String.valueOf(list.get(i).getQty()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-//                        insertCell(pdfPTable3, String.valueOf(list.get(i).getItemName()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-//
-//                    }
-//                }
-//
-//                //   doc.add(new Paragraph(list.get(0).getItemName(),arabicFont));
-//                doc.add(pdfPTable3);
+
 
             }
             insertCellWithColor(pdfPTable, "#", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -2401,9 +2360,9 @@ public class PdfConverter {
 
             /*********/
            int count=0;
-            // pdfPTable3.setHeaderRows(1);
+
             Log.e("list.size()==", list.size() + "");
-            //  list.add(list.get(list.size()-1));
+
             for (int i = 0; i < list.size(); i++) {
 
 
@@ -2440,7 +2399,7 @@ public class PdfConverter {
                 }
             }
 
-            //   doc.add(new Paragraph(list.get(0).getItemName(),arabicFont));
+
             doc.add(pdfPTable3);
 
 
@@ -2487,11 +2446,8 @@ public class PdfConverter {
         cell12.setBorder(Rectangle.NO_BORDER);
             cell133.setBorder(Rectangle.NO_BORDER);
 
-            cell9.setFixedHeight(10);
-
             table2.addCell(cell9);
-//            table2.addCell(cell8);
-          //  table2.addCell(cell73);
+
          table2.addCell(cell10);
         table2.addCell(cell11);
          table2.addCell(cell12);

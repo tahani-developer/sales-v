@@ -7960,6 +7960,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
 
     public int checkVoucherNo(int voucherNumber,int voucherType) {
+        Log.e("checkVoucherNo=", "voucherNumber+\t" + voucherNumber + "\t"+ "\t"+voucherType);
 //        select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
         int count = 0;
         String selectQuery = "select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '"+voucherNumber+"' and VOUCHER_TYPE = '"+voucherType+"'";

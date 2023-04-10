@@ -168,8 +168,8 @@ public class Login extends AppCompatActivity {
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-//public  static    String  headerDll = "/Falcons/VAN.dll";
-public  static    String headerDll = "";
+public  static    String  headerDll = "/Falcons/VAN.dll";
+//public  static    String headerDll = "";
 
     public  static  int gone_noTax_totalDisc=0;
     public  static  int ExportedVochTaxFlage=0;
@@ -660,6 +660,15 @@ public  static    String headerDll = "";
 
                        ImportJason importJason=new ImportJason(Login.this);
                        importJason.startParsing(storeNo_edit.getText().toString());
+                       if(typaImport==1&&getMaxVoucherServer==1&&Purchase_Order==0)//iis
+                       {
+
+
+                           importData=new ImportJason(Login.this);
+                           importData.getMaxVoucherNo2(storeNo_edit.getText().toString().trim(),4);
+
+                       }
+
                    }else {
                        Toast.makeText(Login.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
 
@@ -1785,14 +1794,15 @@ public  static    String headerDll = "";
         if(typaImport==1&&getMaxVoucherServer==1&&Purchase_Order==0)//iis
         {
            boolean isPosted=mDHandler.isAllVoucher_posted();
-        if(isPosted)
-        {
-            getMaxVoucherFromServer(salesManInt);
-        }else {
-            Toast.makeText(Login.this,R.string.failImportMaxExportData , Toast.LENGTH_SHORT).show();
             mainIntent();
-
-        }
+//        if(isPosted)
+//        {
+//            getMaxVoucherFromServer(salesManInt);
+//        }else {
+//            Toast.makeText(Login.this,R.string.failImportMaxExportData , Toast.LENGTH_SHORT).show();
+//            mainIntent();
+//
+//        }
            // mainIntent();
         }
         else {//mysql
