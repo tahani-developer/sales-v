@@ -5567,6 +5567,7 @@ if(editable.toString().trim().equals("refreshtext")){
                 }
                 itemTotalAfterTax = items.get(i).getAmount() + itemTax;
                 subTotal = subTotal + itemTotal;
+
             }
 
 
@@ -5788,10 +5789,13 @@ if(editable.toString().trim().equals("refreshtext")){
                             (items.get(i).getAmount() / (1 + items.get(i).getTaxPercent() * 0.01));
                 }
 
-
+               if(aqapa_tax==1)itemTax=0;
                 itemTotal = items.get(i).getAmount() - itemTax;
                 itemTotalAfterTax = items.get(i).getAmount();
                 subTotal = subTotal + itemTotal;
+                Log.e("A,itemTotal==",itemTotal+"");
+                Log.e("A,itemTotalAfterTax==",itemTotalAfterTax+"");
+                Log.e("A,suntotal==",subTotal+"");
             }
                 // for rawat almazaq
                 if(discType_static==0)// value
@@ -5845,15 +5849,18 @@ if(editable.toString().trim().equals("refreshtext")){
 
 //            totalDiscount+=getTotalDiscSetting(netTotal);
 //            Log.e("TOTAL", "noTax3totalTaxValue==" +totalTaxValue);
+
+                Log.e("ayanetTotal=====","="+"netTotal"+netTotal+"  subTotal="+subTotal+" totalTaxValue ="+totalTaxValue);
                 if(visaPayFlag==1)totalDiscount=0;
             netTotal = netTotal + subTotal - totalDiscount + totalTaxValue; // tahani -discount_oofers_total
 
             if(visaPayFlag==0) {
+
                 totalDiscount += getTotalDiscSetting(netTotal);
 
                 netTotal = netTotal - getTotalDiscSetting(netTotal);
             }
-
+                Log.e("ayanetTotal2=====","="+"netTotal"+netTotal+"  subTotal="+subTotal+" totalTaxValue ="+totalTaxValue);
         }
 
 
@@ -5883,7 +5890,7 @@ if(editable.toString().trim().equals("refreshtext")){
             subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
         }
 
-
+        Log.e("ayanetTotal22=====","="+"netTotal"+netTotal);
 
         if(visaPayFlag==1)totalDiscount = 0;
         discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discTextView.getText().toString()))));
