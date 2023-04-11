@@ -9316,7 +9316,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
         if (cursor.moveToLast()) {
             try {
-                if( cursor.moveToPrevious())
+             //   if( cursor.moveToPrevious())
                 {
                     lastDate =  cursor.getString(0);
 
