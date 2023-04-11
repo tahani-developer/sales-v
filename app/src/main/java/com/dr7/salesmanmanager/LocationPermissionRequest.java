@@ -363,7 +363,7 @@ int  approveAdmin=-1;
                                 status.startResolutionForResult((Activity) context, 10001);
                             } catch (IntentSender.SendIntentException e) {
                                 openDialog = false;
-                                Log.i(TAG, "PendingIntent unable to execute request.");
+                                Log.e(TAG, "PendingIntent unable to execute request.");
                             }
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
