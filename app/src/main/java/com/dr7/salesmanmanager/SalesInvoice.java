@@ -466,6 +466,11 @@ public class SalesInvoice extends Fragment {
             mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
 
+/////////
+
+
+        ///
+
 
 
         //**********************************************************
@@ -637,6 +642,7 @@ public class SalesInvoice extends Fragment {
         threeDForm = new DecimalFormat("#.#");
         valueCheckHidPrice = CustomerListShow.CustHideValu;
         initialView(view);
+
         if(voucherReturn_spreat==1)
         retSalesRadioButton.setVisibility(View.GONE);
         if (mDbHandler.getAllSettings().get(0).getNoReturnInvoice() == 1) {
@@ -702,6 +708,11 @@ public class SalesInvoice extends Fragment {
 
         String vn2 = voucherNumber + "";
         voucherNumberTextView.setText(vn2);
+//        try {  // تمت اضافتها للرواحنة لوجود مشكلة تكرار رقم الفاتورة وعدم تحديثه من السيرفر
+//            checkserialsOfVochs();
+//        }catch (Exception e){
+//            Log.e("checkserialsOfVochsException",e.getMessage());
+//        }
         connect.setVisibility(View.GONE);
         companyInfo = new CompanyInfo();
         if(visaPayFlag==0) {
@@ -1043,6 +1054,9 @@ public class SalesInvoice extends Fragment {
             @Override
             public void onClick(View view) {
                 addItemImgButton2.setEnabled(false);
+
+
+
                 try {
 
 
@@ -2170,10 +2184,43 @@ Log.e("bmb.size="," "+bmb.getPiecePlaceEnum().pieceNumber());
             @Override
             public void afterTextChanged(Editable editable) {
                 if(editable.toString().trim().length()!=0){
-                    if(editable.toString().trim().equals("refresh"))
+                    if(editable.toString().trim().equals("refreshtext2")){
+
+                        Toast.makeText(contextG, "رقم فاتورة مكرر، لم يتم تحديث السيريلات", Toast.LENGTH_SHORT).show();
+                        int curentVoucher=mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType);
+
+                        Log.e("refreshVoucherNo","curentVoucher="+curentVoucher+"\tvoucherNumber="+voucherNumber);
+                        if(curentVoucher>voucherNumber)
+                        {
+                            voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
+                            String vn = voucherNumber + "";
+                            voucherNumberTextView.setText(vn);
+                        }
+
+                        voucherNumberTextView.setText(voucherNumber+"");
+                    }
+                    else
+if(editable.toString().trim().equals("refreshtext")){
+    int curentVoucher=mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType);
+
+    Log.e("refreshVoucherNo","curentVoucher="+curentVoucher+"\tvoucherNumber="+voucherNumber);
+    if(curentVoucher>voucherNumber)
+    {
+        voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
+        String vn = voucherNumber + "";
+        voucherNumberTextView.setText(vn);
+    }
+
+    voucherNumberTextView.setText(voucherNumber+"");
+}
+         else           if(editable.toString().trim().equals("refresh"))
                     {
                         refreshVoucherNo();
+
+
+
                     }
+
                 }
 
             }
@@ -5520,6 +5567,7 @@ Log.e("bmb.size="," "+bmb.getPiecePlaceEnum().pieceNumber());
                 }
                 itemTotalAfterTax = items.get(i).getAmount() + itemTax;
                 subTotal = subTotal + itemTotal;
+
             }
 
 
@@ -5741,7 +5789,7 @@ Log.e("bmb.size="," "+bmb.getPiecePlaceEnum().pieceNumber());
                             (items.get(i).getAmount() / (1 + items.get(i).getTaxPercent() * 0.01));
                 }
 
-
+               if(aqapa_tax==1)itemTax=0;
                 itemTotal = items.get(i).getAmount() - itemTax;
                 itemTotalAfterTax = items.get(i).getAmount();
                 subTotal = subTotal + itemTotal;
@@ -5798,15 +5846,16 @@ Log.e("bmb.size="," "+bmb.getPiecePlaceEnum().pieceNumber());
 
 //            totalDiscount+=getTotalDiscSetting(netTotal);
 //            Log.e("TOTAL", "noTax3totalTaxValue==" +totalTaxValue);
+
                 if(visaPayFlag==1)totalDiscount=0;
             netTotal = netTotal + subTotal - totalDiscount + totalTaxValue; // tahani -discount_oofers_total
 
             if(visaPayFlag==0) {
+
                 totalDiscount += getTotalDiscSetting(netTotal);
 
                 netTotal = netTotal - getTotalDiscSetting(netTotal);
             }
-
         }
 
 
@@ -5836,7 +5885,7 @@ Log.e("bmb.size="," "+bmb.getPiecePlaceEnum().pieceNumber());
             subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
         }
 
-
+        Log.e("ayanetTotal22=====","="+"netTotal"+netTotal);
 
         if(visaPayFlag==1)totalDiscount = 0;
         discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discTextView.getText().toString()))));
@@ -8032,7 +8081,37 @@ try {
 
 
 
+  void   checkserialsOfVochs() {
+      mDbHandler = new DatabaseHandler(getActivity());
+      int voucherNum=0;
+      try {
+          voucherNum= Integer.parseInt(voucherNumberTextView.getText().toString());
+      }catch (Exception e){
+          Log.e("Exception", "===" + "Exception"+e.getMessage());
+          voucherNum=0;
+      }
 
+      int validateVoucherNo = mDbHandler.checkVoucherNo(voucherNum, voucherType);
+
+      Log.e("newvalidateVoucherNo", "===" + validateVoucherNo);
+
+      if (validateVoucherNo == 0) {// not exist voucher no in the same number
+
+      } else {
+          mDbHandler = new DatabaseHandler(getActivity());
+          boolean isPosted = mDbHandler.isAllVoucher_posted();
+          Log.e("newvalidateVoucherNo", "===" + validateVoucherNo);
+          if (isPosted) {
+            int no=  Integer.parseInt(Login.salesMan);
+              getMaxVoucherFromServer(no);
+          }
+      }
+  }
+    private void getMaxVoucherFromServer(int salesManInt) {
+        Log.e("getMaxVoucherFromServer", "getMaxVoucherFromServer" + salesManInt);
+      ImportJason  importData=new ImportJason(getContext());
+        importData.getMaxVoucherNo(3);//3 from salessinvoice Activity
+    }
 
 //    public  void searchByBarcodeNo(String barcodeValue) {
 //        if(!barcodeValue.equals(""))

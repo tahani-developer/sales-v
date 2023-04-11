@@ -383,7 +383,17 @@ public class ImportJason extends AppCompatActivity {
 
 
     }
+    public void getMaxVoucherNo2(String salesMan,int type) {
+        // getDataVolley(salesMan,504 );
+        try {
+            new JSONTask_maxVoucherNo(salesMan, 504,type).execute();
+        }catch (Exception e){
+            Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e("getMaxVoucherNo",""+e.getMessage());
+        }
 
+
+    }
     public void getSerialData(String voucherNo) {
 
         new JSONTask_SerialReturnData(voucherNo).execute();
@@ -1452,6 +1462,7 @@ public class ImportJason extends AppCompatActivity {
 
                                     if(typeResponse==0)
                                     goMainText.setText("main");
+
                                 }
 
 
@@ -1487,6 +1498,7 @@ public class ImportJason extends AppCompatActivity {
                         getDataProgress.dismissWithAnimation();
                         if(typeResponse==0)
                         goMainText.setText("main");
+                        else    if(typeResponse==4){}
                         else      SalesInvoice.voucherNumberTextView.setText("refresh");
                     }
 
@@ -1497,6 +1509,7 @@ public class ImportJason extends AppCompatActivity {
                 getDataProgress.dismissWithAnimation();
                 if(typeResponse==0)
                 goMainText.setText("main");
+                else    if(typeResponse==4){}
                 else     SalesInvoice.voucherNumberTextView.setText("refresh");
             }
         }
