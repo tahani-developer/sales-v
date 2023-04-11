@@ -5793,9 +5793,6 @@ if(editable.toString().trim().equals("refreshtext")){
                 itemTotal = items.get(i).getAmount() - itemTax;
                 itemTotalAfterTax = items.get(i).getAmount();
                 subTotal = subTotal + itemTotal;
-                Log.e("A,itemTotal==",itemTotal+"");
-                Log.e("A,itemTotalAfterTax==",itemTotalAfterTax+"");
-                Log.e("A,suntotal==",subTotal+"");
             }
                 // for rawat almazaq
                 if(discType_static==0)// value
@@ -5850,7 +5847,6 @@ if(editable.toString().trim().equals("refreshtext")){
 //            totalDiscount+=getTotalDiscSetting(netTotal);
 //            Log.e("TOTAL", "noTax3totalTaxValue==" +totalTaxValue);
 
-                Log.e("ayanetTotal=====","="+"netTotal"+netTotal+"  subTotal="+subTotal+" totalTaxValue ="+totalTaxValue);
                 if(visaPayFlag==1)totalDiscount=0;
             netTotal = netTotal + subTotal - totalDiscount + totalTaxValue; // tahani -discount_oofers_total
 
@@ -5860,7 +5856,6 @@ if(editable.toString().trim().equals("refreshtext")){
 
                 netTotal = netTotal - getTotalDiscSetting(netTotal);
             }
-                Log.e("ayanetTotal2=====","="+"netTotal"+netTotal+"  subTotal="+subTotal+" totalTaxValue ="+totalTaxValue);
         }
 
 
