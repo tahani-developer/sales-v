@@ -297,32 +297,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_weight="4"                >
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/swipeRefresh"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                >
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="4"
                 android:background="@color/white"
-                android:nestedScrollingEnabled="true"
                 android:orientation="horizontal"
                 android:padding="2dp"
                 android:visibility="visible"
                 app:spanCount="2">
 
             </androidx.recyclerview.widget.RecyclerView>
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
             <CheckBox
                 android:id="@+id/orientation_checkbox"
                 android:layout_width="50dp"

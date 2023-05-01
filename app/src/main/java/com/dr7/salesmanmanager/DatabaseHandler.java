@@ -5611,7 +5611,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 items.add(item);
             } while (cursor.moveToNext());
         }
-
+        Log.e("itemsall", "" +items.size() );
         return items;
     }
 //     public List<Item> getAllJsonItems1(String rate,int baseList ,int countVisibleTable) {// price from price list d
@@ -10188,14 +10188,6 @@ void updateDataForClient(){
 
        return list;
     }
-    void deletevocher (){
-       SQLiteDatabase db = this.getWritableDatabase();
-
-
-       db.execSQL("delete from SALES_VOUCHER_MASTER where VOUCHER_NUMBER=200004 and IS_POSTED==0");
-       db.execSQL("delete from SALES_VOUCHER_DETAILS where VOUCHER_NUMBER=200004 and IS_POSTED==0");
-       db.close();
-    }
 
     public double getSalesManQty(String itemNo) {
      //SELECT Qty FROM "SalesMan_Items_Balance" WHERE "ItemNo"='67'
@@ -10242,5 +10234,12 @@ void updateDataForClient(){
        Log.e("selectQuery2","price="+price);
        return price;
     }
+
+     public void deleteListD() {
+         SQLiteDatabase db = this.getWritableDatabase();
+         db.execSQL(" DELETE FROM Price_List_D where  PrNo<>0");
+
+         db.close();
+     }
  }
 
