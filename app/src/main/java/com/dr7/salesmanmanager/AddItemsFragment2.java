@@ -18,6 +18,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -39,7 +40,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -135,6 +138,8 @@ public class AddItemsFragment2 extends DialogFragment {
     private static DatabaseHandler mDbHandler;
     private DecimalFormat decimalFormat    = new DecimalFormat("00.000");;
 
+    ProgressBar progress_circular;
+    RelativeLayout allitemLayout;
     public AddItemsInterface getListener() {
         return listener;
     }
@@ -179,6 +184,8 @@ public class AddItemsFragment2 extends DialogFragment {
         final View view = inflater.inflate(R.layout.add_items_dialog2, container, false);
 
         LinearLayout add_item = view.findViewById(R.id.add_item);
+        progress_circular= view.findViewById(R.id.progress_circular);
+        allitemLayout= view.findViewById(R.id.allitemLayout);
         try {
             if (languagelocalApp.equals("ar")) {
                 add_item.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
@@ -197,7 +204,16 @@ public class AddItemsFragment2 extends DialogFragment {
         userNo = mDbHandler.getAllUserNo();
         try {
             if (!userNo.equals("")) {
-                fillListItemJson();
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+//                        progress_circular.setVisibility(View.VISIBLE);
+//                        allitemLayout.setVisibility(View.GONE);
+                        fillListItemJson();
+
+                    }
+                });
+
 
             } else {
                 AddItemsFragment2.this.dismiss();
@@ -398,8 +414,15 @@ public class AddItemsFragment2 extends DialogFragment {
 
         }
 
-
-
+//        new Handler().post(new Runnable() {
+//            @Override
+//            public void run() {
+//                progress_circular.setVisibility(View.GONE);
+//                allitemLayout.setVisibility(View.VISIBLE);
+//
+//            }
+//        });
+//
 
 //        fillListViewAllItem();
         fillItemRecycler();
@@ -951,6 +974,7 @@ public class AddItemsFragment2 extends DialogFragment {
             adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
 
                     recyclerView.setAdapter(adapter);
+
 //            recyclerView.postDelayed(new Runnable() {
 //                @Override
 //                public void run() {

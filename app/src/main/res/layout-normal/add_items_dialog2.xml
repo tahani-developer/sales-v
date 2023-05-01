@@ -293,10 +293,22 @@
             android:orientation="vertical"
             android:layout_height="match_parent">
 
+
         <RelativeLayout
+                android:visibility="visible"
+                android:id="@+id/allitemLayout"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_weight="4"                >
+                android:layout_weight="4"
+                android:layout_gravity="center"
+                android:gravity="center"
+           >
+           <ImageView
+               android:layout_height="70dp"
+               android:layout_width="50dp"
+               android:layout_centerInParent="true"
+               android:src="@drawable/ic_baseline_loading_24"
+               />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
@@ -305,7 +317,7 @@
                 android:layout_marginHorizontal="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="4"
-                android:background="@color/white"
+
                 android:orientation="horizontal"
                 android:padding="2dp"
                 android:visibility="visible"

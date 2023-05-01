@@ -4551,8 +4551,8 @@ if(editable.toString().trim().equals("refreshtext")){
 
             jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1,countListVisible);
 
-            Log.e("jsonItemsList", "="+jsonItemsList.size());
-         Log.e("jsonItemsList", "="+jsonItemsList.get(jsonItemsList.size()-1).getQty());
+            Log.e("jsonItemsList", "Sales="+jsonItemsList.size());
+         Log.e("jsonItemsList", "Sales="+jsonItemsList.get(jsonItemsList.size()-1).getQty());
 
 
     }

@@ -1388,7 +1388,7 @@ public class ExportJason extends AppCompatActivity {
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                     nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
                     nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
-                  //  Log.e("nameValuePairs","added=_JSONSTR"+vouchersObject.toString().trim());
+                  Log.e("nameValuePairs","added=_JSONSTR"+vouchersObject.toString().trim());
 
 
                     request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));

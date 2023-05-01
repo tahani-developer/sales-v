@@ -554,7 +554,13 @@ public class Activities extends AppCompatActivity implements
         @Override
         public void onClick(View view) {
             Log.e("onClick",""+view.getId());
-//
+
+            if(databaseHandler.getAllSettings().get(0).getItemUnit()==1||
+                    databaseHandler.getAllSettings().get(0).getItems_Unit()==1)
+            {
+                databaseHandler.deleteListD();
+
+            }
             switch (view.getId()) {
                 case R.id.saleCardView:
                    // saleImageView.startAnimation(animZoomIn);

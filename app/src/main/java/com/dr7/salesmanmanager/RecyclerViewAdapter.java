@@ -216,7 +216,6 @@ public static     int CountOfItems=1;
         dontDuplicateItems = MHandler.getAllSettings().get(0).getDontduplicateItem();
         sumCurentQty = MHandler.getAllSettings().get(0).getSumCurrentQty();
         getlastPriceforCust=MHandler.getAllSettings().get(0).getLastCustPrice();
-        Log.e("time", "1" + time);
         getTimeAndDate();
 
 
@@ -279,7 +278,7 @@ public static     int CountOfItems=1;
                                              public void onClick(final View view) {
                                                  clearDataCurrent();
                                                  holder.cardView.setEnabled(false);
-                                                 Log.e("time", "2" + time);
+
                                                  getTimeAndDate();
 //                                                   checkDuplicate(position);
                                                  for (int i = 0; i < localItemNumber.size(); i++) {
@@ -1768,7 +1767,6 @@ public static     int CountOfItems=1;
         if (allItemsList.size() == 1 && POS_ACTIVE == 1) {
        //     Log.e("Else", "Yes" + allItemsList.size());
             clearDataCurrent();
-            Log.e("time", "3" + time);
             getTimeAndDate();
             checkDuplicate(position);
             checkDuplicatInAllItems(position);
@@ -1784,7 +1782,7 @@ public static     int CountOfItems=1;
                                                    public void onClick(final View view) {
                                                        clearDataCurrent();
                                                        holder.cardView.setEnabled(false);
-                                                       Log.e("time", "4" + time);
+
                                                        getTimeAndDate();
 //                                                   checkDuplicate(position);
                                                        for (int i = 0; i < localItemNumber.size(); i++) {
@@ -4897,7 +4895,6 @@ public static     int CountOfItems=1;
 
         discountRequest.setRequest_type(type);
         discountRequest.setStatus("0");
-        Log.e("time", "5" + time);
         getTimeAndDate();
         discountRequest.setTime(time);
         discountRequest.setDate(voucherDate);
@@ -4913,7 +4910,7 @@ public static     int CountOfItems=1;
         voucherDate = convertToEnglish(voucherDate);
         time = formatTime.format(currentTimeAndDate);
         time = convertToEnglish(time);
-
+        Log.e("time", "" + time);
         df2 = new SimpleDateFormat("yyyy");
         voucherYear = df2.format(currentTimeAndDate);
         voucherYear = convertToEnglish(voucherYear);

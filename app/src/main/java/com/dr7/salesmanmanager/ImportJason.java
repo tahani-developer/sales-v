@@ -3704,9 +3704,9 @@ Log.e("customerList",""+customerList.size());
                     //  http://localhost:8085/tGetTheUnCollectedChequesWithDate?CONO=295&ACCNO=1110010062&FROMDATE=01/01/2021&TODATE=31/12/2021
 
                     if (dateFromToActive == 1) {
-                        URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/tGetTheUnCollectedChequesWithDate?ACCNO=" + custId
+                        URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetTheUnCollectedChequesWithDate?ACCNO=" + custId
                                 + "&CONO=" + CONO + "&FROMDATE=" + fromD.trim() + "&TODATE=" + toD.trim();
-                        Log.e("URL_TO_HIT", "tGetTheUnCollectedChequesWithDate=" + URL_TO_HIT);
+                        Log.e("URL_TO_HIT", "GetTheUnCollectedChequesWithDate=" + URL_TO_HIT);
 
                     } else {
                         URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetTheUnCollectedCheques?ACCNO=" + custId + "&CONO=" + CONO;
