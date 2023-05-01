@@ -2532,7 +2532,7 @@ public class PdfConverter {
             intent.setDataAndType(uri, "application/pdf");//intent.setDataAndType(Uri.fromFile(path), "application/pdf");
             context.startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(context, "Not able to open flder", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Not able to open folder", Toast.LENGTH_SHORT).show();
         }
 
 

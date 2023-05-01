@@ -5614,6 +5614,240 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
         return items;
     }
+//     public List<Item> getAllJsonItems1(String rate,int baseList ,int countVisibleTable) {// price from price list d
+//         List<Item> items = new ArrayList<Item>();
+//         String salesMan="1";
+//         String selectQuery ="";
+//         // Select All Query
+//         if(makeOrders==1)
+//         {
+//             salesMan=getAllSettings().get(0).getStoreNo();
+//         }else {
+//             salesMan = getAllUserNo();
+//         }
+//         Log.e("getAllJsonItems","countVisibleTable="+countVisibleTable);
+//
+//         String priceListBase="";
+////        String cusNo="5";
+//         if(baseList==0)
+//         {priceListBase="0";
+//
+//         }
+//         else {
+//             priceListBase=rate;
+//         }
+//         String PriceListId = CustomerListShow.PriceListId;
+//         if(countVisibleTable==0){
+//             selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO  \n" +
+//                     "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P \n" +
+//                     "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+priceListBase+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"' LIMIT 500";
+//         }else {
+//             selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO , visiItem.AVAILABLITY \n" +
+//                     "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P , SalesMan_Item_availability visiItem \n" +
+//                     "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+priceListBase+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"' and visiItem.ITEM_OCODE=M.ItemNo LIMIT 500";
+//         }
+//
+//
+//
+//         Log.e("***" , selectQuery);
+//         db = this.getWritableDatabase();
+//         Cursor cursor = db.rawQuery(selectQuery, null);
+//
+//         // looping through all rows and adding to list
+//         if (cursor.moveToFirst()) {
+//             // Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
+//             do {
+//                 Item item = new Item();
+//                 Bitmap itemBitmap = null;
+//
+//                 item.setItemNo(cursor.getString(0));
+//                 item.setItemName(cursor.getString(1));
+//                 item.setCategory(cursor.getString(2));
+//                 item.setQty(Float.parseFloat(cursor.getString(3)));
+//                 item.setPrice(Float.parseFloat(cursor.getString(4)));
+//                 item.setTaxPercent(Float.parseFloat(cursor.getString(5)));
+//                 item.setMinSalePrice(Double.parseDouble(cursor.getString(6)));
+////               Log.e("   item,setMinSalePric1=", item.getMinSalePrice()+"");
+////               try {
+////                  if(getAllSettings().get(0).getItems_Unit()==1)
+////                     item.setMinSalePrice(  item.getPrice());
+////                  Log.e("   item,setMinSalePric2=", item.getMinSalePrice()+"");
+////               }catch (Exception e){
+////                  Log.e("minprice,Exception",e.getMessage()+"");
+////               }
+//
+//                 item.setBarcode(cursor.getString(7));
+//                 item.setItemL(Double.parseDouble(cursor.getString(8)));
+//
+//                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
+//                 item.setKind_item(cursor.getString(10));
+//                 try {
+//
+//
+//                     if (cursor.getString(12) == null) {
+//                         item.setItemHasSerial("0");
+//                         Log.e("setItemHasSerial", "" + item.getItemHasSerial() + "null");
+//                     } else {
+//                         item.setItemHasSerial(cursor.getString(12));
+//                     }
+//                 } catch (Exception e) {
+//                     item.setItemHasSerial("0");
+//                     Log.e("setItemHasSerial", "" + item.getItemHasSerial() + e.getMessage());
+//
+//                 }
+//
+//
+//                 try {
+//
+//
+//                     if (cursor.getString(13) == null) {
+//                         item.setItemPhoto(null);
+//
+//                     } else {
+////                    itemBitmap = StringToBitMap(cursor.getString(13));
+////                    item.setItemPhoto(itemBitmap);
+//                         item.setItemPhoto(cursor.getString(13));
+//                     }
+//                 } catch (Exception e) {
+//                     item.setItemPhoto(null);
+//                 }
+//                 if (countVisibleTable == 0) {
+//                     item.setVivible(0);
+//                 } else {
+//                     try {
+//                         item.setVivible(cursor.getInt(14));
+//                     } catch (Exception e) {
+//                         item.setVivible(0);
+//                     }
+//                 }
+//
+////                Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
+//
+//
+//                 // Adding transaction to list
+//                 items.add(item);
+//             } while (cursor.moveToNext());
+//         }
+//
+//         return items;
+//     }
+//     public List<Item> getAllJsonItems3(String rate,int baseList ,int countVisibleTable) {// price from price list d
+//         List<Item> items = new ArrayList<Item>();
+//         String salesMan="1";
+//         String selectQuery ="";
+//         // Select All Query
+//         if(makeOrders==1)
+//         {
+//             salesMan=getAllSettings().get(0).getStoreNo();
+//         }else {
+//             salesMan = getAllUserNo();
+//         }
+//         Log.e("getAllJsonItems","countVisibleTable="+countVisibleTable);
+//
+//         String priceListBase="";
+////        String cusNo="5";
+//         if(baseList==0)
+//         {priceListBase="0";
+//
+//         }
+//         else {
+//             priceListBase=rate;
+//         }
+//         String PriceListId = CustomerListShow.PriceListId;
+//         if(countVisibleTable==0){
+//             selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO  \n" +
+//                     "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P \n" +
+//                     "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+priceListBase+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"' LIMIT  500 OFFSET 500";
+//         }else {
+//             selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO , visiItem.AVAILABLITY \n" +
+//                     "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P , SalesMan_Item_availability visiItem \n" +
+//                     "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+priceListBase+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"' and visiItem.ITEM_OCODE=M.ItemNo LIMIT  500 OFFSET 500";
+//         }
+//
+//
+//
+//         Log.e("***" , selectQuery);
+//         db = this.getWritableDatabase();
+//         Cursor cursor = db.rawQuery(selectQuery, null);
+//
+//         // looping through all rows and adding to list
+//         if (cursor.moveToFirst()) {
+//             // Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
+//             do {
+//                 Item item = new Item();
+//                 Bitmap itemBitmap = null;
+//
+//                 item.setItemNo(cursor.getString(0));
+//                 item.setItemName(cursor.getString(1));
+//                 item.setCategory(cursor.getString(2));
+//                 item.setQty(Float.parseFloat(cursor.getString(3)));
+//                 item.setPrice(Float.parseFloat(cursor.getString(4)));
+//                 item.setTaxPercent(Float.parseFloat(cursor.getString(5)));
+//                 item.setMinSalePrice(Double.parseDouble(cursor.getString(6)));
+////               Log.e("   item,setMinSalePric1=", item.getMinSalePrice()+"");
+////               try {
+////                  if(getAllSettings().get(0).getItems_Unit()==1)
+////                     item.setMinSalePrice(  item.getPrice());
+////                  Log.e("   item,setMinSalePric2=", item.getMinSalePrice()+"");
+////               }catch (Exception e){
+////                  Log.e("minprice,Exception",e.getMessage()+"");
+////               }
+//
+//                 item.setBarcode(cursor.getString(7));
+//                 item.setItemL(Double.parseDouble(cursor.getString(8)));
+//
+//                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
+//                 item.setKind_item(cursor.getString(10));
+//                 try {
+//
+//
+//                     if (cursor.getString(12) == null) {
+//                         item.setItemHasSerial("0");
+//                         Log.e("setItemHasSerial", "" + item.getItemHasSerial() + "null");
+//                     } else {
+//                         item.setItemHasSerial(cursor.getString(12));
+//                     }
+//                 } catch (Exception e) {
+//                     item.setItemHasSerial("0");
+//                     Log.e("setItemHasSerial", "" + item.getItemHasSerial() + e.getMessage());
+//
+//                 }
+//
+//
+//                 try {
+//
+//
+//                     if (cursor.getString(13) == null) {
+//                         item.setItemPhoto(null);
+//
+//                     } else {
+////                    itemBitmap = StringToBitMap(cursor.getString(13));
+////                    item.setItemPhoto(itemBitmap);
+//                         item.setItemPhoto(cursor.getString(13));
+//                     }
+//                 } catch (Exception e) {
+//                     item.setItemPhoto(null);
+//                 }
+//                 if (countVisibleTable == 0) {
+//                     item.setVivible(0);
+//                 } else {
+//                     try {
+//                         item.setVivible(cursor.getInt(14));
+//                     } catch (Exception e) {
+//                         item.setVivible(0);
+//                     }
+//                 }
+//
+////                Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
+//
+//
+//                 // Adding transaction to list
+//                 items.add(item);
+//             } while (cursor.moveToNext());
+//         }
+//
+//         return items;
+//     }
     public Bitmap StringToBitMap(String encodedString){
         try{
             byte [] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);

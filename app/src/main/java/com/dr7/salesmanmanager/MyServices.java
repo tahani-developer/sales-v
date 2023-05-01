@@ -142,23 +142,23 @@ public class MyServices extends Service {
                                         salesMenLocation.setLatitude(latitude+"");
                                         salesMenLocation.setLongitude(longitude+"");
                                    try {  // code for track salesman location in FireBase Added by aya
-                                    //   Log.e("salesMan==", " salesMan " + userNo);
+                                       Log.e("salesMan==", " salesMan " + userNo);
 
-//                                       if (latitude !=0||longitude!=0) {
-//                                           daoRequsts.addLocation(salesMenLocation);
-//                                       }
+                                       if (latitude !=0||longitude!=0) {
+                                           daoRequsts.addLocation(salesMenLocation);
+                                       }
                                    }catch (Exception e){
                                        Log.e("Exception", ""+e.getMessage());
                                    }
 
-                                            if (latitude !=0||longitude!=0)
-                                            {
-
-                                            importJason.  updateLocation(salesmanStations.getJSONObject());
-                                        }
-                                    }else {
-                                        Log.e(TAG, "  no App Import");
-                                    }
+//                                            if (latitude !=0||longitude!=0)
+//                                            {
+//
+//                                            importJason.  updateLocation(salesmanStations.getJSONObject());
+//                                        }
+//                                    }else {
+//                                        Log.e(TAG, "  no App Import");
+//                                    }
                                 }
                             });
                             getLoc();
