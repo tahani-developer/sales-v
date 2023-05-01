@@ -113,7 +113,6 @@ public class GeneralMethod {
 
     /////B
     public boolean checkDeviceDate() throws ParseException {
-
         Date deviceDateAndTime = Calendar.getInstance().getTime();
 
 //        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
@@ -130,7 +129,6 @@ public class GeneralMethod {
         String lastV_Date = databaseHandler.getLastVoucherDate();
         if(!lastV_Date.equals(""))
          lastV_Date_d = dateFormat.parse(lastV_Date);
-
 //        Log.e("LastV_Date", lastV_Date + "");
 
         if (lastV_Date.equals(""))

@@ -118,46 +118,47 @@ public class MyServices extends Service {
                             h.post(new Runnable() {
                                 public void run() {
                                     Log.e(TAG, "  tttt");
-                                    if(LOCATIONTRACK ==1) {
+                                    if (LOCATIONTRACK == 1) {
 
                                         try {
                                             if (TextUtils.isEmpty(userNo)) {
 
-                                                userNo="";
+                                                userNo = "";
 
                                             }
-                                        }catch (Exception e){
-                                            userNo="";
+                                        } catch (Exception e) {
+                                            userNo = "";
                                         }
                                         salesmanStations.setSalesmanNo(userNo);
                                         salesmanStations.setLatitude("" + latitude);
                                         salesmanStations.setLongitude("" + longitude);
                                         Log.e(TAG, "  nnn");
-                                     //   Log.e(TAG, " mmmm " + salesmanStations.getJSONObject());
+                                        //   Log.e(TAG, " mmmm " + salesmanStations.getJSONObject());
 
-                                        salesMenLocation.setSalesmanNo(userNo+"");
+                                        salesMenLocation.setSalesmanNo(userNo + "");
 
-                                         salesName=mHandler.getSalesmanName_fromSalesTeam();
+                                        salesName = mHandler.getSalesmanName_fromSalesTeam();
                                         salesMenLocation.setSalesmanName(salesName);
-                                        salesMenLocation.setLatitude(latitude+"");
-                                        salesMenLocation.setLongitude(longitude+"");
-                                   try {  // code for track salesman location in FireBase Added by aya
-                                    //   Log.e("salesMan==", " salesMan " + userNo);
+                                        salesMenLocation.setLatitude(latitude + "");
+                                        salesMenLocation.setLongitude(longitude + "");
+                                        try {  // code for track salesman location in FireBase Added by aya
+                                            Log.e("salesMan==", " salesMan " + userNo);
 
-//                                       if (latitude !=0||longitude!=0) {
-//                                           daoRequsts.addLocation(salesMenLocation);
-//                                       }
-                                   }catch (Exception e){
-                                       Log.e("Exception", ""+e.getMessage());
-                                   }
-
-                                            if (latitude !=0||longitude!=0)
-                                            {
-
-                                            importJason.  updateLocation(salesmanStations.getJSONObject());
+                                            if (latitude != 0 || longitude != 0) {
+                                                daoRequsts.addLocation(salesMenLocation);
+                                            }
+                                        } catch (Exception e) {
+                                            Log.e("Exception", "" + e.getMessage());
                                         }
-                                    }else {
-                                        Log.e(TAG, "  no App Import");
+
+//                                            if (latitude !=0||longitude!=0)
+//                                            {
+//
+//                                            importJason.  updateLocation(salesmanStations.getJSONObject());
+//                                        }
+//                                    }else {
+//                                        Log.e(TAG, "  no App Import");
+//                                    }
                                     }
                                 }
                             });
