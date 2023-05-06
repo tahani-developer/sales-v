@@ -647,7 +647,7 @@ if(settingsList.size()>0)
     SharWhatsAppForm=settingsList.get(settingsList.size()-1).getSharWhatsAppForm();
     AddCustomerPer=settingsList.get(settingsList.size()-1).getAdd_CustumerPer();
     LastCustPriceflage=settingsList.get(settingsList.size()-1).getLastCustPrice();
-    Login.Plan_Kind =settingsList.get(settingsList.size()-1).getPlanKind()
+    Login.Plan_Kind =settingsList.get(settingsList.size()-1).getPlanKind();
 }
         }catch (Exception e){
             approveAdmin=0;
