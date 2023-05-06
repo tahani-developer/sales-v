@@ -1137,15 +1137,7 @@
                         android:text="@string/ReturnVoch_perm_checkBox"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
-                    <Button
-                        android:id="@+id/okBut"
-                        android:layout_width="100dp"
-                        android:layout_height="35dp"
-                        android:layout_marginHorizontal="15dp"
-                        android:background="@drawable/done_button"
-                        android:text="@string/save"
-                        android:textColor="@color/layer5"
-                        android:textStyle="bold" />
+
 
                 </LinearLayout>
 
@@ -1165,7 +1157,15 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-
+        <Button
+            android:id="@+id/okBut"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_marginHorizontal="15dp"
+            android:background="@drawable/done_button"
+            android:text="@string/save"
+            android:textColor="@color/layer5"
+            android:textStyle="bold" />
         <Button
             android:id="@+id/cancelBut"
             android:layout_width="100dp"
