@@ -6,12 +6,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.dr7.salesmanmanager.Activities;
 import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.GeneralMethod;
 import com.dr7.salesmanmanager.Login;
 import com.dr7.salesmanmanager.Modles.RequestAdmin;
 import com.dr7.salesmanmanager.Modles.RequstTest;
 import com.dr7.salesmanmanager.R;
+import com.dr7.salesmanmanager.ReturnByVoucherNo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -36,7 +38,7 @@ public class DaoRequsts {
     DatabaseHandler mHandler;
 String ipAddress="";
   public static String  Firebase_ipAddress;
- public static    String Key,LogedReq_Key="";
+ public static    String Key,LogedReq_Key="",ReturnVochReq_Key;
 
     public static ArrayList<RequstTest> AllowedCut_List=new ArrayList<>();
     public static ArrayList<RequstTest> AllRequsts=new ArrayList<>();
@@ -132,7 +134,7 @@ String ipAddress="";
 
                @Override
                public void onSuccess(Void aVoid) {
-                   Toast.makeText(context, "New requst Data stored successfully", Toast.LENGTH_SHORT).show();
+                   Toast.makeText(context, context.getResources().getString(R.string.sendsuccess), Toast.LENGTH_SHORT).show();
                //    Log.e("onSuccess==", "add");
                    try {
           //   getStatusofrequst(context);
@@ -162,7 +164,7 @@ try {
         //    Log.e("getStatusofrequst,onDataChange", "onDataChange");
             // Get Post object and use the values to update the UI
 
-         //   Log.e("keys==",currentKeyTotalDiscount+" , "+keyCreditLimit+" , "+currentKey);
+        Log.e("keys==",currentKeyTotalDiscount+" , "+keyCreditLimit+" , "+currentKey);
             Key="";
             if(!currentKeyTotalDiscount.equals(""))Key=currentKeyTotalDiscount;
             else    if(!keyCreditLimit.equals(""))Key=keyCreditLimit;
@@ -192,6 +194,7 @@ try {
                     if(requstTest.getRequest_type().equals("1")&&checkState!=null)  checkState.setText(requstTest.getStatus().toString());
                     if(requstTest.getRequest_type().equals("10")&&checkState!=null)checkState.setText(requstTest.getStatus().toString());
                     if(requstTest.getRequest_type().equals("100")&&checkState_LimitCredit!=null)     checkState_LimitCredit.setText(requstTest.getStatus().toString());
+                    if(requstTest.getRequest_type().equals("506")&&Activities.ReturnPerm_respon!=null)     Activities.ReturnPerm_respon.setText(requstTest.getStatus().toString());
 
 
                 }
@@ -209,6 +212,57 @@ try {
 }catch (Exception e){
     Log.e("getStatusofrequst,Exception==",""+e.getMessage());
 }
+
+    }
+    public void  getStatusofReturnvochrequst(String Key,Context context){
+        try {
+            ValueEventListener postListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    //    Log.e("getStatusofrequst,onDataChange", "onDataChange");
+                    // Get Post object and use the values to update the UI
+
+                    //   Log.e("keys==",currentKeyTotalDiscount+" , "+keyCreditLimit+" , "+currentKey);
+
+
+
+                    RequstTest requstTest = dataSnapshot.child(Key).getValue(RequstTest.class);
+
+
+                    if(requstTest!=null) {
+                        if (requstTest.getStatus() != null)
+                        {  if (requstTest.getStatus().equals("1")) {
+                            GeneralMethod.displayNotification(context, ""+context.getResources().getString(R.string.acceptedRequest), "");
+                            //     Log.e("requstTest.getSta","1");
+                            deleteRequst(requstTest.getKey_validation());
+
+
+
+                        } else
+
+                        if (requstTest.getStatus().equals("2")) {
+                            GeneralMethod.displayNotification(context, ""+context.getResources().getString(R.string.rejectedRequest), "");
+                            //       Log.e("requstTest.getSt", "2");
+                            deleteRequst(requstTest.getKey_validation());
+                        }
+                              if(requstTest.getRequest_type().equals("506")&&Activities.ReturnPerm_respon!=null)     Activities.ReturnPerm_respon.setText(requstTest.getStatus().toString());
+
+
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                    Log.e("databaseError", "loadPost:onCancelled", databaseError.toException());
+                }
+            };
+            databaseReference2.child(Firebase_ipAddress).child(Login.salesMan).addValueEventListener(postListener);
+
+        }catch (Exception e){
+            Log.e("getStatusofrequst,Exception==",""+e.getMessage());
+        }
 
     }
     public void  getStatusofLogedrequsts(Context context){

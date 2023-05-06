@@ -180,6 +180,11 @@
         <!--                    android:textSize="18dp" />-->
 
     </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/ReturnPerm_respon"
+            android:visibility="gone"/>
         <LinearLayout
             android:id="@+id/linearReturn"
             android:layout_width="match_parent"

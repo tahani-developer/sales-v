@@ -91,7 +91,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.lang.annotation.Target;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -123,8 +122,6 @@ import static com.dr7.salesmanmanager.Login.salesMan;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.MainActivity.fill_Pending_inv;
 import static com.dr7.salesmanmanager.MainActivity.openPendingTextView;
-import static com.dr7.salesmanmanager.MainActivity.password;
-import static com.dr7.salesmanmanager.MainActivity.passwordFromAdmin;
 import static com.dr7.salesmanmanager.MainActivity.pdialog;
 import static com.dr7.salesmanmanager.Methods.convertToEnglish;
 import static com.dr7.salesmanmanager.Methods.getDecimal;
@@ -5261,7 +5258,7 @@ Log.e("customerList",""+customerList.size());
         List<Settings> settings = mHandler.getAllSettings();
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
-         if(Login.DayofweekPlan==1)new JSONTask_GetSalesmanPlan(SalesmanNum,dayOfWeek+"").execute();
+         if(Login.Plan_Kind ==1)new JSONTask_GetSalesmanPlan(SalesmanNum,dayOfWeek+"").execute();
              else new JSONTask_GetSalesmanPlan(SalesmanNum,curentDate).execute();
 
         }

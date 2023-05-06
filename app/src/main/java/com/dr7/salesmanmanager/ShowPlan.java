@@ -15,17 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import com.dr7.salesmanmanager.Adapters.ReturnItemAdapter;
+
 import com.dr7.salesmanmanager.Modles.SalesManPlan;
 import com.dr7.salesmanmanager.Modles.SalesManPlanAdapter;
-import com.dr7.salesmanmanager.Modles.serialModel;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
-
-import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -60,7 +56,7 @@ RadioButton TYPEPOFPLAN1,TYPEPOFPLAN2;
         });
         mtrl_calendar_days_of_week.setVisibility(View.GONE);
         date .setVisibility(View.GONE);
-        if(Login.DayofweekPlan==1) {
+        if(Login.Plan_Kind ==1) {
             mtrl_calendar_days_of_week.setVisibility(View.VISIBLE);
             date .setVisibility(View.GONE);
         } else {

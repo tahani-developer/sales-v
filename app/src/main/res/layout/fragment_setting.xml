@@ -627,7 +627,45 @@
                             android:textSize="14sp" />
 
                     </RadioGroup>
+                <RadioGroup
+                    android:id="@+id/plansetting"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:textColor="@color/totals_color">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="@string/plantype"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/week_plan"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+
+                        android:text="@string/week_plan"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+
+                    <RadioButton
+                        android:id="@+id/month_plan"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+                        android:text="@string/month_plan"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+
+                </RadioGroup>
 
 
 
@@ -1082,6 +1120,15 @@
                         android:layout_marginTop="1dp"
                         android:checked="true"
                         android:text="@string/LastCustPrice"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+                    <CheckBox
+                        android:id="@+id/ReturnVoch_perm_checkBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:checked="true"
+                        android:text="@string/ReturnVoch_perm_checkBox"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
 

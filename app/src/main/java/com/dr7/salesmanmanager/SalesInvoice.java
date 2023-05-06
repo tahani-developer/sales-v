@@ -427,21 +427,25 @@ public class SalesInvoice extends Fragment {
         contextG=getActivity().getApplicationContext();
 
         try{
-
-
+            Log.e("try==","try22"+"");
+            mDbHandler = new DatabaseHandler(getActivity());
+            settingsList= mDbHandler.getAllSettings();
             try {
                 approveAdmin = settingsList.get(0).getApproveAdmin();
+                Log.e("approveAdmin==",approveAdmin+"");
             }catch (Exception e){
+                Log.e("Exceptionhere22==",e.getMessage());
                 approveAdmin=0;
             }
             if(approveAdmin==1)
             {
+                Log.e("approveAdmin","approveAdmin===");
                 DaoRequsts daoRequsts=new DaoRequsts(contextG);
                 daoRequsts.getStatusofrequst(contextG);
             }
 
         }catch (Exception  exception){
-            Log.e("Exception",exception.getMessage());
+            Log.e("Exceptionhere==",exception.getMessage());
         }
 
 
@@ -574,7 +578,7 @@ public class SalesInvoice extends Fragment {
         });
         valueTotalDiscount= (EditText) view.findViewById(R.id.valueTotalDiscount);
         valueTotalDiscount.setEnabled(false);
-        settingsList= mDbHandler.getAllSettings();
+
         notIncludeTax=view.findViewById(R.id.notIncludeTax);
         exported_tax=view.findViewById(R.id.exported_tax);
         visaPay=view.findViewById(R.id.visaPay);

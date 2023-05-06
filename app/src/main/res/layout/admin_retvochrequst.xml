@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="300dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/mainRequestLinear"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:visibility="visible"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:padding="2dp"
+
+            >
+            <TextView
+
+                android:visibility="visible"
+                android:layout_weight="1"
+                android:text="@string/requestForAdmin2"
+                android:textSize="16sp"
+                android:textStyle="bold"
+
+                android:textColor="@color/red_background"
+                android:gravity="center_vertical"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/requestLinear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_marginTop="2dp"
+            android:layout_weight="2">
+            <TextView
+                android:id="@+id/text120"
+                android:visibility="visible"
+                android:layout_weight="1"
+                android:text="@string/requestForAdmin"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorBlack"
+                android:gravity="center_vertical"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"/>
+
+            <ImageView
+                android:id="@+id/requestDiscount"
+                android:layout_width="150dp"
+                android:layout_height="75dp"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/refresh2"
+
+                android:drawableLeft="@drawable/ic_done_black_24dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:padding="2dp"
+
+            >
+
+            <Button
+                android:id="@+id/enter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp"
+                android:layout_weight="1"
+                android:background="@drawable/done_button"
+                android:text="@string/enter"
+                android:textColor="@color/layer7"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/closed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+
+                android:background="@color/cancel_button"
+                android:text="@string/app_cancel"
+                android:textColor="@color/layer5"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/close"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp"
+                android:layout_weight="1"
+                android:background="@drawable/cancel_button"
+                android:text="@string/app_cancel"
+                android:textColor="@color/layer7"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

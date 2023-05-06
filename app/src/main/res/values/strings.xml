@@ -421,10 +421,15 @@
     <string name="note">Note</string>
     <string name="request_state">Request State</string>
     <string name="requestForAdmin">Request For Admin</string>
+    <string name="requestForAdmin2">Note: A return invoice can only be made after the approval of the supervisor </string>
+    <string name="enter">Enter</string>
     <string name="acceptedRequest">Accepted Request</string>
     <string name="rejectedRequest">Rejected Request</string>
     <string name="rejectedRequest2"> تم رفض طلب  الدخول للعميل</string>
     <string name="adminallowed_Wait"> بانتظار موافقة الأدمن</string>
+    <string name="ReturnVoch_perm_checkBox"> طلب موافقة لعمل مرتجع</string>
+
+    <string name="sendsuccess">    requst Data Sended successfully</string>
 
     <string name="acceptedRequest2">تم قبول طلب  الدخول للعميل</string>
     <string name="acceptYourRequest">acceptYourRequest</string>
@@ -652,7 +657,8 @@
     <string name="custperformance"> Customers Performance Report</string>
     <string name="getingData">Getting Data</string>
     <string name="LastCustPrice">Last Customer Price</string>
-
+    <string name="week_plan"> plan based on day of week </string>
+    <string name="month_plan"> plan based on Date </string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

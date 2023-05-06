@@ -78,7 +78,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucher;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 208;
+    private static final int DATABASE_VERSION = 210;
 //
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -412,6 +412,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     private static final String IP_ADDRESS = "IP_ADDRESS";
     private static final String TAX_CALC_KIND = "TAX_CALC_KIND";
+     private static final String plansetting_KIND = "plansetting_KIND";
+
     private static final String TRANS_KIND = "TRANS_KIND";
     private static final String SERIAL_NUMBER = "SERIAL_NUMBER";
     private static final String PRICE_BYCUSTOMER = "PRICE_BYCUSTOMER";
@@ -473,6 +475,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String DISC_AFTER_TAX ="DISC_AFTER_TAX";
     private static final String Add_CustumerPer ="Add_CustumerPer";
     private static final String LastCustPrice ="LastCustPrice";
+     private static final String ReturnVoch_PERM ="ReturnVoch_PERM";
 
 
 
@@ -1127,7 +1130,10 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
      +  SharWhatsApp_Form+" INTEGER DEFAULT 0 ,"
       + DISC_AFTER_TAX+" INTEGER DEFAULT 0 ,"
                + Add_CustumerPer+" INTEGER DEFAULT 1 ,"
-      + LastCustPrice +" INTEGER DEFAULT 0 "
+      + LastCustPrice +" INTEGER DEFAULT 0 ,"
+               + ReturnVoch_PERM +" INTEGER DEFAULT 0 ,"
+               + plansetting_KIND +" INTEGER DEFAULT 0 "
+
                 + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
@@ -2680,6 +2686,20 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
           Log.e(TAG, e.getMessage().toString());
        }
+        try {
+            db.execSQL("ALTER TABLE SETTING ADD '" + ReturnVoch_PERM + "'  INTEGER DEFAULT '0'");
+
+        } catch (Exception e) {
+
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try {
+            db.execSQL("ALTER TABLE SETTING ADD '" + plansetting_KIND + "'  INTEGER DEFAULT '0'");
+
+        } catch (Exception e) {
+
+            Log.e(TAG, e.getMessage().toString());
+        }
 
     }
 
@@ -3625,7 +3645,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                            int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer,
                            int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc,String store,int itemUnit,int sumQtys,int noDuplicate,
                            int salesoffersflage,int checkqtyinorderflage,int locationtrackerflage,int aqapaTax,int show_location,int Items_unitflage,int EndTripReportflage,
-                           int AcountatatmentVisflage,int SharWhatsAppform,int discAfterTax,int add_custumerPer,int LastCustPricevalu) {
+                           int AcountatatmentVisflage,int SharWhatsAppform,int discAfterTax,int add_custumerPer,int LastCustPricevalu,int ReturnVoch_approveAdm,int plansetting) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -3702,6 +3722,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
        values .put(DISC_AFTER_TAX,discAfterTax);
        values .put(Add_CustumerPer,add_custumerPer);
        values .put(LastCustPrice,LastCustPricevalu);
+        values .put(ReturnVoch_PERM,ReturnVoch_approveAdm);
+        values .put(plansetting_KIND,plansetting);
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
@@ -3777,6 +3799,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
        values.put( DISC_AFTER_TAX, defaultValue);
        values.put( Add_CustumerPer, 1);
        values.put(      LastCustPrice, 0);
+        values.put(      ReturnVoch_PERM, 0);
+        values.put(      plansetting_KIND, 0);
 
 
        db.insert(TABLE_SETTING, null, values);
@@ -4201,6 +4225,8 @@ Log.e("addCompanyInfo","addCompanyInfo");
                setting.setDiscAfterTax(cursor.getInt(60));
                setting.setAdd_CustumerPer(cursor.getInt(61));
                setting.setLastCustPrice(cursor.getInt(62));
+                setting.setReturnVoch_approveAdmin(cursor.getInt(63));
+                setting.setPlanKind(cursor.getInt(64));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }

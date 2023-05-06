@@ -465,10 +465,13 @@
     <string name="note">ملاحظة</string>
     <string name="request_state">حالة الطلب</string>
     <string name="requestForAdmin">تقديم طلب للمسؤول</string>
+    <string name="requestForAdmin2">ملاحظة: لا يمكن عمل فاتورة مرتجع إلا بموافقة المسؤول</string>
+    <string name="enter">دخول</string>
     <string name="acceptedRequest">تم قبول طلبك</string>
     <string name="rejectedRequest">تم رفض الطلب</string>
     <string name="rejectedRequest2"> تم رفض طلب  الدخول للعميل</string>
     <string name="adminallowed_Wait"> بانتظار موافقة الأدمن</string>
+    <string name="sendsuccess">   تم إرسال الطلب بنجاح</string>
     <string name="acceptedRequest2">تم قبول طلب  الدخول للعميل</string>
     <string name="acceptYourRequest">acceptYourRequest</string>
     <string name="sorry">عذرا</string>
@@ -685,6 +688,8 @@
     <string name="custperformance">تقرير الأهداف والقيم المحققة</string>
     <string name="getingData">جاري جلب البيانات</string>
     <string name="LastCustPrice">اخر سعر بيع للعميل</string>
+    <string name="week_plan">خطة حسب اسم اليوم  </string>
+    <string name="month_plan"> خطة حسب التاريخ  </string>
     <string-array name="DaysOfWeek">
         <item>السبت</item>
         <item>الأحد</item>

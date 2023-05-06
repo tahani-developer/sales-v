@@ -67,6 +67,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.dr7.salesmanmanager.Login.POS_ACTIVE;
@@ -905,7 +906,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 }
                 catch (Exception e)
                 {
-                    Toast.makeText(getActivity(), "Re Select Items Please", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "ReSelect Items Please", Toast.LENGTH_SHORT).show();
                     Log.e("AddItemException",""+e.getMessage());
                 }
 
@@ -1395,6 +1396,7 @@ try {
 //            Collections.sort(jsonItemsList<itemNoList>);
 
         }
+        Log.e("jsonItemsList=====","**********"+jsonItemsList.size());
     }
 
 

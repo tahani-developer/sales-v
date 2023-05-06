@@ -39,6 +39,7 @@ public class Settings {
     private int  work_serialNo;
     private int  showItemImage;
     private int  approveAdmin;
+    private int  ReturnVoch_approveAdmin;
     private  int saveOnly;
     private  int show_quantity_sold;
     private  int readOfferFromAdmin;
@@ -65,6 +66,23 @@ public class Settings {
     private  int   discAfterTax;
     private  int  Add_CustumerPer;
     private  int  LastCustPrice;
+    private  int planKind;
+
+    public int getPlanKind() {
+        return planKind;
+    }
+
+    public void setPlanKind(int planKind) {
+        this.planKind = planKind;
+    }
+
+    public int getReturnVoch_approveAdmin() {
+        return ReturnVoch_approveAdmin;
+    }
+
+    public void setReturnVoch_approveAdmin(int returnVoch_approveAdmin) {
+        ReturnVoch_approveAdmin = returnVoch_approveAdmin;
+    }
 
     public int getLastCustPrice() {
         return LastCustPrice;
