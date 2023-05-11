@@ -42,6 +42,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.dr7.salesmanmanager.Interface.DaoRequsts;
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.RequstTest;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
@@ -71,10 +72,10 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
 
-import static com.dr7.salesmanmanager.Login.curentTime;
+import static com.dr7.salesmanmanager.Login.Plan_Kind;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
-import static com.dr7.salesmanmanager.MainActivity.curentDate;
+import static com.dr7.salesmanmanager.MainActivity.dayOfWeek;
 import static com.dr7.salesmanmanager.MainActivity.latitudeCheckIn;
 import static com.dr7.salesmanmanager.MainActivity.longtudeCheckIn;
 import static com.dr7.salesmanmanager.MyServices.checkOutLat;
@@ -230,11 +231,33 @@ public class CustomerCheckInFragment extends DialogFragment {
                                 break;
                             }
                         }
-                        Log.e("getAllowOutOfRange",""+mDbHandler.getAllSettings().get(0).getAllowOutOfRange());
-//                        if(inRoot) {
-                            if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 0
+                        Log.e("getAllowOutOfRange",""+new DatabaseHandler(getActivity()).getAllSettings().get(0).getAllowOutOfRange());
+//                        if(inRoot) { 55555555555
+
+                        //1. getlocation from location tabel
+                        String lat="",longat="";
+                        CustomerLocation customerLocation=new DatabaseHandler(getActivity()).getCustomerLocationBYNUMBER(custObj.getCustId());
+                        lat= customerLocation.getLATIT();
+                        longat= customerLocation.getLONG();
+                        //2. getlocation from master tabel if not in  location tabel
+                        if(lat==null||longat==null) {
+
+                            lat = custObj.getCustLat();
+                            longat = custObj.getCustLong();
+                        }
+                        //3. if customer have not location
+                        if(lat==null||longat==null)
+                        {
+                            lat = "0";
+                            longat ="0";
+                        }else if(lat.equals("")||longat.equals("")){
+                            lat = "0";
+                            longat ="0";
+                        }
+
+                        if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 0
                                     ||
-                                    isInRange(custObj.getCustLat(), custObj.getCustLong())
+                                    isInRange(lat,longat)
                             ) {
 
                                 MainActivity mainActivity = new MainActivity();
@@ -574,7 +597,7 @@ public class CustomerCheckInFragment extends DialogFragment {
 
             loc2.setLatitude(latitudeCheckIn);
             loc2.setLongitude(longtudeCheckIn);
-            Toast.makeText(getActivity(), "loc1=="+loc1.getLatitude()+"\t  "+ loc1.getLongitude()+"\tloc2"+loc2.getLatitude()+"\t "+ loc2.getLongitude(), Toast.LENGTH_LONG).show();
+          //  Toast.makeText(getActivity(), "loc1=="+loc1.getLatitude()+"\t  "+ loc1.getLongitude()+"\tloc2"+loc2.getLatitude()+"\t "+ loc2.getLongitude(), Toast.LENGTH_LONG).show();
 //            Toast.makeText(getActivity(), "loc2"+loc2.getLatitude()+"  "+ loc2.getLatitude(), Toast.LENGTH_LONG).show();
 
              distance = loc2.distanceTo(loc1);
@@ -590,7 +613,7 @@ public class CustomerCheckInFragment extends DialogFragment {
             Toast.makeText(getActivity(), "Check Internet Connection"+latitudeCheckIn, Toast.LENGTH_SHORT).show();
         }
 
-        Toast.makeText(getActivity(), "distance"+distance, Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(getActivity(), "distance"+distance, Toast.LENGTH_SHORT).show();
 
         return distance <= 50;
     }
@@ -667,9 +690,11 @@ public class CustomerCheckInFragment extends DialogFragment {
         mDbHandler.updateTransaction(cusCode,convertToEnglish(currentDate), convertToEnglish(currentTime));
 
         if(Login.SalsManPlanFlage==1){
-
+if(Plan_Kind==0)
             mDbHandler.updateLogStatusInPlan(cusCode,convertToEnglish(currentDate));
-        MainActivity.getSalesmanPlan(context);}
+else
+    mDbHandler.updateLogStatusInPlan(cusCode,convertToEnglish(dayOfWeek+""));
+        MainActivity.getSalesmanPlanFromDB(context);}
 
         List<Settings> settings = mDbHandler.getAllSettings();
         if (settings.size() != 0) {

@@ -4031,7 +4031,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
     public void addAddedCustomer(AddedCustomer customer) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
-        Log.e("addAddedCustomer",""+customer.getCustName());
+        Log.e("#1addAddedCustomer",""+customer.getCustName());
 
         values.put(CUST_NAME7, customer.getCustName());
         values.put(REMARK7, customer.getRemark());
@@ -4396,6 +4396,31 @@ Log.e("addCompanyInfo","addCompanyInfo");
         }
         return infos;
     }
+     public CustomerLocation getCustomerLocationBYNUMBER(String CUS_NO ) {
+
+//         CREATE TABLE "CUSTOMER_LOCATION" (
+//                 "CUS_NO"	TEXT,
+//                 "LONG"	TEXT,
+//                 "LATIT"	TEXT
+//);
+         String selectQuery = "select  * FROM CUSTOMER_LOCATION WHERE  CUS_NO= '"+CUS_NO+"' ";
+         CustomerLocation info=new CustomerLocation();
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+
+         if (cursor.moveToFirst()) {
+             do {
+                  info = new CustomerLocation();
+                 info.setCUS_NO(cursor.getString(0));
+                 info.setLONG((cursor.getString(1)));
+                 info.setLATIT((cursor.getString(2)));
+
+
+
+             } while (cursor.moveToNext());
+         }
+         return info;
+     }
 //    public void addCustomerLocation(CustomerLocation customerLocation)
 //    {
 //        try {
@@ -7146,7 +7171,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
-//            do {
+         do {
                 AddedCustomer customer = new AddedCustomer();
 
                 customer.setCustName(cursor.getString(0));
@@ -7163,8 +7188,8 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
 
                 customers.add(customer);
-//            }
-//            while (cursor.moveToNext());
+            }
+           while (cursor.moveToNext());
         }
 
         return customers;
@@ -7180,6 +7205,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
             do {
                 Offers offer = new Offers();
                 offer.setPromotionID(Integer.parseInt(cursor.getString(0)));
+                Log.e("offer==",cursor.getString(0)+" "+ offer.getPromotionID());
                 offer.setPromotionType(Integer.parseInt(cursor.getString(1)));
                 offer.setFromDate(cursor.getString(2));
                 offer.setToDate(cursor.getString(3));//*************
@@ -7389,6 +7415,13 @@ Log.e("addCompanyInfo","addCompanyInfo");
         values.put(IS_POSTED, 1);
         db.update(ADDED_CUSTOMER, values, IS_POSTED + " = 0 and CUST_NAME = '"+cusName+"' "  , null);
     }
+     public void New_updateAddedCustomers(String cusName) {
+         db = this.getWritableDatabase();
+         ContentValues values = new ContentValues();
+
+         values.put(IS_POSTED, 1);
+         db.update(ADDED_CUSTOMER, values, IS_POSTED + "=" + 0  , null);
+     }
     public void updateCustomersMaster() {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();

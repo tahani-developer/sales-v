@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_height="100dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+
+            android:layout_margin="3dp"
+            android:gravity="center"
+            android:text="@string/offer_"
+            android:textColor="@color/colorblue_dark3"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/cancel_dialog"
+            android:layout_width="match_parent"
+            android:layout_weight="6"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:padding="5dp"
+            android:layout_margin="3dp"
+
+            android:gravity="end"
+            android:textColor="@color/colorblue_dark3"
+            android:textSize="12sp"
+            android:drawableEnd="@drawable/ic_cancel_black_24dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/HorizontalScrollView01"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:fillViewport="true"
+
+
+        android:layout_margin="2dp"
+
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+
+                android:layout_margin="5dp"
+
+                android:gravity="center"
+                android:id="@+id/invoicetable"
+                android:background="@drawable/back_border_shape"
+                >
+
+                <TextView
+                    android:id="@+id/PROMOTION_ID"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:textSize="12sp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/PROMOTION_ID"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+
+
+
+                <TextView
+                    android:id="@+id/PROMOTION_TYPE"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:textSize="12sp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/PROMOTION_TYPE"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/FROM_DATE"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:text="@string/FROM_DATE"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/TO_DATE"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/TO_DATE"
+
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                <TextView
+
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/item_number"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                <TextView
+
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/ITEM_QTY"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/BONUS_QTY"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                <TextView
+
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/BONUS_ITEM_NO"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorblue1"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                <TextView
+
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/DISCOUNT_ITEM_TYPE"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/VS_PROMO_recycle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="2dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/back_border_edit"
+
+                android:orientation="vertical"
+                >
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+    </HorizontalScrollView>
+</LinearLayout>

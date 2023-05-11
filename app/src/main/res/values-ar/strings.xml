@@ -109,6 +109,7 @@
     <string name="use_weight">استخدام العدد</string>
 
     <string name="offer_dialog">العروض</string>
+    <string name="offer_"> العروض</string>
     <string name="promo_type">نوع العرض </string>
     <string name="bonus_item">المادة المجانية </string>
     <string name="discount_value">قيمة الخصم </string>
@@ -243,6 +244,7 @@
     <string name="all">الكل</string>
     <string name="ReturnVocher">فاتورة مرتجع</string>
     <string name="saleVocher">فاتورة بيع</string>
+    <string name="ordersVocher">فاتورة طلبيات</string>
     <string name="trade_mark">Trade Mark</string>
     <string name="category">الفئة</string>
     <string name="barcode">الباركود</string>
@@ -290,6 +292,7 @@
     <string name="cust_regard">تحية العميل</string>
     <string name="check_store">تفقد المتجر/الرف/المستودع/نشاط المنافسين</string>
     <string name="promotion_check_stock">العرض و الترويج , تفقد المخزون و الاصناف الواجب توافرها</string>
+    <string name="promotion">العروض</string>
     <string name="select_proposed_request">تحديد الطلبية المقترحة</string>
     <string name="display_and_persuasion">التقديم و الإقناع</string>
     <string name="visit_rate">مراجعة الزيارة</string>
@@ -549,6 +552,7 @@
     <string name="noTax">معفى</string>
     <string name="shelf_inventory">جرد الرف</string>
     <string name="carstock">جرد السيارة</string>
+    <string name="appDiscount">خصم </string>
     <string name="totalDiscount">خصم كلي للكاش</string>
     <string name="deffirentPrice">سعر مختلف عن</string>
     <string name="deffirentPrice2">فرق السعر</string>
@@ -690,6 +694,14 @@
     <string name="LastCustPrice">اخر سعر بيع للعميل</string>
     <string name="week_plan">خطة حسب اسم اليوم  </string>
     <string name="month_plan"> خطة حسب التاريخ  </string>
+    <string name="PROMOTION_ID"> رقم العرض</string>
+    <string name="PROMOTION_TYPE">   نوع العرض</string>
+    <string name="FROM_DATE"> من تاريخ </string>
+    <string name="TO_DATE"> الى تاريخ</string>
+    <string name="DISCOUNT_ITEM_TYPE">نوع الخصم</string>
+    <string name="BONUS_ITEM_NO"> رقم المادة المجانية</string>
+    <string name="BONUS_QTY"> كمية المجاني</string>
+    <string name="ITEM_QTY">  كمية المادة</string>
     <string-array name="DaysOfWeek">
         <item>السبت</item>
         <item>الأحد</item>

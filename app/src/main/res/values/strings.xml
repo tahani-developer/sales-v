@@ -115,6 +115,7 @@
     <string name="use_weight">Use Weight</string>
 
     <string name="offer_dialog"> New Offer</string>
+    <string name="offer_"> Offers</string>
     <string name="promo_type">Offer Type </string>
     <string name="bonus_item">Bonus Item </string>
     <string name="discount_value">Discount Value </string>
@@ -244,8 +245,9 @@
     <string name="print">Print</string>
     <string name="show">Show</string>
     <string name="all">All</string>
-    <string name="ReturnVocher">Return Vocher</string>
-    <string name="saleVocher">Sale Vocher</string>
+    <string name="ReturnVocher">Return Voucher</string>
+    <string name="saleVocher">Sale Voucher</string>
+    <string name="ordersVocher">Order Voucher</string>
     <string name="trade_mark">Trade Mark</string>
     <string name="category">Category</string>
     <string name="barcode">Barcode</string>
@@ -292,6 +294,7 @@
     <string name="cust_regard">Customer Regard</string>
     <string name="check_store">Check Store/Shelf/Repository/Activity of competitors</string>
     <string name="promotion_check_stock">Presentation And Promotion And Check_store, The Categories Supposed to be there</string>
+    <string name="promotion">Promotion</string>
     <string name="select_proposed_request">Select Proposed Request</string>
     <string name="display_and_persuasion">Display And Persuasion</string>
     <string name="visit_rate">Visit Rate</string>
@@ -510,6 +513,7 @@
     <string name="noTax">No Tax</string>
     <string name="shelf_inventory">Shelf Inventory</string>
     <string name="carstock">Car Stocking</string>
+    <string name="appDiscount">Discount </string>
     <string name="totalDiscount">Total Cash Discount</string>
     <string name="deffirentPrice">Deffirent Price</string>
     <string name="deffirentPrice2"> price difference</string>
@@ -659,6 +663,14 @@
     <string name="LastCustPrice">Last Customer Price</string>
     <string name="week_plan"> plan based on day of week </string>
     <string name="month_plan"> plan based on Date </string>
+    <string name="PROMOTION_ID"> PROMOTION_ID</string>
+    <string name="PROMOTION_TYPE">   PROMOTION_TYPE</string>
+    <string name="FROM_DATE"> FROM_DATE</string>
+    <string name="TO_DATE"> TO_DATE</string>
+    <string name="DISCOUNT_ITEM_TYPE">DISCOUNT_ITEM_TYPE</string>
+    <string name="BONUS_ITEM_NO"> BONUS_ITEM_NO</string>
+    <string name="BONUS_QTY"> BONUS_QTY</string>
+    <string name="ITEM_QTY">  ITEM_QTY</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

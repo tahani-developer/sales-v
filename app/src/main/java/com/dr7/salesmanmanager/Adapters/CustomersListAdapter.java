@@ -25,6 +25,7 @@ import com.dr7.salesmanmanager.Login;
 import com.dr7.salesmanmanager.MainActivity;
 import com.dr7.salesmanmanager.MapsActivity;
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.SalesManPlan;
 import com.dr7.salesmanmanager.R;
 
@@ -105,16 +106,17 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         holder. showloction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CustomerLocation customerLocation=mDHandler.getCustomerLocationBYNUMBER(custList.get(i).getCustId());
 
-             //  Log.e("location==", CustomerListShow.latitude+"  "+custList.get(i).getCustId()+"  "+custList.get(i).getCustLat()+" "+custList.get(i).getCustLong());
-                if(custList.get(i).getCustLat()!=null
-                && custList.get(i).getCustLong()!=null) {
-                    if (!custList.get(i).getCustLat().equals("")) {
+               Log.e("location==", customerLocation.getLONG()+"   "+customerLocation.getLATIT()+"");
+                if(customerLocation.getLATIT()!=null
+                && customerLocation.getLONG()!=null) {
+                    if (!customerLocation.getLATIT().equals("")) {
 
-                        if (Double.parseDouble(custList.get(i).getCustLat()) != 0) {
+                        if (Double.parseDouble(customerLocation.getLATIT()) != 0) {
                             String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?q=loc:%f,%f",
-                                    Double.parseDouble(custList.get(i).getCustLat()),
-                                    Double.parseDouble(custList.get(i).getCustLong()));
+                                    Double.parseDouble(customerLocation.getLATIT()),
+                                    Double.parseDouble(customerLocation.getLONG()));
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                             context.startActivity(intent);
 
@@ -150,6 +152,11 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                                         .setContentText("")
                                         .show();
                             }
+                        }else {
+                            new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText(context.getResources().getString(R.string.Noloction))
+                                    .setContentText("")
+                                    .show();
                         }
                     }
                  else   new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)

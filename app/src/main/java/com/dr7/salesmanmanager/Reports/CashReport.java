@@ -877,6 +877,8 @@ public class CashReport  extends AppCompatActivity {
                     printCustom("التاريخ :       " + date.getText() + " : " + " \n ", 1, 0);
                     printCustom("المبيعات نقدا " + convertToEnglish(decimalFormat.format((cash - returnCash))) + " : " + " \n ", 1, 0);
                     printCustom("المبيعات ذمم   " + convertToEnglish(decimalFormat.format((credit - returnCridet))) + " : " + " \n ", 1, 0);
+                    printCustom("المرتجع نقدا  " + convertToEnglish(decimalFormat.format(( returnCash))) + " : " + " \n ", 1, 0);
+                    printCustom("المرتجع ذمم   " + convertToEnglish(decimalFormat.format((returnCridet))) + " : " + " \n ", 1, 0);
                     printCustom("إجمالي المبيعات   " + convertToEnglish(decimalFormat.format(total)) + " : " + " \n ", 1, 0);
                     printCustom("\n", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
