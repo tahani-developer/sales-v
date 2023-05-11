@@ -444,6 +444,8 @@ public class ExportJason extends AppCompatActivity {
 
     private void getAddedCustomer() {
         addedCustomer = mHandler.getAllAddedCustomer();
+        Log.e("#2addAddedCustomer",""+"addedCustomer");
+        Log.e("getAddedCustomer","addedCustomer=="+addedCustomer.size());
         jsonArrayAddedCustomer = new JSONArray();
         for (int i = 0; i < addedCustomer.size(); i++)
         {
@@ -492,17 +494,18 @@ public class ExportJason extends AppCompatActivity {
 
     private void getPayment() {
         payments = mHandler.getAllPayments();
+        Log.e("payments===",payments.size()+"");
         jsonArrayPayments = new JSONArray();
         for (int i = 0; i < payments.size(); i++)
         {
             if (payments.get(i).getIsPosted() == 0) {
-//                payments.get(i).setIsPosted(1);
+                Log.e("paymentshere===",payments.size()+"");
                 jsonArrayPayments.put(payments.get(i).getJSONObjectDelphi());
             }
         }
         try {
             vouchersObject=new JSONObject();
-            vouchersObject.put("JSN",jsonArrayPayments);
+            vouchersObject.put("paymentJSN===",jsonArrayPayments);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1138,7 +1141,7 @@ public class ExportJason extends AppCompatActivity {
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                     nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
                     nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
-                    // Log.e("nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
+                    Log.e("payments,nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
 
 
                     request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
@@ -1676,7 +1679,7 @@ public class ExportJason extends AppCompatActivity {
         return data_json;
     }
     private void updateAddedCustomer() {
-        mHandler.updateAddedCustomers(custName);
+        mHandler.New_updateAddedCustomers(custName);
         Log.e("onPostExecute","updateAddedCustomer---10---");
     }
 

@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -82,9 +83,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dr7.salesmanmanager.Adapters.CustomerselectedAdapter;
 import com.dr7.salesmanmanager.Adapters.Pending_item_Adapter;
 import com.dr7.salesmanmanager.Adapters.Pending_seriak_adapter;
+import com.dr7.salesmanmanager.Adapters.VS_PromoAdapter;
 import com.dr7.salesmanmanager.Interface.DaoRequsts;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.MyServicesForNotification;
+import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.TransactionsInfo;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
@@ -129,6 +132,7 @@ import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -148,6 +152,7 @@ import static com.dr7.salesmanmanager.ImportJason.list_pending_serial;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 
+import static com.dr7.salesmanmanager.Login.Plan_Kind;
 import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.SalsManPlanFlage;
 import static com.dr7.salesmanmanager.Login.SalsManTripFlage;
@@ -194,7 +199,7 @@ public class MainActivity extends AppCompatActivity
     FusedLocationProviderClient mFusedLocationClient;
     LocationRequest mLocationRequest;
 Dialog dialog1;
-    public  static      TextView endtripText,starttripText;
+    public  static      TextView endtripText,starttripText,VS_PROMO;
   public String text;
     int position=0,netsalflag=0;
     public  static  double latitude_main, longitude_main;
@@ -333,7 +338,7 @@ Dialog dialog1;
     ////////
 
 
-
+    public static int dayOfWeek=0;
 
 
     public static ArrayList<String> customersSpinnerArray = new ArrayList<>();
@@ -519,7 +524,13 @@ Dialog dialog1;
         generalMethod=new GeneralMethod(this);
 
 
-
+        VS_PROMO=findViewById(R.id.VS_PROMO);
+        VS_PROMO.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OpenVS_PROMODailog();
+            }
+        });
 
 
         salesmanPlanRespon.addTextChangedListener(new TextWatcher() {
@@ -538,7 +549,7 @@ Dialog dialog1;
                 if (!s.toString().equals("")) {
                     if (s.toString().equals("fill")) {
 
-                        getSalesmanPlan(MainActivity.this);
+                        getSalesmanPlanFromDB(MainActivity.this);
                         //
 
                         if(IsDateInLocalDatabase())
@@ -569,8 +580,10 @@ Dialog dialog1;
 
                             String currentTime = convertToEnglish(tf.format(currentTimeAndDate));
                             String currentDate = convertToEnglish(df.format(currentTimeAndDate));
+                            if(Plan_Kind==0)
                             mDbHandler.deleteFromSalesMan_Plan(convertToEnglish(currentDate));
-
+else
+                                mDbHandler.deleteFromSalesMan_Plan(convertToEnglish(dayOfWeek+""));
                             // update logoutstatus based on old plan
                             for (int i = 0; i < ImportJason.salesManPlanList.size(); i++) {
                                 Log.e("detalis===",  ImportJason.salesManPlanList.get(i).getCustNumber()+"   " +  ImportJason.salesManPlanList.get(i).getLogoutStatus());
@@ -578,7 +591,7 @@ Dialog dialog1;
                                 mDbHandler.addSalesmanPlan(ImportJason.salesManPlanList.get(i));
 
                             }
-                            getSalesmanPlan(MainActivity.this);
+                            getSalesmanPlanFromDB(MainActivity.this);
 
                         } else { // case when salesman get plan in new  date
 
@@ -588,7 +601,7 @@ Dialog dialog1;
                                 mDbHandler.addSalesmanPlan(ImportJason.salesManPlanList.get(i));
 
                             }
-                            getSalesmanPlan(MainActivity.this);
+                            getSalesmanPlanFromDB(MainActivity.this);
                         }
 
 
@@ -596,12 +609,11 @@ Dialog dialog1;
                 }
             }
         });
-        if(Login.SalsManPlanFlage==1)
-        {getSalesmanPlan(MainActivity.this);
-            Log.e("eee==",""+ DB_salesManPlanList.size());
-        }
+        Calendar  myCalendar = Calendar.getInstance();
+         dayOfWeek=myCalendar.get(Calendar.DAY_OF_WEEK);
+        Log.e("dayOfWeek=",dayOfWeek+"");
 
-        Log.e(" DB_salesManPlanListlast==",""+ DB_salesManPlanList.size());
+
 
 
 
@@ -653,6 +665,15 @@ if(settingsList.size()>0)
             approveAdmin=0;
             ReturnVoch_approveAdmin=0;
         }
+
+        if(Login.SalsManPlanFlage==1)
+        {
+            getSalesmanPlanFromDB(MainActivity.this);
+            Log.e("eee==",""+ DB_salesManPlanList.size());
+        }
+
+        Log.e(" DB_salesManPlanListlast==",""+ DB_salesManPlanList.size());
+
 
         if(approveAdmin==1) {
             boolean locCheck = locationPermissionRequest.checkLocationPermission();
@@ -1060,7 +1081,11 @@ if(settingsList.size()>0)
     }
 
     private void checkPlan() {
-        int count =mDbHandler.getCountPlan(generalMethod.getCurentTimeDate(1));
+        int count =0;
+        if(Plan_Kind==0)
+         count =mDbHandler.getCountPlan(generalMethod.getCurentTimeDate(1));
+        else
+             count =mDbHandler.getCountPlan(dayOfWeek+"");
         if(count==0)
         {
             importPlanForCurrentSalesMan();
@@ -1252,6 +1277,36 @@ if(settingsList.size()>0)
     public void saveCurrentLocation() throws InterruptedException {
         first=2;
         isClickLocation=2;
+        if (ActivityCompat.checkSelfPermission(
+                MainActivity.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (locationGPS != null) {
+                double lat = locationGPS.getLatitude();
+                double longi = locationGPS.getLongitude();
+                latitude = String.valueOf(lat);
+                longitude = String.valueOf(longi);
+                Log.e("Your Location: ", "" + "Latitude: " + latitude + "" + "Longitude: " + longitude);
+
+                            customerLocation_main = new CustomerLocation();
+                                        customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
+                                        customerLocation_main.setLONG(longitude + "");
+                                        customerLocation_main.setLATIT(latitude + "");
+                                        mDbHandler.addCustomerLocation(customerLocation_main);
+                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                                                .setTitleText(getResources().getString(R.string.succsesful))
+                                                .setContentText(getResources().getString(R.string.LocationSaved))
+                                                .show();
+
+            } else {
+                Toast.makeText(this, "Unable to find location.", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+
   //      getLoc();
 //        requestSingleUpdate();
         Log.e("saveCurrentLocation",""+isClickLocation);
@@ -1394,6 +1449,7 @@ if(settingsList.size()>0)
 //        }// END ELSE
 
     }//end
+
     public void getLoc() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         String locationProvider = LocationManager.NETWORK_PROVIDER;
@@ -1454,7 +1510,7 @@ if(settingsList.size()>0)
                         try {
                             latitude = CustomerListShow.latitude;
                             longitude = CustomerListShow.longtude;
-                            Log.e("latitude",""+latitude+longitude);
+                            Log.e("latitude",""+latitude+","+longitude);
                         }
                         catch (Exception e)
                         {
@@ -4975,7 +5031,7 @@ if(settingsList.size()>0)
         }
          }
 
-    static  void getSalesmanPlan(Context context)   {
+    static  void getSalesmanPlanFromDB(Context context)   {
         currentTimeAndDate = Calendar.getInstance().getTime();
         df2 = new SimpleDateFormat("hh:mm:ss");
         curentTime=df2.format(currentTimeAndDate);
@@ -4983,7 +5039,10 @@ if(settingsList.size()>0)
         curentDate = df.format(currentTimeAndDate);
         databaseHandler = new DatabaseHandler(  context);
         DB_salesManPlanList.clear();
+        if(Plan_Kind==0)
                 DB_salesManPlanList =  databaseHandler .getSalesmanPlan(curentDate);
+        else     DB_salesManPlanList =  databaseHandler .getSalesmanPlan(dayOfWeek+"");
+
      if(DB_salesManPlanList.size()!=0)
          ReSortList();
      else
@@ -4995,13 +5054,22 @@ if(settingsList.size()>0)
   boolean  IsDateInLocalDatabase(){
         boolean f=false;
 
-
-        for(int i=0;i<DB_salesManPlanList.size();i++)
+if(Plan_Kind==0)
+{ for(int i=0;i<DB_salesManPlanList.size();i++)
             if (DB_salesManPlanList.get(i).getDate().
                     equals(convertToEnglish(curentDate)))
             { f=true;
             break;
-            }
+            }}
+else
+{
+    for(int i=0;i<DB_salesManPlanList.size();i++)
+        if (DB_salesManPlanList.get(i).getDate().
+                equals(convertToEnglish(dayOfWeek+"")))
+        { f=true;
+            break;
+        }
+}
 
 
     return f;}
@@ -5389,6 +5457,37 @@ Log.e("Exception==",e.getMessage());
 //               NewCustomerSelecteddialog.dismiss();
 //           }
 //       });
+   }
+   private void OpenVS_PROMODailog(){
+        Log.e("OpenVS_PROMODailog","OpenVS_PROMODailog");
+       final Dialog dialog = new Dialog(MainActivity.this);
+       dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+       dialog.setCancelable(false);
+       dialog.setContentView(R.layout.vs_promo_dailog);
+       WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+       int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
+       int height = (int)(getResources().getDisplayMetrics().heightPixels*0.90);
+       openDialog=true;
+       dialog.getWindow().setLayout(width, height);
+       lp.copyFrom(dialog.getWindow().getAttributes());
+       validPassowrdSetting=false;
+       lp.gravity = Gravity.CENTER;
+       lp.windowAnimations = R.style.DialogAnimation;
+     RecyclerView recyclerView=  dialog.findViewById(R.id.VS_PROMO_recycle);
+ List<Offers> list=  mDbHandler. getAllOffers();
+       Log.e("OpenVS_PROMODailog==",""+list.size());
+       recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+       VS_PromoAdapter vs_promoAdapter=new VS_PromoAdapter(list,MainActivity.this);
+
+       recyclerView.setAdapter(vs_promoAdapter);
+       dialog.show();
+
+       dialog.findViewById(R.id.cancel_dialog).setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               dialog.dismiss();
+           }
+       });
    }
 
 }

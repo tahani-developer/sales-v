@@ -181,7 +181,8 @@ public class VouchersReport extends AppCompatActivity {
 
                     for (int n = 0; n < vouchers.size(); n++) {
                         if(vouchers.get(n).getVoucherType()==504) vochtype=getString(R.string.saleVocher);
-                        else vochtype=getString(R.string.ReturnVocher);
+                        else  if(vouchers.get(n).getVoucherType()==506) vochtype=getString(R.string.ReturnVocher);
+                        else  vochtype=getString(R.string.ordersVocher);
 
                         type= vouchers.get(n).getVoucherType();
                         if (filters(n)) {

@@ -75,6 +75,30 @@ android:visibility="gone"
             android:textColor="@color/main_green_stroke_color"
             android:textSize="18sp"
             android:textStyle="bold" />
+            <TextView
+                android:id="@+id/VS_PROMO"
+                android:layout_width="match_parent"
+
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginHorizontal="20dp"
+                android:text="@string/promotion"
+                android:gravity="center"
+                android:layout_margin="5dp"
+                android:drawableLeft="@drawable/ic_baseline_local_offer_24"
+
+                android:textColor="@color/colorblue_dark"
+
+                app:autoSizeMaxTextSize="16sp"
+                app:autoSizeMinTextSize="14sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                android:textStyle="bold|italic"
+                android:fontFamily="sans-serif"
+                />
+
         </LinearLayout>
     <TextView
         android:id="@+id/mainTextView"

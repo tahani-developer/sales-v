@@ -5250,6 +5250,13 @@ Log.e("customerList",""+customerList.size());
 
 
     public void getSalesmanPlan(int SalesmanNum) {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage(context.getResources().getString(R.string.progress_getPlan));
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setProgress(0);
+        progressDialog.show();
+
         Calendar  myCalendar = Calendar.getInstance();
         int dayOfWeek=myCalendar.get(Calendar.DAY_OF_WEEK);
         Log.e("dayOfWeek=",dayOfWeek+"");
@@ -5280,12 +5287,7 @@ Log.e("customerList",""+customerList.size());
                 e.printStackTrace();
             }
             super.onPreExecute();
-            progressDialog = new ProgressDialog(context);
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage(context.getResources().getString(R.string.progress_getPlan));
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setProgress(0);
-            progressDialog.show();
+
         }
 
        @Override
@@ -5466,8 +5468,7 @@ Log.e("customerList",""+customerList.size());
                  }
 
 
-                 getSuccsesfuly();
-
+                 Toast.makeText(context, ""+context.getResources().getString(R.string.saveSuccessfuly), Toast.LENGTH_SHORT).show();
              }
              else  if(array.contains("No Data Found")){
                  Toast.makeText(context, ""+context.getResources().getString(R.string.no_plan), Toast.LENGTH_SHORT).show();

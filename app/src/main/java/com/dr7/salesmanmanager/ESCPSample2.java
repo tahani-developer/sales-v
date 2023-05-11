@@ -2540,6 +2540,9 @@ public class ESCPSample2
 				posPtr.printAndroidFont(null, true, line + " \n ", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 				posPtr.printAndroidFont(null, true, "المبيعات نقدا :     " + convertToEnglish(decimalFormat.format((cash - returnCash))) + " \n ", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(null, true, "المبيعات ذمم :     " + convertToEnglish(decimalFormat.format((credit - returnCridet))) + " \n ", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(null, true, "المرتجع نقدا : " +convertToEnglish(decimalFormat.format(( returnCash))) + " \n ",  nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(null, true, "المرتجع ذمم  : " + convertToEnglish(decimalFormat.format((returnCridet))) + " \n ", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
 				posPtr.printAndroidFont(null, true, "إجمالي المبيعات :     " + convertToEnglish(decimalFormat.format(total)) + " \n ", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(null, true, line + " \n ", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 				posPtr.printAndroidFont(null, true, "الدفع نقدا :     " + convertToEnglish(decimalFormat.format(cashPayment)) + " \n ", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
