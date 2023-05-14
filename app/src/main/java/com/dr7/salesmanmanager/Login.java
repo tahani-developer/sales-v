@@ -168,8 +168,8 @@ public class Login extends AppCompatActivity {
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-//public  static    String  headerDll = "/Falcons/VAN.dll";
-public  static    String headerDll = "";
+public  static    String  headerDll = "/Falcons/VAN.dll";
+//public  static    String headerDll = "";
 
     public  static  int gone_noTax_totalDisc=0;
     public  static  int ExportedVochTaxFlage=0;
@@ -462,7 +462,7 @@ public  static    String headerDll = "";
             Mainpassword_setting="303090";
             Secondpassword_setting="2021000";
         }
-        Log.e("getPasswords=",Mainpassword_setting+"  "+Secondpassword_setting);
+//        Log.e("getPasswords=",Mainpassword_setting+"  "+Secondpassword_setting);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

@@ -3087,7 +3087,7 @@ public class ImportJason extends AppCompatActivity {
 //                    Log.e("Import Data", e.getMessage().toString());
 //                }
 
-Log.e("customerList",""+customerList.size());
+//Log.e("customerList",""+customerList.size());
             } catch (MalformedURLException e) {
                 Log.e("Customer", "********ex1");
                 progressDialog.dismiss();
@@ -3111,7 +3111,7 @@ Log.e("customerList",""+customerList.size());
                     public void run() {
                         if (customerList.size() == 0) {
                             new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                                    .setTitleText("check Connection")
+                                    .setTitleText("No Customer Found ")
                                     .show();
                         }
 
