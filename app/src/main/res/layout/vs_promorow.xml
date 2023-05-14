@@ -109,6 +109,17 @@
             android:textColor="@color/colorBlack"
             android:textStyle="bold" />
         <TextView
+
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:id="@+id/ItemName"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold" />
+
+        <TextView
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -163,6 +174,16 @@
             android:layout_weight="1"
             android:gravity="center"
             android:id="@+id/BONUS_ITEM_NO"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold" />
+        <TextView
+
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:id="@+id/ItemNameBonus"
             android:textColor="@color/colorBlack"
             android:textStyle="bold" />
         <TextView

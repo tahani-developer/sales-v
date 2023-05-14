@@ -118,7 +118,7 @@ import static com.dr7.salesmanmanager.StockRequest.clearData;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder> {
     SalesInvoice.SalesInvoiceInterface salesInvoiceInterfaceListener;
     private List<Item> allItemsList;
-public static     int CountOfItems=1;
+public static     float CountOfItems=1;
     private ArrayList<Integer> isClicked = new ArrayList<>();
     private List<Item> filterList;
     private Context cont;
@@ -1206,6 +1206,7 @@ public static     int CountOfItems=1;
                                                              CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
                                                              if(!Item_unit.getSelectedItem().toString().equals("")) {
                                                                  price.setText(mHandler.getUnitPrice(itemNumber.getText().toString(), "-1", CountOfItems));
+
                                                                  String ITEMS_unitsQTY = mHandler.getItemsUnitsQTY(itemNumber.getText().toString(), Item_unit.getSelectedItem().toString());
                                                                  unit_qty.setText(ITEMS_unitsQTY);
                                                                  allItemsList.get(position).setMinSalePrice(Double.parseDouble(price.getText().toString()));
@@ -5296,13 +5297,14 @@ public static     int CountOfItems=1;
              ||
              (MainActivity.OffersJustForSalsFlag == 1 &&SalesInvoice.voucherType == 504));
  }
-  public static   int getCountOfItems(String itemcode,String unitid ){
+  public static   float getCountOfItems(String itemcode,String unitid ){
         String CountOfItems=MHandler.getConvRate(itemcode, unitid);
-        int resule=1;
+        float resule=1;
         if(CountOfItems!=null && !CountOfItems.equals(""))
         {
             try {
-                resule=Integer.parseInt(CountOfItems);
+                resule=Float.parseFloat(CountOfItems);
+
             }catch (Exception e){
                 Log.e("getCountOfItems",""+e.getMessage());
             }

@@ -494,7 +494,7 @@ public class BluetoothConnectMenu extends Activity {
                     }
 
                     CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
-                    if (!companyInfo.getCompanyName().equals("") && !companyInfo.getcompanyTel().equals("0") && companyInfo.getTaxNo() != -1) {
+                    if (!companyInfo.getCompanyName().equals("")  && companyInfo.getTaxNo() != -1) {
 //                  Log.e("salesVoucher","=" + SalesInvoice.items.get(0).getVoucherNumber());
 
 
