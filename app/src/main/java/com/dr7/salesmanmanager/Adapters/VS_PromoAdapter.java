@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.R;
@@ -21,10 +22,11 @@ import java.util.List;
 public class VS_PromoAdapter extends RecyclerView.Adapter<VS_PromoAdapter.ViewHolder> {
    private List<Offers> offersList=new ArrayList<>();
    Context context;
-
+DatabaseHandler databaseHandler;
    public VS_PromoAdapter(List<Offers> offersList, Context context) {
       this.offersList = offersList;
       this.context = context;
+       this.  databaseHandler=new DatabaseHandler(context);
    }
 
    @NonNull
@@ -62,6 +64,9 @@ public class VS_PromoAdapter extends RecyclerView.Adapter<VS_PromoAdapter.ViewHo
 
       holder.FROM_DATE.setText(offersList.get(position).getFromDate());
       holder.TO_DATE.setText(offersList.get(position).getToDate());
+      if( offersList.get(position).getBonusItemNo()!=null)
+       holder.ItemNameBonus.setText(databaseHandler.getItemNameBonus(offersList.get(position).getBonusItemNo()));
+       holder.ItemName.setText(databaseHandler.getItemNameBonus(offersList.get(position).getItemNo()));
 
 
    }
@@ -73,7 +78,7 @@ public class VS_PromoAdapter extends RecyclerView.Adapter<VS_PromoAdapter.ViewHo
 
    class ViewHolder extends RecyclerView.ViewHolder {
       TextView PROMOTION_ID,PROMOTION_TYPE,FROM_DATE,TO_DATE,DISCOUNT_ITEM_TYPE,BONUS_ITEM_NO,BONUS_QTY
-              ,ITEM_QTY,item_number;
+              ,ITEM_QTY,item_number,ItemNameBonus,ItemName;
 
       public ViewHolder(@NonNull View itemView) {
          super(itemView);
@@ -86,6 +91,8 @@ public class VS_PromoAdapter extends RecyclerView.Adapter<VS_PromoAdapter.ViewHo
          BONUS_QTY=itemView.findViewById(R.id.BONUS_QTY);
          ITEM_QTY=itemView.findViewById(R.id.ITEM_QTY);
          item_number=itemView.findViewById(R.id.item_number);
+        ItemNameBonus=itemView.findViewById(R.id.ItemNameBonus);
+          ItemName=itemView.findViewById(R.id.ItemName);
       }
    }
 }

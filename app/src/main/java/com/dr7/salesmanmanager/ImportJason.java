@@ -111,9 +111,11 @@ import static com.dr7.salesmanmanager.AccountStatment.getAccountList_text;
 import static com.dr7.salesmanmanager.Activities.totalBalance_text;
 
 import static com.dr7.salesmanmanager.Activities.totalBalance_value;
+import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.checkIpDevice;
 import static com.dr7.salesmanmanager.Login.curentDate;
 import static com.dr7.salesmanmanager.Login.dateFromToActive;
+import static com.dr7.salesmanmanager.Login.getMaxVoucherServer;
 import static com.dr7.salesmanmanager.Login.goMainText;
 import static com.dr7.salesmanmanager.Login.headerDll;
 import static com.dr7.salesmanmanager.Login.makeOrders;
@@ -3144,6 +3146,19 @@ public class ImportJason extends AppCompatActivity {
                 Log.e("Customerr", "*****************" + customerList.size());
                 storeInDatabase();
                 getPassowrdSetting("1");
+                try {
+                    if(typaImport==1&&getMaxVoucherServer==1&&Purchase_Order==0)//iis
+                    {
+
+
+
+                     getMaxVoucherNo2(salesNo,4);
+
+                    }
+                }catch (Exception exception){
+
+                }
+
             } else {
 
                 // Toast.makeText(context, "Not able to fetch Customer data from server.", Toast.LENGTH_SHORT).show();

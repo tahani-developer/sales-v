@@ -57,6 +57,7 @@ import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8392,11 +8393,10 @@ Log.e("addCompanyInfo","addCompanyInfo");
             name = cursor.getString(0);
 
         }
-        Log.e("getItemNameBonus", "getItemNameBonus+\t" + name + "\t");
+if(name==null) name = "";
 
         return name;
     }
-
     public CompanyInfo getCompanyLocation() {
         CompanyInfo infoLocation=new CompanyInfo();
 
@@ -8967,6 +8967,14 @@ Log.e("addCompanyInfo","addCompanyInfo");
     public String getUnitPrice(String itemNo,String rate,double countItems) {
        //  Log.e("getUnitPrice","itemNo"+itemNo+"\trate="+rate);
         String selectQuery="";
+        try {
+            DecimalFormat decimalFormat = new DecimalFormat("00.000");
+            countItems= Double.parseDouble(convertToEnglish(decimalFormat.format(countItems)));
+        }catch (Exception exception){
+
+        }
+
+
         switch (rate){
             case "0":
                 selectQuery = "select PriceUnit from Item_Unit_Details where ItemNo='"+itemNo.trim()+"'";
@@ -8982,7 +8990,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
                 break;
 
-           case "-1":   selectQuery = "select PriceUnit from Item_Unit_Details where ItemNo='"+itemNo.trim()+"'  and ConvRate='"+countItems+"'";
+           case "-1":   selectQuery = "select PriceUnit from Item_Unit_Details where ItemNo='"+itemNo.trim()+"'  and  CAST(ConvRate as double)='"+countItems+"'";
 
               break;
         }
@@ -9008,10 +9016,11 @@ Log.e("addCompanyInfo","addCompanyInfo");
         {
             Log.e("Exception","getUnitForItem"+e.getMessage());
         }
+        Log.e("itemUnit","price=="+itemUnit);
         return  itemUnit;
     }
 
-    public ItemUnitDetails getItemUnitDetails(String itemNumber,int countItem) {
+    public ItemUnitDetails getItemUnitDetails(String itemNumber,float countItem) {
        //and ConvRate=100
        String selectQuery="";
        if(countItem!=-1)
@@ -10186,16 +10195,18 @@ void updateDataForClient(){
        db.close();
     }
     public String getConvRate(String itemNo,String UnitID) {
+        Log.e("getConvRate==","getConvRate");
       String ConvRate="1";
        // units.add("1");
        String selectQuery = "select DISTINCT  ConvRate  from " + Item_Unit_Details + " where ItemNo = '" + itemNo + "' and UnitID= '"+UnitID+"' ";
-
+        Log.e("selectQuery==",selectQuery+"");
        db = this.getWritableDatabase();
        Cursor cursor = db.rawQuery(selectQuery, null);
 
        if (cursor.moveToFirst()) {
           do {
              ConvRate=cursor.getString(0);
+             Log.e("ConvRate==",ConvRate+"");
           } while (cursor.moveToNext());
        }
 

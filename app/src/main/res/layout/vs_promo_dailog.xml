@@ -163,6 +163,16 @@
                     android:textColor="@color/white"
                     android:textStyle="bold" />
                 <TextView
+
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/item_name"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
                     android:layout_width="2dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -214,6 +224,16 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/BONUS_ITEM_NO"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
+
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/bonus_item_name"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
                 <TextView

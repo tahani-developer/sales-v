@@ -501,7 +501,7 @@ public class PdfConverter {
         if (obj.getAllCompanyInfo().get(0) != null) {
             companyInfo = obj.getAllCompanyInfo().get(0);
             if (
-                    !companyInfo.getCompanyName().equals("") && !companyInfo.getcompanyTel().equals("0")) {
+                    !companyInfo.getCompanyName().equals("") ) {
 
                 createvocherPDF("Invoice" + ".pdf", list);
             } else {
@@ -555,7 +555,7 @@ public class PdfConverter {
         if (obj.getAllCompanyInfo().get(0) != null) {
             companyInfo = obj.getAllCompanyInfo().get(0);
             if (
-                    !companyInfo.getCompanyName().equals("") && !companyInfo.getcompanyTel().equals("0")) {
+                    !companyInfo.getCompanyName().equals("") ) {
 
                 createvocherPDFForShare("Invoice" + ".pdf", list);
             } else {
@@ -609,7 +609,7 @@ public class PdfConverter {
         if (obj.getAllCompanyInfo().get(0) != null) {
             companyInfo = obj.getAllCompanyInfo().get(0);
             if (
-                    !companyInfo.getCompanyName().equals("") && !companyInfo.getcompanyTel().equals("0")) {
+                    !companyInfo.getCompanyName().equals("") ) {
 
                 createvocherPDFForShare("Invoice" + ".pdf", list);
             } else {
@@ -628,8 +628,8 @@ public class PdfConverter {
         if ( obj.getAllCompanyInfo().get(0) != null) {
             companyInfo = obj.getAllCompanyInfo().get(0);
             if (
-                    !companyInfo.getCompanyName().equals("") &&
-                            !companyInfo.getcompanyTel().equals("0")) {
+                    !companyInfo.getCompanyName().equals("")
+                         ) {
 
                 createSalevocherPDF("Invoice" + ".pdf", list);
             } else {
@@ -647,8 +647,8 @@ public class PdfConverter {
         if ( obj.getAllCompanyInfo().get(0) != null) {
             companyInfo = obj.getAllCompanyInfo().get(0);
             if (
-                    !companyInfo.getCompanyName().equals("") &&
-                            !companyInfo.getcompanyTel().equals("0")) {
+                    !companyInfo.getCompanyName().equals("")
+                          ) {
 
                 createSalevocherPDF2("Invoice" + ".pdf", list);
             } else {
