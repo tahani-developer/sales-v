@@ -314,7 +314,7 @@ public class CashReport  extends AppCompatActivity {
                     try {
                         int printer = obj.getPrinterSetting();
                         companyInfo = obj.getAllCompanyInfo().get(0);
-                        if (!companyInfo.getCompanyName().equals("") && !companyInfo.getcompanyTel().equals("0") && companyInfo.getTaxNo() != -1) {
+                        if (!companyInfo.getCompanyName().equals("")  && companyInfo.getTaxNo() != -1) {
                             if (printer != -1) {
                                 switch (printer) {
                                     case 0:

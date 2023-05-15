@@ -2731,7 +2731,7 @@ if(editable.toString().trim().equals("refreshtext")){
             try {
                 int printer = mDbHandler.getPrinterSetting();
                 companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-                if (!companyInfo.getCompanyName().equals("") && !companyInfo.getcompanyTel().equals("0")  && companyInfo.getTaxNo() != -1) {
+                if (!companyInfo.getCompanyName().equals("")   && companyInfo.getTaxNo() != -1) {
                     switch (printer) {
                         case 0:
                             vouchLast = vouchPrint;
@@ -7624,7 +7624,7 @@ try {
             }
 
             //&& !companyInfo.getLogo().equals(null)
-            if (!companyInfo.getCompanyName().equals("") && !companyInfo.getcompanyTel().equals("0") && companyInfo.getTaxNo() != -1) {
+            if (!companyInfo.getCompanyName().equals("")  && companyInfo.getTaxNo() != -1) {
                 pic.setImageBitmap(companyInfo.getLogo());
                 pic.setDrawingCacheEnabled(true);
                 Bitmap bitmap = pic.getDrawingCache();
@@ -7746,7 +7746,7 @@ try {
 
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-            if (!companyInfo.getCompanyName().equals("") && !companyInfo.getcompanyTel().equals("0") && !companyInfo.getLogo().equals(null) && companyInfo.getTaxNo() != -1) {
+            if (!companyInfo.getCompanyName().equals("") && !companyInfo.getLogo().equals(null) && companyInfo.getTaxNo() != -1) {
 
                 pic.setImageBitmap(companyInfo.getLogo());
                 pic.setDrawingCacheEnabled(true);

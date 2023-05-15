@@ -9,12 +9,14 @@ import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.google.zxing.integration.android.IntentIntegrator;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -1517,7 +1519,7 @@ try {
 
                 //***************************************************
                 if(mDbHandler.getAllSettings().get(0).getItemUnit()==1)
-                {int itemUnit=1;
+                {float itemUnit=1;
                     if(mDbHandler.getAllSettings().get(0).getItems_Unit()==1)
                     { itemUnit=CountOfItems;
 
@@ -1765,10 +1767,10 @@ try {
         }
     }
 
-    private ItemUnitDetails getItemUnitInfo(String itemNumber,int countItem) {
+    private ItemUnitDetails getItemUnitInfo(String itemNumber,float countItem) {
 //        Log.e("getItemUnitInfo","itemNumber="+itemNumber+"\tcountItem= "+countItem);
         ItemUnitDetails item= new ItemUnitDetails();
-        item=mDbHandler.getItemUnitDetails(itemNumber,countItem);
+        item=mDbHandler.getItemUnitDetails(itemNumber, countItem);
         return  item;
     }
 

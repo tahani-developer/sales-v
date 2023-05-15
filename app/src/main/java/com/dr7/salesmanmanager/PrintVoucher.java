@@ -2599,7 +2599,7 @@ linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHei
             Log.e("nocopy", "" + numOfCopy);
             CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 
-            if (!companyInfo.getCompanyName().equals("")&& !companyInfo.getcompanyTel().equals("0")&& !companyInfo.getLogo().equals(null)&&companyInfo.getTaxNo()!=0) {
+            if (!companyInfo.getCompanyName().equals("")&&  !companyInfo.getLogo().equals(null)&&companyInfo.getTaxNo()!=0) {
             pic.setImageBitmap(companyInfo.getLogo());
             pic.setDrawingCacheEnabled(true);
             bitmap = pic.getDrawingCache();
