@@ -660,14 +660,7 @@ public  static    String headerDll = "";
 
                        ImportJason importJason=new ImportJason(Login.this);
                        importJason.startParsing(storeNo_edit.getText().toString());
-                       if(typaImport==1&&getMaxVoucherServer==1&&Purchase_Order==0)//iis
-                       {
 
-
-                           importData=new ImportJason(Login.this);
-                           importData.getMaxVoucherNo2(storeNo_edit.getText().toString().trim(),4);
-
-                       }
 
                    }else {
                        Toast.makeText(Login.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();

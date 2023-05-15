@@ -8393,7 +8393,6 @@ Log.e("addCompanyInfo","addCompanyInfo");
             name = cursor.getString(0);
 
         }
-        Log.e("getItemNameBonus", "getItemNameBonus+\t" + name + "\t");
 if(name==null) name = "";
 
         return name;
