@@ -205,15 +205,18 @@ public class AddItemsFragment2 extends DialogFragment {
         userNo = mDbHandler.getAllUserNo();
         try {
             if (!userNo.equals("")) {
-                new Handler().post(new Runnable() {
-                    @Override
-                    public void run() {
-//                        progress_circular.setVisibility(View.VISIBLE);
-//                        allitemLayout.setVisibility(View.GONE);
-                        fillListItemJson();
+                if(mDbHandler.getAllSettings().get(0).getItemUnit()==1){
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            fillListItemJson();
 
-                    }
-                });
+                        }
+                    });
+                }else {
+                    fillListItemJson();
+                }
+
 
 
             } else {
