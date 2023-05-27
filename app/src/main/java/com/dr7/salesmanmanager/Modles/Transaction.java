@@ -150,8 +150,9 @@ public class Transaction {
 
             obj.put("REAL_LONGITIUED_CHECHOUT", longtude);
             obj.put("REAL_LATITUED_CHECHOUT", latitud);
-            obj.put("EXPORTED", "0");
 
+            obj.put("EXPORTED", "0");
+            obj.put("VOUCHERCOUNT",VOUCHERCOUNT);
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");
         }
@@ -172,6 +173,7 @@ public class Transaction {
             obj.put("REAL_LONGITIUED_CHECHOUT", longtude);
             obj.put("REAL_LATITUED_CHECHOUT", latitud);
             obj.put("EXPORTED", "0");
+            obj.put("VOUCHERCOUNT",VOUCHERCOUNT);
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

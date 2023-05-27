@@ -4624,7 +4624,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 transaction.setIsPosted(Integer.parseInt(cursor.getString(8)));
                 transaction.setLongtude(Double.parseDouble(cursor.getString(9)));
                 transaction.setLatitud(Double.parseDouble(cursor.getString(10)));
-                transaction.setVOUCHERCOUNT(Integer.parseInt(cursor.getString(7)));
+                transaction.setVOUCHERCOUNT(Integer.parseInt(cursor.getString(12)));
                 // Adding transaction to list
                 transactionList.add(transaction);
             } while (cursor.moveToNext());
