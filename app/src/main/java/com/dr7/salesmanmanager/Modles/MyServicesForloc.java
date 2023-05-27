@@ -125,7 +125,7 @@ private  void   startMyOenForeground(){
         starttimer();
         //  Log.e(TAG, "onStartCommand() , MyServicesForNotification started..."+id);
 
-        return START_STICKY;
+        return START_NOT_STICKY;
 
     }
     @Override
