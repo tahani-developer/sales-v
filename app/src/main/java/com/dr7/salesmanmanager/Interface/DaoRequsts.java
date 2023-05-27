@@ -194,7 +194,7 @@ try {
                     if(requstTest.getRequest_type().equals("1")&&checkState!=null)  checkState.setText(requstTest.getStatus().toString());
                     if(requstTest.getRequest_type().equals("10")&&checkState!=null)checkState.setText(requstTest.getStatus().toString());
                     if(requstTest.getRequest_type().equals("100")&&checkState_LimitCredit!=null)     checkState_LimitCredit.setText(requstTest.getStatus().toString());
-                    if(requstTest.getRequest_type().equals("506")&&Activities.ReturnPerm_respon!=null)     Activities.ReturnPerm_respon.setText(requstTest.getStatus().toString());
+                    if(requstTest.getRequest_type().equals("506")&&ReturnByVoucherNo.ReturnPerm_respon!=null)     ReturnByVoucherNo.ReturnPerm_respon.setText(requstTest.getStatus().toString());
 
 
                 }
@@ -245,7 +245,7 @@ try {
                             //       Log.e("requstTest.getSt", "2");
                             deleteRequst(requstTest.getKey_validation());
                         }
-                              if(requstTest.getRequest_type().equals("506")&&Activities.ReturnPerm_respon!=null)     Activities.ReturnPerm_respon.setText(requstTest.getStatus().toString());
+                              if(requstTest.getRequest_type().equals("506")&&ReturnByVoucherNo.ReturnPerm_respon!=null)     ReturnByVoucherNo.ReturnPerm_respon.setText(requstTest.getStatus().toString());
 
 
                         }

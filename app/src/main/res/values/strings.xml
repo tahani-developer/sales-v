@@ -424,6 +424,8 @@
     <string name="note">Note</string>
     <string name="request_state">Request State</string>
     <string name="requestForAdmin">Request For Admin</string>
+    <string name="requestForAdmin3"><u>Request For Admin</u></string>
+
     <string name="requestForAdmin2">Note: A return invoice can only be made after the approval of the supervisor </string>
     <string name="enter">Enter</string>
     <string name="acceptedRequest">Accepted Request</string>

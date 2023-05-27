@@ -20,6 +20,16 @@ public class Transaction {
     int isPosted;
     double latitud;
     double longtude;
+    int VOUCHERCOUNT;
+
+
+    public int getVOUCHERCOUNT() {
+        return VOUCHERCOUNT;
+    }
+
+    public void setVOUCHERCOUNT(int VOUCHERCOUNT) {
+        this.VOUCHERCOUNT = VOUCHERCOUNT;
+    }
 
     public double getLatitud() {
         return latitud;

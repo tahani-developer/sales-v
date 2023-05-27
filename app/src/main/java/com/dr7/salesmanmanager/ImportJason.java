@@ -2850,8 +2850,14 @@ public class ImportJason extends AppCompatActivity {
                         String qty = "";
                         SalesManItemsBalance item = new SalesManItemsBalance();
                         item.setCompanyNo(finalObject.getString("COMAPNYNO"));
+                        try {
+                            item.setItemNo(finalObject.getString("ItemOCode"));
+                        }catch (Exception exception)
+                        {
+                            item.setItemNo(finalObject.getString("ITEMNO"));
+                        }
                         item.setSalesManNo(finalObject.getString("STOCK_CODE"));
-                        item.setItemNo(finalObject.getString("ItemOCode"));
+
 
                         qty = finalObject.getString("QTY");
                         try {

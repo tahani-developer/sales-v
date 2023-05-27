@@ -468,6 +468,7 @@
     <string name="note">ملاحظة</string>
     <string name="request_state">حالة الطلب</string>
     <string name="requestForAdmin">تقديم طلب للمسؤول</string>
+    <string name="requestForAdmin3"><u>تقديم طلب للمسؤول</u></string>
     <string name="requestForAdmin2">ملاحظة: لا يمكن عمل فاتورة مرتجع إلا بموافقة المسؤول</string>
     <string name="enter">دخول</string>
     <string name="acceptedRequest">تم قبول طلبك</string>

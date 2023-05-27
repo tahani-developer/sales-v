@@ -21,8 +21,8 @@
         tools:ignore="GoogleAppIndexingWarning,HardcodedDebugMode">
         <activity
             android:name=".Reports.CustomersPerformanceReport"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.TargetReport"
             android:exported="false"
@@ -223,12 +223,20 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/provider_paths" />
         </provider>
-
+        <receiver android:name=".Restarter"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="restartservice" />
+            </intent-filter>
+        </receiver>
         <service
             android:name=".MyServices"
             android:enabled="true"
+            android:exported="false"
+
             android:finishOnTaskLaunch="true"
             android:foregroundServiceType="location"
             android:process=":MyServicesSalesMan"
@@ -240,6 +248,14 @@
             android:finishOnTaskLaunch="true"
             android:foregroundServiceType="dataSync"
             android:process=":MyServicesFireCaptain"
+            android:stopWithTask="false" />
+        <service
+            android:name=".Modles.MyServicesForloc"
+            android:enabled="true"
+            android:exported="false"
+            android:finishOnTaskLaunch="true"
+            android:foregroundServiceType="location"
+            android:process=":MyServicesForloccaption"
             android:stopWithTask="false" />
 
         <uses-library
@@ -295,6 +311,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION " />
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />

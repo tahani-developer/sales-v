@@ -51,14 +51,19 @@ public class LocationDao {
 
    }
    public void addLocation(SalesMenLocation salesMenLocation){
-      Log.e("addLocation==", "addLocation");
-      if(!ChildIsExists(salesMenLocation.getSalesmanNo())) {
+
+if(databaseReference==null) {
+   FirebaseDatabase dbroot = FirebaseDatabase.getInstance();
+   databaseReference = dbroot.getReference(SalesMenLocation.class.getSimpleName());
+}
+
+//      if(!ChildIsExists(salesMenLocation.getSalesmanNo())) {
          databaseReference.child(Firebase_ipAddress).child(salesMenLocation.getSalesmanNo()).setValue(salesMenLocation).addOnSuccessListener(new OnSuccessListener<Void>() {
 
             @Override
             public void onSuccess(Void aVoid) {
-             //  Log.e("addLocation==", "databaseReference"+databaseReference.getRoot());
-               Log.e("onSuccess==", "New salesMenLocation Data stored successfully");
+//             Log.e("addLocation==", "databaseReference"+databaseReference.getRoot());
+           //    Log.e("onSuccess==", "New salesMenLocation Data stored successfully");
 
             }
          });
@@ -69,9 +74,9 @@ public class LocationDao {
             }
          });
 
-      }
-      else
-         Toast.makeText(context, "child is exsits", Toast.LENGTH_SHORT).show();
+//      }
+//      else
+//         Toast.makeText(context, "child is exsits", Toast.LENGTH_SHORT).show();
 
    }
    public boolean ChildIsExists(String value) {
@@ -97,4 +102,5 @@ public class LocationDao {
          }
       });
       return flage[0];  }
+
 }

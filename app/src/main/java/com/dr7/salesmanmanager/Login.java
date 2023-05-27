@@ -60,7 +60,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.FirebaseApp;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -1427,7 +1426,7 @@ public  static    String headerDll = "";
                         Log.e("LocationIn","GoToMain 1");
 
                         // locationPermissionRequest.displayLocationSettingsRequest(Login.this);
-                        startService(new Intent(Login.this, MyServices.class));
+                    //    startService(new Intent(Login.this, MyServices.class));
                         Intent main = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(main);
                         // permission was granted, yay! Do the
@@ -1596,6 +1595,7 @@ public  static    String headerDll = "";
                         transaction.setLongtude(location_main.getLongitude());
                         transaction.setLatitud(location_main.getLatitude());
                         transaction.setSalesManId(Integer.parseInt(salesMan));
+                        transaction.setSalesManId(Integer.parseInt(salesMan));
                         mDHandler.addlogin(transaction);
                     }
                     catch (Exception e){
@@ -1725,6 +1725,7 @@ public  static    String headerDll = "";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void goToMain() {
+        Log.e("goToMain","goToMain");
        List<Settings>settingsList= mDHandler.getAllSettings();
          approveAdmin=0;
         LocationTracker=0;
@@ -1827,7 +1828,7 @@ public  static    String headerDll = "";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public  void mainIntent(){
-
+        Log.e("mainIntent===","mainIntent");
         if(LocationTracker==1) {
             boolean locCheck= locationPermissionRequest.checkLocationPermission();
             boolean isNetworkAvailable=isNetworkAvailable();
@@ -1838,8 +1839,8 @@ public  static    String headerDll = "";
             Log.e("LocationIn===","GoToMain"+locCheck);
             if(locCheck){
                 Log.e("LocationIn====","GoToMain IN "+locCheck);
-                startService(new Intent(Login.this, MyServices.class));
-                finish();
+//                startService(new Intent(Login.this, MyServices.class));
+//                finish();
                 Intent main = new Intent(Login.this, MainActivity.class);
                 startActivity(main);
             }else {
