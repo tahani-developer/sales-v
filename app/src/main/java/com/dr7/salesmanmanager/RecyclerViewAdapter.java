@@ -1156,9 +1156,16 @@ public static     float CountOfItems=1;
 //                                                           {
 //                                                               price.setText("" + items.get(position).getPrice());
 //                                                           }else {
-                                                         String itemUnitPrice = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer,0);
+                                                               String itemUnitPrice="",price_value="";
+                                                         if(mHandler.getAllSettings().get(0).getPriceByCust()==1)
+                                                         {
+                                                              itemUnitPrice = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
+
+                                                         }
+                                                             price_value = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer,0);
                                                          if (!itemUnitPrice.equals(""))
                                                              price.setText(itemUnitPrice);
+                                                         else  price.setText(price_value);
 //                                                           }
 
                                                      }
@@ -1205,7 +1212,17 @@ public static     float CountOfItems=1;
                                                          public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                                                              CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
                                                              if(!Item_unit.getSelectedItem().toString().equals("")) {
-                                                                 price.setText(mHandler.getUnitPrice(itemNumber.getText().toString(), "-1", CountOfItems));
+                                                                 String itemUnitPrice="",price_value="";
+//                                                                 if(mHandler.getAllSettings().get(0).getPriceByCust()==1)
+//                                                                 {
+//                                                                      itemUnitPrice = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
+//
+//
+//                                                                 }
+                                                                     price_value=mHandler.getUnitPrice(itemNumber.getText().toString(), "-1", CountOfItems);
+                                                                 if(!itemUnitPrice.equals(""))
+                                                                     price.setText(itemUnitPrice);
+                                                                     else  price.setText(price_value);
 
                                                                  String ITEMS_unitsQTY = mHandler.getItemsUnitsQTY(itemNumber.getText().toString(), Item_unit.getSelectedItem().toString());
                                                                  unit_qty.setText(ITEMS_unitsQTY);
@@ -1213,7 +1230,20 @@ public static     float CountOfItems=1;
                                                         //         Log.e("CountOfItems", CountOfItems + " ,ITEMS_unitsQTY=" + ITEMS_unitsQTY);
                                                              }else
                                                              {
-                                                                 price.setText(   allItemsList.get(position).getPrice()+"");
+                                                                 String price_text="";
+                                                                 if(mHandler.getAllSettings().get(0).getPriceByCust()==1){
+                                                                     price_text= mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
+                                                                 }
+                                                                 if(!price_text.equals("")){
+
+                                                                     price_text=allItemsList.get(position).getPrice()+"";
+                                                                 }
+                                                                 price.setText(price_text);
+
+
+
+                                                                 unit_qty.setText("");
+
                                                                  allItemsList.get(position).setMinSalePrice(Double.parseDouble(price.getText().toString()));
                                                              }
 
@@ -1710,14 +1740,21 @@ public static     float CountOfItems=1;
 //            holder.price.setText("300");
 //
 //        }else {
-        if (itemUnit == 1&&unitsItems_select==0) {
+        if (itemUnit == 1 && unitsItems_select==0) {
 //            if(items.get(position).getPrice()!=0)
 //            {
 //                holder.price.setText("" + items.get(position).getPrice());
 //            }else{
 
      //       Log.e("rate_customer", "" + rate_customer);
-            String postPriceUniteValue = MHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer,0);
+            String postPriceUniteValue="",price_value="";
+            if(MHandler.getAllSettings().get(0).getPriceByCust()==1)
+            {
+                 postPriceUniteValue = MHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
+
+            }
+                price_value = MHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer,0);
+
             if (!postPriceUniteValue.equals("")) {
                 try {
                     priceUnit = Float.parseFloat(postPriceUniteValue);
@@ -2710,7 +2747,19 @@ public static     float CountOfItems=1;
                                                                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                                                                  CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
                                                                  if(!Item_unit.getSelectedItem().toString().equals("")) {
-                                                                     price.setText(mHandler.getUnitPrice(itemNumber.getText().toString(), "-1", CountOfItems));
+
+                                                                     String priceCustomer="",price_value="";
+//                                                                     if(mHandler.getAllSettings().get(0).getPriceByCust()==1)
+//                                                                     {
+//                                                                         priceCustomer=mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
+//
+//                                                                     }
+                                                                         price_value=mHandler.getUnitPrice(itemNumber.getText().toString(), "-1", CountOfItems);
+                                                                     if(!priceCustomer.equals(""))
+                                                                     price.setText(priceCustomer);
+                                                                     else price.setText(price_value);
+
+
                                                                      String ITEMS_unitsQTY = mHandler.getItemsUnitsQTY(itemNumber.getText().toString(), Item_unit.getSelectedItem().toString());
                                                                      unit_qty.setText(ITEMS_unitsQTY);
                                                                      try {
@@ -2722,7 +2771,18 @@ public static     float CountOfItems=1;
 
                                                                  }else
                                                                  {
-                                                                     price.setText(   allItemsList.get(position).getPrice()+"");
+                                                                     String price_text="";
+                                                                     unit_qty.setText("");
+                                                                     if(mHandler.getAllSettings().get(0).getPriceByCust()==1)
+                                                                 {
+                                                                     price_text=mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
+
+                                                                 }
+                                                                     if(!price_text.equals("")){
+
+                                                                         price_text=allItemsList.get(position).getPrice()+"";
+                                                                     }
+                                                                     price.setText(price_text);
                                                                      try {
                                                                          allItemsList.get(position).setMinSalePrice(Double.parseDouble(price.getText().toString()));
                                                                      }
@@ -3942,9 +4002,16 @@ public static     float CountOfItems=1;
 //                                                           {
 //                                                               price.setText("" + items.get(position).getPrice());
 //                                                           }else {
-                String itemUnitPrice = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer,0);
+                String itemUnitPrice ="",price_value="";
+                if(mHandler.getAllSettings().get(0).getPriceByCust()==1)
+                {
+                     itemUnitPrice = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
+
+                }
+                    price_value = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer,0);
                 if (!itemUnitPrice.equals(""))
                     price.setText(itemUnitPrice);
+                else  price.setText(price_value);
 //                                                           }
 
             }

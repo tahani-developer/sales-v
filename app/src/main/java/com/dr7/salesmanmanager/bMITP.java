@@ -700,14 +700,14 @@ public class bMITP extends Activity {
                            itemVOCHER=obj.getAllItemsBYVOCHER(String.valueOf(printVoucher.getVoucherNumber()),printVoucher.getVoucherType());
                           itemPrint.clear();
                           itemPrint=itemVOCHER;
-                          Log.e("itemVOCHER==","1"+printVoucher.getVoucherNumber());
-                          Log.e("itemVOCHER==","2"+itemVOCHER.size()+"\t"+itemPrint.size());
+//                          Log.e("itemVOCHER==","1"+printVoucher.getVoucherNumber());
+//                          Log.e("itemVOCHER==","2"+itemVOCHER.size()+"\t"+itemPrint.size());
 
 //                          convertLayoutToImageW(bMITP.this,sample,settings);
                           if(printShape==0) {//Normal print (Arabic)
                               for (int i = 0; i < settings; i++) {
 //                              sample.printMultilingualFontEsc(0);
-                                  Log.e("printShape==","1printMultilingualFontEsc3== "+i);
+//                                  Log.e("printShape==","1printMultilingualFontEsc3== "+i);
                                   sample.printMultilingualFontEsc3(0, printVoucher, itemPrint);
 
                               }

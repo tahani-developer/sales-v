@@ -8993,6 +8993,11 @@ if(name==null) name = "";
            case "-1":   selectQuery = "select PriceUnit from Item_Unit_Details where ItemNo='"+itemNo.trim()+"'  and  CAST(ConvRate as double)='"+countItems+"'";
 
               break;
+            case "-2":
+//                Log.e("getItemName","getItemName="+itemNo);
+                String customerNo=CustomerListShow.Customer_Account;
+                 selectQuery = " select Price - DISCOUNT_CUSTOMER from CustomerPrices  where ItemNo_='"+itemNo.trim()+"' and  CustomerNumber='"+customerNo+"' ";
+                break;
         }
 
          Log.e("selectQuery","itemNo"+selectQuery);

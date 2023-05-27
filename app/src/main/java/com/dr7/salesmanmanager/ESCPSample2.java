@@ -1291,6 +1291,7 @@ public class ESCPSample2
 			}
 		} catch (Exception e) {
 			Log.e("printerType","3="+e.getMessage());
+			Toast.makeText(context, "printException"+e.getMessage(), Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
 

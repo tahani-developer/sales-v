@@ -430,13 +430,19 @@ GeneralMethod generalMethod;
 
                                                             case 6:
                                                             case 7:
-                                                                vouch1 = vouch;
-                                                                voucherPrint=vouch;
-                                                                Log.e("hheere44","hheere");
+                                                                try {
+                                                                    vouch1 = vouch;
+                                                                    voucherPrint=vouch;
+                                                                    Log.e("hheere44","hheere");
 //                                                                convertLayoutToImageW();
-                                                                Intent o12 = new Intent(PrintVoucher.this, bMITP.class);
-                                                                o12.putExtra("printKey", "0");
-                                                                startActivity(o12);
+                                                                    Intent o12 = new Intent(PrintVoucher.this, bMITP.class);
+                                                                    o12.putExtra("printKey", "0");
+                                                                    startActivity(o12);
+                                                                }catch (Exception e){
+                                                                    Toast.makeText(PrintVoucher.this, "error"+e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                                                }
+
 
 
                                                                 break;

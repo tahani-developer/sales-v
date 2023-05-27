@@ -3011,8 +3011,86 @@ listOfResponse.add(res_linkObject) ;  }
         Log.e("onPostExecute","updateExporttransaction---12---");
 
     }
-
     private class JSONTask_InventoryShelfDelphi extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/EXPORTDROPPRICE";
+
+            String JsonResponse="";
+            Log.e("tagexPORT", "JsonResponseEXPORT_DROPPRICE");
+            try {
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost();
+                try {
+                    request.setURI(new URI(URL_TO_HIT));
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
+                nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
+                // Log.e("nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
+
+
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("JsonResponse", "ExporVoucher" + JsonResponse);
+
+
+
+                //*******************************************
+
+
+            } catch (Exception e) {
+            }
+            return JsonResponse;
+
+
+
+        }
+
+
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+            Log.e("onPostExecuteTrans","JSONTask_InventoryShelfDelphi---13"+result);
+            pdVoucher.setTitle("Export Transaction");
+//            pdVoucher.dismissWithAnimation();
+            if (result != null && !result.equals("")) {
+                if(result.contains("Saved Successfully"))
+                {
+                    mHandler.updateInventoryShelf();
+                }
+
+
+            }
+            updatePosted(); //14
+//            exportLoadVan();
+
+        }
+    }
+    private class JSONTask_StockMaster extends AsyncTask<String, String, String> {
 
         @Override
         protected String doInBackground(String... params) {
