@@ -11,7 +11,11 @@
     android:background="@color/layer3"
     tools:context="com.dr7.salesmanmanager.ReceiptVoucher"
     tools:ignore="MissingDefaultResource">
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/MAX_ServoucherNumberRespon"
+        android:visibility="gone"/>
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
         android:layout_height="match_parent"

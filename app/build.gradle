@@ -50,7 +50,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation files('libs/Sewoo_Android_1087.jar')
     implementation files('libs/intermecarabic.jar')
-    implementation 'com.google.firebase:firebase-database:20.0.6'
+    implementation 'com.google.firebase:firebase-database:20.2.1'
     implementation files('libs/activation.jar')
     implementation files('libs/mail.jar')
     implementation files('libs/additionnal.jar')
@@ -117,4 +117,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    //to see data in browser
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 }

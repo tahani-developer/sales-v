@@ -44,7 +44,7 @@ import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.databinding.ExportResultDailogBinding;
-import com.dr7.salesmanmanager.databinding.ExportResultDailogBindingImpl;
+
 
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;

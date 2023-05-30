@@ -60,7 +60,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.FirebaseApp;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -154,6 +153,7 @@ public class Login extends AppCompatActivity {
     public  static int OfferCakeShop=0;// if 0 calck offer many times
     public  static int Plan_Kind =0;// 1 if saleman plan based on day of week ,, 0 if saleman plan based on date
     public  static    int  offerTalaat=0;
+    public  static    int   MaxpaymentvochFromServ=0;
     public  static    int  offerQasion=0;
     public   static  int  offernasleh=1;
     public  static    int getTotalBalanceInActivities=1;
@@ -296,8 +296,9 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
             gone_noTax_totalDisc = flag_settingsList.get(0).getNoTax();
             ExportedVochTaxFlage = flag_settingsList.get(0).getExportedVoch_Tax();
             Purchase_Order = flag_settingsList.get(0).getPurchaseOrder();
+            MaxpaymentvochFromServ= flag_settingsList.get(0).getPaymentvochServer();
             Log.e(" Purchase_Order==",""+ Purchase_Order);
-            Log.e(" SalsManPlanFlage",""+ SalsManPlanFlage);
+            Log.e(" SalsManPlanFlage",""+ SalsManPlanFlage+"MaxpaymentvochFromServ"+MaxpaymentvochFromServ);
         } else {
 
 
@@ -709,7 +710,7 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
 //            RadioButton radioBtnIIS = moreDialog.findViewById(R.id.radioBtnIIS);
 
         Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn,plan,Trips,activePos,
-                cakeshopSW, qasionSW, talaatSW,maxvochServer,purchaseOrder_switch,noTax_Sw,naslehSW,ExportedVochTax_Sw;
+                cakeshopSW, qasionSW, talaatSW,maxvochServer,purchaseOrder_switch,noTax_Sw,naslehSW,ExportedVochTax_Sw,maxpaymentvoch_SW;
 
         ImageButton cakeshopInfo, qasionInfo, talaatInfo,naslehInfo;
         TextView cakeExpandedText, qasionExpandedText, talaatExpandedText,naslehExpandedText;
@@ -726,6 +727,7 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
         swReturn = moreDialog.findViewById(R.id.swReturn);
         plan = moreDialog.findViewById(R.id.SalsManPlan);
         Trips= moreDialog.findViewById(R.id.SalsManTrips);
+        maxpaymentvoch_SW= moreDialog.findViewById(R.id.maxpaymentvoch_SW);
         if(Plan_ACTIVE==0)
         {
             plan_linear.setVisibility(View.GONE);
@@ -774,6 +776,7 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
             qasionSW.setChecked((flag_settingsList.get(0).getOfferQasion() == 1));
             naslehSW.setChecked((flag_settingsList.get(0).getOffernasleh() == 1));
             talaatSW.setChecked((flag_settingsList.get(0).getOfferTalaat() == 1));
+            maxpaymentvoch_SW.setChecked((flag_settingsList.get(0).getPaymentvochServer() == 1));
         }
 
         OnClickListener infoClickListener = new OnClickListener() {
@@ -847,17 +850,17 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
             offerQasion = qasionSW.isChecked() ? 1 : 0;
             offernasleh= naslehSW.isChecked() ? 1 : 0;
             offerTalaat = talaatSW.isChecked() ? 1 : 0;
-
+            MaxpaymentvochFromServ=maxpaymentvoch_SW.isChecked() ? 1 : 0;
 
             if(flag_settingsList.size()==0)
             {
                 mDHandler.insertFlagSettings(new Flag_Settings(dataType1, rawahneh, getMaxVoucherServer,
                         makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE,
-                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer,Purchase_Order,gone_noTax_totalDisc,offernasleh,ExportedVochTaxFlage));
+                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer,Purchase_Order,gone_noTax_totalDisc,offernasleh,ExportedVochTaxFlage,MaxpaymentvochFromServ));
             }else {
                 mDHandler.updateFlagSettings(dataType1, rawahneh, getMaxVoucherServer,
                         makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE,
-                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer,Purchase_Order,gone_noTax_totalDisc,offernasleh,ExportedVochTaxFlage);
+                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer,Purchase_Order,gone_noTax_totalDisc,offernasleh,ExportedVochTaxFlage,MaxpaymentvochFromServ);
             }
 
             getPasswords();
@@ -1427,7 +1430,7 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
                         Log.e("LocationIn","GoToMain 1");
 
                         // locationPermissionRequest.displayLocationSettingsRequest(Login.this);
-                        startService(new Intent(Login.this, MyServices.class));
+                    //    startService(new Intent(Login.this, MyServices.class));
                         Intent main = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(main);
                         // permission was granted, yay! Do the
@@ -1596,6 +1599,7 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
                         transaction.setLongtude(location_main.getLongitude());
                         transaction.setLatitud(location_main.getLatitude());
                         transaction.setSalesManId(Integer.parseInt(salesMan));
+                        transaction.setSalesManId(Integer.parseInt(salesMan));
                         mDHandler.addlogin(transaction);
                     }
                     catch (Exception e){
@@ -1725,6 +1729,7 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void goToMain() {
+        Log.e("goToMain","goToMain");
        List<Settings>settingsList= mDHandler.getAllSettings();
          approveAdmin=0;
         LocationTracker=0;
@@ -1827,7 +1832,7 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public  void mainIntent(){
-
+        Log.e("mainIntent===","mainIntent");
         if(LocationTracker==1) {
             boolean locCheck= locationPermissionRequest.checkLocationPermission();
             boolean isNetworkAvailable=isNetworkAvailable();
@@ -1838,8 +1843,8 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
             Log.e("LocationIn===","GoToMain"+locCheck);
             if(locCheck){
                 Log.e("LocationIn====","GoToMain IN "+locCheck);
-                startService(new Intent(Login.this, MyServices.class));
-                finish();
+//                startService(new Intent(Login.this, MyServices.class));
+//                finish();
                 Intent main = new Intent(Login.this, MainActivity.class);
                 startActivity(main);
             }else {

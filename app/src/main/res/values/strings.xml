@@ -324,7 +324,7 @@
     <string name="CustomerAuthorize">Customer Authorized</string>
     <string name="passowrddata">Password imp/exp Data</string>
     <string name="arabic_language">Arabic Language</string>
-    <string name="error_companey_info">   please enter company information for print </string>
+    <string name="error_companey_info">   please enter company information   </string>
     <string name="fill_setting">Please enter setting app</string>
     <string name="warning_message">Warning Message</string>
     <string name="emptyList">Empty List</string>
@@ -424,6 +424,8 @@
     <string name="note">Note</string>
     <string name="request_state">Request State</string>
     <string name="requestForAdmin">Request For Admin</string>
+    <string name="requestForAdmin3"><u>Request For Admin</u></string>
+
     <string name="requestForAdmin2">Note: A return invoice can only be made after the approval of the supervisor </string>
     <string name="enter">Enter</string>
     <string name="acceptedRequest">Accepted Request</string>
@@ -671,6 +673,10 @@
     <string name="BONUS_ITEM_NO"> BONUS_ITEM_NO</string>
     <string name="BONUS_QTY"> BONUS_QTY</string>
     <string name="ITEM_QTY">  ITEM_QTY</string>
+    <string name="getReceiptSerials">  getting Max_PaymentVouch Serials</string>
+
+    <string name="maxpaymentvoch">  Max_PaymentVouch From Server</string>
+
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

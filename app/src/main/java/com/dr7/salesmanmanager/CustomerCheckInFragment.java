@@ -47,6 +47,7 @@ import com.dr7.salesmanmanager.Modles.RequstTest;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
+import com.dr7.salesmanmanager.Modles.Voucher;
 import com.google.android.gms.location.FusedLocationProviderClient;
 
 import org.json.JSONArray;
@@ -61,6 +62,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -686,8 +688,14 @@ public class CustomerCheckInFragment extends DialogFragment {
         transaction.setCheckInDate(currentDate);
         transaction.setCheckOutTime(currentTime);
         transaction.setCusCode(cusCode);
+     String  CheckInTime=  mDbHandler.getlastTransaction().getCheckInTime();
 
-        mDbHandler.updateTransaction(cusCode,convertToEnglish(currentDate), convertToEnglish(currentTime));
+
+              Log.e("ditCheckOutTimeAndDate,CheckInTime",CheckInTime+"")  ;
+        today = df.format(currentTimeAndDate);
+        today = convertToEnglish(today);
+        transaction.setVOUCHERCOUNT(getVouchcount(CheckInTime,today,cusCode));
+        mDbHandler.updateTransaction(cusCode,convertToEnglish(currentDate), convertToEnglish(currentTime),transaction.getVOUCHERCOUNT());
 
         if(Login.SalsManPlanFlage==1){
 if(Plan_Kind==0)
@@ -1024,4 +1032,66 @@ else
         }
         return -1;
     }
+   int getVouchcount(String checkintime,String date,String cus_num){
+        int count =0;
+      List<String>  vouchers=mDbHandler.gettodayVoucher(cus_num,date);
+       Log.e("vouchers==",vouchers.size()+"");
+      try {
+          for(int i=0;i<vouchers.size();i++)
+              if(chechTransctionstime(checkintime,vouchers.get(i)))
+                  count++;
+
+              Log.e("getVouchcount==",count+"");
+          return count;
+      }
+   catch (Exception exception){
+       Log.e("exception==",exception.getMessage()+"");
+       return 0;
+   }
+
+   }
+
+    public static boolean chechTransctionstime(String checkintime, String vochertime) throws ParseException {
+
+        String reg = "^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
+        Log.e("checkintime==",checkintime);
+        Log.e("vochertime==",vochertime);
+        Log.e("match1==",""+checkintime.matches(reg));
+        Log.e("match2==",""+vochertime.matches(reg));
+        if (checkintime.matches(reg) && vochertime.matches(reg) )
+
+        {
+            boolean valid = false;
+            //check Time
+            //all times are from java.util.Date
+            Date inTime = new SimpleDateFormat("HH:mm:ss").parse(checkintime);
+            Calendar calendar1 = Calendar.getInstance();
+            calendar1.setTime(inTime);
+            Log.e("calendar1==",""+calendar1.getTime());
+
+            //voch Time
+            Date finTime = new SimpleDateFormat("HH:mm:ss").parse(vochertime);
+            Calendar Vochcalendar = Calendar.getInstance();
+            Vochcalendar.setTime(finTime);
+            Log.e("Vochcalendar==",""+Vochcalendar.getTime()+" calendar1==    "+calendar1.getTime());
+//            if (vochertime.compareTo(checkintime) < 0)
+//            {
+//                Vochcalendar.add(Calendar.DATE, 1);
+//
+//            }
+
+
+            if (calendar1.getTime().before(Vochcalendar.getTime()))
+            {
+                Log.e("true==","true");
+
+                valid = true;
+                return valid;
+            } else {
+                Log.e("false==","false");
+                return false;
+            }
+        }
+        return false;    }
+
 }

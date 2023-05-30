@@ -62,11 +62,6 @@ public class MyServices extends Service {
         userNo= db.getAllUserNo();
          daoRequsts =new LocationDao(MyServices.this);
          salesMenLocation=new SalesMenLocation();
-        if (settings.size() != 0) {
-            LOCATIONTRACK = settings.get(0).getLocationtracker();
-
-        //    Log.e(TAG,"spical"+ LOCATIONTRACK +"   ");
-        }
 
 
 
@@ -74,20 +69,18 @@ public class MyServices extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         settings = db.getAllSettings();
         userNo= db.getAllUserNo();
-        if (settings.size() != 0) {
-            LOCATIONTRACK = settings.get(0).getLocationtracker();
- //           Log.e(TAG,"spical"+ LOCATIONTRACK +"   ");
-        }
 
+        getLoc();
 
-        boolean shouldClose=intent.getBooleanExtra("close",false);
-        if(shouldClose){
-            onDestroy();
-            stopSelf();
-        } else {
-            Timer();
-            // Continue to action here
-        }
+//        boolean shouldClose=intent.getBooleanExtra("close",false);
+//        if(shouldClose){
+//            onDestroy();
+//            stopSelf();
+//        } else {
+//        getLoc();
+//      //    Timer();
+//            // Continue to action here
+//        }
 
             return START_NOT_STICKY;
 
@@ -107,7 +100,7 @@ public class MyServices extends Service {
 
           //      Log.e(TAG,"approveAdmin = "+ LOCATIONTRACK +"   ="+getApplicationContext().toString());
 
-                if(LOCATIONTRACK ==1) {
+//                if(LOCATIONTRACK ==1) {
              //       Log.e(TAG,"approveAdmin IN  = "+ LOCATIONTRACK);
 
                     Handler h = new Handler(Looper.getMainLooper());
@@ -118,7 +111,7 @@ public class MyServices extends Service {
                             h.post(new Runnable() {
                                 public void run() {
                                     Log.e(TAG, "  tttt");
-                                    if (LOCATIONTRACK == 1) {
+                             //       if (LOCATIONTRACK == 1) {
 
                                         try {
                                             if (TextUtils.isEmpty(userNo)) {
@@ -135,21 +128,7 @@ public class MyServices extends Service {
                                         Log.e(TAG, "  nnn");
                                         //   Log.e(TAG, " mmmm " + salesmanStations.getJSONObject());
 
-                                        salesMenLocation.setSalesmanNo(userNo + "");
 
-                                        salesName = mHandler.getSalesmanName_fromSalesTeam();
-                                        salesMenLocation.setSalesmanName(salesName);
-                                        salesMenLocation.setLatitude(latitude + "");
-                                        salesMenLocation.setLongitude(longitude + "");
-                                        try {  // code for track salesman location in FireBase Added by aya
-                                            Log.e("salesMan==", " salesMan " + userNo);
-
-                                            if (latitude != 0 || longitude != 0) {
-                                                daoRequsts.addLocation(salesMenLocation);
-                                            }
-                                        } catch (Exception e) {
-                                            Log.e("Exception", "" + e.getMessage());
-                                        }
 
 //                                            if (latitude !=0||longitude!=0)
 //                                            {
@@ -159,20 +138,20 @@ public class MyServices extends Service {
 //                                    }else {
 //                                        Log.e(TAG, "  no App Import");
 //                                    }
-                                    }
+                                  // }
                                 }
                             });
                             getLoc();
                         }
                     });
 
-                }else {
-                    T.cancel();
-                    T=null;
-
-                //    Log.e(TAG,"no approveAdmin = "+ LOCATIONTRACK);
-
-                }
+//                }else {
+//                    T.cancel();
+//                    T=null;
+//
+//                //    Log.e(TAG,"no approveAdmin = "+ LOCATIONTRACK);
+//
+//                }
             }
         }, 10, 10000);
     }
@@ -196,6 +175,16 @@ public class MyServices extends Service {
     }
     @Override
     public void onDestroy() {
+        settings = db.getAllSettings();
+        importJason = new ImportJason(MyServices.this);
+        mHandler=new DatabaseHandler(MyServices.this);
+        userNo= db.getAllUserNo();
+        daoRequsts =new LocationDao(MyServices.this);
+        salesMenLocation=new SalesMenLocation();
+
+        Log.e("ServiceSlocation", "onDestroy()");
+  getLoc();
+     //   Timer();
 //        player.stop();
 //        player.release();
 //        Toast.makeText(this, "Service stopped...", Toast.LENGTH_SHORT).show();
@@ -217,13 +206,21 @@ public class MyServices extends Service {
         super.onTaskRemoved(rootIntent);
       //  onStop();
 //        startForegroundService(new Intent(MyService.this,MyService.class));
+        Log.e("ServiceSlocation2", "onTaskRemoved()");
+        settings = db.getAllSettings();
+        importJason = new ImportJason(MyServices.this);
+        mHandler=new DatabaseHandler(MyServices.this);
+        userNo= db.getAllUserNo();
+        daoRequsts =new LocationDao(MyServices.this);
+        salesMenLocation=new SalesMenLocation();
 
+getLoc();
         Log.e(TAG, "In onTaskRemoved");
     }
 
     public void getLoc(){
-
-       // Log.e(TAG, " first ");
+       // Log.e("getLoc,== ","getLoc");
+                // Log.e(TAG, " first ");
        // Log.e(TAG, "getLocinin = " + LOCATIONTRACK);
 
         LocationManager locationManager;
@@ -252,6 +249,9 @@ public class MyServices extends Service {
                 public void onLocationChanged(Location location) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
+
+                 Log.e("Location,== ", "latitude"+latitude+"longitude"+""+longitude);
+
 //                    String userNo= db.getAllUserNo();
 //                    try {
 //                        if (TextUtils.isEmpty(userNo)) {
@@ -267,6 +267,26 @@ public class MyServices extends Service {
 //                    salesmanStations.setLongitude("" + location.getLongitude());
                     checkOutLong=location.getLongitude();
                     checkOutLat=location.getLatitude();
+
+
+
+                    salesMenLocation.setSalesmanNo(userNo + "");
+       if(mHandler==null )  mHandler=new DatabaseHandler(MyServices.this);
+                    if(daoRequsts==null ) daoRequsts=new LocationDao(MyServices.this);
+                    salesName = mHandler.getSalesmanName_fromSalesTeam();
+                    salesMenLocation.setSalesmanName(salesName);
+                    salesMenLocation.setLatitude(latitude + "");
+                    salesMenLocation.setLongitude(longitude + "");
+                    try {  // code for track salesman location in FireBase Added by aya
+                //        Log.e("salesMan==", " salesMan " + userNo);
+
+                        if (latitude != 0 || longitude != 0) {
+                            daoRequsts.addLocation(salesMenLocation);
+                        }
+                    } catch (Exception e) {
+                        Log.e("Exception", "" + e.getMessage());
+                    }
+
 
 //                    settings = db.getAllSettings();
 //                    if (settings.size() != 0) {
@@ -299,16 +319,17 @@ public class MyServices extends Service {
 
                 @Override
                 public void onStatusChanged(String provider, int status, Bundle extras) {
-
+                    Log.e("onStatusChanged", "onStatusChanged" );
                 }
 
                 @Override
                 public void onProviderEnabled(String provider) {
+                    Log.e("onProviderEnabled", "onProviderEnabled" );
                 }
 
                 @Override
                 public void onProviderDisabled(String provider) {
-
+                    Log.e("onProviderDisabled", "onProviderDisabled" );
                 }
             };
 
@@ -316,7 +337,7 @@ public class MyServices extends Service {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         } catch (Exception e) {
-            Log.e(TAG, "  "+e.getMessage());
+            Log.e("Exceptioninservice", "  "+e.getMessage());
         }
 
     }

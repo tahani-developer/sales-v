@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import org.apache.http.impl.cookie.DateUtils;
 
@@ -219,7 +220,14 @@ public class GeneralMethod {
 
     public void shareWhatsAppA(File pdfFile, int pdfExcel){
         try {
-            Uri uri = Uri.fromFile(pdfFile);
+            //Uri uri = Uri.fromFile(pdfFile);
+       //     Uri uri = FileProvider.getUriForFile(PdfRendererActivity.this, PdfRendererActivity.this.getPackageName() + ".provider", pdfFile);
+            Uri uri;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                uri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", pdfFile);
+            } else {
+                uri = Uri.fromFile(pdfFile);
+            }
             Intent sendIntent = new Intent();
             if (pdfFile.exists()) {
                 if (pdfExcel == 1) {
@@ -227,6 +235,8 @@ public class GeneralMethod {
                 } else if (pdfExcel == 2) {
                     sendIntent.setType("application/pdf");//46.185.208.4
                 }
+                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
                 sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(String.valueOf(uri)));
                 sendIntent.setPackage("com.whatsapp");
                 sendIntent.putExtra(Intent.EXTRA_SUBJECT,
@@ -234,7 +244,9 @@ public class GeneralMethod {
                 sendIntent.putExtra(Intent.EXTRA_TEXT, pdfFile.getName() + " Sharing File");
                 Log.e("shareIntent", "shareIntent");
                 Intent shareIntent = Intent.createChooser(sendIntent, null);
-                context.startActivity(shareIntent);
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                sendIntent.setAction(Intent.ACTION_SEND);
+                context.startActivity(sendIntent);
                 Log.e("shareIntent==", "shareIntent"+shareIntent.getData());
             }
 

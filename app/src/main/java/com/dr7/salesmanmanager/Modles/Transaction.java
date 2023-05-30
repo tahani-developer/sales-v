@@ -20,6 +20,16 @@ public class Transaction {
     int isPosted;
     double latitud;
     double longtude;
+    int VOUCHERCOUNT;
+
+
+    public int getVOUCHERCOUNT() {
+        return VOUCHERCOUNT;
+    }
+
+    public void setVOUCHERCOUNT(int VOUCHERCOUNT) {
+        this.VOUCHERCOUNT = VOUCHERCOUNT;
+    }
 
     public double getLatitud() {
         return latitud;
@@ -140,8 +150,9 @@ public class Transaction {
 
             obj.put("REAL_LONGITIUED_CHECHOUT", longtude);
             obj.put("REAL_LATITUED_CHECHOUT", latitud);
-            obj.put("EXPORTED", "0");
 
+            obj.put("EXPORTED", "0");
+            obj.put("VOUCHERCOUNT",VOUCHERCOUNT);
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");
         }
@@ -162,6 +173,7 @@ public class Transaction {
             obj.put("REAL_LONGITIUED_CHECHOUT", longtude);
             obj.put("REAL_LATITUED_CHECHOUT", latitud);
             obj.put("EXPORTED", "0");
+            obj.put("VOUCHERCOUNT",VOUCHERCOUNT);
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

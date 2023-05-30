@@ -18,7 +18,9 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,9 +38,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
@@ -46,8 +50,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Adapters.ReturnItemAdapter;
+import com.dr7.salesmanmanager.Interface.DaoRequsts;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
+import com.dr7.salesmanmanager.Modles.Flag_Settings;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.RequstTest;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -61,16 +69,20 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 import org.json.JSONException;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ReturnByVoucherNo extends AppCompatActivity {
     public  ArrayList<String> SpinnerArray = new ArrayList<>();
-
+    List<Settings>settingsList=new ArrayList<>();
     public static  List<Item> ReturnupdateditemList=new ArrayList<>();
     public static   RecyclerView recyclerView;
     public static List<serialModel> allseriallist =new ArrayList<>();
@@ -99,19 +111,54 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     public RadioGroup paymentTermRadioGroup;
     CompanyInfo companyInfo;
     int typeTax=0;
+
     int[] listImageIcone=new int[]{R.drawable.ic_print_white_24dp,
             R.drawable.pdf_icon,R.drawable.excel_small
             };
     LinearLayout boomlin;
-    public  static TextView  ScanSerialcode,checked;
+    public  static TextView  ScanSerialcode,checked,text120;
     public  static EditText  Serialcode;
+    Button enterBtn;
+    int  approveAdmin = 0;
+    public  static TextView ReturnPerm_respon;
+
+    public ImageView requestDiscount;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_return_by_voucher_no);
 
+        ReturnPerm_respon=findViewById(R.id.ReturnPerm_respon);
+        databaseHandler=new DatabaseHandler(ReturnByVoucherNo.this);
+        settingsList= databaseHandler.getAllSettings();
+        ReturnPerm_respon.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(editable.length()!=0){
+                    if(ReturnPerm_respon.getText().toString().trim().equals("1")) {
+                        enterBtn.setEnabled(true);
+                        text120.setText(getResources().getString(R.string.acceptedRequest));
+                        text120.setEnabled(false);
+                        requestDiscount.setBackground(getResources().getDrawable(R.drawable.ic_launcher_foreground_tick));
+                    }else   if(ReturnPerm_respon.getText().toString().trim().equals("2"))
+                    { text120.setEnabled(false);
+                        text120.setText(getResources().getString(R.string.rejectedRequest));
+                        requestDiscount.setBackground(getResources().getDrawable(R.drawable.ic_block_red_24dp));
+                    }
+                }
+            }
+        });
         initialView();
         typeTax=dataBase.getAllSettings().get(0).getTaxClarcKind();
         Log.e("typeTax",""+typeTax);
@@ -391,8 +438,42 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             public void onClick(View view) {
 
                 //boomlin.setVisibility(View.VISIBLE);
-                saveData();
+                boolean flage=false;
+                for(int i=0;i<allitemsdata.size();i++)
+                {
+                    if(allitemsdata.get(i).getIsClicked()==1)
+                    {
+                        flage=true;
+                        break;
+                    }
 
+                }
+
+                if(flage==true) {
+
+                    try {
+                        List<Flag_Settings> flag_settingsList;
+                        flag_settingsList = databaseHandler.getFlagSettings();
+
+                        approveAdmin = settingsList.get(0).getReturnVoch_approveAdmin();
+                        Log.e("approveAdmin==", approveAdmin + "");
+                    } catch (Exception e) {
+                        Log.e("Exceptionhere22==", e.getMessage());
+                        approveAdmin = 0;
+                    }
+                    if (approveAdmin == 1) {
+                        Log.e("approveAdmin", "approveAdmin===");
+                        showRequstdailog(CustomerListShow.Customer_Account, CustomerListShow.Customer_Name);
+
+                    } else {
+                        saveData();
+                    }
+
+                }
+  else{
+                        Toast.makeText(ReturnByVoucherNo.this, "Fill Your List Please", Toast.LENGTH_LONG).show();
+
+                    }
 
 
 
@@ -1222,7 +1303,7 @@ try {
 
         // Log.e("deleteItemsDetail","2listItemsMain"+listItemsMain.size());
         listItemsMain=removeDuplicates(listItemsMain);
-       // Log.e("deleteItemsDetail","3listItemsMain"+listItemsMain.size());
+      //Log.e("deleteItemsDetail","3listItemsMain"+listItemsMain.size());
         textView_save.setEnabled(true);
     }
 
@@ -1623,7 +1704,125 @@ break;
 
 
     }
+    public void showRequstdailog(String cust_num,String cust_name){
+        Log.e("showRequstdailog","showRequstdailog");
+        Dialog dialog = new Dialog(ReturnByVoucherNo.this);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.admin_retvochrequst);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+        Button closeBtn = dialog.findViewById(R.id.close);
+        enterBtn = dialog.findViewById(R.id.enter);
+
+        enterBtn.setEnabled(false);
+        text120= dialog.findViewById(R.id.text120);
+        requestDiscount= dialog.findViewById(R.id.requestDiscount);
+        text120.setEnabled(true);
+        text120.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                text120.setEnabled(false);
+                text120.setText(getResources().getString(R.string.adminallowed_Wait));
+                GetObjToAddInFirebase(cust_num,cust_name);
+            }
+        });
+        dialog.show();
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+            }
+        });
+
+        enterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+    saveData();
+                dialog.dismiss();
+
+            }
+        });
+
+
+
+
+    }
+    void GetObjToAddInFirebase(String cust_num,String cust_name){
+        try{
+            //ayah
+            Log.e("GetObjToAddInFirebase==","GetObjToAddInFirebase");
+            DaoRequsts daoRequsts=new DaoRequsts(ReturnByVoucherNo.this);
+
+            RequstTest requestAdmin1=new RequstTest();
+            requestAdmin1.setSalesman_no(Login.salesMan);
+            String salesName=databaseHandler.getSalesmanName_fromSalesTeam();
+            requestAdmin1.setSalesman_name(salesName);
+            requestAdmin1.setCustomer_no(cust_num);
+            requestAdmin1.setVoucher_no("-1");
+
+
+            Date currentTimeAndDate = Calendar.getInstance().getTime();
+            SimpleDateFormat df= new SimpleDateFormat("dd/MM/yyyy");
+            String curentDate = df.format(currentTimeAndDate);
+            SimpleDateFormat    df2 = new SimpleDateFormat("hh:mm:ss");
+            String  curentTime=df2.format(currentTimeAndDate);
+
+            Log.e("curentDate==",curentDate+"");
+            requestAdmin1.setDate(curentDate);
+            requestAdmin1.setTime(curentTime);
+            requestAdmin1.setCustomer_name(cust_name);
+            requestAdmin1.setRequest_type("506");
+            requestAdmin1.setAmount_value("0");
+            requestAdmin1.setKey_validation(getRandomNumberString() + "");
+            Log.e("requestAdmin1.getKey", requestAdmin1.getKey_validation()+"");
+
+
+            requestAdmin1.setStatus("0");
+            requestAdmin1.setSeen_row("0");
+            String ItemsCollections="";
+            Log.e("allitemsdata", allitemsdata.size()+"");
+            for(int i=0;i<allitemsdata.size();i++)
+            {  Log.e("allitemsdata", allitemsdata.get(i).getIsClicked()+"  "+allitemsdata.get(i).getItemName());
+                if(allitemsdata.get(i).getIsClicked()==1)
+                ItemsCollections+=  allitemsdata.get(i).getItemName()+";"+allitemsdata.get(i).getPriceItem()+";";
+            }
+
+
+            requestAdmin1.setNote(ItemsCollections);
+            requestAdmin1.setTotal_voucher("0");
+            daoRequsts.addRequst(requestAdmin1);
+            try {
+                approveAdmin = 0;
+
+
+
+                approveAdmin = settingsList.get(0).getReturnVoch_approveAdmin();
+            }catch (Exception e){
+                approveAdmin=0;
+            }
+            if(approveAdmin==1)
+            {
+
+                daoRequsts.getStatusofReturnvochrequst(  requestAdmin1.getKey_validation(),ReturnByVoucherNo.this);
+            }
+            //SalesInvoice.lastrequst=requestAdmin1.getKey_validation();
+
+        }catch (Exception e){
+            Log.e("Exception==", e.getMessage()+"");
+        }
+
+    }
+    public static int getRandomNumberString() {
+        // It will generate 6 digit random Number.
+        // from 0 to 999999
+        Random rnd = new Random();
+        int number = rnd.nextInt(999999);
+        Log.e("Random", "" + number);
+        // this will convert any number sequence into 6 character.
+//        return String.format("%06d", number);
+        return number;
+    }
 }
 //VE_ITEMSERIALS
 //

@@ -177,17 +177,18 @@ public class PdfConverter {
 
         } catch (DocumentException e) {
             e.printStackTrace();
+            Log.e("DocumentException",e.getMessage() );
         }
         endDocPdf();
 
         if (Build.VERSION.SDK_INT >= 23) {
             if (context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                     && (context.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-                if (report != 13 && report != 14 && report != 16&& report != 17&& report != 18) showPdf(pdfFileName);
-                Log.v("", "Permission is granted");
+               if (report != 13 && report != 14 && report != 16&& report != 17&& report != 18) showPdf(pdfFileName);
+                Log.e("SDK_INT", "Permission is granted");
             } else {
 
-                Log.v("", "Permission is revoked");
+                Log.e("SDK_INT", "Permission is revoked");
                 ActivityCompat.requestPermissions(
                         (Activity) context,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -196,7 +197,7 @@ public class PdfConverter {
         } else { // permission is automatically granted on sdk<23 upon
             // installation
    showPdf(pdfFileName);
-            Log.v("", "Permission is granted");
+            Log.e("here,", "Permission is granted");
         }
 
     }
@@ -291,7 +292,7 @@ public class PdfConverter {
                 createInvoiceForPrint((List<Item>) list);
                 Log.e("path==", String.valueOf(pdfFileName));
                 GeneralMethod generalMethod=new GeneralMethod(context);
-                generalMethod.shareWhatsAppA(pdfFileName,2);
+          generalMethod.shareWhatsAppA(pdfFileName,2);
                 break;
             case 17:
                 Log.e("createReturnVocher", "" + list.size());
@@ -299,29 +300,47 @@ public class PdfConverter {
                 createInvoiceForShare ((List<Item>) list);
                 Log.e("path==", String.valueOf(pdfFileName));
                 GeneralMethod generalMethod1=new GeneralMethod(context);
-                generalMethod1.shareWhatsAppA(pdfFileName,2);
+          generalMethod1.shareWhatsAppA(pdfFileName,2);
                 break;
 
             case 18:
                 Log.e("createReturnVocher", "" + list.size());
                 //    tableContent=
-                createSaleInvoiceForPrint2((List<Item>) list);
-                Log.e("path==", String.valueOf(pdfFileName));
+                obj = new DatabaseHandler(context);
+                if ( obj.getAllCompanyInfo().size()!= 0) {
+                    if (obj.getAllCompanyInfo().get(0) != null) {
+                        companyInfo = obj.getAllCompanyInfo().get(0);
+                        if (!companyInfo.getCompanyName().equals(""))
+                        {
+                            createSaleInvoiceForPrint2((List<Item>) list);
+                            Log.e("path==", String.valueOf(pdfFileName));
 
-                PrintManager printManager2 = (PrintManager) context.getSystemService(Context.PRINT_SERVICE);
-                try {
-                    PrintDocumentAdapter printAdapter = new PdfDocumentAdapter(context, String.valueOf(pdfFileName));
-                    Log.e("path2==", String.valueOf(pdfFileName));
-                    printManager2.print("Document", printAdapter, new PrintAttributes.Builder().build());
-                    Log.e("path3==", String.valueOf(pdfFileName));
+                            PrintManager printManager2 = (PrintManager) context.getSystemService(Context.PRINT_SERVICE);
+                            try {
+                                PrintDocumentAdapter printAdapter = new PdfDocumentAdapter(context, String.valueOf(pdfFileName));
+                                Log.e("path2==", String.valueOf(pdfFileName));
+                                printManager2.print("Document", printAdapter, new PrintAttributes.Builder().build());
+                                Log.e("path3==", String.valueOf(pdfFileName));
 
-                    GeneralMethod generalMethod2=new GeneralMethod(context);
-                    generalMethod2.shareWhatsAppA(pdfFileName,2);
+                                GeneralMethod generalMethod2=new GeneralMethod(context);
+                                generalMethod2.shareWhatsAppA(pdfFileName,2);
 
 
-                } catch (Exception e) {
-                    Log.e("Exception==", e.getMessage());
+                            } catch (Exception e) {
+                                Log.e("Exception==", e.getMessage());
+                            }
+        } else {
+            Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+        }
+    }else {
+        Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+    }
+}
+        else {
+                Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
                 }
+
+
         }
         return tableContent;
     }
@@ -643,19 +662,24 @@ public class PdfConverter {
         //  , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
         obj = new DatabaseHandler(context);
 
+        if ( obj.getAllCompanyInfo().size()!= 0) {
+            if (obj.getAllCompanyInfo().get(0) != null) {
+                companyInfo = obj.getAllCompanyInfo().get(0);
+                if (
+                        !companyInfo.getCompanyName().equals("")
+                ) {
 
-        if ( obj.getAllCompanyInfo().get(0) != null) {
-            companyInfo = obj.getAllCompanyInfo().get(0);
-            if (
-                    !companyInfo.getCompanyName().equals("")
-                          ) {
-
-                createSalevocherPDF2("Invoice" + ".pdf", list);
-            } else {
+                    createSalevocherPDF2("Invoice" + ".pdf", list);
+                } else {
+                    Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+                }
+            }else {
                 Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
             }
         }
-
+        else {
+            Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+        }
     }
     private PdfPTable creatTableCustomerLog(List<Transaction> list) {
         createPDF("CustomerLog_Report" + ".pdf");
@@ -1136,7 +1160,8 @@ public class PdfConverter {
             headertable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
             PdfPCell cell13 = new PdfPCell(new Paragraph("                    " + companyInfo.getCompanyName() + "\n", arabicFontHeaderVochprint));
             cell13.setBorder(Rectangle.NO_BORDER);
-            headertable.addCell(cell13);
+            if(MainActivity.CompanyinfoINPdf_Hide==0)
+                headertable.addCell(cell13);
 
             if (companyInfo.getLogo() != null && !companyInfo.getLogo().equals("")) {
                 Bitmap imageBytes = companyInfo.getLogo();
@@ -1191,7 +1216,8 @@ public class PdfConverter {
             }
 
             PdfPCell cell1 = new PdfPCell(new Paragraph(context.getString(R.string.date) + " : " +PrintVoucher.vouchPrinted.getVoucherDate() , arabicFontHeaderprint));
-            PdfPCell cell2 = new PdfPCell(new Paragraph(context.getString(R.string.company_tel) + " : " + companyInfo.getcompanyTel(), arabicFontHeaderprint));
+
+             PdfPCell cell2 = new PdfPCell(new Paragraph(context.getString(R.string.company_tel) + " : " + companyInfo.getcompanyTel(), arabicFontHeaderprint));
 
             PdfPCell cell3 = new PdfPCell(new Paragraph(context.getString(R.string.tax_no) + companyInfo.getTaxNo(), arabicFontHeaderprint));
             PdfPCell cell4 = new PdfPCell(new Paragraph(context.getString(R.string.voucherNo) + " : " + PrintVoucher.vouchPrinted.getVoucherNumber(), arabicFontHeaderprint));
@@ -1209,7 +1235,8 @@ public class PdfConverter {
             cell14.setBorder(Rectangle.NO_BORDER);
 
             table.addCell(cell1);
-            table.addCell(cell2);
+            if(MainActivity.CompanyinfoINPdf_Hide==0)
+                table.addCell(cell2);
             table.addCell(cell3);
             table.addCell(cell4);
             table.addCell(cell5);
@@ -1306,6 +1333,7 @@ public class PdfConverter {
 
     }
     void createvocherPDFForShare(String fileName, List<Item> list) {
+        Log.e("createvocherPDFForShare", "" + "createvocherPDFForShare");
         doc = new Document();
 
         docWriter = null;
@@ -1365,8 +1393,10 @@ public class PdfConverter {
             cell13.setBorder(Rectangle.NO_BORDER);
             cell2.setBorder(Rectangle.NO_BORDER);
 
-            headertable.addCell(cell13);
-            headertable.addCell(cell2);
+            if(MainActivity.CompanyinfoINPdf_Hide==0) {
+                headertable.addCell(cell13);
+                headertable.addCell(cell2);
+            }
             doc.add(headertable);
 
 
@@ -1401,12 +1431,7 @@ public class PdfConverter {
         }
 
             table.addCell(emptycell);
-//            PdfPCell cell1 = new PdfPCell(new Paragraph("عرض سعر" , arabicFontHeaderVochprint));
-//            cell1.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-//            cell1.setBorder(Rectangle.BOX);
-//            cell1.setBorderWidth(1);
-//            cell1.setBorderWidth(1);
-//            table.addCell(cell1);
+
 
             PdfPTable table222 = new PdfPTable(3);
             table222.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
@@ -1424,14 +1449,6 @@ public class PdfConverter {
             table222.addCell(cell_103);
 
             doc.add(table222);
-            ///////////
-//            table.addCell(emptycell);
-//            PdfPCell cell21 = new PdfPCell(new Paragraph(paymentTyp , arabicFontHeaderVochprint));
-//            cell21.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-//            cell21.setBorder(Rectangle.BOTTOM);
-//            cell21.setBorderWidth(1);
-//
-//            table.addCell(cell21);
 
 
             PdfPTable table02 = new PdfPTable(3);
@@ -1621,8 +1638,10 @@ public class PdfConverter {
 
         } catch (DocumentException e) {
             e.printStackTrace();
+            Log.e("DocumentException11==", "" + e.getMessage());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            Log.e("DocumentException==", "" +  e.getMessage());
         }
 
 

@@ -382,6 +382,19 @@ public class ImportJason extends AppCompatActivity {
 
 
     }
+    public void GetmaxPaymentVoucherNo(int type,int activtyflage) {
+        // getDataVolley(salesMan,504 );
+        try {
+            new JSONTask_maxPaymentVoucherNo(salesMan, type,activtyflage).execute();
+        }catch (Exception e){
+            Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e("getMaxVoucherNo",""+e.getMessage());
+        }
+
+
+    }
+
+
     public void getMaxVoucherNo2(String salesMan,int type) {
         // getDataVolley(salesMan,504 );
         try {
@@ -1511,9 +1524,192 @@ public class ImportJason extends AppCompatActivity {
                 else    if(typeResponse==4){}
                 else     SalesInvoice.voucherNumberTextView.setText("refresh");
             }
+
+            if(Login.MaxpaymentvochFromServ==1)
+            GetmaxPaymentVoucherNo(1,0);
         }
     }
+    public class JSONTask_maxPaymentVoucherNo extends AsyncTask<String, String, String> {
 
+        private String salesMan_no = "", JsonResponse;
+        int voucherTyp;
+      int  activtyflage;
+        public JSONTask_maxPaymentVoucherNo(String salesMan_no, int voucherType, int activtyflage) {
+            this.salesMan_no = salesMan_no;
+            this.voucherTyp = voucherType;
+this.activtyflage=activtyflage;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            getDataProgress = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            getDataProgress.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            getDataProgress.setTitleText(context.getResources().getString(R.string.getReceiptSerials));
+            getDataProgress.setCancelable(false);
+            getDataProgress.show();
+            String do_ = "my";
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            Log.e("doInBackground", "JSONTask_maxPaymentVoucherNo" );
+            try {
+                if (!ipAddress.equals("")) {
+
+                    if (ipAddress.contains(":")) {
+                        int ind = ipAddress.indexOf(":");
+                        ipAddress = ipAddress.substring(0, ind);
+                    }
+
+                    if (!salesMan_no.equals("")) {
+                        URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/getmaxrcpno?STRNO=" + salesMan_no + "&CONO=" + CONO + "&TKIND=" + String.valueOf(voucherTyp).trim();
+
+                    } else {
+                        URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/getmaxrcpno?STRNO=" + SalesManLogin + "&CONO=" + CONO + "&TKIND=" + String.valueOf(voucherTyp).trim();
+
+                    }
+
+                    Log.e("URL_TO_HIT1010", "" + URL_TO_HIT);
+                }
+            } catch (Exception e) {
+
+            }
+
+            try {
+
+                //*************************************
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
+                HttpResponse response = client.execute(request);
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent())
+                );
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                // JsonResponse = sb.toString();
+
+                String finalJson = sb.toString();
+                Log.e("finalJson***Import", "maxVoucherNo=" + finalJson);
+
+
+                return finalJson;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        getDataProgress.dismissWithAnimation();
+
+                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+                getDataProgress.dismissWithAnimation();
+                Log.e("Exception", "" + e.getMessage());
+                return null;
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            // Log.e("onPostExecute","maxVoucherNo"+result.toString());
+            getDataProgress.dismissWithAnimation();
+            if (result != null) {
+
+                if (result.length() != 0) {
+                    Log.e("onPostExecute", "result" +result);
+                    if (result.contains("MAXNO")) {
+                        try {
+                            String maxVoucher = "";
+                            JSONArray requestArray = null;
+                            requestArray = new JSONArray(result);
+
+                            JSONObject infoDetail = requestArray.getJSONObject(0);
+
+                            maxVoucher = infoDetail.get("MAXNO").toString();
+                            // maxVoucher = jresponse.getString("MAXVHFNO");
+                            long maxVoucherLong=0;
+                            if(!maxVoucher.equals(""))
+                            {
+                                maxVoucherLong = Long.parseLong(maxVoucher);
+
+                            }else {
+                                maxVoucherLong=0;
+
+                            }
+
+                            Toast.makeText(context,
+                                    "Sucsses VoucherNo" + voucherTyp,
+                                    Toast.LENGTH_SHORT).show();
+                            if (voucherTyp == 1) {//CASH
+
+                                 if(mHandler.getPaymentSerialsCount()==0)
+                                mHandler.insertPaymentSerials(1,maxVoucherLong+"");
+                                 else
+                                     mHandler.UpdatePaymentSerials(1,maxVoucherLong+"");
+                                new JSONTask_maxPaymentVoucherNo(salesMan, 2,activtyflage).execute();
+
+                            } else {//others
+
+                                {
+                                    if(mHandler.getPaymentSerialsCount()==0)
+                                    mHandler.insertPaymentSerials(2,maxVoucherLong+"");
+                                    else
+                                    mHandler.UpdatePaymentSerials(2,maxVoucherLong+"");
+
+                            }
+
+                            }
+
+                          if(activtyflage==1&&voucherTyp!=1) {
+                              Log.e("activtyflage","activtyflage");
+                              ReceiptVoucher.MAX_ServoucherNumberRespon.setText("fill");
+                          }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        getDataProgress.dismissWithAnimation();
+
+
+                    }
+
+                }
+
+
+            } else {
+                getDataProgress.dismissWithAnimation();
+
+            }
+        }
+    }
 
     public void getItemBalance(String salesNo) {
 
@@ -2532,6 +2728,8 @@ public class ImportJason extends AppCompatActivity {
                     for (int i = 0; i < parentArrayCustomers.length(); i++) {
                         JSONObject finalObject = parentArrayCustomers.getJSONObject(i);
 
+
+
                         if (customerSales == 1) {
                             String salesNo = finalObject.getString("SALESMANNO");
                             try {
@@ -2539,7 +2737,7 @@ public class ImportJason extends AppCompatActivity {
                             } catch (Exception e) {
 
                             }
-                            Log.e("validUser", " == " + sales+" \tsalesManInt="+salesManInt);
+//                            Log.e("validUser", " == " + sales+" \tsalesManInt="+salesManInt);
                             if (sales == salesManInt) {
 
                                 validUser = 1;
@@ -2551,7 +2749,7 @@ public class ImportJason extends AppCompatActivity {
                             validUser = 1;
                         }
 //                        validUser = 1;
-                        Log.e("validUser", "== " + validUser);
+//                        Log.e("validUser", "== " + validUser);
                         Customer Customer = new Customer();
                         if (validUser == 1)
                         {
@@ -2616,7 +2814,7 @@ public class ImportJason extends AppCompatActivity {
 
                         }
                             customerList.add(Customer);
-                            Log.e("customerList",""+customerList.size());
+
                     }
                         //*******************************
 
@@ -2850,8 +3048,14 @@ public class ImportJason extends AppCompatActivity {
                         String qty = "";
                         SalesManItemsBalance item = new SalesManItemsBalance();
                         item.setCompanyNo(finalObject.getString("COMAPNYNO"));
+                        try {
+                            item.setItemNo(finalObject.getString("ItemOCode"));
+                        }catch (Exception exception)
+                        {
+                            item.setItemNo(finalObject.getString("ITEMNO"));
+                        }
                         item.setSalesManNo(finalObject.getString("STOCK_CODE"));
-                        item.setItemNo(finalObject.getString("ItemOCode"));
+
 
                         qty = finalObject.getString("QTY");
                         try {
@@ -2860,7 +3064,7 @@ public class ImportJason extends AppCompatActivity {
 
                         } catch (Exception e) {
                             item.setQty(0);
-                            Log.e("Exception", "qty" + qty);
+                            Log.e("Exception", "" + qty);
                         }
 //                        item.setQty(finalObject.getDouble("QTY"));
 
@@ -2939,7 +3143,7 @@ public class ImportJason extends AppCompatActivity {
 //                    }
 
                         customerPricesList.add(price);
-                        Log.e("customerPricesList", "" + customerPricesList.size());
+                       // Log.e("customerPricesList", "" + customerPricesList.size());
 
                     }
                 } catch (JSONException e) {
@@ -3102,7 +3306,7 @@ public class ImportJason extends AppCompatActivity {
 //                    Log.e("Import Data", e.getMessage().toString());
 //                }
 
-//Log.e("customerList",""+customerList.size());
+
             } catch (MalformedURLException e) {
                 Log.e("Customer", "********ex1");
                 progressDialog.dismiss();
@@ -3126,7 +3330,7 @@ public class ImportJason extends AppCompatActivity {
                     public void run() {
                         if (customerList.size() == 0) {
                             new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                                    .setTitleText("No Customer Found ")
+                                    .setTitleText("check Connection")
                                     .show();
                         }
 
@@ -3168,6 +3372,12 @@ public class ImportJason extends AppCompatActivity {
                      getMaxVoucherNo2(salesNo,4);
 
                     }
+                    else
+                    if(Login.getMaxVoucherServer==0){
+                        Log.e("getMaxVoucherServer","getMaxVoucherServer");
+                            if(Login.MaxpaymentvochFromServ==1)
+                                GetmaxPaymentVoucherNo(1,0);
+                        }
                 }catch (Exception exception){
 
                 }

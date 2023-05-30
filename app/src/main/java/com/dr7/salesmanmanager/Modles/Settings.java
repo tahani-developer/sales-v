@@ -67,6 +67,15 @@ public class Settings {
     private  int  Add_CustumerPer;
     private  int  LastCustPrice;
     private  int planKind;
+    private  int CompanyinfoINPdf;
+
+    public int getCompanyinfoINPdf() {
+        return CompanyinfoINPdf;
+    }
+
+    public void setCompanyinfoINPdf(int companyinfoINPdf) {
+        CompanyinfoINPdf = companyinfoINPdf;
+    }
 
     public int getPlanKind() {
         return planKind;

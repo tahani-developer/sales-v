@@ -108,7 +108,7 @@ public class Activities extends AppCompatActivity implements
     private ImageView  returnInvImageView, receiptImageView, stockImageView,saleImageView,transaction_imageview;
   //  private CircleImageView saleImageView;
     private CardView saleCardView, receiptCardView, accountBalance, returnCardView,uncollectChechue;
-    public  static TextView ReturnPerm_respon;
+
     private int activitySelected;
     public  static  String currentKeyTotalDiscount="",keyCreditLimit="",  currentKey="";
 
@@ -129,14 +129,13 @@ public class Activities extends AppCompatActivity implements
     DatabaseHandler databaseHandler;
     static String[] araySerial;
     TextView switchLayout;
-    public static TextView totalBalance_text,lastVisit_textView,text120;
+    public static TextView totalBalance_text,lastVisit_textView;
     public static String totalBalance_value="0";
     public  static  LocationPermissionRequest locationPermissionRequestAc;
     public  GeneralMethod generalMethod;
     LinearLayout linearReturn;
 // LocationPermissionRequest locationPermissionRequest;
-Button enterBtn;
-    public ImageView requestDiscount;
+
     @Override 
     public void displayFindItemFragment() {
         try {
@@ -210,7 +209,7 @@ Button enterBtn;
 //        salesInvoice.discTextView.setText(decimalFormat.format(discount));
         salesInvoice.calculateTotals(0);
     }
-    int  approveAdmin = 0;
+
     Animation animZoomIn ;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("WrongViewCast")
@@ -238,35 +237,7 @@ Button enterBtn;
 
         mainlayout = (LinearLayout)findViewById(R.id.mainlyout);
         totalBalance_text=findViewById(R.id.totalBalance_text);
-        ReturnPerm_respon=findViewById(R.id.ReturnPerm_respon);
 
-        ReturnPerm_respon.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                         if(editable.length()!=0){
-                             if(ReturnPerm_respon.getText().toString().trim().equals("1")) {
-                                 enterBtn.setEnabled(true);
-                                 text120.setText(getResources().getString(R.string.acceptedRequest));
-                                 requestDiscount.setEnabled(false);
-                                 requestDiscount.setBackground(getResources().getDrawable(R.drawable.ic_launcher_foreground_tick));
-                             }else   if(ReturnPerm_respon.getText().toString().trim().equals("2"))
-                             { requestDiscount.setEnabled(false);
-                                 text120.setText(getResources().getString(R.string.rejectedRequest));
-                                 requestDiscount.setBackground(getResources().getDrawable(R.drawable.ic_block_red_24dp));
-                             }
-                         }
-            }
-        });
         lastVisit_textView=findViewById(R.id.lastVisit_textView);
         generalMethod=new GeneralMethod(Activities.this);
 
@@ -832,26 +803,30 @@ Button enterBtn;
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
 
-
-                                    try {
-                                        approveAdmin = settingsList.get(0).getReturnVoch_approveAdmin();
-                                        Log.e("approveAdmin==",approveAdmin+"");
-                                    }catch (Exception e){
-                                        Log.e("Exceptionhere22==",e.getMessage());
-                                        approveAdmin=0;
-                                    }
-                                    if(approveAdmin==1)
-                                    {
-                                        Log.e("approveAdmin","approveAdmin===");
-                                        showRequstdailog(CustomerListShow.Customer_Account,CustomerListShow.Customer_Name);
-
-                                    }else
-                                    {
-                                        finish();
-                                        Intent inte = new Intent(Activities.this, ReturnByVoucherNo.class);
-                                        inte.putExtra("type", "2");
-                                        startActivity(inte);
-                                    }
+                                    finish();
+                                    Intent inte = new Intent(Activities.this, ReturnByVoucherNo.class);
+                                    inte.putExtra("type", "2");
+                                    startActivity(inte);
+//
+//                                    try {
+//                                        approveAdmin = settingsList.get(0).getReturnVoch_approveAdmin();
+//                                        Log.e("approveAdmin==",approveAdmin+"");
+//                                    }catch (Exception e){
+//                                        Log.e("Exceptionhere22==",e.getMessage());
+//                                        approveAdmin=0;
+//                                    }
+//                                    if(approveAdmin==1)
+//                                    {
+//                                        Log.e("approveAdmin","approveAdmin===");
+//                                        showRequstdailog(CustomerListShow.Customer_Account,CustomerListShow.Customer_Name);
+//
+//                                    }else
+//                                    {
+//                                        finish();
+//                                        Intent inte = new Intent(Activities.this, ReturnByVoucherNo.class);
+//                                        inte.putExtra("type", "2");
+//                                        startActivity(inte);
+//                                    }
 
 
 
@@ -863,26 +838,30 @@ Button enterBtn;
                             builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
                             builder2.create().show();
                         } else {
-
-                            try {
-                                approveAdmin = settingsList.get(0).getReturnVoch_approveAdmin();
-                                Log.e("approveAdmin==", approveAdmin + "");
-                            } catch (Exception e) {
-                                Log.e("Exceptionhere22==", e.getMessage());
-                                approveAdmin = 0;
-                            }
-                            if (approveAdmin == 1) {
-                                Log.e("approveAdmin", "approveAdmin===");
-                                showRequstdailog(CustomerListShow.Customer_Account, CustomerListShow.Customer_Name);
-
-                            } else{
-
-
                             finish();
                             Intent inte = new Intent(Activities.this, ReturnByVoucherNo.class);
                             inte.putExtra("type", "2");
                             startActivity(inte);
-                        }
+
+//                            try {
+//                                approveAdmin = settingsList.get(0).getReturnVoch_approveAdmin();
+//                                Log.e("approveAdmin==", approveAdmin + "");
+//                            } catch (Exception e) {
+//                                Log.e("Exceptionhere22==", e.getMessage());
+//                                approveAdmin = 0;
+//                            }
+//                            if (approveAdmin == 1) {
+//                                Log.e("approveAdmin", "approveAdmin===");
+//                                showRequstdailog(CustomerListShow.Customer_Account, CustomerListShow.Customer_Name);
+//
+//                            } else{
+//
+//
+//                            finish();
+//                            Intent inte = new Intent(Activities.this, ReturnByVoucherNo.class);
+//                            inte.putExtra("type", "2");
+//                            startActivity(inte);
+//                        }
 
 
                         }
@@ -1399,117 +1378,6 @@ Button enterBtn;
         new IntentIntegrator(Activities.this).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
 
     }
-    public void showRequstdailog(String cust_num,String cust_name){
-        Log.e("showRequstdailog","showRequstdailog");
-        Dialog dialog = new Dialog(Activities.this);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.admin_retvochrequst);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        Button closeBtn = dialog.findViewById(R.id.close);
-         enterBtn = dialog.findViewById(R.id.enter);
-
-        enterBtn.setEnabled(false);
-        text120= dialog.findViewById(R.id.text120);
-        requestDiscount= dialog.findViewById(R.id.requestDiscount);
-        requestDiscount.setEnabled(true);
-        requestDiscount.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                requestDiscount.setEnabled(false);
-                text120.setText(getResources().getString(R.string.adminallowed_Wait));
-                GetObjToAddInFirebase(cust_num,cust_name);
-            }
-        });
-        dialog.show();
-        closeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        enterBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                Intent inte = new Intent(Activities.this, ReturnByVoucherNo.class);
-                inte.putExtra("type", "2");
-                startActivity(inte);
-
-
-            }
-        });
-
-
-
-
-    }
-    void GetObjToAddInFirebase(String cust_num,String cust_name){
-        try{
-            //ayah
-            Log.e("GetObjToAddInFirebase==","GetObjToAddInFirebase");
-            DaoRequsts daoRequsts=new DaoRequsts(Activities.this);
-
-            RequstTest requestAdmin1=new RequstTest();
-            requestAdmin1.setSalesman_no(Login.salesMan);
-            String salesName=databaseHandler.getSalesmanName_fromSalesTeam();
-            requestAdmin1.setSalesman_name(salesName);
-            requestAdmin1.setCustomer_no(cust_num);
-            requestAdmin1.setVoucher_no("-1");
-
-
-            Date currentTimeAndDate = Calendar.getInstance().getTime();
-            SimpleDateFormat df= new SimpleDateFormat("dd/MM/yyyy");
-            String curentDate = df.format(currentTimeAndDate);
-            SimpleDateFormat    df2 = new SimpleDateFormat("hh:mm:ss");
-            String  curentTime=df2.format(currentTimeAndDate);
-
-            Log.e("curentDate==",curentDate+"");
-            requestAdmin1.setDate(curentDate);
-            requestAdmin1.setTime(curentTime);
-            requestAdmin1.setCustomer_name(cust_name);
-            requestAdmin1.setRequest_type("506");
-            requestAdmin1.setAmount_value("0");
-            requestAdmin1.setKey_validation(getRandomNumberString() + "");
-            Log.e("requestAdmin1.getKey", requestAdmin1.getKey_validation()+"");
-
-
-            requestAdmin1.setStatus("0");
-            requestAdmin1.setSeen_row("0");
-            requestAdmin1.setNote("عمل فاتورة مرتجعة");
-            requestAdmin1.setTotal_voucher("0");
-            daoRequsts.addRequst(requestAdmin1);
-            try {
-                approveAdmin = 0;
-
-                List<Settings>settingsList=new ArrayList<>();
-                settingsList= databaseHandler.getAllSettings();
-                approveAdmin = settingsList.get(0).getReturnVoch_approveAdmin();
-            }catch (Exception e){
-                approveAdmin=0;
-            }
-            if(approveAdmin==1)
-            {
-
-                daoRequsts.getStatusofReturnvochrequst(  requestAdmin1.getKey_validation(),Activities.this);
-            }
-            //SalesInvoice.lastrequst=requestAdmin1.getKey_validation();
-
-        }catch (Exception e){
-            Log.e("Exception==", e.getMessage()+"");
-        }
-
-    }
-    public static int getRandomNumberString() {
-        // It will generate 6 digit random Number.
-        // from 0 to 999999
-        Random rnd = new Random();
-        int number = rnd.nextInt(999999);
-        Log.e("Random", "" + number);
-        // this will convert any number sequence into 6 character.
-//        return String.format("%06d", number);
-        return number;
-    }
 
 }
