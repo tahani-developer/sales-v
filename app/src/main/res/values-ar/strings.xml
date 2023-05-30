@@ -361,7 +361,7 @@
     <string name="passowrddata">    كلمة مرور للبيانات
     </string>
     <string name="arabic_language">لغة عربية </string>
-    <string name="error_companey_info">  أدخل معلومات الشركة للطباعة </string>
+    <string name="error_companey_info">  أدخل معلومات الشركة  </string>
     <string name="fill_setting">
     رجاء أدخل اعدادات البرنامج لاتمام العملية
     </string>
@@ -703,6 +703,8 @@
     <string name="BONUS_ITEM_NO"> رقم المادة المجانية</string>
     <string name="BONUS_QTY"> كمية المجاني</string>
     <string name="ITEM_QTY">  كمية المادة</string>
+    <string name="getReceiptSerials"> جاري جلب سيريلات سندات القبض</string>
+    <string name="maxpaymentvoch"> اكبر رقم تسلسلي لسندات القبض من السيرفر</string>
     <string-array name="DaysOfWeek">
         <item>السبت</item>
         <item>الأحد</item>

@@ -306,23 +306,41 @@ public class PdfConverter {
             case 18:
                 Log.e("createReturnVocher", "" + list.size());
                 //    tableContent=
-                createSaleInvoiceForPrint2((List<Item>) list);
-                Log.e("path==", String.valueOf(pdfFileName));
+                obj = new DatabaseHandler(context);
+                if ( obj.getAllCompanyInfo().size()!= 0) {
+                    if (obj.getAllCompanyInfo().get(0) != null) {
+                        companyInfo = obj.getAllCompanyInfo().get(0);
+                        if (!companyInfo.getCompanyName().equals(""))
+                        {
+                            createSaleInvoiceForPrint2((List<Item>) list);
+                            Log.e("path==", String.valueOf(pdfFileName));
 
-                PrintManager printManager2 = (PrintManager) context.getSystemService(Context.PRINT_SERVICE);
-                try {
-                    PrintDocumentAdapter printAdapter = new PdfDocumentAdapter(context, String.valueOf(pdfFileName));
-                    Log.e("path2==", String.valueOf(pdfFileName));
-                    printManager2.print("Document", printAdapter, new PrintAttributes.Builder().build());
-                    Log.e("path3==", String.valueOf(pdfFileName));
+                            PrintManager printManager2 = (PrintManager) context.getSystemService(Context.PRINT_SERVICE);
+                            try {
+                                PrintDocumentAdapter printAdapter = new PdfDocumentAdapter(context, String.valueOf(pdfFileName));
+                                Log.e("path2==", String.valueOf(pdfFileName));
+                                printManager2.print("Document", printAdapter, new PrintAttributes.Builder().build());
+                                Log.e("path3==", String.valueOf(pdfFileName));
 
-                    GeneralMethod generalMethod2=new GeneralMethod(context);
-                    generalMethod2.shareWhatsAppA(pdfFileName,2);
+                                GeneralMethod generalMethod2=new GeneralMethod(context);
+                                generalMethod2.shareWhatsAppA(pdfFileName,2);
 
 
-                } catch (Exception e) {
-                    Log.e("Exception==", e.getMessage());
+                            } catch (Exception e) {
+                                Log.e("Exception==", e.getMessage());
+                            }
+        } else {
+            Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+        }
+    }else {
+        Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+    }
+}
+        else {
+                Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
                 }
+
+
         }
         return tableContent;
     }
@@ -644,19 +662,24 @@ public class PdfConverter {
         //  , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
         obj = new DatabaseHandler(context);
 
+        if ( obj.getAllCompanyInfo().size()!= 0) {
+            if (obj.getAllCompanyInfo().get(0) != null) {
+                companyInfo = obj.getAllCompanyInfo().get(0);
+                if (
+                        !companyInfo.getCompanyName().equals("")
+                ) {
 
-        if ( obj.getAllCompanyInfo().get(0) != null) {
-            companyInfo = obj.getAllCompanyInfo().get(0);
-            if (
-                    !companyInfo.getCompanyName().equals("")
-                          ) {
-
-                createSalevocherPDF2("Invoice" + ".pdf", list);
-            } else {
+                    createSalevocherPDF2("Invoice" + ".pdf", list);
+                } else {
+                    Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+                }
+            }else {
                 Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
             }
         }
-
+        else {
+            Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+        }
     }
     private PdfPTable creatTableCustomerLog(List<Transaction> list) {
         createPDF("CustomerLog_Report" + ".pdf");

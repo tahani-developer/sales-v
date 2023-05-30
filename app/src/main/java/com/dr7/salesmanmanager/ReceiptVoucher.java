@@ -35,7 +35,10 @@ import androidx.recyclerview.widget.RecyclerView;
 //import android.support.v4.content.ContextCompat;
 //import android.support.v7.widget.LinearLayoutManager;
 //import android.support.v7.widget.RecyclerView;
+import android.os.Looper;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -112,6 +115,7 @@ public class ReceiptVoucher extends Fragment {
     private CircleImageView rePrintimage;
     private static DatabaseHandler mDbHandler;
     private int voucherNumber;
+    private long MAX_ServoucherNumber;
     PrintPic printPic;
     Bitmap testB;
     byte[] printIm;
@@ -163,6 +167,8 @@ public class ReceiptVoucher extends Fragment {
     int counter;
     volatile boolean stopWorker;
     int voucherNoReprint = 0;
+    public static TextView MAX_ServoucherNumberRespon;
+
     public static Payment payment_rePrint;
     public  TextView totalBalance_text;
     public static List<Payment> paymentPrinter;
@@ -233,9 +239,43 @@ LinearLayout row221;
                         .show();
 
             }
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        mDbHandler = new DatabaseHandler(getActivity());
+        if (Login.MaxpaymentvochFromServ==1&&mDbHandler.getPaymentSerialsCount()==0) {
+
+                    ImportJason importJason = new ImportJason(getActivity());
+                    importJason.GetmaxPaymentVoucherNo(1,1);
+        }
+        MAX_ServoucherNumberRespon=view.findViewById(R.id. MAX_ServoucherNumberRespon);
+        MAX_ServoucherNumberRespon.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                       if(editable.length()!=0){
+                           if(MAX_ServoucherNumberRespon.getText().toString().equals("fill")){
+                               Log.e("editable","fill");
+                               if(Login.MaxpaymentvochFromServ==1) {
+                                   MAX_ServoucherNumber = mDbHandler.getPaymentVochNo(voucherType);
+                                   voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + MAX_ServoucherNumber);
+                               }
+                           }
+                       }
+            }
+        });
+        MAX_ServoucherNumber=mDbHandler.getPaymentVochNo(1);
+
         totalBalance_text= view.findViewById(R.id.totalBalance_text);
         row221= view.findViewById(R.id.row221);
 
@@ -368,7 +408,10 @@ LinearLayout row221;
 
         voucherNumber = mDbHandler.getMaxSerialNumber(1) + 1;//for test 1
         Log.e("voucherNumber", "onCreateView" +voucherNumber);
+        if(Login.MaxpaymentvochFromServ==0)
         voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
+        else
+            voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + MAX_ServoucherNumber);
 
         String payMethod = "";
         switch (CustomerListShow.paymentTerm) {
@@ -535,7 +578,14 @@ LinearLayout row221;
 
                     voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
                  //for test 1
+                    if(Login.MaxpaymentvochFromServ==0)
                     voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
+                    else {
+                        MAX_ServoucherNumber=mDbHandler.getPaymentVochNo(voucherType);
+                        voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + MAX_ServoucherNumber);
+
+                    }
+
                 }
 
 
@@ -1311,7 +1361,15 @@ LinearLayout row221;
         tableHeader.setVisibility(View.VISIBLE);
         voucherType = 4;//chequ
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+        if(Login.MaxpaymentvochFromServ==0)
         voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
+        else {
+            MAX_ServoucherNumber=mDbHandler.getPaymentVochNo(voucherType);
+            voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + MAX_ServoucherNumber);
+
+        }
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -1361,8 +1419,10 @@ LinearLayout row221;
             Log.e("isArabicBank",""+isArabicBank+""+payments.get(0).getBank());
 
             itemsString = "\n" + itemsString + "\n" + row;
-
+            if(Login.MaxpaymentvochFromServ==0)
             mDbHandler.setMaxSerialNumber(4, voucherNumber);
+           else
+                mDbHandler.   setServer_MaxSerialNumber(4, MAX_ServoucherNumber);
         }
 
 
@@ -1552,7 +1612,12 @@ LinearLayout row221;
 
         }
 
-        mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
+        if(Login.MaxpaymentvochFromServ==0)
+            mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
+        else
+            mDbHandler.   setServer_MaxSerialNumber(voucherType, MAX_ServoucherNumber);
+
+
         clearForm();
     }
 
@@ -1673,7 +1738,15 @@ LinearLayout row221;
         total = 0.0;
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;//test 0
         // voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+        if(Login.MaxpaymentvochFromServ==0)
         voucherNo.setText(getResources().getString(R.string.voucher_number) + " : " + voucherNumber);
+        else {
+            MAX_ServoucherNumber=mDbHandler.getPaymentVochNo(voucherType);
+            voucherNo.setText(getResources().getString(R.string.voucher_number) + " : " + MAX_ServoucherNumber);
+
+        }
+
+
         payments.clear();
         chequNo_EditText.setText("");
         editChech.setVisibility(View.GONE);

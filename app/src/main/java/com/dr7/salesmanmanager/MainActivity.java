@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity
     public   static int plantype=0;
     private static final String TAG = "MainActivity";
     public static String    CusId;
-    public static int menuItemState,OffersJustForSalsFlag=0,checkQtyForOrdersFlage=0,Acountatatment=1,SharWhatsAppForm=0,AddCustomerPer=1,LastCustPriceflage=0,CompanyinfoINPdf_Hide=0;
+    public static int menuItemState,OffersJustForSalsFlag=0,checkQtyForOrdersFlage=0,Acountatatment=1,SharWhatsAppForm=0,AddCustomerPer=1,LastCustPriceflage=0,Locationtrack=0,CompanyinfoINPdf_Hide=0;
     public static boolean enter=false;
     String typeImport="";
     int  approveAdmin=-1,workOnLine=-1,EndTrip_Report=0,ReturnVoch_approveAdmin=0;
@@ -287,7 +287,7 @@ Dialog dialog1;
             }
         }
 
-
+        if(Locationtrack==1)
         if(!isMyServiceRunning(MyServicesForloc.class)){
             {
                 Log.e("isMyServiceRunning","no");
@@ -669,6 +669,7 @@ if(settingsList.size()>0)
     LastCustPriceflage=settingsList.get(settingsList.size()-1).getLastCustPrice();
     Login.Plan_Kind =settingsList.get(settingsList.size()-1).getPlanKind();
     CompanyinfoINPdf_Hide=settingsList.get(settingsList.size()-1).getCompanyinfoINPdf();
+    Locationtrack=settingsList.get(settingsList.size()-1).getLocationtracker();
 }
         }catch (Exception e){
             approveAdmin=0;

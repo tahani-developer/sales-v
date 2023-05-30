@@ -153,6 +153,7 @@ public class Login extends AppCompatActivity {
     public  static int OfferCakeShop=0;// if 0 calck offer many times
     public  static int Plan_Kind =0;// 1 if saleman plan based on day of week ,, 0 if saleman plan based on date
     public  static    int  offerTalaat=0;
+    public  static    int   MaxpaymentvochFromServ=0;
     public  static    int  offerQasion=0;
     public   static  int  offernasleh=1;
     public  static    int getTotalBalanceInActivities=1;
@@ -167,8 +168,8 @@ public class Login extends AppCompatActivity {
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-public  static    String  headerDll = "/Falcons/VAN.dll";
-//public  static    String headerDll = "";
+//public  static    String  headerDll = "/Falcons/VAN.dll";
+public  static    String headerDll = "";
 
     public  static  int gone_noTax_totalDisc=0;
     public  static  int ExportedVochTaxFlage=0;
@@ -295,8 +296,9 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
             gone_noTax_totalDisc = flag_settingsList.get(0).getNoTax();
             ExportedVochTaxFlage = flag_settingsList.get(0).getExportedVoch_Tax();
             Purchase_Order = flag_settingsList.get(0).getPurchaseOrder();
+            MaxpaymentvochFromServ= flag_settingsList.get(0).getPaymentvochServer();
             Log.e(" Purchase_Order==",""+ Purchase_Order);
-            Log.e(" SalsManPlanFlage",""+ SalsManPlanFlage);
+            Log.e(" SalsManPlanFlage",""+ SalsManPlanFlage+"MaxpaymentvochFromServ"+MaxpaymentvochFromServ);
         } else {
 
 
@@ -708,7 +710,7 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
 //            RadioButton radioBtnIIS = moreDialog.findViewById(R.id.radioBtnIIS);
 
         Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn,plan,Trips,activePos,
-                cakeshopSW, qasionSW, talaatSW,maxvochServer,purchaseOrder_switch,noTax_Sw,naslehSW,ExportedVochTax_Sw;
+                cakeshopSW, qasionSW, talaatSW,maxvochServer,purchaseOrder_switch,noTax_Sw,naslehSW,ExportedVochTax_Sw,maxpaymentvoch_SW;
 
         ImageButton cakeshopInfo, qasionInfo, talaatInfo,naslehInfo;
         TextView cakeExpandedText, qasionExpandedText, talaatExpandedText,naslehExpandedText;
@@ -725,6 +727,7 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
         swReturn = moreDialog.findViewById(R.id.swReturn);
         plan = moreDialog.findViewById(R.id.SalsManPlan);
         Trips= moreDialog.findViewById(R.id.SalsManTrips);
+        maxpaymentvoch_SW= moreDialog.findViewById(R.id.maxpaymentvoch_SW);
         if(Plan_ACTIVE==0)
         {
             plan_linear.setVisibility(View.GONE);
@@ -773,6 +776,7 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
             qasionSW.setChecked((flag_settingsList.get(0).getOfferQasion() == 1));
             naslehSW.setChecked((flag_settingsList.get(0).getOffernasleh() == 1));
             talaatSW.setChecked((flag_settingsList.get(0).getOfferTalaat() == 1));
+            maxpaymentvoch_SW.setChecked((flag_settingsList.get(0).getPaymentvochServer() == 1));
         }
 
         OnClickListener infoClickListener = new OnClickListener() {
@@ -846,17 +850,17 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
             offerQasion = qasionSW.isChecked() ? 1 : 0;
             offernasleh= naslehSW.isChecked() ? 1 : 0;
             offerTalaat = talaatSW.isChecked() ? 1 : 0;
-
+            MaxpaymentvochFromServ=maxpaymentvoch_SW.isChecked() ? 1 : 0;
 
             if(flag_settingsList.size()==0)
             {
                 mDHandler.insertFlagSettings(new Flag_Settings(dataType1, rawahneh, getMaxVoucherServer,
                         makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE,
-                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer,Purchase_Order,gone_noTax_totalDisc,offernasleh,ExportedVochTaxFlage));
+                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer,Purchase_Order,gone_noTax_totalDisc,offernasleh,ExportedVochTaxFlage,MaxpaymentvochFromServ));
             }else {
                 mDHandler.updateFlagSettings(dataType1, rawahneh, getMaxVoucherServer,
                         makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE,
-                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer,Purchase_Order,gone_noTax_totalDisc,offernasleh,ExportedVochTaxFlage);
+                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer,Purchase_Order,gone_noTax_totalDisc,offernasleh,ExportedVochTaxFlage,MaxpaymentvochFromServ);
             }
 
             getPasswords();

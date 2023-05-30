@@ -79,7 +79,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucher;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 212;
+    private static final int DATABASE_VERSION = 213;
 //
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -667,7 +667,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String exportedVochTax = "exportedVochTax";
 
     private static final String Nasleh_Offer = "Nasleh_Offer";
-
+     private static final String MaxPaymentVoucherSever = "MaxPaymentVoucherSever";
 
     //----------------------------------------------------------------------
     private static final String SalesMan_Plan = "SalesMan_Plan";
@@ -697,9 +697,16 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
     private static final String  Cust_num="Cust_num";
     private static final String  Cust_name="Cust_name";
     //-----------------------------------------------------
-    private static final String  AdminPasswords="AdminPasswords";
-    private static final String  password_type="password_type";
-    private static final String  password_no="password";
+    private static final String  PaymentSerials="PaymentSerials";
+    private static final String  PaymentSerials_cash="PaymentSerials_cash";
+    private static final String  PaymentSerials_cridt="PaymentSerials_cridt";
+
+    //---------------------------------------
+
+     private static final String  AdminPasswords="AdminPasswords";
+     private static final String  password_type="password_type";
+     private static final String  password_no="password";
+
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -1048,22 +1055,28 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
 
        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+try {
 
-       String CREATE_TABLE_CONTACTS = "CREATE TABLE IF NOT EXISTS " + TABLE_TRANSACTIONS + "("
-               + SALES_MAN_ID + " INTEGER,"
-               + CUS_CODE + " INTEGER,"
-               + CUS_NAME + " TEXT,"
-               + CHECK_IN_DATE + " TEXT,"
-               + CHECK_IN_TIME + " TEXT,"
-               + CHECK_OUT_DATE + " TEXT,"
-               + CHECK_OUT_TIME + " TEXT,"
-               + STATUS + " INTEGER,"
-               + IS_POSTED2 + " INTEGER,"
-               + REAL_LONGTUD + " TEXT,"
-               + REAL_LATITUDE + " TEXT, " +
-                VOUCHERCOUNT + " INTEGER DEFAULT 0 "+
-               ")";
-       db.execSQL(CREATE_TABLE_CONTACTS);
+
+    String CREATE_TABLE_CONTACTS = "CREATE TABLE IF NOT EXISTS " + TABLE_TRANSACTIONS + "("
+            + SALES_MAN_ID + " INTEGER,"
+            + CUS_CODE + " INTEGER,"
+            + CUS_NAME + " TEXT,"
+            + CHECK_IN_DATE + " TEXT,"
+            + CHECK_IN_TIME + " TEXT,"
+            + CHECK_OUT_DATE + " TEXT,"
+            + CHECK_OUT_TIME + " TEXT,"
+            + STATUS + " INTEGER,"
+            + IS_POSTED2 + " INTEGER,"
+            + REAL_LONGTUD + " TEXT,"
+            + REAL_LATITUDE + " TEXT," +
+            VOUCHERCOUNT + " INTEGER DEFAULT 0" +
+            ")";
+    db.execSQL(CREATE_TABLE_CONTACTS);
+    Log.e("TABLE_TRANSACTIONS====",CREATE_TABLE_CONTACTS);
+}catch (Exception exception){
+    Log.e("Exception,TABLE_TRANSACTIONS", exception.getMessage());
+}
 
        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
@@ -1352,7 +1365,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                 +Purchase_Order+" INTEGER DEFAULT '0', "
                 +NO_TAX+ " INTEGER DEFAULT '0' ,"
                 + Nasleh_Offer + " INTEGER DEFAULT '0' ,"
-                + exportedVochTax + " INTEGER DEFAULT '0' "
+                + exportedVochTax + " INTEGER DEFAULT '0' ,"
+                + MaxPaymentVoucherSever + " INTEGER DEFAULT '0' "
 
                 + ")";
         db.execSQL(CREATE_TABLE_FlAG_SETTINGS);
@@ -1492,6 +1506,15 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
                + ")";
        db.execSQL(CREATE_AdminPasswords_TABLE);
+
+        String CREATE_PaymentSerials_TABLE = "CREATE TABLE IF NOT EXISTS " + PaymentSerials+ "("
+                + PaymentSerials_cash + " TEXT,"
+                + PaymentSerials_cridt + " TEXT"
+
+                + ")";
+        db.execSQL(CREATE_PaymentSerials_TABLE);
+
+
     }
 
 
@@ -2721,6 +2744,22 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
             Log.e(TAG, e.getMessage().toString());
         }
+        try {
+            db.execSQL("ALTER TABLE Flag_Settings ADD '" + MaxPaymentVoucherSever + "'  INTEGER  DEFAULT '0' ");
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try {
+        String CREATE_PaymentSerials_TABLE = "CREATE TABLE IF NOT EXISTS " + PaymentSerials+ "("
+                + PaymentSerials_cash + " TEXT,"
+                + PaymentSerials_cridt + " TEXT"
+
+                + ")";
+        db.execSQL(CREATE_PaymentSerials_TABLE);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage().toString());
+        }
     }
 
     ////B
@@ -2748,6 +2787,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
        values.put(exportedVochTax,flag_settings.getExportedVoch_Tax());
 
        values.put(Nasleh_Offer,flag_settings.getOffernasleh());
+        values.put(MaxPaymentVoucherSever,flag_settings.getPaymentvochServer());
 
         db.insert(Flag_Settings, null, values);
         db.close();
@@ -2766,6 +2806,70 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
        db.close();
 
     }
+     public void insertPaymentSerials(int type,String SERIAL) {
+         Log.e("insertPaymentSerials","insertPaymentSerials");
+         db = this.getReadableDatabase();
+         ContentValues values = new ContentValues();
+if(type==1)
+         values.put(PaymentSerials_cash, SERIAL);
+      else
+         values.put(PaymentSerials_cridt, SERIAL);
+
+
+         db.insert(PaymentSerials, null, values);
+         db.close();
+
+     }
+     public void UpdatePaymentSerials(int type,String SERIAL) {
+         Log.e("UpdatePaymentSerials","UpdatePaymentSerials");
+         db = this.getWritableDatabase();
+         ContentValues values = new ContentValues();
+
+         if(type==1)
+             values.put(PaymentSerials_cash, SERIAL);
+         else
+             values.put(PaymentSerials_cridt, SERIAL);
+
+         // updating row
+         db.update(PaymentSerials, values,null, null);
+
+     }
+     public int getPaymentSerialsCount() {
+
+
+         String selectQuery = "SELECT * FROM " + PaymentSerials;
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+
+Log.e("getPaymentSerials",cursor.getCount()+"");
+         return cursor.getCount();
+
+     }
+     public long getPaymentVochNo(int type) {
+         String selectQuery="";
+     long    VochNo=0;
+         if(type==1)
+          selectQuery = "SELECT PaymentSerials_cash FROM " + PaymentSerials ;
+else   selectQuery = "SELECT PaymentSerials_cridt FROM " + PaymentSerials ;
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+
+
+         if (cursor.moveToFirst()) {
+//            Log.i("DatabaseHandler", "************************" + selectQuery);
+             do {
+
+                 VochNo = cursor.getLong(0);
+
+
+             } while (cursor.moveToNext());
+         }
+
+
+         return VochNo;
+
+     }
+
     public void DeleteAdminPasswords(){
        SQLiteDatabase db = this.getWritableDatabase();
        db.execSQL("delete from " + AdminPasswords);
@@ -2798,7 +2902,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                         cursor.getInt(14),
                         cursor.getInt(15),
                         cursor.getInt(16),
-                        cursor.getInt(17)
+                        cursor.getInt(17),
+                        cursor.getInt(18)
                 );
 
                 flagSettings.add(mySettings);
@@ -2838,7 +2943,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
     public void updateFlagSettings (String dataType, int export, int max, int order,
                                     int password, int total, int vReturn,int SalPlan,int pos,
                                     int csOffer, int tOffer, int qOffer,int SalTrip,int mavVoServer,int purchOrder
-    ,int no_tax,int offernasleh,int exportedVoch_Tax) {
+    ,int no_tax,int offernasleh,int exportedVoch_Tax,int MaxpaymentvochFromServ) {
 
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -2862,6 +2967,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
        values.put( exportedVochTax,exportedVoch_Tax);
 
        values.put( Nasleh_Offer,offernasleh);
+        values.put( MaxPaymentVoucherSever,MaxpaymentvochFromServ);
 
         db.update(Flag_Settings, values, null, null);
 
@@ -4573,6 +4679,18 @@ Log.e("addCompanyInfo","addCompanyInfo");
         db.update(TABLE_SETTING, values, TRANS_KIND + "=" + voucherType, null);
 
     }
+     public void setServer_MaxSerialNumber(int voucherType, long newSerial) {
+         db = this.getWritableDatabase();
+         ContentValues values = new ContentValues();
+         if(voucherType==1)
+         values.put(PaymentSerials_cash, newSerial+1);
+         else
+             values.put(PaymentSerials_cridt, newSerial+1);
+         // updating row
+         db.update(PaymentSerials, values, null, null);
+
+
+     }
 
     public int getMaxVoucherNumber() {
         String selectQuery = "SELECT  MAX(VOUCHER_NUMBER) FROM " + PAYMENTS;
@@ -4624,7 +4742,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 transaction.setIsPosted(Integer.parseInt(cursor.getString(8)));
                 transaction.setLongtude(Double.parseDouble(cursor.getString(9)));
                 transaction.setLatitud(Double.parseDouble(cursor.getString(10)));
-                transaction.setVOUCHERCOUNT(Integer.parseInt(cursor.getString(12)));
+                transaction.setVOUCHERCOUNT(Integer.parseInt(cursor.getString(11)));
                 // Adding transaction to list
                 transactionList.add(transaction);
             } while (cursor.moveToNext());
@@ -5444,7 +5562,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
         // Select All Query
         //AND VOUCHER_NUMBER= (SELECT MAX(VOUCHER_TYPE VOUCHER_NUMBER FROM SALES_VOUCHER_DETAILS)
         String selectQuery = "select * FROM SALES_VOUCHER_DETAILS where VOUCHER_TYPE= '"+VOUCHETYPE+"' and VOUCHER_NUMBER='"+voucherNo+"'";
-
+        Log.i("DatabaseHandler", "selectQuery" + selectQuery);
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
