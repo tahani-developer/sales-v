@@ -2749,7 +2749,7 @@ public class ImportJason extends AppCompatActivity {
                         item.setIsSuspended(0);
                         try {
                             item.setItemL(finalObject.getDouble("ITEML"));
-                            Log.e("Exception", "" + finalObject.getDouble("ITEML"));
+                            Log.e("Exception", "ITEML" + finalObject.getDouble("ITEML"));
                         } catch (Exception e) {
                             item.setItemL(0.0);
 
@@ -2860,7 +2860,7 @@ public class ImportJason extends AppCompatActivity {
 
                         } catch (Exception e) {
                             item.setQty(0);
-                            Log.e("Exception", "" + qty);
+                            Log.e("Exception", "qty" + qty);
                         }
 //                        item.setQty(finalObject.getDouble("QTY"));
 
@@ -2899,13 +2899,26 @@ public class ImportJason extends AppCompatActivity {
                     JSONArray parentArrayCustomerPrice = parentObject.getJSONArray("Customer_prices");
                     Log.e("parentArrayCusto", "" + parentArrayCustomerPrice.length());
                     customerPricesList.clear();
-
+                    String acc="";
                     for (int i = 0; i < parentArrayCustomerPrice.length(); i++) {
                         JSONObject finalObject = parentArrayCustomerPrice.getJSONObject(i);
 
                         CustomerPrice price = new CustomerPrice();
                         price.setItemNumber(finalObject.getString("ITEMCODE"));
-                        price.setCustomerNumber(finalObject.getInt("CUSTACCNO"));
+                        try {
+                             acc=finalObject.getString("CUSTACCNO");
+                        }catch (Exception e){
+                            Log.e("Exception","1="+e.getMessage());
+                        }
+                        if(acc.trim().length()!=0)
+                        {try {
+                            price.setCustomerNumber(Integer.parseInt(acc));
+                        }catch ( Exception e){
+                            price.setCustomerNumber(0);
+                            Log.e("Exception","2="+e.getMessage());
+                        }
+                        }
+
                         price.setPrice(finalObject.getDouble("PRICE"));
                         price.setDiscount(finalObject.getDouble("DISCOUNT"));
 

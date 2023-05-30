@@ -305,6 +305,7 @@
 
 
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/_linear_switch"
         android:layout_width="match_parent"

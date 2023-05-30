@@ -8994,9 +8994,19 @@ if(name==null) name = "";
 
               break;
             case "-2":
-//                Log.e("getItemName","getItemName="+itemNo);
                 String customerNo=CustomerListShow.Customer_Account;
-                 selectQuery = " select Price - DISCOUNT_CUSTOMER from CustomerPrices  where ItemNo_='"+itemNo.trim()+"' and  CustomerNumber='"+customerNo+"' ";
+                String discountType=getDiscountType();
+                selectQuery = " select Price from CustomerPrices  where ItemNo_='"+itemNo.trim()+"' and  CustomerNumber='"+customerNo+"' ";
+//                if(discountType.equals("1"))
+//                {
+//                 selectQuery = " select Price - (Price * (DISCOUNT_CUSTOMER/100)) from CustomerPrices  where ItemNo_='"+itemNo.trim()+"' and  CustomerNumber='"+customerNo+"' ";
+//                }else {
+//                 selectQuery = " select Price - DISCOUNT_CUSTOMER from CustomerPrices  where ItemNo_='"+itemNo.trim()+"' and  CustomerNumber='"+customerNo+"' ";
+//                }
+                break;
+            case "-3":
+                String customer_No=CustomerListShow.Customer_Account;
+                selectQuery = "select DISCOUNT_CUSTOMER from CustomerPrices  where ItemNo_='"+itemNo.trim()+"' and  CustomerNumber='"+customer_No+"' ";
                 break;
         }
 
@@ -9011,7 +9021,7 @@ if(name==null) name = "";
                     return "";
                 } else {
                     itemUnit = (cursor.getString(0));
-                //    Log.e("getUnitForItem","price="+itemUnit);
+                    Log.e("getUnitForItem","price="+itemUnit);
                     return itemUnit;
                 }
 
@@ -9025,7 +9035,11 @@ if(name==null) name = "";
         return  itemUnit;
     }
 
-    public ItemUnitDetails getItemUnitDetails(String itemNumber,float countItem) {
+     private String getDiscountType() {
+        return "1";
+     }
+
+     public ItemUnitDetails getItemUnitDetails(String itemNumber,float countItem) {
        //and ConvRate=100
        String selectQuery="";
        if(countItem!=-1)

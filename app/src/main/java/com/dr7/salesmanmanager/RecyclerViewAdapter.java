@@ -1163,9 +1163,20 @@ public static     float CountOfItems=1;
 
                                                          }
                                                              price_value = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer,0);
-                                                         if (!itemUnitPrice.equals(""))
+                                                        Log.e("*itemUnitPrice=",itemUnitPrice+"price_value="+price_value);
+
+                                                         if (!itemUnitPrice.equals("")) {
                                                              price.setText(itemUnitPrice);
+                                                             String discountItem=mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-3",0);
+                                                             discount.setText(discountItem);
+                                                             discount.setEnabled(false);
+                                                             discPercRadioButton.setChecked(true);
+                                                             discValueRadioButton.setEnabled(false);
+                                                             discPercRadioButton.setEnabled(false);
+                                                         }
                                                          else  price.setText(price_value);
+
+
 //                                                           }
 
                                                      }
@@ -1213,6 +1224,7 @@ public static     float CountOfItems=1;
                                                              CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
                                                              if(!Item_unit.getSelectedItem().toString().equals("")) {
                                                                  String itemUnitPrice="",price_value="";
+                                                                 discount.setText("");
 //                                                                 if(mHandler.getAllSettings().get(0).getPriceByCust()==1)
 //                                                                 {
 //                                                                      itemUnitPrice = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
@@ -1233,8 +1245,19 @@ public static     float CountOfItems=1;
                                                                  String price_text="";
                                                                  if(mHandler.getAllSettings().get(0).getPriceByCust()==1){
                                                                      price_text= mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
+                                                                if(price_text.trim().length()!=0)
+                                                                {
+                                                                    String discountItem=mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-3",0);
+                                                                    discount.setText(discountItem);
+                                                                    discount.setEnabled(false);
+                                                                    discPercRadioButton.setChecked(true);
+                                                                    discValueRadioButton.setEnabled(false);
+                                                                    discPercRadioButton.setEnabled(false);
+                                                                }else discount.setText("");
                                                                  }
-                                                                 if(!price_text.equals("")){
+                                                                 Log.e("8*itemUnitPrice=",price_text+"");
+
+                                                                 if(price_text.equals("")){
 
                                                                      price_text=allItemsList.get(position).getPrice()+"";
                                                                  }
@@ -2748,6 +2771,7 @@ public static     float CountOfItems=1;
                                                                  CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
                                                                  if(!Item_unit.getSelectedItem().toString().equals("")) {
 
+                                                                     discount.setText("");
                                                                      String priceCustomer="",price_value="";
 //                                                                     if(mHandler.getAllSettings().get(0).getPriceByCust()==1)
 //                                                                     {
@@ -2776,9 +2800,18 @@ public static     float CountOfItems=1;
                                                                      if(mHandler.getAllSettings().get(0).getPriceByCust()==1)
                                                                  {
                                                                      price_text=mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
+                                                                     if(price_text.trim().length()!=0){
+                                                                         String discountItem=mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-3",0);
+                                                                         discount.setText(discountItem);
+                                                                         discount.setEnabled(false);
+                                                                         discPercRadioButton.setChecked(true);
+                                                                         discValueRadioButton.setEnabled(false);
+                                                                         discPercRadioButton.setEnabled(false);
+                                                                     }else discount.setText("");
+
 
                                                                  }
-                                                                     if(!price_text.equals("")){
+                                                                     if(price_text.equals("")){
 
                                                                          price_text=allItemsList.get(position).getPrice()+"";
                                                                      }
@@ -4010,8 +4043,19 @@ public static     float CountOfItems=1;
                 }
                     price_value = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer,0);
                 if (!itemUnitPrice.equals(""))
+                {
                     price.setText(itemUnitPrice);
-                else  price.setText(price_value);
+                    String discountItem=mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-3",0);
+                    discount.setText(discountItem);
+                    discount.setEnabled(false);
+                    discPercRadioButton.setChecked(true);
+                    discValueRadioButton.setEnabled(false);
+                    discPercRadioButton.setEnabled(false);
+                }
+                else {
+                    price.setText(price_value);
+                    discount.setText("");
+                }
 //                                                           }
 
             }

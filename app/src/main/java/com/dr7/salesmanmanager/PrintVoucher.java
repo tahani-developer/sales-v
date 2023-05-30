@@ -439,6 +439,7 @@ GeneralMethod generalMethod;
                                                                     o12.putExtra("printKey", "0");
                                                                     startActivity(o12);
                                                                 }catch (Exception e){
+                                                                    Log.e("voucherPrint",""+e.getMessage().toString());
                                                                     Toast.makeText(PrintVoucher.this, "error"+e.getMessage(), Toast.LENGTH_SHORT).show();
 
                                                                 }
