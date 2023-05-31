@@ -1683,6 +1683,7 @@ Log.e("bmb.size="," "+bmb.getPiecePlaceEnum().pieceNumber());
                                     break;
                                 case 4:
                                     showLastVisitDialog();
+                                    break;
                                 case 5:
                                     try {
                                         voucherNo = mDbHandler.getLastVoucherNo(voucherType);

@@ -237,9 +237,6 @@ public class bMITP extends Activity {
     }
     public void onPermission()
     {
-        Log.e("onPermission", "request_SDK_INT"+Build.VERSION.SDK_INT);
-
-
 // Permision can add more at your convinient
         //  ((ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH ))!= PackageManager.PERMISSION_GRANTED))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ){
@@ -345,12 +342,12 @@ public class bMITP extends Activity {
 
 //
         getData = getIntent().getStringExtra("printKey");
-        try {
-            onPermission();
-        }catch (Exception e){
-            Log.e("onPermission",""+e.getMessage());
-            Toast.makeText(context, "check permission", Toast.LENGTH_SHORT).show();
-        }
+//        try {
+//            onPermission();
+//        }catch (Exception e){
+//            Log.e("onPermission",""+e.getMessage());
+//            Toast.makeText(context, "check permission", Toast.LENGTH_SHORT).show();
+//        }
 
 //        Bundle bundle = getIntent().getExtras();
 //         allStudents = (List<Item>) bundle.get("ExtraData");
