@@ -317,10 +317,10 @@ public class PdfConverter {
 
                             PrintManager printManager2 = (PrintManager) context.getSystemService(Context.PRINT_SERVICE);
                             try {
-                                PrintDocumentAdapter printAdapter = new PdfDocumentAdapter(context, String.valueOf(pdfFileName));
-                                Log.e("path2==", String.valueOf(pdfFileName));
-                                printManager2.print("Document", printAdapter, new PrintAttributes.Builder().build());
-                                Log.e("path3==", String.valueOf(pdfFileName));
+//                                PrintDocumentAdapter printAdapter = new PdfDocumentAdapter(context, String.valueOf(pdfFileName));
+//                                Log.e("path2==", String.valueOf(pdfFileName));
+//                                printManager2.print("Document", printAdapter, new PrintAttributes.Builder().build());
+//                                Log.e("path3==", String.valueOf(pdfFileName));
 
                                 GeneralMethod generalMethod2=new GeneralMethod(context);
                                 generalMethod2.shareWhatsAppA(pdfFileName,2);
@@ -2285,7 +2285,7 @@ public class PdfConverter {
             PdfPCell cell4 = new PdfPCell(new Paragraph(context.getString(R.string.voucherNo) + " : " + SalesInvoice.SaleInvoicePrinted.getVoucherNumber(), arabicFontHeaderprint));
             PdfPCell cell5 = new PdfPCell(new Paragraph(context.getString(R.string.cust_name) + " : " + SalesInvoice.SaleInvoicePrinted.getCustName()
 
-                +"                                                      "  +"   رقم المستودع: " +SalesInvoice.SaleInvoicePrinted.getSaleManNumber(), arabicFontHeaderprint));
+                +"                            "  +"   رقم المستودع: " +SalesInvoice.SaleInvoicePrinted.getSaleManNumber(), arabicFontHeaderprint));
             PdfPCell cell6 = new PdfPCell(new Paragraph(context.getString(R.string.note) + " : " + companyInfo.getNoteForPrint(), arabicFontHeaderprint));
             PdfPCell cell14 = new PdfPCell(new Paragraph(context.getString(R.string.app_paymentType) + " : " + SalesInvoice.SaleInvoicePrinted.getPayMethod(), arabicFontHeaderprint));
             PdfPCell cell_101 = new PdfPCell(new Paragraph( "عرض سعر نقداً", arabicFontHeaderprint));
