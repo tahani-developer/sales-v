@@ -165,11 +165,7 @@ private  void   startMyOenForeground(){
     //       fillData(MainActivity.this);
     //   updateSeenOfRow();
     public  void starttimer(){
-
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Handler handler = new Handler(Looper.getMainLooper());
+        Handler handler = new Handler(Looper.getMainLooper());
 
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -179,17 +175,30 @@ private  void   startMyOenForeground(){
                     }
                 }, 5000 );
 
-//                Handler     mHandler = new Handler(Looper.getMainLooper()) {
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                Handler handler = new Handler(Looper.getMainLooper());
+//
+//                handler.postDelayed(new Runnable() {
 //                    @Override
-//                    public void handleMessage(Message message) {
-//                        Log.e("count","" +count++);
+//                    public void run() {
+////                        Log.e("count","" +count++);
 //                        allTaskInFireBasewithoutnotify();
 //                    }
-//                };
-
-            }
-
-        }, 0, 3000);
+//                }, 5000 );
+//
+////                Handler     mHandler = new Handler(Looper.getMainLooper()) {
+////                    @Override
+////                    public void handleMessage(Message message) {
+////                        Log.e("count","" +count++);
+////                        allTaskInFireBasewithoutnotify();
+////                    }
+////                };
+//
+//            }
+//
+//        }, 0, 5000);
 
     }
     public  void stoptimer(){

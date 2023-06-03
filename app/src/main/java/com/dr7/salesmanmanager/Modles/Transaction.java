@@ -150,6 +150,9 @@ public class Transaction {
 
             obj.put("REAL_LONGITIUED_CHECHOUT", longtude);
             obj.put("REAL_LATITUED_CHECHOUT", latitud);
+            obj.put("VOUCHERCOUNT", VOUCHERCOUNT);
+            obj.put("EXPORTED", "0");
+
 
             obj.put("EXPORTED", "0");
             try {
