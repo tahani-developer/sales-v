@@ -177,7 +177,7 @@ private  void   startMyOenForeground(){
 //                        Log.e("count","" +count++);
                         allTaskInFireBasewithoutnotify();
                     }
-                }, 1000 );
+                }, 5000 );
 
 //                Handler     mHandler = new Handler(Looper.getMainLooper()) {
 //                    @Override
