@@ -63,7 +63,7 @@ if(databaseReference==null) {
             @Override
             public void onSuccess(Void aVoid) {
 //             Log.e("addLocation==", "databaseReference"+databaseReference.getRoot());
-           //    Log.e("onSuccess==", "New salesMenLocation Data stored successfully");
+             Log.e("onSuccess==", "New salesMenLocation Data stored successfully");
 
             }
          });
