@@ -291,7 +291,7 @@ Dialog dialog1;
         if(!isMyServiceRunning(MyServicesForloc.class)){
             {
                 Log.e("isMyServiceRunning","no");
-                startService(new Intent(MainActivity.this, MyServicesForloc.class));
+          startService(new Intent(MainActivity.this, MyServicesForloc.class));
             }
         }
 
@@ -3983,9 +3983,9 @@ if(settingsList.size()>0)
                         startActivity(getIntent());
                         dialog.dismiss();
                         if(locationtrackerflage==1){
-                            stopService(new Intent(MainActivity.this, MyServicesForloc.class));
+                    stopService(new Intent(MainActivity.this, MyServicesForloc.class));
 
-                            startService(new Intent(MainActivity.this, MyServicesForloc.class));
+                          startService(new Intent(MainActivity.this, MyServicesForloc.class));
                         }else
                         {
 

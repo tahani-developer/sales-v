@@ -1067,6 +1067,7 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
                 {
                     if(editable.toString().equals("main"))
                     {
+
                         mainIntent();
                     }
                 }

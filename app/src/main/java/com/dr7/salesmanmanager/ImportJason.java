@@ -1492,7 +1492,11 @@ public class ImportJason extends AppCompatActivity {
                                     getDataProgress.dismissWithAnimation();
                                     new JSONTask_maxVoucherNo(salesMan_no, 508,typeResponse).execute();
                                 }else
-                                getDataProgress.dismissWithAnimation();
+                                {
+                                    getDataProgress.dismissWithAnimation();
+                                    if(Login.MaxpaymentvochFromServ==1)
+                                        GetmaxPaymentVoucherNo(1,0);
+                                }
                             }
                             try {
                                 if(typeResponse==1)
@@ -1525,8 +1529,9 @@ public class ImportJason extends AppCompatActivity {
                 else     SalesInvoice.voucherNumberTextView.setText("refresh");
             }
 
-            if(Login.MaxpaymentvochFromServ==1)
-            GetmaxPaymentVoucherNo(1,0);
+
+
+
         }
     }
     public class JSONTask_maxPaymentVoucherNo extends AsyncTask<String, String, String> {
