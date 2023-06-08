@@ -76,13 +76,21 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.dr7.salesmanmanager.Adapters.CustomerselectedAdapter;
 import com.dr7.salesmanmanager.Adapters.Pending_item_Adapter;
 import com.dr7.salesmanmanager.Adapters.Pending_seriak_adapter;
+import com.dr7.salesmanmanager.Adapters.TapsAdapter;
+import com.dr7.salesmanmanager.Adapters.TapsAdapter2;
 import com.dr7.salesmanmanager.Adapters.VS_PromoAdapter;
+import com.dr7.salesmanmanager.Fragments.BlankFragment;
 import com.dr7.salesmanmanager.Interface.DaoRequsts;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.MyServicesForNotification;
@@ -108,6 +116,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -253,7 +262,8 @@ Dialog dialog1;
     public  Pending_seriak_adapter adapter_serial;
 
 //
-
+public TabLayout tabLayout;
+    public ViewPager viewPager;
 
 
     public static void settext2() {
@@ -367,6 +377,7 @@ Dialog dialog1;
 
         return d;
     }
+    FragmentManager childFragMang;
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
@@ -375,6 +386,7 @@ Dialog dialog1;
         super.onCreate(savedInstanceState);
         new LocaleAppUtils().changeLayot(MainActivity.this);
         mDbHandler = new DatabaseHandler(MainActivity.this);
+
         setContentView(R.layout.activity_main);
 
         Log.e("salesMan==", " salesMan " + Login.salesMan);
@@ -536,7 +548,7 @@ Dialog dialog1;
         VS_PROMO.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OpenVS_PROMODailog();
+               OpenVS_PROMODailog();
             }
         });
 
@@ -2971,7 +2983,13 @@ if(settingsList.size()>0)
                     if ((password.getText().toString().trim().equals(passwordFromAdmin.getText().toString())) && (!password.getText().toString().equals(""))) {
                         dialog.dismiss();
                         openSetting alert = new openSetting();
-                        alert.showDialog(MainActivity.this, "Error de conexión al servidor");
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                alert.showDialog(MainActivity.this, "Error de conexión al servidor");
+                            }
+                        }, 3000);
+
                     } else {
                         password.setError(getResources().getString(R.string.invalidPassword));
 
@@ -3034,7 +3052,14 @@ if(settingsList.size()>0)
 
                         if (flag == 1) {
                             openSetting alert = new openSetting();
-                            alert.showDialog(MainActivity.this, "Error de conexión al servidor");
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    alert.showDialog(MainActivity.this, "Error de conexión al servidor");
+                                }
+                            }, 3000);
+
+
                         } else if (flag == 2)
                             openCompanyInfoDialog();
 
@@ -3194,6 +3219,11 @@ if(settingsList.size()>0)
 
     }
     public class openSetting {
+
+        //add tabs
+
+
+
         boolean validSerial = false, validReturn = false, validOrder = false;
         EditText linkEditText,ip_withPort, cono,numOfCopy, invoicEditText, returnEditText, orderEditText, paymentEditTextCash, paymentEditTextCheque, paymentEditTextCredit,
                 salesmanNmae,valueTotalDiscount,storNo_text;
@@ -3247,6 +3277,79 @@ if(settingsList.size()>0)
                     return false;
                 }
             });
+            ///
+            try {
+                tabLayout=dialog.findViewById(R.id.simpleTabLayout);
+                viewPager=dialog.findViewById(R.id.viewPager);
+                LinearLayout VouchersLayout=dialog.findViewById(R.id.VouchersLayout);
+                VouchersLayout.setVisibility(View.VISIBLE);
+                LinearLayout CustomersLayout=dialog.findViewById(R.id.CustomersLayout);
+                LinearLayout GenralLayout=dialog.findViewById(R.id.GenralLayout);
+                tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.voch_sett)));
+                tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.customers_sett)));
+                tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.Genral_sett)));
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+////                      Fragment view= activity.getLayoutInflater().inflate(R.layout.fragment_setting);
+//                     //   MainActivity.getChildFragmentManager();
+////                        FragmentManager FragmentManager=view.getChildFragmentManager();
+//                        final TapsAdapter adapter = new TapsAdapter(getSupportFragmentManager());
+//                        viewPager.setAdapter(adapter);
+//                    }
+//                }, 3000);
+
+//
+//                viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+//
+                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        Log.e("TabLayout,tab=",tab.getPosition()+"");
+                        if(tab.getPosition()==0) {
+                            VouchersLayout.setVisibility(View.VISIBLE);
+                            CustomersLayout.setVisibility(View.GONE);
+                            GenralLayout.setVisibility(View.GONE);
+                        }
+                        else    if(tab.getPosition()==1)
+                        {
+                            VouchersLayout.setVisibility(View.GONE);
+                            CustomersLayout.setVisibility(View.VISIBLE);
+                            GenralLayout.setVisibility(View.GONE);
+                        }
+                        else    if(tab.getPosition()==2)
+                        {
+                            VouchersLayout.setVisibility(View.GONE);
+                            CustomersLayout.setVisibility(View.GONE);
+                            GenralLayout.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+
+                    }
+                });
+
+
+            }catch (Exception exception){
+
+            }
+//            tabLayout=dialog.findViewById(R.id.simpleTabLayout);
+//              viewPager=dialog.findViewById(R.id.viewPager);
+//            TapsAdapter2 adapter = new TapsAdapter2(getSupportFragmentManager());
+//            adapter.addFrag(new BlankFragment(), "APPLE");
+//            viewPager.setAdapter(adapter);
+//            tabLayout.setupWithViewPager(viewPager);
+//            tabLayout.getTabAt(0).setIcon(R.drawable.invoices_icon);
+
+
+            ///
             sumCurentQty_checkbox= (CheckBox) dialog.findViewById(R.id.sumCurentQty_checkbox);
             dontDuplicateItems_checkbox= (CheckBox) dialog.findViewById(R.id.dontDuplicateItems_checkbox);
             continousReading_checkbox = (CheckBox) dialog.findViewById(R.id.continousReading_checkbox);
@@ -5506,6 +5609,7 @@ Log.e("Exception==",e.getMessage());
        });
    }
 
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -5519,4 +5623,6 @@ Log.e("Exception==",e.getMessage());
 //        startService(new Intent(MainActivity.this, MyServices.class));
 //        finish();
     }
+
+
 }

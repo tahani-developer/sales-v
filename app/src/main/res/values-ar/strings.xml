@@ -632,7 +632,7 @@
     <string name="savevocher">حفظ كفاتورة باسم المندوب</string>
     <string name="not_authoriz2"> عفوا , ليس لديك صلاحية</string>
     <string name="maxvochServer">أكبر رقم تسلسلي للفواتير من السيرفر</string>
-    <string name="salesoffers">العروض فقط للميعات</string>
+    <string name="salesoffers">العروض فقط للمبيعات</string>
     <string name="checkqtyinorder">التأكد من الكمية في الطلبيات</string>
     <string name="headerprint">عدم طباعة الترويسة في الطلبيات </string>
     <string name="locationtracker">تعقب الموقع</string>
@@ -705,6 +705,14 @@
     <string name="ITEM_QTY">  كمية المادة</string>
     <string name="getReceiptSerials"> جاري جلب سيريلات سندات القبض</string>
     <string name="maxpaymentvoch"> اكبر رقم تسلسلي لسندات القبض من السيرفر</string>
+
+    <string name="voch_sett">  إعدادات الفاتورة</string>
+    <string name="customers_sett">  إعدادات العملاء</string>
+    <string name="Printer_sett">  إعدادات الطباعة</string>
+    <string name="Stock_sett">  إعدادات المستودعات</string>
+    <string name="Genral_sett">   إعدادات عامة</string>
+
+
     <string-array name="DaysOfWeek">
         <item>السبت</item>
         <item>الأحد</item>

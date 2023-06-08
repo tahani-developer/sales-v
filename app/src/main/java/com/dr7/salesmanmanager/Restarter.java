@@ -12,6 +12,9 @@ public class Restarter extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.e("Restarter","Restarter");
+if(intent.getAction().equals("stopservice"))
+    context.stopService(new Intent(context, MyServicesForloc.class));
+else
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(new Intent(context, MyServicesForloc.class));

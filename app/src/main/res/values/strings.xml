@@ -676,6 +676,11 @@
     <string name="getReceiptSerials">  getting Max_PaymentVouch Serials</string>
 
     <string name="maxpaymentvoch">  Max_PaymentVouch From Server</string>
+    <string name="voch_sett">  Voucher Settings</string>
+    <string name="customers_sett"> Customers Settings</string>
+    <string name="Printer_sett"> Printer Settings</string>
+    <string name="Stock_sett"> Stocks Settings</string>
+    <string name="Genral_sett"> Genral Settings</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
