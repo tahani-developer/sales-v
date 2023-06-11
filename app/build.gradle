@@ -54,6 +54,8 @@ dependencies {
     implementation files('libs/activation.jar')
     implementation files('libs/mail.jar')
     implementation files('libs/additionnal.jar')
+    implementation files('libs\\IminLibs1.0.15.jar')
+    implementation files('libs\\iminPrinterSDK-9-v1.0.8_2303130944.jar')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'

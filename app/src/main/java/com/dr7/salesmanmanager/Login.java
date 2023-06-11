@@ -1670,8 +1670,16 @@ public  static    String  headerDll = "/Falcons/VAN.dll";
 
         if(mDHandler.getFlagSettings().get(0).getMake_Order()==0){
             if(userStore.equals(""))
+            {try {
+
+
                 userStore=mDHandler.getAllSettings().get(0).getStoreNo();
-            Log.e("verifyIpDevice","="+userStore+"\tuser="+user);
+                Log.e("verifyIpDevice","="+userStore+"\tuser="+user);
+            }catch (Exception e){
+                userStore="1";
+            }
+            }
+
             if(user.trim().equals(userStore.trim()))
                 goToMain();
             else{

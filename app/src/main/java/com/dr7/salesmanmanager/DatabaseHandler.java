@@ -5712,13 +5712,30 @@ Log.e("addCompanyInfo","addCompanyInfo");
         }
         String PriceListId = CustomerListShow.PriceListId;
         if(countVisibleTable==0){
-            selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO  \n" +
-                    "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P \n" +
-                    "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+priceListBase+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"'";
+//
+//            selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO  \n" +
+//                    "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P \n" +
+//                    "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+priceListBase+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"'";
+
+            selectQuery="select DISTINCT   M.ItemNo ,M.Name ,M.CateogryID ,M.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO from Price_List_D P ,(\n" +
+                    " select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty  ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM,  M.ITEM_HAS_SERIAL , M.ITEM_PHOTO  \n" +
+                    "                    from Items_Master M , SalesMan_Items_Balance S \n" +
+                    "                    where M.ItemNo  = S.ItemNo   and S.SalesManNo = '"+salesMan+"') as M  where  M.ItemNo = P.ItemNo and P.PrNo ='"+priceListBase+"'";
+
+
         }else {
-            selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO , visiItem.AVAILABLITY \n" +
-                    "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P , SalesMan_Item_availability visiItem \n" +
-                    "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+priceListBase+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"' and visiItem.ITEM_OCODE=M.ItemNo";
+//            selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO , visiItem.AVAILABLITY \n" +
+//                    "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P , SalesMan_Item_availability visiItem \n" +
+//                    "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+priceListBase+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"' and visiItem.ITEM_OCODE=M.ItemNo";
+
+
+       selectQuery="select DISTINCT  J.ItemNo ,J.Name ,J.CateogryID ,J.Qty ,J.Price ,J.TaxPerc ,J.MinSalePrice ,J.Barcode ,J.ITEM_L, J.F_D, J.KIND_ITEM , J.ITEM_HAS_SERIAL , J.ITEM_PHOTO ,visiItem.AVAILABLITY from  SalesMan_Item_availability visiItem  ,(select DISTINCT   M.ItemNo ,M.Name ,M.CateogryID ,M.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO from Price_List_D P ,(\n" +
+               " select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty  ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM,  M.ITEM_HAS_SERIAL , M.ITEM_PHOTO  \n" +
+               "                    from Items_Master M , SalesMan_Items_Balance S \n" +
+               "                    where M.ItemNo  = S.ItemNo   and S.SalesManNo = '"+salesMan+"') as M  where  M.ItemNo = P.ItemNo and P.PrNo ='"+priceListBase+"' ) as J where  visiItem.ITEM_OCODE=J.ItemNo ";
+
+
+
         }
 
 

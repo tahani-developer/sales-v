@@ -17,6 +17,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -49,6 +50,7 @@ import com.dr7.salesmanmanager.Modles.PrinterSetting;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Port.AlertView;
 import com.dr7.salesmanmanager.Reports.VouchersReport;
+import com.imin.printerlib.IminPrintUtils;
 import com.sewoo.request.android.RequestHandler;
 
 import java.io.File;
@@ -151,7 +153,7 @@ public class bMITP extends Activity {
             int rin = fReader.read(buf);
             if (rin > 0) {
                 this.lastConnAddr = new String(buf, 0, rin);
-                Log.e("lastConnAddr",""+lastConnAddr);
+//                Log.e("lastConnAddr",""+lastConnAddr);
                 this.btAddrBox.setText(this.lastConnAddr);
             }
 
@@ -173,10 +175,10 @@ public class bMITP extends Activity {
             FileWriter fWriter = new FileWriter(fileName);// crash
             if (this.lastConnAddr != null) {
                 fWriter.write(this.lastConnAddr);
-                Log.e("lastConnAddr","write="+lastConnAddr);
+//                Log.e("lastConnAddr","write="+lastConnAddr);
             }
             else {
-                Log.e("lastConnAddr","elsewrite"+lastConnAddr);
+//                Log.e("lastConnAddr","elsewrite"+lastConnAddr);
                 fWriter.close();
                 if(getData.equals("6"))
                 {
@@ -342,12 +344,12 @@ public class bMITP extends Activity {
 
 //
         getData = getIntent().getStringExtra("printKey");
-//        try {
-//            onPermission();
-//        }catch (Exception e){
-//            Log.e("onPermission",""+e.getMessage());
-//            Toast.makeText(context, "check permission", Toast.LENGTH_SHORT).show();
-//        }
+        try {
+            onPermission();
+        }catch (Exception e){
+            Log.e("onPermission",""+e.getMessage());
+            Toast.makeText(context, "check permission", Toast.LENGTH_SHORT).show();
+        }
 
 //        Bundle bundle = getIntent().getExtras();
 //         allStudents = (List<Item>) bundle.get("ExtraData");

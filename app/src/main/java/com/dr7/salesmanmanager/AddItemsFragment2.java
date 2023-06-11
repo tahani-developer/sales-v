@@ -67,6 +67,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -95,6 +96,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 public class AddItemsFragment2 extends DialogFragment {
     public   AllItemRecyclerListViewAdapter allItemAdapterList;
     ArrayList<Item> filteredList_allItem = new ArrayList<>();
+ HashMap<Integer,String>filteredMap=new HashMap<>();
     public  CheckBox greaterZero_checkbox;
     public static List<Item> List;
     TableRow HeaderNewLin;
@@ -207,7 +209,8 @@ public class AddItemsFragment2 extends DialogFragment {
         userNo = mDbHandler.getAllUserNo();
         try {
             if (!userNo.equals("")) {
-                if(mDbHandler.getAllSettings().get(0).getItemUnit()==1){
+                if(mDbHandler.getAllSettings().get(0).getItemUnit()==1)
+                {
                     new Handler().post(new Runnable() {
                         @Override
                         public void run() {
@@ -1314,7 +1317,9 @@ try {
         if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0) {
 //            Log.e("jsonItemsList","000000");
             jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1,countListVisible);
-
+            filteredMap.clear();
+            for (int  i=0;i<jsonItemsList.size();i++ )
+            filteredMap.put(i,jsonItemsList.get(i).getItemName());
            // Log.e("jsonItemsList", "zero"+jsonItemsList.get(0).getItemName()+"\t"+jsonItemsList.get(0).getItemHasSerial());
         }
 

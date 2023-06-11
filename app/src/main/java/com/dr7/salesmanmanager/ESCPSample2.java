@@ -606,6 +606,18 @@ public class ESCPSample2
 	}
 
 
+//	public void printF (){
+//		int nLineWidth = 550;
+//		posPtr.setAsync(false);
+//		try {
+//			posPtr.printAndroidFont(null,true,"--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//			posPtr.lineFeed(4);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
+
 	public void printMultilingualFontEsc(int count) throws UnsupportedEncodingException {
 		if (count == 0) {
 			voucherforPrint = vouch1;
