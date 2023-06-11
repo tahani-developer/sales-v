@@ -480,6 +480,8 @@
     <string name="acceptYourRequest">acceptYourRequest</string>
     <string name="sorry">عذرا</string>
     <string name="ApproveAdmin">طلب موافقة الادمن</string>
+    <string name="Addedcustomer_perm">إضافة العميل من المسؤول</string>
+
     <string name="youHaveRequestToAdmin">يجب موافقة الادمن</string>
     <string name="saveOnly">حفظ الفاتورة فقط </string>
     <string name="saveSuccessfuly">Save Successfuly</string>
@@ -711,7 +713,9 @@
     <string name="Printer_sett">  إعدادات الطباعة</string>
     <string name="Stock_sett">  إعدادات المستودعات</string>
     <string name="Genral_sett">   إعدادات عامة</string>
-
+    <string name="MarketName"> اسم المحل</string>
+    <string name="Customerdatasentsuccessfully">
+تم إرسال بيانات العميل إلى المسؤول بنجاح</string>
 
     <string-array name="DaysOfWeek">
         <item>السبت</item>

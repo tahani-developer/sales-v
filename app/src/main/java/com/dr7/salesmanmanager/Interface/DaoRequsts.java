@@ -93,7 +93,7 @@ String ipAddress="";
     public void add(RequestAdmin requsts) {
       //  Log.e("add==","add");
 //        if (!ChildIsExists(requsts.getSalesman_no())) {
-            databaseReference.child(ipAddress).setValue(requsts).addOnSuccessListener(new OnSuccessListener<Void>() {
+            databaseReference.child(Firebase_ipAddress).setValue(requsts).addOnSuccessListener(new OnSuccessListener<Void>() {
 
                 @Override
                 public void onSuccess(Void aVoid) {

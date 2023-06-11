@@ -59,6 +59,8 @@
             android:textStyle="bold"
             android:layout_marginTop="10dp"/>
 
+
+
         <EditText
             android:id="@+id/custEditText"
             android:layout_width="match_parent"
@@ -73,6 +75,7 @@
             android:background="@drawable/back_border_edit"
             android:textColor="@color/add_button" />
     </LinearLayout>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_height="match_parent"

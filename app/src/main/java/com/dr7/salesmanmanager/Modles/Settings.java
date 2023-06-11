@@ -68,6 +68,15 @@ public class Settings {
     private  int  LastCustPrice;
     private  int planKind;
     private  int CompanyinfoINPdf;
+    private  int AddedCustomer_PERM;
+
+    public int getAddedCustomer_PERM() {
+        return AddedCustomer_PERM;
+    }
+
+    public void setAddedCustomer_PERM(int addedCustomer_PERM) {
+        AddedCustomer_PERM = addedCustomer_PERM;
+    }
 
     public int getCompanyinfoINPdf() {
         return CompanyinfoINPdf;
