@@ -682,15 +682,29 @@
 
                     android:background="@color/colorblue1"
                     android:orientation="vertical" />
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/simpleTabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:tabMode="fixed"
+                    app:tabGravity="fill"/>
 
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/viewPager"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_weight="1"
+                    android:visibility="gone"
+                    android:id="@+id/VouchersLayout"
                     android:orientation="vertical">
-
-
                     <CheckBox
                         android:id="@+id/price_by_cust"
                         android:layout_width="match_parent"
@@ -699,6 +713,8 @@
                         android:text="@string/price_by_customer"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
+
+
 
                     <CheckBox
                         android:id="@+id/use_weight_case"
@@ -709,6 +725,7 @@
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
 
+
                     <CheckBox
                         android:id="@+id/allow_sale_with_minus"
                         android:layout_width="match_parent"
@@ -717,7 +734,6 @@
                         android:text="@string/allow_sale_with_minus"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
-
                     <CheckBox
                         android:id="@+id/can_change_price"
                         android:layout_width="match_parent"
@@ -736,15 +752,6 @@
                         android:textSize="14sp" />
 
                     <CheckBox
-                        android:id="@+id/salesman_customers_only"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="7dp"
-                        android:text="@string/get_salesman_customers_only"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-
-                    <CheckBox
                         android:id="@+id/min_sale_price"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -752,16 +759,6 @@
                         android:text="@string/min_sale_price"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
-
-                    <CheckBox
-                        android:id="@+id/allow_cust_check_out_range"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="7dp"
-                        android:text="@string/allow_cust_check_out_range"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-
                     <CheckBox
                         android:id="@+id/read_discount"
                         android:layout_width="match_parent"
@@ -770,17 +767,6 @@
                         android:text="@string/read_discount_from_offers"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
-
-                    <CheckBox
-                        android:id="@+id/work_online"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="7dp"
-                        android:text="@string/work_online"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp"
-                        android:visibility="visible" />
-
                     <CheckBox
                         android:id="@+id/checkBox_paymethod_check"
                         android:layout_width="match_parent"
@@ -789,7 +775,6 @@
                         android:text="@string/paymethod_check"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
-
                     <CheckBox
                         android:id="@+id/checkBox_bonus_notallowed"
                         android:layout_width="match_parent"
@@ -798,7 +783,14 @@
                         android:text="@string/bonus_not_allowed"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
-
+                    <CheckBox
+                        android:id="@+id/Items_unit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/items_Unit"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
                     <CheckBox
                         android:id="@+id/checkBox_NoOffer_forCredit"
                         android:layout_width="match_parent"
@@ -807,34 +799,6 @@
                         android:text="@string/no_offer_for_credit"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
-
-                    <CheckBox
-                        android:id="@+id/CustomerAuthorize_checkbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/CustomerAuthorize"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-
-                    <CheckBox
-                        android:id="@+id/PassowrdData_checkbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/passowrddata"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-
-                    <CheckBox
-                        android:id="@+id/ArabicLanguage_checkbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/arabic_language"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-
                     <CheckBox
                         android:id="@+id/hideQty_checkbox"
                         android:layout_width="match_parent"
@@ -843,25 +807,6 @@
                         android:text="@string/hideQty"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
-
-                    <CheckBox
-                        android:id="@+id/lockcash_checkbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/lockcash"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-
-                    <CheckBox
-                        android:id="@+id/preventNewOrder_checkbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/preventNew"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-
                     <CheckBox
                         android:id="@+id/note_checkbox"
                         android:layout_width="match_parent"
@@ -870,7 +815,6 @@
                         android:text="@string/requiredNote"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
-
                     <CheckBox
                         android:id="@+id/preventtotalDisc_checkbox"
                         android:layout_width="match_parent"
@@ -879,25 +823,6 @@
                         android:text="@string/preventTotaldisc"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
-
-                    <CheckBox
-                        android:id="@+id/automatic_cheque_checkbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/automatic_cheque"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-
-                    <CheckBox
-                        android:id="@+id/tafqit_checkbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/tafqit"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-
                     <CheckBox
                         android:id="@+id/preventChangePay_checkbox"
                         android:layout_width="match_parent"
@@ -906,16 +831,6 @@
                         android:text="@string/preventPayMethod"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
-
-                    <CheckBox
-                        android:id="@+id/showCustomerList_checkbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/ShowCustomerList"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-
                     <CheckBox
                         android:id="@+id/noReturn_checkbox"
                         android:layout_width="match_parent"
@@ -924,30 +839,12 @@
                         android:text="@string/noReturnInvoice"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
-
-                    <CheckBox
-                        android:id="@+id/workSerial_checkbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/workSerial"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-
                     <CheckBox
                         android:id="@+id/showItemImage_checkbox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"
                         android:text="@string/ShowItemImage"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-                    <CheckBox
-                        android:id="@+id/approveAdmin_checkbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/ApproveAdmin"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
                     <CheckBox
@@ -964,31 +861,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"
                         android:text="@string/showSolidQty"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-                    <CheckBox
-                        android:id="@+id/offerFromAdmin_checkbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/readOfferFromAdmin"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-                    <CheckBox
-                        android:id="@+id/qtyFromServer_checkbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/checkQtyServer"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-
-                    <CheckBox
-                        android:id="@+id/dontShowTax_checkbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/dontShowTaxOnprinter"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
                     <CheckBox
@@ -1023,6 +895,7 @@
                         android:text="@string/dontDuplicateItem"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
+
                     <CheckBox
                         android:id="@+id/salesoffers"
                         android:layout_width="match_parent"
@@ -1031,6 +904,220 @@
                         android:text="@string/salesoffers"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    android:id="@+id/CustomersLayout"
+                    android:orientation="vertical">
+                    <CheckBox
+                        android:id="@+id/salesman_customers_only"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:text="@string/get_salesman_customers_only"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/allow_cust_check_out_range"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:text="@string/allow_cust_check_out_range"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+                    <CheckBox
+                        android:id="@+id/CustomerAuthorize_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/CustomerAuthorize"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+                    <CheckBox
+                        android:id="@+id/showCustomerList_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/ShowCustomerList"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+                    <CheckBox
+                        android:id="@+id/showCustomerLocation_checBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/showCustomerLocation"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+                    <CheckBox
+                        android:id="@+id/Add_CustumerPer_checkBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:checked="true"
+                        android:text="@string/Add_CustumerPer"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+                    <CheckBox
+                        android:id="@+id/LastCustPrice_checkBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:checked="true"
+                        android:text="@string/LastCustPrice"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+                    <CheckBox
+                        android:id="@+id/Addedcustomer_perm_checkBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:checked="true"
+                        android:text="@string/Addedcustomer_perm"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    android:id="@+id/GenralLayout"
+                    android:orientation="vertical">
+
+
+
+
+                    <CheckBox
+                        android:id="@+id/work_online"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:text="@string/work_online"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp"
+                        android:visibility="visible" />
+
+
+
+
+                    <CheckBox
+                        android:id="@+id/PassowrdData_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/passowrddata"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/ArabicLanguage_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/arabic_language"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+
+
+
+                    <CheckBox
+                        android:id="@+id/lockcash_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/lockcash"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/preventNewOrder_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/preventNew"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+
+
+
+
+
+                    <CheckBox
+                        android:id="@+id/automatic_cheque_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/automatic_cheque"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/tafqit_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/tafqit"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+
+
+
+
+
+
+                    <CheckBox
+                        android:id="@+id/workSerial_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/workSerial"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+
+
+                    <CheckBox
+                        android:id="@+id/approveAdmin_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/ApproveAdmin"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+
+
+                    <CheckBox
+                        android:id="@+id/offerFromAdmin_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/readOfferFromAdmin"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+                    <CheckBox
+                        android:id="@+id/qtyFromServer_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/checkQtyServer"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+                    <CheckBox
+                        android:id="@+id/dontShowTax_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/dontShowTaxOnprinter"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+
+
 
                     <CheckBox
                         android:id="@+id/checkqtyinorder"
@@ -1040,7 +1127,6 @@
                         android:text="@string/checkqtyinorder"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
-
                     <CheckBox
                         android:id="@+id/locationtracker"
                         android:layout_width="match_parent"
@@ -1057,22 +1143,8 @@
                         android:text="@string/aqaba_tax_exemption"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
-                    <CheckBox
-                        android:id="@+id/showCustomerLocation_checBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/showCustomerLocation"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-                    <CheckBox
-                        android:id="@+id/Items_unit"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/items_Unit"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
+
+
                     <CheckBox
                         android:id="@+id/EndTripReport_checBox"
                         android:layout_width="match_parent"
@@ -1109,25 +1181,7 @@
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
 
-                    <CheckBox
-                        android:id="@+id/Add_CustumerPer_checkBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:checked="true"
 
-                        android:text="@string/Add_CustumerPer"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
-                    <CheckBox
-                        android:id="@+id/LastCustPrice_checkBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:checked="true"
-                        android:text="@string/LastCustPrice"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="14sp" />
                     <CheckBox
                         android:id="@+id/ReturnVoch_perm_checkBox"
                         android:layout_width="match_parent"
@@ -1149,6 +1203,7 @@
 
 
                 </LinearLayout>
+
 
             </LinearLayout>
 

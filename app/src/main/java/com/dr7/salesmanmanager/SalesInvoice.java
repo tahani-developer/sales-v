@@ -461,7 +461,8 @@ public class SalesInvoice extends Fragment {
             else
                 {
                 if (languagelocalApp.equals("en")) {
-                    mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                    mainlayout.setLayoutDirection(View
+                            .LAYOUT_DIRECTION_LTR);
                 }
 
             }

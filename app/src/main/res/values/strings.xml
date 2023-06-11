@@ -440,6 +440,7 @@
     <string name="acceptYourRequest">acceptYourRequest</string>
     <string name="sorry">Sorry</string>
     <string name="ApproveAdmin">Approve Admin</string>
+    <string name="Addedcustomer_perm">Add the new client from the administrator</string>
     <string name="youHaveRequestToAdmin">You Have Request To Admin</string>
     <string name="saveOnly">Save Only</string>
     <string name="saveSuccessfuly">Save Successfuly</string>
@@ -676,6 +677,14 @@
     <string name="getReceiptSerials">  getting Max_PaymentVouch Serials</string>
 
     <string name="maxpaymentvoch">  Max_PaymentVouch From Server</string>
+    <string name="voch_sett">  Voucher Settings</string>
+    <string name="customers_sett"> Customers Settings</string>
+    <string name="Printer_sett"> Printer Settings</string>
+    <string name="Stock_sett"> Stocks Settings</string>
+    <string name="Genral_sett"> Genral Settings</string>
+    <string name="MarketName"> Market Name</string>
+
+    <string name="Customerdatasentsuccessfully">Customer data has been sent to the Admin successfully</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>

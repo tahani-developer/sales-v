@@ -28,6 +28,7 @@ import androidx.core.content.ContextCompat;
 
 import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.Interface.LocationDao;
+import com.dr7.salesmanmanager.MainActivity;
 import com.dr7.salesmanmanager.MyServices;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.Restarter;
@@ -157,7 +158,11 @@ private  void   startMyOenForeground(){
             super.onDestroy();
         }else
         {
-            stoptimer();
+            stopService(new Intent(this, MyServicesForloc.class));
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction("stopservice");
+            broadcastIntent.setClass(this, Restarter.class);
+            this.sendBroadcast(broadcastIntent);//
         }
     }
 
@@ -288,7 +293,7 @@ private  void   startMyOenForeground(){
                 public void onLocationChanged(Location location) {
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
-//                    Log.e("onLocationChanged==", "allTaskInFireBasewithoutnotify");
+              //   Log.e("onLocationChanged==", "allTaskInFireBasewithoutnotify");
 
                     salesMenLocation.setSalesmanNo(userNo + "");
                     if(mHandler==null )  mHandler=new DatabaseHandler(MyServicesForloc.this);
