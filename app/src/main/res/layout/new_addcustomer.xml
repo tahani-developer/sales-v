@@ -5,7 +5,18 @@
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linear"
-    android:layout_height="400dp">
+    android:layout_height="600dp">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -249,12 +260,55 @@
             android:background="@drawable/back_border_edit"
             android:textColor="@color/add_button" />
     </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingTop="2dp"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/maxD"
+                android:layout_gravity="center_vertical"
+
+                android:textStyle="bold"
+                android:textColor="@color/text_view_color"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/MaxDEditText"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:padding="3dp"
+                android:paddingEnd="3dp"
+                android:textSize="14sp"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:background="@drawable/back_border_edit"
+                android:textColor="@color/add_button" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:id="@+id/showMap"
+            android:text="@string/showMap"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/main_blue_stroke_color"
+            android:textSize="14sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
    android:layout_gravity="center"
-        android:layout_weight="1"
+        android:layout_weight="1.03"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
         android:gravity="center_horizontal"
@@ -274,15 +328,7 @@
 
     </LinearLayout>
     </LinearLayout>
-    <com.google.android.gms.maps.MapView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/mapView"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        >
 
-    </com.google.android.gms.maps.MapView>
-
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

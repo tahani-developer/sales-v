@@ -16,6 +16,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -76,21 +78,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.dr7.salesmanmanager.Adapters.CustomerselectedAdapter;
 import com.dr7.salesmanmanager.Adapters.Pending_item_Adapter;
 import com.dr7.salesmanmanager.Adapters.Pending_seriak_adapter;
-import com.dr7.salesmanmanager.Adapters.TapsAdapter;
-import com.dr7.salesmanmanager.Adapters.TapsAdapter2;
 import com.dr7.salesmanmanager.Adapters.VS_PromoAdapter;
-import com.dr7.salesmanmanager.Fragments.BlankFragment;
 import com.dr7.salesmanmanager.Interface.CustomerDao;
 import com.dr7.salesmanmanager.Interface.DaoRequsts;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
@@ -116,9 +112,15 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -190,6 +192,15 @@ public class MainActivity extends AppCompatActivity
     public   static int plantype=0;
     private static final String TAG = "MainActivity";
     public static String    CusId;
+   double latu=0;
+    private LatLngBounds.Builder builder;
+    double longi=0;
+    double cutmer_lat =0;
+    String   add="";
+    double  cutmer_long=0;
+
+    TextView  Addrss_map;
+    MapView mMapView;
     public static int menuItemState,OffersJustForSalsFlag=0,checkQtyForOrdersFlage=0,Acountatatment=1,SharWhatsAppForm=0,AddCustomerPer=1,LastCustPriceflage=0,Locationtrack=0,CompanyinfoINPdf_Hide=0,AddedCustomer_PERM=0;
     public static boolean enter=false;
     String typeImport="";
@@ -2563,19 +2574,19 @@ if(settingsList.size()>0)
     }
 
 
-    public void New_openAddCustomerDialog() {
-        final Dialog dialog = new Dialog(MainActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.new_addcustomer);
-        dialog.setCanceledOnTouchOutside(true);
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(dialog.getWindow().getAttributes());
-
-        lp.gravity = Gravity.CENTER;
-        lp.windowAnimations = R.style.DialogAnimation;
-        dialog.getWindow().setAttributes(lp);
-
+//    public void New_openAddCustomerDialog() {
+//        final Dialog dialog = new Dialog(MainActivity.this);
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.setCancelable(true);
+//        dialog.setContentView(R.layout.new_addcustomer);
+//        dialog.setCanceledOnTouchOutside(true);
+//        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+//        lp.copyFrom(dialog.getWindow().getAttributes());
+//
+//        lp.gravity = Gravity.CENTER;
+//        lp.windowAnimations = R.style.DialogAnimation;
+//        dialog.getWindow().setAttributes(lp);
+//
 //        Window window = dialog.getWindow();
 //        GoogleMap googleMap;
 //
@@ -2586,76 +2597,388 @@ if(settingsList.size()>0)
 //        mMapView = (MapView) dialog.findViewById(R.id.mapView);
 //        mMapView.onCreate(dialog.onSaveInstanceState());
 //        mMapView.onResume();// needed to get the map to display immediately
-     //   googleMap = mMapView.getMap
+////        googleMap = mMapView.getMap
+//        MapsInitializer.initialize(MainActivity.this);
+//
+//        mMapView.onCreate(dialog.onSaveInstanceState());
+//        mMapView.onResume();
+//
+//
+////        mMapView.getMapAsync(new OnMapReadyCallback() {
+////            @Override
+////            public void onMapReady(final GoogleMap googleMap) {
+////
+////                //get c
+////
+////
+////
+////                LatLng posisiabsen = new LatLng(lat, lng); ////your lat lng
+////                googleMap.addMarker(new MarkerOptions().position(posisiabsen).title("Yout title"));
+////                googleMap.moveCamera(CameraUpdateFactory.newLatLng(posisiabsen));
+////                googleMap.getUiSettings().setZoomControlsEnabled(true);
+////                googleMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+////            }
+////        });
+//
+//        final EditText addCus = (EditText) dialog.findViewById(R.id.custEditText);
+//        final EditText remark = (EditText) dialog.findViewById(R.id.remarkEditText);
+//        final EditText address = (EditText) dialog.findViewById(R.id.addressEditText);
+//        final EditText telephone = (EditText) dialog.findViewById(R.id.phoneEditText);
+//        final EditText contactPerson = (EditText) dialog.findViewById(R.id.person_contactEditText);
+//        final EditText MarketName = (EditText) dialog.findViewById(R.id.MarketName);
+//        final EditText  MaxDEditText= (EditText) dialog.findViewById(R.id.MaxDEditText);
+//        Button done = (Button) dialog.findViewById(R.id.doneButton);
+//        RadioGroup paymentTermRadioGroup=dialog.findViewById(R.id.paymentTermRadioGroup);
+//        LinearLayout   linear = dialog.findViewById(R.id.linear);
+//        try {
+//            if (languagelocalApp.equals("ar")) {
+//                linear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+//            } else {
+//                if (languagelocalApp.equals("en")) {
+//                    linear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+//                }
+//
+//            }
+//        }
+//        catch (Exception e){
+//            linear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);}
+//
+//
+//        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+//                == PackageManager.PERMISSION_GRANTED) {
+//
+//            locationListener = new LocationListener() {
+//                @Override
+//                public void onLocationChanged(Location location) {
+//                    latitude_main = location.getLatitude();
+//                    longitude_main = location.getLongitude();
+//                    Log.e("onLocationChanged", "" + longitude_main);
+//                }
+//
+//                @Override
+//                public void onStatusChanged(String provider, int status, Bundle extras) {
+//
+//                }
+//
+//                @Override
+//                public void onProviderEnabled(String provider) {
+//                }
+//
+//                @Override
+//                public void onProviderDisabled(String provider) {
+//
+//                }
+//            };
+//
+//            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+//
+//
+//            done.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (!addCus.getText().toString().equals("")) {
+//                        if (!telephone.getText().toString().equals("")) {
+//                        int payMethod = 0;
+//                        if (isCustExist(addCus.getText().toString().trim()) == 0) {
+//
+//                            CustomerDao customerDao = new CustomerDao(MainActivity.this);
+//                           String date= generalMethod.getCurentTimeDate(1);
+//                            String time= generalMethod.getCurentTimeDate(2);
+//                           String salesman=mDbHandler.getAllSettings().get(0).getSalesMan_name();
+//                            NewAddedCustomer addedCustomer = new NewAddedCustomer(addCus.getText().toString(), remark.getText().toString(),
+//                                    latitude_main+"", longitude_main+"", salesman, Login.salesMan, "0", address.getText().toString(), telephone.getText().toString(), contactPerson.getText().toString(),MarketName.getText().toString(),date,time,MaxDEditText.getText().toString());
+//
+//                            customerDao.add(addedCustomer);
+//                            dialog.dismiss();
+//
+//                        } else {
+//                            addCus.setError(getResources().getString(R.string.duplicate_name));
+//                        }
+//
+//                        } else {
+//                            telephone.setError(getResources().getString(R.string.reqired_filled));
+//                            Toast.makeText(MainActivity.this, "Please add customer phone", Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                    } else {
+//                        addCus.setError(getResources().getString(R.string.reqired_filled));
+//                        Toast.makeText(MainActivity.this, "Please add customer name", Toast.LENGTH_SHORT).show();
+//
+//                    }
+//                }
+//
+//            });
+//
+//
+//            dialog.show();
+//        }
+//    }
+public void New_openAddCustomerDialog() {
+    final Dialog dialog = new Dialog(MainActivity.this);
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    dialog.setCancelable(true);
+    dialog.setContentView(R.layout.new_addcustomer);
+    dialog.setCanceledOnTouchOutside(true);
+    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+    lp.copyFrom(dialog.getWindow().getAttributes());
 
-        final EditText addCus = (EditText) dialog.findViewById(R.id.custEditText);
-        final EditText remark = (EditText) dialog.findViewById(R.id.remarkEditText);
-        final EditText address = (EditText) dialog.findViewById(R.id.addressEditText);
-        final EditText telephone = (EditText) dialog.findViewById(R.id.phoneEditText);
-        final EditText contactPerson = (EditText) dialog.findViewById(R.id.person_contactEditText);
-        final EditText MarketName = (EditText) dialog.findViewById(R.id.MarketName);
+    lp.gravity = Gravity.CENTER;
+    lp.windowAnimations = R.style.DialogAnimation;
+    dialog.getWindow().setAttributes(lp);
 
-        Button done = (Button) dialog.findViewById(R.id.doneButton);
-        RadioGroup paymentTermRadioGroup=dialog.findViewById(R.id.paymentTermRadioGroup);
-        LinearLayout   linear = dialog.findViewById(R.id.linear);
-        try {
-            if (languagelocalApp.equals("ar")) {
-                linear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-            } else {
-                if (languagelocalApp.equals("en")) {
-                    linear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+    Window window = dialog.getWindow();
+    GoogleMap googleMap;
+
+
+
+
+     mMapView = (MapView) dialog.findViewById(R.id.mapView);
+    final TextView  showMap= dialog.findViewById(R.id.showMap);
+    showMap.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final Dialog Mapdialog = new Dialog(MainActivity.this);
+            Mapdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            Mapdialog.setCancelable(true);
+            Mapdialog.setContentView(R.layout.mapdailog);
+            Mapdialog.setCanceledOnTouchOutside(true);
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(Mapdialog.getWindow().getAttributes());
+
+            lp.gravity = Gravity.CENTER;
+            lp.windowAnimations = R.style.DialogAnimation;
+            Mapdialog.getWindow().setAttributes(lp);
+            Addrss_map= Mapdialog.findViewById(R.id.Addrss_map);
+            Window window = Mapdialog.getWindow();
+            Mapdialog.show();
+            mMapView = (MapView) dialog.findViewById(R.id.mapView);
+
+          //  getAddress(cutmer_lat,cutmer_long);
+
+
+            Mapdialog.findViewById(R.id.AcceptButton).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(cutmer_lat!=0&&cutmer_long!=0)
+                    getAddress(cutmer_lat,cutmer_long);
+                    Mapdialog.dismiss();
                 }
+            });
+            Mapdialog.findViewById(R.id.RejectButton).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cutmer_lat= latu;
+                    cutmer_long=longi;
+                    Mapdialog.dismiss();
+                }
+            });
+
+            try {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+                        mMapView = (MapView) Mapdialog.findViewById(R.id.mapView);
+                        mMapView.onCreate(Mapdialog.onSaveInstanceState());
+                        mMapView.onResume();// needed to get the map to display immediately
+//        googleMap = mMapView.getMap
+                        MapsInitializer.initialize(MainActivity.this);
+
+                        mMapView.onCreate(Mapdialog.onSaveInstanceState());
+                        mMapView.onResume();
+                        mMapView.getMapAsync(new OnMapReadyCallback() {
+                            @Override
+                            public void onMapReady(final GoogleMap googleMap) {
+                                androidx.appcompat.widget.SearchView searchView =Mapdialog. findViewById(R.id.idSearchView);
+                                searchView.setOnQueryTextListener(new  androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+                                    @Override
+                                    public boolean onQueryTextSubmit(String query) {
+                                        // on below line we are getting the
+                                        // location name from search view.
+                                        String location = searchView.getQuery().toString();
+
+                                        // below line is to create a list of address
+                                        // where we will store the list of all address.
+                                        List<Address> addressList = null;
+
+                                        // checking if the entered location is null or not.
+                                        if (location != null || location.equals("")) {
+                                            // on below line we are creating and initializing a geo coder.
+                                            Geocoder geocoder = new Geocoder(MainActivity.this);
+                                            try {
+                                                // on below line we are getting location from the
+                                                // location name and adding that location to address list.
+                                                addressList = geocoder.getFromLocationName(location, 1);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                            // on below line we are getting the location
+                                            // from our list a first position.
+                                            Address address = addressList.get(0);
+
+                                            // on below line we are creating a variable for our location
+                                            // where we will add our locations latitude and longitude.
+                                            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+
+                                            // on below line we are adding marker to that position.
+                                            googleMap.addMarker(new MarkerOptions().position(latLng).title(location));
+
+                                            // below line is to animate camera to that position.
+                                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 500));
+                                        }
+
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public boolean onQueryTextChange(String newText) {
+                                        return false;
+                                    }
+                                });
+
+                                //get curent loction
+                                Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                if (locationGPS != null) {
+                                    latu = locationGPS.getLatitude();
+                                    longi = locationGPS.getLongitude();
+                                    latitude = String.valueOf(lat);
+                                    longitude = String.valueOf(longi);
+
+
+                                } else {
+                                    Toast.makeText(MainActivity.this, "Unable to find location.", Toast.LENGTH_SHORT).show();
+                                }
+
+
+
+                                com.google.android.gms.maps.model.LatLng posisiabsen = new LatLng(latu, longi); ////your lat lng
+                                googleMap.addMarker(new MarkerOptions().position(posisiabsen).title("Yout title"));
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLng(posisiabsen));
+                                googleMap.getUiSettings().setZoomControlsEnabled(true);
+                          //      googleMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+                                LatLngBounds bounds;
+                                builder = new LatLngBounds.Builder();
+                                builder.include(new LatLng(latu,longi));
+                                bounds = builder.build();
+
+
+
+                                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
+                                googleMap.animateCamera(cu,500,null);
+
+                                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                                    @Override
+                                    public void onMapClick(LatLng latLng) {
+                                        googleMap.clear();
+
+                                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                                                .setContentText( "اعتماد هذا الموقع؟")
+                                                .setConfirmButton(MainActivity.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                                    @Override
+                                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                        googleMap.addMarker(new MarkerOptions().position(latLng).title("here"));
+                                                     //   Toast.makeText(MainActivity.this, latLng.latitude+","+latLng.longitude, Toast.LENGTH_SHORT).show();
+                                                        cutmer_lat= latLng.latitude;
+                                                        cutmer_long=latLng.longitude;
+                                                        if(cutmer_lat!=0&&cutmer_long!=0)
+                                                        getAddress(cutmer_lat,cutmer_long);
+                                                        sweetAlertDialog.dismissWithAnimation();
+                                                    }
+                                                }).setCancelButton(MainActivity.this.getResources().getString(R.string.cancel), new SweetAlertDialog.OnSweetClickListener() {
+                                                    @Override
+                                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                        cutmer_lat= latu;
+                                                        cutmer_long=longi;
+                                                        sweetAlertDialog.dismissWithAnimation();
+                                                    }
+                                                })
+                                                .show();
+
+                                    }
+                                });
+                            }
+                        });
+//                    }
+//                }, 3000);
+            }catch (Exception exception){
 
             }
         }
-        catch (Exception e){
-            linear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);}
+    });
 
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-
-            locationListener = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    latitude_main = location.getLatitude();
-                    longitude_main = location.getLongitude();
-                    Log.e("onLocationChanged", "" + longitude_main);
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider) {
-                }
-
-                @Override
-                public void onProviderDisabled(String provider) {
-
-                }
-            };
-
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
 
-            done.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!addCus.getText().toString().equals("")) {
-                        if (!telephone.getText().toString().equals("")) {
+    final EditText addCus = (EditText) dialog.findViewById(R.id.custEditText);
+    final EditText remark = (EditText) dialog.findViewById(R.id.remarkEditText);
+    final EditText address = (EditText) dialog.findViewById(R.id.addressEditText);
+    final EditText telephone = (EditText) dialog.findViewById(R.id.phoneEditText);
+    final EditText contactPerson = (EditText) dialog.findViewById(R.id.person_contactEditText);
+    final EditText MarketName = (EditText) dialog.findViewById(R.id.MarketName);
+    final EditText  MaxDEditText= (EditText) dialog.findViewById(R.id.MaxDEditText);
+    Button done = (Button) dialog.findViewById(R.id.doneButton);
+    RadioGroup paymentTermRadioGroup=dialog.findViewById(R.id.paymentTermRadioGroup);
+    LinearLayout   linear = dialog.findViewById(R.id.linear);
+    try {
+        if (languagelocalApp.equals("ar")) {
+            linear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        } else {
+            if (languagelocalApp.equals("en")) {
+                linear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            }
+
+        }
+    }
+    catch (Exception e){
+        linear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);}
+
+
+    locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED) {
+
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                latitude_main = location.getLatitude();
+                longitude_main = location.getLongitude();
+
+
+                Log.e("onLocationChanged", "" + longitude_main);
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+
+
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!addCus.getText().toString().equals("")) {
+                    if (!telephone.getText().toString().equals("")) {
                         int payMethod = 0;
                         if (isCustExist(addCus.getText().toString().trim()) == 0) {
 
                             CustomerDao customerDao = new CustomerDao(MainActivity.this);
-                           String date= generalMethod.getCurentTimeDate(1);
+                            String date= generalMethod.getCurentTimeDate(1);
                             String time= generalMethod.getCurentTimeDate(2);
-                           String salesman=mDbHandler.getAllSettings().get(0).getSalesMan_name();
+                            String salesman=mDbHandler.getAllSettings().get(0).getSalesMan_name();
                             NewAddedCustomer addedCustomer = new NewAddedCustomer(addCus.getText().toString(), remark.getText().toString(),
-                                    latitude_main+"", longitude_main+"", salesman, Login.salesMan, "0", address.getText().toString(), telephone.getText().toString(), contactPerson.getText().toString(),MarketName.getText().toString(),date,time);
+                                    cutmer_lat+"", cutmer_long+"", salesman, Login.salesMan, "0", address.getText().toString(), telephone.getText().toString(), contactPerson.getText().toString(),MarketName.getText().toString(),date,time,MaxDEditText.getText().toString());
 
                             customerDao.add(addedCustomer);
                             dialog.dismiss();
@@ -2664,24 +2987,24 @@ if(settingsList.size()>0)
                             addCus.setError(getResources().getString(R.string.duplicate_name));
                         }
 
-                        } else {
-                            telephone.setError(getResources().getString(R.string.reqired_filled));
-                            Toast.makeText(MainActivity.this, "Please add customer phone", Toast.LENGTH_SHORT).show();
-
-                        }
                     } else {
-                        addCus.setError(getResources().getString(R.string.reqired_filled));
-                        Toast.makeText(MainActivity.this, "Please add customer name", Toast.LENGTH_SHORT).show();
+                        telephone.setError(getResources().getString(R.string.reqired_filled));
+                        Toast.makeText(MainActivity.this, "Please add customer phone", Toast.LENGTH_SHORT).show();
 
                     }
+                } else {
+                    addCus.setError(getResources().getString(R.string.reqired_filled));
+                    Toast.makeText(MainActivity.this, "Please add customer name", Toast.LENGTH_SHORT).show();
+
                 }
+            }
 
-            });
+        });
 
 
-            dialog.show();
-        }
+        dialog.show();
     }
+}
     private int isCustExist(String name) {
         return  mDbHandler.isExist(name);
     }
@@ -5759,6 +6082,57 @@ Log.e("Exception==",e.getMessage());
         super.onPause();
 //        startService(new Intent(MainActivity.this, MyServices.class));
 //        finish();
+    }
+
+    public void getAddress(double lat, double lng) {
+        Log.e("getAddress",lat+","+lng);
+        Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            Address obj = addresses.get(0);
+            add = obj.getAddressLine(0);
+            String  currentAddress = obj.getSubAdminArea() + ","
+                    + obj.getAdminArea();
+            double   latitude = obj.getLatitude();
+            double longitude = obj.getLongitude();
+            String currentCity= obj.getSubAdminArea();
+            String currentState= obj.getAdminArea();
+            if(obj.getCountryName()!=null)
+                add = add + "-" + obj.getCountryName();
+            if(obj.getCountryCode()!=null)
+                add = add + "-" + obj.getCountryCode();
+            if(obj.getAdminArea()!=null)
+                add = add + "-"+ obj.getAdminArea();
+            if(obj.getPostalCode()!=null)
+                add = add + "-" + obj.getPostalCode();
+            if(obj.getSubAdminArea()!=null)
+                add = add + "-" + obj.getSubAdminArea();
+            if(obj.getLocality()!=null)
+                add = add + "-" + obj.getLocality();
+            if(obj.getSubThoroughfare()!=null)
+                add = add + "-" + obj.getSubThoroughfare();
+
+
+            Log.e("obj.getCountryName()",obj.getCountryName()+"");
+            Log.e("obj.getCountryCode()",obj.getCountryCode()+"");
+            Log.e("obj.getAdminArea()",obj.getAdminArea()+"");
+            Log.e("obj.getPostalCode()",obj.getPostalCode()+"");
+            Log.e("obj.getSubAdminArea()",obj.getSubAdminArea()+"");
+            Log.e("obj.getLocality()",obj.getLocality()+"");
+            Log.e("obj.getSubThoroughfare()",obj.getSubThoroughfare()+"");
+
+
+            Log.e("IGA", "Address" + add);
+            Addrss_map.setText("Address: "+add+"");
+            // Toast.makeText(this, "Address=>" + add,
+            // Toast.LENGTH_SHORT).show();
+
+            // TennisAppActivity.showDialog(add);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+
+        }
     }
 
 

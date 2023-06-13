@@ -25,6 +25,15 @@ public class Customer {
     private int Hide_val;
     private int isPost;
     private  String customerIdText;
+    private  String MaxD;
+
+    public String getMaxD() {
+        return MaxD;
+    }
+
+    public void setMaxD(String MaxD) {
+        this.MaxD = MaxD;
+    }
 
     public String getCustomerIdText() {
         return customerIdText;

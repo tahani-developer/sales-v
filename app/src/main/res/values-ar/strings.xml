@@ -714,6 +714,8 @@
     <string name="Stock_sett">  إعدادات المستودعات</string>
     <string name="Genral_sett">   إعدادات عامة</string>
     <string name="MarketName"> اسم المحل</string>
+    <string name="maxD"> السقف المقترح للذمم</string>
+    <string name="showMap"> تحديد الموقع على الخريطة</string>
     <string name="Customerdatasentsuccessfully">
 تم إرسال بيانات العميل إلى المسؤول بنجاح</string>
 

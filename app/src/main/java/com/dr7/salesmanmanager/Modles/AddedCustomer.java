@@ -143,7 +143,8 @@ public class AddedCustomer {
             obj.put("ISPOSTED", isPosted);
             obj.put("SALESMANNO", salesmanNo);
             obj.put("MOBILE", TELEPHONE);
-
+            obj.put("MaxD", "");
+            obj.put("MaxC", "0");
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");
         }
