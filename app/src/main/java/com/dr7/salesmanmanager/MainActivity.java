@@ -3112,12 +3112,7 @@ if(settingsList.size()>0)
                     if ((password.getText().toString().trim().equals(passwordFromAdmin.getText().toString())) && (!password.getText().toString().equals(""))) {
                         dialog.dismiss();
                         openSetting alert = new openSetting();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                alert.showDialog(MainActivity.this, "Error de conexión al servidor");
-                            }
-                        }, 3000);
+                        alert.showDialog(MainActivity.this, "Error de conexión al servidor");
 
                     } else {
                         password.setError(getResources().getString(R.string.invalidPassword));
