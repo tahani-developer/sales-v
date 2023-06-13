@@ -5370,6 +5370,9 @@ this.activtyflage=activtyflage;
                         Customer.setCashCredit(finalObject.getInt("CASHCREDIT"));
                         Customer.setSalesManNumber(finalObject.getString("SALESMANNO"));
                         Customer.setCreditLimit(finalObject.getDouble("CREDITLIMIT"));
+                        Customer.setMaxD(finalObject.getString("MaxD"));
+
+
                         try {
                             Customer.setPayMethod(finalObject.getInt("PAYMETHOD"));
                         } catch (Exception e) {

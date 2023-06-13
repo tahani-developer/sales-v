@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="500dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/Addrss_map"
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:textStyle="bold"
+        android:textColor="@color/text_view_color"
+        android:textSize="9sp" />
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/idSearchView"
+        android:textSize="9sp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        app:iconifiedByDefault="false"
+        app:queryHint="Search Here" />
+    <LinearLayout
+
+        android:layout_height="match_parent"
+        android:paddingStart="6dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:paddingEnd="6dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_width="match_parent">
+
+        <com.google.android.gms.maps.MapView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/mapView"
+
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+
+            >
+
+
+        </com.google.android.gms.maps.MapView>
+        <LinearLayout
+            android:orientation="horizontal"
+
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+
+            android:layout_weight="1"
+            android:id="@+id/linearButtons"
+
+            android:gravity="center"
+            android:padding="2dp">
+
+
+            <Button
+                android:id="@+id/AcceptButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/done_button"
+                android:layout_weight="1"
+                android:fontFamily="serif"
+
+                android:padding="1dp"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:elevation="2dp"
+                app:autoSizeMaxTextSize="16sp"
+                app:autoSizeMinTextSize="14sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
+            <TextView
+                android:layout_width="3dp"
+
+                android:layout_height="match_parent"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/RejectButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/cancel_button"
+                android:layout_weight="1"
+
+                android:padding="2dp"
+                android:text="@string/cancel"
+                android:fontFamily="serif"
+                android:textColor="@color/colorblue_dark3"
+                android:textSize="18sp"
+                android:elevation="2dp"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="16sp"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

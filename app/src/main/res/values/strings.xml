@@ -683,7 +683,8 @@
     <string name="Stock_sett"> Stocks Settings</string>
     <string name="Genral_sett"> Genral Settings</string>
     <string name="MarketName"> Market Name</string>
-
+    <string name="maxD"> Max Debit</string>
+    <string name="showMap"> Set Location in Map</string>
     <string name="Customerdatasentsuccessfully">Customer data has been sent to the Admin successfully</string>
 
     <string-array name="app_paymentTypeList">

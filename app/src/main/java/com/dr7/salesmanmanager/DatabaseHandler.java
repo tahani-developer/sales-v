@@ -79,7 +79,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucher;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 214;
+    private static final int DATABASE_VERSION = 215;
 //
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -275,7 +275,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucher;
 
     private static final String IS_POST = "IS_POST";
     private static final String CUS_ID_Text="CUS_ID_Text";
-
+     private static final String MAXD="MAXD";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Item_Unit_Details = "Item_Unit_Details";
@@ -885,8 +885,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                + HIDE_VAL + " INTEGER,"
 
                + IS_POST + " INTEGER not null default  0,"
-               + CUS_ID_Text + " TEXT"
-
+               + CUS_ID_Text + " TEXT,"
+               +   MAXD + " TEXT DEFAULT '0'"
 
                + ")";
 
@@ -2768,6 +2768,15 @@ try {
 
             Log.e(TAG, e.getMessage().toString());
         }
+        try {
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD '" + MAXD + "'  TEXT DEFAULT '0'");
+
+        } catch (Exception e) {
+
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
     }
 
     ////B
@@ -3436,6 +3445,7 @@ else   selectQuery = "SELECT PaymentSerials_cridt FROM " + PaymentSerials ;
             values.put(HIDE_VAL, customer.get(i).getHide_val());
             values.put(IS_POST, 0);
             values.put(CUS_ID_Text, customer.get(i).getCustomerIdText());
+            values.put(MAXD, customer.get(i).getMaxD());
             db.insertWithOnConflict(CUSTOMER_MASTER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 
         }

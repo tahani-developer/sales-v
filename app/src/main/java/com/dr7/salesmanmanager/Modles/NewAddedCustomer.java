@@ -14,6 +14,15 @@ public class NewAddedCustomer {
     private String  MarketName;
     private String  date;
     private String  time;
+    private String  MaxD;
+
+    public String getMaxD() {
+        return MaxD;
+    }
+
+    public void setMaxD(String maxD) {
+        MaxD = maxD;
+    }
 
     public String getDate() {
         return date;
@@ -68,7 +77,7 @@ public class NewAddedCustomer {
     }
 
 
-    public NewAddedCustomer(String custName, String remark, String latitude, String longtitude, String salesMan, String salesmanNo, String isPosted, String ADRESS_CUSTOMER, String TELEPHONE, String CONTACT_PERSON,String MarketName,String date,String time) {
+    public NewAddedCustomer(String custName, String remark, String latitude, String longtitude, String salesMan, String salesmanNo, String isPosted, String ADRESS_CUSTOMER, String TELEPHONE, String CONTACT_PERSON,String MarketName,String date,String time,String Maxd) {
         this.custName = custName;
         this.remark = remark;
         this.latitude = latitude;
@@ -82,6 +91,7 @@ public class NewAddedCustomer {
       this.MarketName=  MarketName;
         this.date=date;
         this.time=time;
+        this.MaxD =Maxd;
     }
 
     public String getCustName() {
