@@ -5729,11 +5729,29 @@ Log.e("Exception==",e.getMessage());
        validPassowrdSetting=false;
        lp.gravity = Gravity.CENTER;
        lp.windowAnimations = R.style.DialogAnimation;
-     RecyclerView recyclerView=  dialog.findViewById(R.id.VS_PROMO_recycle);
- List<Offers> list=  mDbHandler. getAllOffers();
+       RecyclerView recyclerView=  dialog.findViewById(R.id.VS_PROMO_recycle);
+       List<Offers> list=  mDbHandler. getAllOffers();
+       Offers offer = null;
+       List<Offers> Offers_list = new ArrayList<>();
+           Date currentTimeAndDate = Calendar.getInstance().getTime();
+           SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+           String date = df.format(currentTimeAndDate);
+           date = convertToEnglish(date);
+       for (int i = 0; i < list.size(); i++) {
+           //   Log.e("log2 ", date + "  " + offers.get(i).getFromDate() + " " + offers.get(i).getToDate());
+           try {
+               if ( (formatDate(date).after(formatDate(list.get(i).getFromDate())) || formatDate(date).equals(formatDate(list.get(i).getFromDate()))) &&
+                       (formatDate(date).before(formatDate(list.get(i).getToDate())) || formatDate(date).equals(formatDate(list.get(i).getToDate())))) {
+                   offer = list.get(i);
+                   Offers_list.add(offer);
+               }
+           } catch (ParseException e) {
+               e.printStackTrace();
+           }
+       }
        Log.e("OpenVS_PROMODailog==",""+list.size());
        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-       VS_PromoAdapter vs_promoAdapter=new VS_PromoAdapter(list,MainActivity.this);
+       VS_PromoAdapter vs_promoAdapter=new VS_PromoAdapter(Offers_list,MainActivity.this);
 
        recyclerView.setAdapter(vs_promoAdapter);
        dialog.show();

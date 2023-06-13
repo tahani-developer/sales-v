@@ -616,6 +616,7 @@ public class CustomerCheckInFragment extends DialogFragment {
         }
 
       //  Toast.makeText(getActivity(), "distance"+distance, Toast.LENGTH_SHORT).show();
+if (cusLat.equals("0")|| cusLong.equals("0")) return true;
 
         return distance <= 50;
     }

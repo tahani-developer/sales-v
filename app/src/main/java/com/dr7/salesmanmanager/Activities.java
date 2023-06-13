@@ -116,7 +116,7 @@ public class Activities extends AppCompatActivity implements
             linearInvoice,linearPayment,linearStock,linearBalance,linearuncollect,dashLayout,fragmentContainer,accountBalanceMainLin;
 
     private SalesInvoice salesInvoice;
-    private  Transaction_Fragment transaction_fragment;
+    private Transaction_Fragment transaction_fragment;
 
     private StockRequest stockRequest;
     Transaction transaction;
@@ -131,8 +131,8 @@ public class Activities extends AppCompatActivity implements
     TextView switchLayout;
     public static TextView totalBalance_text,lastVisit_textView;
     public static String totalBalance_value="0";
-    public  static  LocationPermissionRequest locationPermissionRequestAc;
-    public  GeneralMethod generalMethod;
+    public static  LocationPermissionRequest locationPermissionRequestAc;
+    public GeneralMethod generalMethod;
     LinearLayout linearReturn;
 // LocationPermissionRequest locationPermissionRequest;
 

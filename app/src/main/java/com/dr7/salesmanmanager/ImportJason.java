@@ -3276,7 +3276,7 @@ this.activtyflage=activtyflage;
                         qtyOffers.setToDate(finalObject.getString("TODATE"));
                         qtyOffers.setDiscount_value(finalObject.getDouble("DISCOUNT"));
                         itemsQtyOfferList.add(qtyOffers);
-                        Log.e("Import Data,itemsQtyOfferList", "itemsQtyOfferList");
+                        Log.e("ImportDataitemsQtyOffe", "itemsQtyOfferList");
                     }
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
