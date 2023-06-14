@@ -208,7 +208,7 @@ public class SalesInvoice extends Fragment {
     ArrayList<MainGroup_Id_Count> listMainIdCount;
     List<Integer> listAppliedGroup;
     RecyclerView serial_No_recyclerView;
-    public static int noTax=0,priceByCustomer=0,Exported_Tax=0;
+    public static int noTax=1,priceByCustomer=0,Exported_Tax=0;
     SimpleDateFormat dateFormat, timeformat;
     String dateCurent="",timevocher;
     public static  int updatedSerial=0,addNewSerial=0,taxCalcType=0;
@@ -591,9 +591,26 @@ public class SalesInvoice extends Fragment {
         notIncludeTax.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged( CompoundButton compoundButton , boolean b ) {
-                calculateTotals(0);
-                if(mDbHandler.getAllSettings().get(0).getTaxClarcKind()==1)
-                refreshAdapterItems();
+
+                if(items.size()==0){
+                    calculateTotals(0);
+
+                    if(mDbHandler.getAllSettings().get(0).getTaxClarcKind()==1)
+                        refreshAdapterItems();
+                }else {
+
+                        discTextView.setText("0.0");
+                        netTotalTextView.setText("0.0");
+                        netTotal = 0.0;
+                        totalDiscount = 0;
+                        sum_discount = 0;
+                        updateListSerialBukupDeleted("",voucherNo+"");
+                        clearLayoutData(1);
+
+                    calculateTotals(0);
+                    // tax here*******
+                }
+
             }
         });
         exported_tax.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -1290,6 +1307,8 @@ public class SalesInvoice extends Fragment {
         Log.e("isDataSmoke"," = "+isDataSmoke);
         return view;
     }
+
+
 
     private void refreshLocalVoucherNo() {
         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
@@ -3311,6 +3330,7 @@ if(editable.toString().trim().equals("refreshtext")){
         for (int i = 0; i < items.size(); i++)
         {
             items.get(i).setORIGINALvoucherNo(voucherNumber);
+
 
 
             Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
@@ -5794,8 +5814,18 @@ if(editable.toString().trim().equals("refreshtext")){
                     itemTax = items.get(i).getAmount() -
                             (items.get(i).getAmount() / (1 + items.get(i).getTaxPercent() * 0.01));
                 }
-
-               if(aqapa_tax==1)itemTax=0;
+                itemTotal = items.get(i).getQty() * items.get(i).getPosPrice() - itemTax;
+                Log.e("getAmount","1="+items.get(i).getAmount());
+//                if(noTax==0){
+//                    items.get(i).setAmount( Float.parseFloat(itemTotal+""));
+//                }
+                Log.e("getAmount","2="+items.get(i).getAmount());
+               if(aqapa_tax==1||noTax==0) {
+                   itemTax = 0;
+                   items.get(i).setTaxValue(0);
+                   items.get(i).setTax(0);
+                   items.get(i).setTaxPercent(0);
+               }
                 itemTotal = items.get(i).getAmount() - itemTax;
                 itemTotalAfterTax = items.get(i).getAmount();
                 subTotal = subTotal + itemTotal;
@@ -5837,13 +5867,14 @@ if(editable.toString().trim().equals("refreshtext")){
                 } else {
                     itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
                 }
-
                 itemTotal = itemTotal - itemDiscVal;// here for rawat mazaq
-                if(aqapa_tax==0)
+                if(aqapa_tax==0||noTax==1)
                     items.get(i).setTaxValue(itemTax);
                 else
                 {
                     items.get(i).setTaxValue(0);
+                    items.get(i).setTax(0);
+                    items.get(i).setTaxPercent(0);
                     totalTaxValue=0;
                     itemTax=0;
                 }

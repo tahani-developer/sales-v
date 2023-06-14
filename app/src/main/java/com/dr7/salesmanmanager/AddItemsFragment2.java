@@ -87,6 +87,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
 import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList2;
 import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.minusQtyTotal;
+import static com.dr7.salesmanmanager.SalesInvoice.noTax;
 import static com.dr7.salesmanmanager.SalesInvoice.priceListTypeVoucher;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
@@ -1547,9 +1548,24 @@ try {
                         float priceUnitItem=priceItem/itemUnit;
                         item.setPrice(priceUnitItem);
 
+                        if(noTax==0)
+                        {
+                            float itemtax= (float) (priceItem* (item.getTaxPercent() * 0.01) / (1 + item.getTaxPercent() * 0.01));
+                             item.setPrice(priceItem-itemtax);
+
+                        }
+
                     }
                     else {
-                        item.setPrice(priceItem);
+//                        Log.e("addItem"," 1="+item.getPrice());
+                        if(noTax==0)
+                        {
+                           float itemtax= (float) (priceItem* (item.getTaxPercent() * 0.01) / (1 + item.getTaxPercent() * 0.01));
+                            item.setPrice(priceItem-itemtax);
+                                                   }
+
+
+                        else  item.setPrice(priceItem);
                     }
 
                     if(unitDetail.getItemNo()!=null)
@@ -1606,8 +1622,15 @@ try {
                     else {
                         item.setQty(Float.parseFloat(qty));
                     }
-                    item.setPrice(priceItem);
 
+                    if(noTax==0)
+                    {
+                        float itemtax= (float) (priceItem* (item.getTaxPercent() * 0.01) / (1 + item.getTaxPercent() * 0.01));
+                        item.setPrice(priceItem-itemtax);
+
+                    }else {
+                        item.setPrice(priceItem);
+                    }
 
 
                     item.setWhich_unit("0");

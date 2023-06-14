@@ -190,16 +190,16 @@ public class ItemsListAdapter extends BaseAdapter {
         bonusTextView_detail.setText(String.valueOf(itemList.get(i).getBonus()));
         lineDescTextView.setText(String.valueOf(itemList.get(i).getDisc()));
         lineDiscTextView_detail.setText(String.valueOf(itemList.get(i).getDisc()));
-        if(noTax==0){
-            if(taxCalcType==1) {
-
-                amountTextView.setText(convertToEnglish(String.format("%.3f", (itemList.get(i).getAmount() - itemList.get(i).getTaxValue()))));
-
-            }
-            else  amountTextView.setText(convertToEnglish(String.format("%.3f",(itemList.get(i).getAmount()))));
-        }else {
+//        if(noTax==0){
+//            if(taxCalcType==1) {
+//
+//                amountTextView.setText(convertToEnglish(String.format("%.3f", (itemList.get(i).getAmount() - itemList.get(i).getTaxValue()))));
+//
+//            }
+//            else  amountTextView.setText(convertToEnglish(String.format("%.3f",(itemList.get(i).getAmount()))));
+//        }else {
             amountTextView.setText(convertToEnglish(String.format("%.3f",(itemList.get(i).getAmount()))));
-        }
+//        }
 
 
 
