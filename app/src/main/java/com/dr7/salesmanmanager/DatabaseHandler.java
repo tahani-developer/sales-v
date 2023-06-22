@@ -3443,7 +3443,7 @@ else   selectQuery = "SELECT PaymentSerials_cridt FROM " + PaymentSerials ;
             values.put(MAX_DISCOUNT, customer.get(i).getMax_discount());
             values.put(ACCPRC, customer.get(i).getACCPRC());
             values.put(HIDE_VAL, customer.get(i).getHide_val());
-            values.put(IS_POST, 0);
+            values.put(IS_POST, 1);
             values.put(CUS_ID_Text, customer.get(i).getCustomerIdText());
             values.put(MAXD, customer.get(i).getMaxD());
             db.insertWithOnConflict(CUSTOMER_MASTER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -5795,8 +5795,6 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
                 item.setKind_item(cursor.getString(10));
                 try {
-
-
                     if (cursor.getString(12) == null) {
                         item.setItemHasSerial("0");
                         Log.e("setItemHasSerial", "" + item.getItemHasSerial() + "null");
@@ -10522,10 +10520,10 @@ void updateDataForClient(){
     }
 
      public void deleteListD() {
-         SQLiteDatabase db = this.getWritableDatabase();
-         db.execSQL(" DELETE FROM Price_List_D where  PrNo<>0");
-
-         db.close();
+//         SQLiteDatabase db = this.getWritableDatabase();
+//         db.execSQL(" DELETE FROM Price_List_D where  PrNo<>0");
+//
+//         db.close();
      }
      public   List<String> gettodayVoucher( String CUSTNUMBER,String date) {
          String cutomer = "",time="";
@@ -10550,5 +10548,80 @@ void updateDataForClient(){
 
      }
 
+     public void updateLastVoucher() {
+//         select max(VOUCHER_NUMBER)+1 from SALES_VOUCHER_MASTER where VOUCHER_NUMBER<>20000053
+     
+         List<ItemUnitDetails> list=new ArrayList<>();
+         // Select All Query
+
+         String selectQuery = "select max(VOUCHER_NUMBER)+1 from SALES_VOUCHER_MASTER where VOUCHER_NUMBER<>20000053";
+         Log.e("selectQuerygetSalesManQty==", selectQuery+"\t\t");
+         //  db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+         Log.e("cursor2==", cursor.getCount()+"\t\t");
+         String available="";
+         if (cursor.moveToFirst()) {
+             Log.i("DatabaseHandler", "************************" + selectQuery);
+             do {
+
+                 available=(cursor.getString(0));
+
+
+
+             } while (cursor.moveToNext());
+         }
+         Log.i("DatabaseHandler", "************************" + available);
+      updateTableMax(available);
+     }
+
+     private void updateTableMax(String voucherNo) {
+//         update SALES_VOUCHER_MASTER set  VOUCHER_NUMBER =900666 where VOUCHER_NUMBER=20000053
+//
+//
+         db = this.getWritableDatabase();
+         ContentValues values = new ContentValues();
+         values.put(VOUCHER_NUMBER,voucherNo);
+         // updating row
+         Log.e("currentDate",voucherNo);
+         int y=   db.update(SALES_VOUCHER_MASTER, values, VOUCHER_NUMBER + "=20000053" , null);
+         Log.e("y===",""+y);
+         updatedetails( voucherNo);
+     }
+
+     private void updatedetails(String voucherNo) {
+      // update SALES_VOUCHER_DETAILS  set  VOUCHER_NUMBER=900666 where VOUCHER_NUMBER=20000053
+         db = this.getWritableDatabase();
+         ContentValues values = new ContentValues();
+         values.put(VOUCHER_NUMBER,voucherNo);
+         // updating row
+         Log.e("currentDate",voucherNo);
+         int y=   db.update(SALES_VOUCHER_DETAILS, values, VOUCHER_NUMBER + "=20000053" , null);
+         Log.e("y===",""+y);
+         long vouch=Long.parseLong(voucherNo);
+        if(getMaxSerialNumberFromVoucherMaster(508)==20000052)
+         updateVoucherNo(vouch,508,0);
+     }
+
+     public List<String> getItemPrices(String itemNo) {
+         List<String> prices = new ArrayList<>();
+         // units.add("1");
+         String selectQuery = "select PriceUnit ,PRICECLASS_1,PRICECLASS_2,PRICECLASS_3 from  Item_Unit_Details  where ItemNo='" + itemNo + "'";
+
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+
+         if (cursor.moveToFirst()) {
+             do {
+                 prices.add(cursor.getString(0));
+                 Log.e("getItemPrices","prices="+cursor.getString(0));
+                 prices.add(cursor.getString(1));
+                 prices.add(cursor.getString(2));
+                 prices.add(cursor.getString(3));
+             } while (cursor.moveToNext());
+         }
+
+         Log.e("getItemPrices","prices="+prices.size());
+         return prices;
+     }
  }
 

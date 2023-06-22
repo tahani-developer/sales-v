@@ -50,7 +50,6 @@ import com.dr7.salesmanmanager.Modles.inventoryReportItem;
 import com.dr7.salesmanmanager.PdfConverter;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.RecyclerViewAdapter;
-import com.dr7.salesmanmanager.RefreshCustomerBalance;
 import com.dr7.salesmanmanager.bMITP;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;

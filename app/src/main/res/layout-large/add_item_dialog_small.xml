@@ -294,7 +294,16 @@
             android:text="@string/app_price"
             android:textColor="@color/text_view_color"
             android:textSize="16sp" />
-
+        <Spinner
+            android:id="@+id/item_prices_sp"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_marginVertical="9dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="16sp" />
         <EditText
             android:id="@+id/price"
             android:layout_width="0dp"

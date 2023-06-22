@@ -505,7 +505,8 @@ public class ExportJason extends AppCompatActivity {
         }
         try {
             vouchersObject=new JSONObject();
-            vouchersObject.put("paymentJSN===",jsonArrayPayments);
+            vouchersObject.put("JSN",jsonArrayPayments);
+            Log.e("paymentsvouchersObject",vouchersObject.toString()+"");
         } catch (JSONException e) {
             e.printStackTrace();
         }

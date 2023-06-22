@@ -70,6 +70,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -97,7 +98,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 public class AddItemsFragment2 extends DialogFragment {
     public   AllItemRecyclerListViewAdapter allItemAdapterList;
     ArrayList<Item> filteredList_allItem = new ArrayList<>();
- HashMap<Integer,String>filteredMap=new HashMap<>();
+ HashMap<Integer,Item>filteredMap=new HashMap<>();
     public  CheckBox greaterZero_checkbox;
     public static List<Item> List;
     TableRow HeaderNewLin;
@@ -573,14 +574,15 @@ public class AddItemsFragment2 extends DialogFragment {
                     ArrayList<Item> filteredList = new ArrayList<>();
 //                    filteredList_allItem
 
-
+// old search
+                    /*
                     if(filteredList_allItem.size()==0){
                         filteredList_allItem.addAll(jsonItemsList);
                     }
 
 
                     for (int i = 0; i < filteredList_allItem.size(); i++) {
-
+                       // filteredList_allItem.stream().map(::get).filter(s -> s.contains(searchTerm));
                         if (filteredList_allItem.get(i).getItemName().toLowerCase().trim().replaceAll("\\s", "").contains(query.toString().trim().replaceAll("\\s", ""))
                                 || filteredList_allItem.get(i).getItemName().toUpperCase().trim().replaceAll("\\s", "").contains(query.toString().trim().replaceAll("\\s", ""))
 //                        ||
@@ -633,6 +635,29 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
                     }
+
+                    */
+
+                    for(Map.Entry<Integer,Item> m : filteredMap.entrySet()){
+                        Item item=m.getValue();
+//                        if(item.getItemName().toString().contains(query))
+//                        {
+// scan through all candidate titles
+                            if (item.getItemName().toLowerCase().trim().contains(query.toString().toLowerCase(Locale.ROOT).trim())
+//                                    || item.getItemName().toUpperCase().trim().contains(query.toString().trim())
+//                        ||
+//                                FisrtCharsFromString(item.getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))) {
+//                                    ||
+//                                    SubStringtoMoreThanOne(item.getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
+                                    ){
+                                filteredList.add(item);
+//                                Log.e("filteredMap1-", m.getKey() + " " + item.getItemName());
+                            }
+//                        }
+
+
+                    }
+                    Log.e("filteredMap2-",filteredList.size()+"");
 
                     RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
                     recyclerView.setAdapter(adapter);
@@ -1320,12 +1345,13 @@ try {
             jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1,countListVisible);
             filteredMap.clear();
             for (int  i=0;i<jsonItemsList.size();i++ )
-            filteredMap.put(i,jsonItemsList.get(i).getItemName());
-           // Log.e("jsonItemsList", "zero"+jsonItemsList.get(0).getItemName()+"\t"+jsonItemsList.get(0).getItemHasSerial());
+            filteredMap.put(i,jsonItemsList.get(i));
+//            Log.e("jsonItemsList", "zero"+jsonItemsList.get(0).getItemName()+"\t"+jsonItemsList.get(0).getItemHasSerial());
         }
 
         else {// price by customer
             try {
+
                // List<String> itemNoList = mDbHandler.getItemNumbersNotInPriceListD();// difference itemNo between tow table (CustomerPricess and priceListD)
                // Log.e("itemsize","3**************"+itemNoList.size());
             }catch (Exception e){
@@ -1402,7 +1428,9 @@ try {
 //                }
 
             }
-
+            filteredMap.clear();
+            for (int  i=0;i<jsonItemsList.size();i++ )
+                filteredMap.put(i,jsonItemsList.get(i));
 
 //            Collections.sort(jsonItemsList<itemNoList>);
 
@@ -1936,22 +1964,16 @@ boolean FisrtCharsFromString(String ItemName, String SerachText){
         String[] sArray2 = SerachText.split("\\s{1,}");
 
         for(int j=0; j<sArray2.length;j++)  {
-
             for(int i=0; i<sArray.length; i++)
             {
                 if(sArray[i].contains(sArray2[j]))
                 {
                     falge=true;
                     break;
-
                 }
                 else{
                     falge=false;
-
                        }
-
-
-
             }
             if (falge==false) break; }
 

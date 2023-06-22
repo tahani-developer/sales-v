@@ -699,9 +699,17 @@ public class SalesInvoice extends Fragment {
         refreshData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
-                obj.startParsing();
+//                RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
+//                obj.startParsing();
 //                calculateTotals();
+                                try {
+                    RefreshData obj = new RefreshData(getActivity());
+                    obj.startParsing();
+                }
+                catch (Exception e)
+                {
+                    Log.e("RefreshData",""+e.getMessage());
+                }
             }
         });
         custInfoImgButton = (ImageButton) view.findViewById(R.id.custInfoImgBtn);
@@ -1660,8 +1668,16 @@ Log.e("bmb.size="," "+bmb.getPiecePlaceEnum().pieceNumber());
                                     clearAllData();
                                     break;
                                 case 1:
-                                    RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
-                                    obj.startParsing();
+                                    try {
+                                        RefreshData obj = new RefreshData(getActivity());
+                                        obj.startParsing();
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Log.e("RefreshData",""+e.getMessage());
+                                    }
+//                                    RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
+//                                    obj.startParsing();
                                     break;
 
                                 case 2:
@@ -1763,8 +1779,16 @@ Log.e("bmb.size="," "+bmb.getPiecePlaceEnum().pieceNumber());
                                     clearAllData();
                                     break;
                                 case 1:
-                                    RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
-                                    obj.startParsing();
+//                                    RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
+//                                    obj.startParsing();
+                                    try {
+                                        RefreshData obj = new RefreshData(getActivity());
+                                        obj.startParsing();
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Log.e("RefreshData",""+e.getMessage());
+                                    }
                                     break;
 
                                 case 2:

@@ -164,6 +164,7 @@ public static     float CountOfItems=1;
     int typeRequest = 0, haveResult = 0, approveAdmin = 0, dontDuplicateItems = 0, sumCurentQty = 0,ItemUnitsFlage=0;
     LinearLayout UnitSpinnerLinear;
     LinearLayout mainRequestLinear;
+    public  Spinner spinerItemPrices;
     LinearLayout resultLinear;
     LinearLayout mainLinear,linearUnit;
     ImageView acceptDiscount, rejectDiscount;
@@ -675,6 +676,30 @@ public static     float CountOfItems=1;
 
                                                      final Spinner unit = dialog.findViewById(R.id.unit);
                                                      final Spinner   Item_unit= dialog.findViewById(R.id.Item_unit);
+                                                     spinerItemPrices=dialog.findViewById(R.id.item_prices_sp);
+                                                     spinerItemPrices.setVisibility(View.GONE);
+                                                     if(MHandler.getAllSettings().get(0).getItems_Unit()==1&& MHandler.getAllSettings().get(0).getPriceByCust()==1){
+                                                         spinerItemPrices.setVisibility(View.VISIBLE);
+                                                         List<String> prices_item = MHandler.getItemPrices(itemNumber.getText().toString());
+                                                         ArrayAdapter<String> itemsPriceList = new ArrayAdapter<String>(cont, R.layout.spinner_style, prices_item);
+                                                         spinerItemPrices.setAdapter(itemsPriceList);
+
+                                                         spinerItemPrices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                             @Override
+                                                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                                 if(   !spinerItemPrices.getSelectedItem().toString().equals("")) {
+                                                                     if(   !spinerItemPrices.getSelectedItem().toString().equals("0")) {
+                                                                         price.setText(spinerItemPrices.getSelectedItem().toString().trim());
+                                                                     }
+                                                                 }
+                                                             }
+
+                                                             @Override
+                                                             public void onNothingSelected(AdapterView<?> parent) {
+
+                                                             }
+                                                         });
+                                                     }
                                                      TextView unit_qty= dialog.findViewById(R.id.unit_qty);
                                                      final TextView textQty = dialog.findViewById(R.id.textQty);
                                                      unitQty = dialog.findViewById(R.id.unitQty);
@@ -1212,6 +1237,52 @@ public static     float CountOfItems=1;
 
                                                      ArrayAdapter<String> itemsunitsList = new ArrayAdapter<String>(cont, R.layout.spinner_style, ITEMS_units);
                                                      Item_unit.setAdapter(itemsunitsList);
+                                                     if(MHandler.getAllSettings().get(0).getItems_Unit()==1&& MHandler.getAllSettings().get(0).getPriceByCust()==1){
+                                                         spinerItemPrices=dialog.findViewById(R.id.item_prices_sp);
+                                                         spinerItemPrices.setVisibility(View.VISIBLE);
+                                                         List<String> prices_item = MHandler.getItemPrices(itemNumber.getText().toString());
+                                                         ArrayAdapter<String> itemsPriceList = new ArrayAdapter<String>(cont, R.layout.spinner_style, prices_item);
+                                                         spinerItemPrices.setAdapter(itemsPriceList);
+
+                                                         spinerItemPrices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                             @Override
+                                                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                                 if(   !spinerItemPrices.getSelectedItem().toString().equals("")) {
+                                                                     if(   !spinerItemPrices.getSelectedItem().toString().equals("0")) {
+                                                                         price.setText(spinerItemPrices.getSelectedItem().toString().trim());
+                                                                     }
+                                                                 }
+                                                             }
+
+                                                             @Override
+                                                             public void onNothingSelected(AdapterView<?> parent) {
+
+                                                             }
+                                                         });
+                                                     }     if(MHandler.getAllSettings().get(0).getItems_Unit()==1&& MHandler.getAllSettings().get(0).getPriceByCust()==1){
+
+                                                         spinerItemPrices=dialog.findViewById(R.id.item_prices_sp);
+                                                         spinerItemPrices.setVisibility(View.VISIBLE);
+                                                         List<String> prices_item = MHandler.getItemPrices(itemNumber.getText().toString());
+                                                         ArrayAdapter<String> itemsPriceList = new ArrayAdapter<String>(cont, R.layout.spinner_style, prices_item);
+                                                         spinerItemPrices.setAdapter(itemsPriceList);
+
+                                                         spinerItemPrices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                             @Override
+                                                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                                 if(   !spinerItemPrices.getSelectedItem().toString().equals("")) {
+                                                                     if(   !spinerItemPrices.getSelectedItem().toString().equals("0")) {
+                                                                         price.setText(spinerItemPrices.getSelectedItem().toString().trim());
+                                                                     }
+                                                                 }
+                                                             }
+
+                                                             @Override
+                                                             public void onNothingSelected(AdapterView<?> parent) {
+
+                                                             }
+                                                         });
+                                                     }
 
                                                      try {
                                                          CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
@@ -2759,6 +2830,29 @@ public static     float CountOfItems=1;
 
                                                            ArrayAdapter<String> itemsunitsList = new ArrayAdapter<String>(cont, R.layout.spinner_style, ITEMS_units);
                                                         Item_unit.setAdapter(itemsunitsList);
+                                                           if(MHandler.getAllSettings().get(0).getItems_Unit()==1&& MHandler.getAllSettings().get(0).getPriceByCust()==1){
+                                                               spinerItemPrices=dialog.findViewById(R.id.item_prices_sp);
+                                                               spinerItemPrices.setVisibility(View.VISIBLE);
+                                                               List<String> prices_item = MHandler.getItemPrices(itemNumber.getText().toString());
+                                                               ArrayAdapter<String> itemsPriceList = new ArrayAdapter<String>(cont, R.layout.spinner_style, prices_item);
+                                                               spinerItemPrices.setAdapter(itemsPriceList);
+
+                                                               spinerItemPrices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                                   @Override
+                                                                   public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                                       if(   !spinerItemPrices.getSelectedItem().toString().equals("")) {
+                                                                           if(   !spinerItemPrices.getSelectedItem().toString().equals("0")) {
+                                                                               price.setText(spinerItemPrices.getSelectedItem().toString().trim());
+                                                                           }
+                                                                       }
+                                                                   }
+
+                                                                   @Override
+                                                                   public void onNothingSelected(AdapterView<?> parent) {
+
+                                                                   }
+                                                               });
+                                                           }
 
                                                         try {
                                                             CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());

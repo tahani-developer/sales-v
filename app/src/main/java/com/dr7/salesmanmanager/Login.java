@@ -98,7 +98,7 @@ public class Login extends AppCompatActivity {
     public static SharedPreferences sharedPref;
     public static boolean Items_Orent =true;
 
-    public EditText storeNo_edit;
+    public static EditText storeNo_edit;
     String user="", password="";
     List<Flag_Settings> flag_settingsList;
     private String username, link, ipAddress;
@@ -1834,6 +1834,20 @@ public class Login extends AppCompatActivity {
 
 }
 
+    private void updateForKhashram() {
+        mDHandler.getFlagSettings().get(0).setMax_Voucher(0);
+        mDHandler.getFlagSettings().get(0).setMaxvochServer(0);
+        getMaxVoucherServer=0;
+        rawahneh_getMaxVouchFromServer=0;
+        mDHandler.getFlagSettings().get(0).setMax_Voucher(0);
+        mDHandler.getFlagSettings().get(0).setMaxvochServer(0);
+        updateInDataBase();
+    }
+
+    private void updateInDataBase() {
+        mDHandler.updateLastVoucher();
+
+    }
 
 
     private void getMaxVoucherFromServer(int salesManInt) {

@@ -232,10 +232,10 @@ public class bMITP extends Activity {
     };
 
     public static void requestBlePermissions(Activity activity, int requestCode) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S )
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S )
             ActivityCompat.requestPermissions(activity, ANDROID_12_BLE_PERMISSIONS, requestCode);
-        else
-            ActivityCompat.requestPermissions(activity, BLE_PERMISSIONS, requestCode);
+//        else
+//            ActivityCompat.requestPermissions(activity, BLE_PERMISSIONS, requestCode);
     }
     public void onPermission()
     {
@@ -344,12 +344,12 @@ public class bMITP extends Activity {
 
 //
         getData = getIntent().getStringExtra("printKey");
-//        try {
-//            onPermission();
-//        }catch (Exception e){
-//            Log.e("onPermission",""+e.getMessage());
-//            Toast.makeText(context, "check permission", Toast.LENGTH_SHORT).show();
-//        }
+        try {
+            onPermission();
+        }catch (Exception e){
+            Log.e("onPermission",""+e.getMessage());
+            Toast.makeText(context, "check permission", Toast.LENGTH_SHORT).show();
+        }
 
 //        Bundle bundle = getIntent().getExtras();
 //         allStudents = (List<Item>) bundle.get("ExtraData");

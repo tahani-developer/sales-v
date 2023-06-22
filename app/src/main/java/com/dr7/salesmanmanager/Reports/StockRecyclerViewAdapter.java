@@ -81,6 +81,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
      public  static  EditText unitQtyStock;
      public static String itemNoStock="",barcodeValue_inventory="";
      boolean isFoundSerial=false;
+     int hideQty=0;
 
 
     public StockRecyclerViewAdapter(List<Item> items, Context context) {
@@ -92,6 +93,8 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 
         }
         mDbHandler = new DatabaseHandler(context);
+        hideQty=mDbHandler.getAllSettings().get(0).getHide_qty();
+        Log.e("hideQty","StockRecyclerViewAdapter="+hideQty);
     }
 
     @Override
@@ -122,6 +125,9 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
         holder.tradeMark.setText(items.get(holder.getAdapterPosition()).getItemName());
         holder.category.setText("" + items.get(holder.getAdapterPosition()).getCategory());
 //        holder.unitQty.setText("" + itemsRequiredList.get(holder.getAdapterPosition()).getCurrentQty());
+        if(hideQty==1)
+            holder.unitQty.setVisibility(View.INVISIBLE);
+        else holder.unitQty.setVisibility(View.VISIBLE);
         holder.unitQty.setText("" + items.get(holder.getAdapterPosition()).getCurrentQty());
         holder.tax.setText("" + items.get(holder.getAdapterPosition()).getTaxPercent());
         holder.barcode.setText(items.get(holder.getAdapterPosition()).getBarcode());

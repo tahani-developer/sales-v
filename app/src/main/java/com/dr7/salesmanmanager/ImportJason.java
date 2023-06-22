@@ -121,6 +121,7 @@ import static com.dr7.salesmanmanager.Login.headerDll;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.previousIp;
 import static com.dr7.salesmanmanager.Login.salesMan;
+import static com.dr7.salesmanmanager.Login.storeNo_edit;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.MainActivity.fill_Pending_inv;
 import static com.dr7.salesmanmanager.MainActivity.openPendingTextView;
@@ -1284,11 +1285,10 @@ public class ImportJason extends AppCompatActivity {
 
                             mHandler.addSerialVoucherNo(maxVoucherLong, 0, 0);
 
-                        } else {
+                        } else if (voucherTyp == 506) {
 
                             mHandler.updateVoucherNo(maxVoucherLong, 506, 0);
                             goMainText.setText("main");
-
                         }
                         counter++;
 
@@ -1356,8 +1356,8 @@ public class ImportJason extends AppCompatActivity {
                         ipAddress = ipAddress.substring(0, ind);
                     }
 
-                    if (!salesMan_no.equals("")) {
-                        URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetmaxNo?STRNO=" + salesMan_no + "&CONO=" + CONO + "&VKIND=" + String.valueOf(voucherTyp).trim();
+                    if (storeNo_edit.getText()!=null) {
+                        URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetmaxNo?STRNO=" + storeNo_edit.getText().toString().trim() + "&CONO=" + CONO + "&VKIND=" + String.valueOf(voucherTyp).trim();
 
                     } else {
                         URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetmaxNo?STRNO=" + SalesManLogin + "&CONO=" + CONO + "&VKIND=" + String.valueOf(voucherTyp).trim();
