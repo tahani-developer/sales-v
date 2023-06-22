@@ -5294,8 +5294,14 @@ public static     float CountOfItems=1;
                 } else {
                     bonus_calc = offer.get(i).getBonusQty();
                 }
-                if(MHandler.getSalesManQty(offer.get(i).getBonusItemNo())>=(bonus_calc))
-                return offer.get(i);
+                if (offer.get(i).getPromotionType()==0){
+
+                    if(MHandler.getSalesManQty(offer.get(i).getBonusItemNo())>=(bonus_calc))
+                        return offer.get(i);
+                }else {
+                    return offer.get(i);
+                }
+
             }
 
         }
