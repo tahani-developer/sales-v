@@ -5257,8 +5257,13 @@ if(editable.toString().trim().equals("refreshtext")){
                 } else {
                     bonus_calc = offer.get(i).getBonusQty();
                 }
+                if (offer.get(i).getPromotionType()==0){
+
                 if(mDbHandler.getSalesManQty(offer.get(i).getBonusItemNo())>=(bonus_calc))
                 return offer.get(i);
+                }else {
+                    return offer.get(i);
+                }
         }
         }
         Offers offerEmpty = new Offers();
@@ -5291,7 +5296,7 @@ if(editable.toString().trim().equals("refreshtext")){
                     Offers.add(offer);
                 }
             }
-            Log.e("checkOffers",""+Offers.size());
+            Log.e("checkOffers1",""+Offers.size());
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -8144,6 +8149,7 @@ try {
           }
       }
   }
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void getMaxVoucherFromServer(int salesManInt) {
         Log.e("getMaxVoucherFromServer", "getMaxVoucherFromServer" + salesManInt);
       ImportJason  importData=new ImportJason(getContext());
