@@ -645,10 +645,10 @@ public class AddItemsFragment2 extends DialogFragment {
 // scan through all candidate titles
                             if (item.getItemName().toLowerCase().trim().contains(query.toString().toLowerCase(Locale.ROOT).trim())
 //                                    || item.getItemName().toUpperCase().trim().contains(query.toString().trim())
-//                        ||
+                        ||
 //                                FisrtCharsFromString(item.getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))) {
 //                                    ||
-//                                    SubStringtoMoreThanOne(item.getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
+                                    SubStringtoMoreThanOne(item.getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
                                     ){
                                 filteredList.add(item);
 //                                Log.e("filteredMap1-", m.getKey() + " " + item.getItemName());

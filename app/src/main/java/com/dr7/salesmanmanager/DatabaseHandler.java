@@ -5795,11 +5795,11 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
                 item.setKind_item(cursor.getString(10));
                 try {
-                    if (cursor.getString(12) == null) {
+                    if (cursor.getString(11) == null) {
                         item.setItemHasSerial("0");
                         Log.e("setItemHasSerial", "" + item.getItemHasSerial() + "null");
                     } else {
-                        item.setItemHasSerial(cursor.getString(12));
+                        item.setItemHasSerial(cursor.getString(11));
                     }
                 } catch (Exception e) {
                     item.setItemHasSerial("0");
@@ -5811,13 +5811,13 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 try {
 
 
-                    if (cursor.getString(13) == null) {
+                    if (cursor.getString(12) == null) {
                         item.setItemPhoto(null);
 
                     } else {
 //                    itemBitmap = StringToBitMap(cursor.getString(13));
 //                    item.setItemPhoto(itemBitmap);
-                        item.setItemPhoto(cursor.getString(13));
+                        item.setItemPhoto(cursor.getString(12));
                     }
                 } catch (Exception e) {
                     item.setItemPhoto(null);
@@ -5826,7 +5826,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                     item.setVivible(0);
                 } else {
                 try {
-                    item.setVivible(cursor.getInt(14));
+                    item.setVivible(cursor.getInt(13));
                 } catch (Exception e) {
                     item.setVivible(0);
                 }

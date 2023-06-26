@@ -238,12 +238,14 @@ public class CustomerCheckInFragment extends DialogFragment {
 
                         //1. getlocation from location tabel
                         String lat="",longat="";
+                        // from customer location
                         CustomerLocation customerLocation=new DatabaseHandler(getActivity()).getCustomerLocationBYNUMBER(custObj.getCustId());
                         lat= customerLocation.getLATIT();
                         longat= customerLocation.getLONG();
+                        Log.e("CustomerLocation1==","lat "+lat+"\tlongat= "+longat);
                         //2. getlocation from master tabel if not in  location tabel
                         if(lat==null||longat==null) {
-
+                            Log.e("CustomerLocation2+null+==","lat "+lat+"\tlongat= "+longat);
                             lat = custObj.getCustLat();
                             longat = custObj.getCustLong();
                         }
@@ -256,7 +258,7 @@ public class CustomerCheckInFragment extends DialogFragment {
                             lat = "0";
                             longat ="0";
                         }
-
+                        Log.e("CustomerLocation3==","lat "+lat+"\tlongat= "+longat);
                         if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 0
                                     ||
                                     isInRange(lat,longat)
@@ -614,7 +616,7 @@ public class CustomerCheckInFragment extends DialogFragment {
             distance = loc2.distanceTo(loc1);
             Toast.makeText(getActivity(), "Check Internet Connection"+latitudeCheckIn, Toast.LENGTH_SHORT).show();
         }
-
+        Log.e("ggg3","distance="+ distance);
       //  Toast.makeText(getActivity(), "distance"+distance, Toast.LENGTH_SHORT).show();
 if (cusLat.equals("0")|| cusLong.equals("0")) return true;
 

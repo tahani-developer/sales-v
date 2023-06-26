@@ -1953,10 +1953,12 @@ public static     float CountOfItems=1;
                                                            itemNoSelected = allItemsList.get(position).getItemNo();
 
                                                            try {
+                                                               Log.e("getItemHasSerial","==="+allItemsList.get(position).getItemHasSerial());
 
 
                                                                if ((allItemsList.get(position).getItemHasSerial().equals("1")) && voucherType != 508) {
                                                                    current_itemHasSerial = 1;
+                                                                   Log.e("getItemHasSerial","22==="+allItemsList.get(position).getItemHasSerial());
 
                                                                    dialog.setContentView(R.layout.add_item_serial_dialog);
                                                                    serialValue = dialog.findViewById(R.id.serialValue);

@@ -95,7 +95,7 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class PrintVoucher extends AppCompatActivity {
     private String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/myCamera/";
-    private IminPrintUtils mIminPrintUtils;
+
     Bitmap testB;
     PrintPic printPic;
     byte[] printIm;
