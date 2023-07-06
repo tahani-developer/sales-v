@@ -628,8 +628,9 @@ GeneralMethod generalMethod;
 
         Log.e("itemVOCHER==", "" + itemVOCHER.size());
         PdfConverter pdf = new PdfConverter(PrintVoucher.this);
+        Log.e("shareWhatsApp==", "= " + MainActivity.SharWhatsAppForm);
         if(MainActivity.SharWhatsAppForm==0)
- pdf.exportListToPdf(items, "Vocher", "", 16);
+        pdf.exportListToPdf(items, "Vocher", "", 16);
        else pdf.exportListToPdf(items, "Vocher", "", 17);
 
 

@@ -1,7 +1,15 @@
 <resources>
 
+
+    <string name="item_info">Item Info</string>
+    <string name="VisitMedicalReport">VisitMedicalReport</string>
+    <string name="Adoption">Adoption</string>
+    <string name="tool">Tool</string>
+
+    <string name="doubleVisit">Double Visit</string>
+
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 300.00 </string>
+    <string name="version"> V 300.01 </string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>

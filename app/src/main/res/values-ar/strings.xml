@@ -1,4 +1,9 @@
 <resources>
+    <string name="VisitMedicalReport">تقرير الزيارات الطبية</string>
+    <string name="Adoption">النوع</string>
+    <string name="tool">الأدوات</string>
+    <string name="item_info">معلومات المواد</string>
+    <string name="doubleVisit">زيارة مزدوجة</string>
     <string name="app_name">نظام الصقور للمندوبين</string>
 
     <string name="app_username">اسم المستخدم</string>

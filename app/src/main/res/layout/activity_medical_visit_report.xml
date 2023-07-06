@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+<LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/linearMain"
+    tools:context=".Reports.MedicalVisitReport">
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:id="@+id/row2"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:text="@string/from_date"
+                android:textColor="@color/text_view_color"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/from_date"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textColor="@color/add_button"
+                android:textSize="12sp"
+                android:inputType="date"
+                android:focusable="false"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/to_date"
+                android:textColor="@color/text_view_color"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/to_date"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/add_button"
+                android:textSize="12sp"
+                android:inputType="date"
+                android:focusable="false"/>
+
+            <Button
+                android:id="@+id/preview"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:layout_height="40dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginLeft="3dp"
+                android:textSize="14sp"
+                android:background="@drawable/done_button"
+                android:text="@string/preview"
+                android:textColor="@color/white" />
+
+
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/serialtable"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+
+                    android:layout_weight="7.8"
+                    android:background="@drawable/back_border_shape"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/textView_itemname"
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/item_info"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:background="@color/colorblue1"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/textView_cridit"
+                        android:layout_width="150dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/cust_name"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:background="@color/colorblue1"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/textView_date_voucher"
+                        android:layout_width="150dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/Adoption"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:background="@color/colorblue1"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/textView_debit"
+                        android:layout_width="150dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/tool"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:background="@color/colorblue1"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView_voucherNo"
+                        android:layout_width="150dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/doubleVisit"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:background="@color/colorblue1"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/textView_remark"
+                        android:layout_width="150dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/remark"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/textView_qty"
+                        android:layout_width="150dp"
+                        android:layout_height="match_parent"
+
+                        android:visibility="gone"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/qty"
+
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_report"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.9"
+                    android:background="@drawable/back_border_edit"
+                    android:orientation="vertical"
+
+                    android:padding="2dp">
+
+                </androidx.recyclerview.widget.RecyclerView>
+            </LinearLayout>
+
+        </HorizontalScrollView>
+    </LinearLayout>
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/bmb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:bmb_normalColor="@color/colorblue1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        app:bmb_draggable="true"
+        />
+    </RelativeLayout>
+</LinearLayout>
+</layout>

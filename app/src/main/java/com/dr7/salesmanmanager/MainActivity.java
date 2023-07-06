@@ -3178,6 +3178,7 @@ public void New_openAddCustomerDialog() {
         builder.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+
                 checknum = 0;
                 String cutm_num= CustomerListShow.Customer_Account;
                 String cutm_name = CustomerListShow.Customer_Name;
@@ -3236,7 +3237,8 @@ public void New_openAddCustomerDialog() {
                 if( EndTrip_Report ==1||Purchase_Order==1) {
                     Log.e("chechTransctions",""+chechTransctionsForCustomer(cutm_num));
                     if (!chechTransctionsForCustomer(cutm_num)) {
-                        openTransInfo(cutm_num, cutm_name);
+//                        openTransInfo(cutm_num, cutm_name);
+                        openMedicalScreen(cutm_num, cutm_name);
 
 
                     }
@@ -3248,6 +3250,15 @@ public void New_openAddCustomerDialog() {
         builder.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
         android.app.AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
+    }
+
+    private void openMedicalScreen(String cutm_num, String cutm_name) {
+
+        Intent intent =new Intent(MainActivity.this,MedicalVisit.class);
+        intent.putExtra("cutm_name", cutm_name);
+        intent.putExtra("cutm_num", cutm_num);
+        startActivity(intent);
 
     }
 
@@ -3499,12 +3510,7 @@ public void New_openAddCustomerDialog() {
 
                         if (flag == 1) {
                             openSetting alert = new openSetting();
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    alert.showDialog(MainActivity.this, "Error de conexión al servidor");
-                                }
-                            }, 3000);
+                            alert.showDialog(MainActivity.this, "Error de conexión al servidor");
 
 
                         } else if (flag == 2)

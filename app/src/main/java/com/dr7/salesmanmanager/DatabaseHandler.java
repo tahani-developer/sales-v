@@ -54,6 +54,7 @@ import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.activeKey;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
 import com.dr7.salesmanmanager.Modles.serialModel;
+import com.dr7.salesmanmanager.Modles.visitMedicalModel;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 
 import java.io.ByteArrayOutputStream;
@@ -75,11 +76,13 @@ import static com.dr7.salesmanmanager.SalesInvoice.noTax;
 import static com.dr7.salesmanmanager.SalesInvoice.time;
 import static com.dr7.salesmanmanager.SalesInvoice.voucher;
 
+import org.jetbrains.annotations.NotNull;
+
  public class DatabaseHandler extends SQLiteOpenHelper {
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 215;
+    private static final int DATABASE_VERSION = 216;
 //
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -707,6 +710,24 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
      private static final String  AdminPasswords="AdminPasswords";
      private static final String  password_type="password_type";
      private static final String  password_no="password";
+     //---------------------------------------
+
+     private static final String  VisitMedicalTable="VisitMedicalTable";
+     private static final String  VoucherNo="VoucherNo";
+     private static final String  DateVisit="DateVisit";
+     private static final String  CustNo="CustNo";
+     private static final String  CustName="CustName";
+     private static final String  Adoption="Adoption";
+     private static final String  Tool="Tool";
+     private static final String  DoubleVisit="DoubleVisit";
+     private static final String  RemarkVisit="RemarkVisit";
+     private static final String  HaveItem="HaveItem";
+     //---------------------------------------
+     private static final String  ItemsVisit="ItemsVisit";
+     private static final String  VoucherNoItem="VoucherNoItem";
+     private static final String  CustNoItem="CustNoItem";
+     private static final String  ItemName="ItemName";
+     private static final String  QtyItem="QtyItem";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -1515,7 +1536,28 @@ try {
                 + ")";
         db.execSQL(CREATE_PaymentSerials_TABLE);
 
+        String CREATE_VisitTABLE = "CREATE TABLE IF NOT EXISTS " + VisitMedicalTable + "("
+                + " VoucherNo INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + DateVisit + " TEXT,"
+                + CustNo + " TEXT,"
+                + CustName + " TEXT,"
+                + Adoption + " TEXT,"
+                + Tool + " TEXT,"
+                + DoubleVisit + " TEXT,"
+                + RemarkVisit + " TEXT,"
+                + HaveItem + " TEXT"
+                + ")";
+        db.execSQL(CREATE_VisitTABLE );
 
+        String CREATE_ItemsVisitTABLE = "CREATE TABLE IF NOT EXISTS " + ItemsVisit + "("
+
+                + VoucherNoItem + " TEXT,"
+                + CustNoItem + " TEXT,"
+                + ItemName + " TEXT,"
+                + QtyItem + " TEXT"
+
+                + ")";
+        db.execSQL(CREATE_ItemsVisitTABLE );
     }
 
 
@@ -2777,6 +2819,28 @@ try {
         }
 
 
+        String CREATE_VisitTABLE = "CREATE TABLE IF NOT EXISTS " + VisitMedicalTable + "("
+                + " VoucherNo INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + DateVisit + " TEXT,"
+                + CustNo + " TEXT,"
+                + CustName + " TEXT,"
+                + Adoption + " TEXT,"
+                + Tool + " TEXT,"
+                + DoubleVisit + " TEXT,"
+                + RemarkVisit + " TEXT,"
+                + HaveItem + " TEXT"
+                + ")";
+        db.execSQL(CREATE_VisitTABLE );
+
+        String CREATE_ItemsVisitTABLE = "CREATE TABLE IF NOT EXISTS " + ItemsVisit + "("
+
+                + VoucherNoItem + " TEXT,"
+                + CustNoItem + " TEXT,"
+                + ItemName + " TEXT,"
+                + QtyItem + " TEXT"
+
+                + ")";
+        db.execSQL(CREATE_ItemsVisitTABLE );
     }
 
     ////B
@@ -5011,7 +5075,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 customer.setPriceListId(cursor.getString(5));
                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
                 customer.setSalesManNumber(cursor.getString(7));
-                customer.setCreditLimit(Integer.parseInt(cursor.getString(8)));
+                customer.setCreditLimit(Double.parseDouble(cursor.getString(8)));
                 customer.setPayMethod(Integer.parseInt(cursor.getString(9)));
 
                 customer.setCustLat(cursor.getString(10));
@@ -10622,6 +10686,146 @@ void updateDataForClient(){
 
          Log.e("getItemPrices","prices="+prices.size());
          return prices;
+     }
+
+     @NotNull
+     public List<String> getAllItemsName() {
+         List<String> items = new ArrayList<>();
+        String  selectQuery="select Name from  Items_Master ";
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+
+         if (cursor.moveToFirst()) {
+             do {
+                 items.add(cursor.getString(0));
+                 Log.e("getItemPrices","items="+cursor.getString(0));
+
+             } while (cursor.moveToNext());
+         }
+
+         Log.e("getAllItemsName","prices="+items.size());
+         return items;
+     }
+
+
+
+     public void addVisitMedical(@NotNull visitMedicalModel visitItems) {
+         Log.e("addVisitMedical", "===="+visitItems.getCustname());
+         db = this.getReadableDatabase();
+         ContentValues values = new ContentValues();
+         values.put(DateVisit, visitItems.getDateVoucher());
+         values.put(CustNo, visitItems.getCustNo());
+         values.put(CustName, visitItems.getCustname());
+         values.put(Adoption, visitItems.getAdoption());
+         values.put(Tool, visitItems.getTool());
+         values.put(DoubleVisit, visitItems.getDoubleVisit());
+         values.put(RemarkVisit, visitItems.getRemark());
+         values.put(HaveItem, visitItems.getHaveItem());
+         db.insert(VisitMedicalTable, null, values);
+         db.close();
+     }
+
+     @NotNull
+     public String getMaxVoucherVisit() {
+
+         String maxV = "0";
+         String  selectQuery="select max(VoucherNo) from VisitMedicalTable ";
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+
+         if (cursor.moveToFirst()) {
+             do {
+                 maxV=(cursor.getString(0));
+                 Log.e("getItemPrices","items="+cursor.getString(0));
+
+             } while (cursor.moveToNext());
+         }
+
+         Log.e("getAllItemsName","maxV="+maxV);
+         return maxV;
+
+     }
+     public void addItemVisit(@NotNull List<Item> listSelectedItem) {
+         Log.e("addVisitMedical", "items ===="+listSelectedItem.size());
+         db = this.getReadableDatabase();
+         ContentValues values = new ContentValues();
+         for(int i=0;i<listSelectedItem.size();i++){
+             values.put(VoucherNoItem, listSelectedItem.get(i).getORIGINALvoucherNo());
+             values.put(CustNoItem, listSelectedItem.get(i).getCust());
+             values.put(ItemName, listSelectedItem.get(i).getItemName());
+             values.put(QtyItem, listSelectedItem.get(i).getQty());
+             db.insert(ItemsVisit, null, values);
+         }
+         db.close();
+     }
+     public  List<visitMedicalModel>  getAllVisitReport(){
+      List<visitMedicalModel> list=new ArrayList<>();
+         String  selectQuery=" select VisitMedicalTable.* ,ItemsVisit.ItemName,ItemsVisit.QtyItem from  VisitMedicalTable LEFT JOIN ItemsVisit" +
+                 "  ON   ItemsVisit.VoucherNoItem=VisitMedicalTable.VoucherNo";
+
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+         Log.e("cursor==", "" + cursor.getCount() + "\t");
+
+         if (cursor.moveToFirst()) {
+             Log.i("DatabaseHandler", "************************" + selectQuery);
+             do {
+                 visitMedicalModel visitMedicalModel=new visitMedicalModel(
+                         cursor.getString(0),
+                         cursor.getString(1),
+                         cursor.getString(2),
+                         cursor.getString(3),
+                         cursor.getString(4),
+                         cursor.getString(5),
+                         cursor.getString(6),
+                         cursor.getString(7),
+                         cursor.getString(8),
+                         cursor.getString(9),
+                         cursor.getString(10)
+
+                 );
+
+
+                 list.add(visitMedicalModel);
+                 Log.e("list","getVoucherNo="+list.get(0).getVoucherNo());
+             } while (cursor.moveToNext());
+         }
+         Log.e("list",""+list.size());
+         return  list;
+     }
+     public  List<visitMedicalModel>  getAllVisitReport_noduplicate(){
+         List<visitMedicalModel> list=new ArrayList<>();
+         String  selectQuery=" select VisitMedicalTable.* from  VisitMedicalTable ";
+
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+         Log.e("cursor==", "" + cursor.getCount() + "\t");
+
+         if (cursor.moveToFirst()) {
+             Log.i("DatabaseHandler", "************************" + selectQuery);
+             do {
+                 visitMedicalModel visitMedicalModel=new visitMedicalModel(
+                         cursor.getString(0),
+                         cursor.getString(1),
+                         cursor.getString(2),
+                         cursor.getString(3),
+                         cursor.getString(4),
+                         cursor.getString(5),
+                         cursor.getString(6),
+                         cursor.getString(7),
+                         cursor.getString(8),
+                         "",
+                         ""
+
+                 );
+
+
+                 list.add(visitMedicalModel);
+                 Log.e("list","getVoucherNo="+list.get(0).getVoucherNo());
+             } while (cursor.moveToNext());
+         }
+         Log.e("list",""+list.size());
+         return  list;
      }
  }
 

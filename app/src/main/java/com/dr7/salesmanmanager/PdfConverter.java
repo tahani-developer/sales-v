@@ -38,6 +38,7 @@ import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
 import com.dr7.salesmanmanager.Modles.serialModel;
+import com.dr7.salesmanmanager.Modles.visitMedicalModel;
 import com.dr7.salesmanmanager.Reports.SerialReport;
 import com.itextpdf.text.Anchor;
 import com.itextpdf.text.BaseColor;
@@ -340,6 +341,11 @@ public class PdfConverter {
                 Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
                 }
 
+        break;
+            case 19:
+                Log.e("createserials",""+list.size());
+                tableContent=createMedicalReport((List<visitMedicalModel>) list);
+                break;
 
         }
         return tableContent;
@@ -747,6 +753,50 @@ public class PdfConverter {
             insertCell(pdfPTable, String.valueOf(list.get(i).getQty()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
 //            insertCell(pdfPTable, String.valueOf(String.format("%.3f", (list.get(i).getSalesManId()))), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+        }
+
+        return pdfPTable;
+
+    }
+    private PdfPTable createMedicalReport(List<visitMedicalModel> list)
+    {
+        createPDF("MedicalReport" + ".pdf");
+        PdfPTable pdfPTable = new PdfPTable(7);
+        pdfPTable.setWidthPercentage(100f);
+
+        if (!Locale.getDefault().getLanguage().equals("ar")) {
+
+            pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+
+        } else {
+
+            pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+
+        }
+
+        insertCell(pdfPTable,context.getString(R.string.cust_name), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getString(R.string.Adoption), ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getResources().getString(R.string.tool), ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getResources().getString(R.string.doubleVisit), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getResources().getString(R.string.remark), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getResources().getString(R.string.item_name), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+        insertCell(pdfPTable,context.getResources().getString(R.string.qty), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+//        pdfPTable.setHeaderRows(1);
+
+        for (int i = 0; i < list.size(); i++) {
+
+            insertCell(pdfPTable, String.valueOf(list.get(i).getCustname() ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getAdoption()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getTool()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getDoubleVisit()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getRemark()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getNameItem()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+            insertCell(pdfPTable, String.valueOf(list.get(i).getQtyItem()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
         }
 

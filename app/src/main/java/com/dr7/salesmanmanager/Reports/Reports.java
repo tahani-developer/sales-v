@@ -46,7 +46,8 @@ public class Reports extends AppCompatActivity {
 
 
     LinearLayout showplanLin,customer_log_report,transactions_report,stock_request_report,Inventory_report,cash_reoprt,
-            custperformance  , return_report,serial_report,shelf_inventory_report,custwithouttrans_report,Target_Report;
+            custperformance  , return_report,serial_report,shelf_inventory_report,custwithouttrans_report,Target_Report,
+            custvisit;
 
     DatabaseHandler MHandler;
     LinearLayout inventory_layout,mainLayout;
@@ -101,6 +102,7 @@ public class Reports extends AppCompatActivity {
         Target_Report=findViewById(R.id.TargetReport);
         Target_Report.setOnClickListener(onClickListener);
         custwithouttrans_report.setOnClickListener(onClickListener);
+        custvisit=findViewById(R.id.custvisit);
 //          if( Purchase_Order==0)   custwithouttrans_report.setVisibility(View.GONE);
 //          if(MHandler.getAllSettings().get(0).getEndTripReport()==1)
 //              custwithouttrans_report.setVisibility(View.VISIBLE);
@@ -112,6 +114,7 @@ public class Reports extends AppCompatActivity {
         return_report.setOnClickListener(onClickListener);
         stock_request_report.setOnClickListener(onClickListener);
         Inventory_report.setOnClickListener(onClickListener);
+        custvisit.setOnClickListener(onClickListener);
         showplanLin=findViewById(R.id.showplan);
         showplanLin.setOnClickListener(onClickListener);
      if(Login.SalsManPlanFlage==0)   showplanLin.setVisibility(View.GONE);
@@ -197,6 +200,11 @@ public class Reports extends AppCompatActivity {
                 case R.id.custperformance:
                     Intent intent12 = new Intent(Reports.this, CustomersPerformanceReport.class);
                     startActivity(intent12);
+                    break;
+
+                case R.id.custvisit:
+                    Intent intent13 = new Intent(Reports.this, MedicalVisitReport.class);
+                    startActivity(intent13);
                     break;
 
             }
