@@ -1,6 +1,8 @@
 <resources>
 
-
+    <string name="printItemNumber">Print Item Number</string>
+    <string name="max_credit">Max Credit</string>
+    <string name="cust_store">Customer store</string>
     <string name="item_info">Item Info</string>
     <string name="VisitMedicalReport">VisitMedicalReport</string>
     <string name="Adoption">Adoption</string>
@@ -9,7 +11,7 @@
     <string name="doubleVisit">Double Visit</string>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 300.01 </string>
+    <string name="version"> V 300.02 </string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>

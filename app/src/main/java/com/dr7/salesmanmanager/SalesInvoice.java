@@ -652,6 +652,7 @@ public class SalesInvoice extends Fragment {
         itemCountTable = mDbHandler.getCountItemsMaster();
         listItemImage=new ArrayList<>();
        priceByCustomer= mDbHandler.getAllSettings().get(0).getPriceByCust() ;
+
 //        listItemImage=mDbHandler.getItemsImage();
 //        Log.e("listItemImage",""+listItemImage.get(0).toString());
 //        jsonItemsList = new ArrayList<>();

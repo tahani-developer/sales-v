@@ -74,12 +74,14 @@ import static com.dr7.salesmanmanager.SalesInvoice.Exported_Tax;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
 
 import static com.dr7.salesmanmanager.SalesInvoice.noTax;
+
 import static com.dr7.salesmanmanager.SalesInvoice.valueCheckHidPrice;
 import static com.dr7.salesmanmanager.SalesInvoice.voucher;
 import static com.dr7.salesmanmanager.StockRequest.clearData;
 import static com.dr7.salesmanmanager.StockRequest.listItemStock;
 import static com.dr7.salesmanmanager.StockRequest.totalQty;
 import static com.dr7.salesmanmanager.StockRequest.voucherStockItem;
+import static com.dr7.salesmanmanager.bMITP.printItemNumberSetting;
 
 public class ESCPSample2
 {
@@ -1815,7 +1817,7 @@ public class ESCPSample2
 //		textSize=20;
 		}
 
-		TextView price,total,qty,item,item_largeName,item_discount,item_bonus;
+		TextView price,total,qty,item,item_largeName,item_discount,item_bonus,itemNumber;
 
 		price=(TextView)dialogs.findViewById(R.id.price);
 		total=(TextView)dialogs.findViewById(R.id.total);
@@ -1823,13 +1825,22 @@ public class ESCPSample2
 		item=(TextView)dialogs.findViewById(R.id.ittem);
 		item_discount=(TextView)dialogs.findViewById(R.id.item_discount);
 		item_largeName=(TextView)dialogs.findViewById(R.id.ittem_largeName);
+		itemNumber=(TextView)dialogs.findViewById(R.id.itemNumber);
 		item_bonus=(TextView)dialogs.findViewById(R.id.item_bonus);
 		LinearLayout linearView=(LinearLayout)dialogs.findViewById(R.id.tab);
+		LinearLayout linear_itemNumber=(LinearLayout)dialogs.findViewById(R.id.linear_itemNumber);
 		if (printerType == 6||printerType==7) {
 
 			item_bonus.setVisibility(View.GONE);
 		}
 		item_bonus.setText(""+bonus);
+		if(printItemNumberSetting==0){
+			linear_itemNumber.setVisibility(View.GONE);
+		}else {
+			linear_itemNumber.setVisibility(View.VISIBLE);
+			itemNumber.setText(itemNo);
+			itemNumber.setTextSize(textSize);
+		}
 //	prices=convertToEnglish(decimalFormat.format(prices));
 //		totals=convertToEnglish(decimalFormat.format(totals));
 //		*********************** here

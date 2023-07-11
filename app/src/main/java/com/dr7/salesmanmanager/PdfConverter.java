@@ -126,6 +126,7 @@ public class PdfConverter {
 
     public PdfConverter(Context context) {
         this.context = context;
+        obj = new DatabaseHandler(context);
     }
 
     public String convertToEnglish(String value) {
@@ -156,7 +157,51 @@ public class PdfConverter {
         return dateTime;
 
     }
+    public void exportListToPdf_account(List<?> list, String headerDate, String fromDate,String toDate, int report) {
 
+        PdfPTable pdfPTable = new PdfPTable(1);
+        PdfPTable pdfPTableHeader = new PdfPTable(1);
+        pdfPTable = getContentTable(list, report);
+
+        String dateTime = "";
+        dateTime = getCurentTimeDate(1);
+        //dateTime=dateTime+getCurentTimeDate(2);
+        pdfPTableHeader = getHeaderTable(list, report, fromDate, toDate);
+
+        try {
+//
+
+            if (doc != null) doc.add(pdfPTableHeader);
+            if (doc != null) doc.add(pdfPTable);
+            if (report != 13 && report != 14&& report != 16&& report != 17&& report != 18)
+                Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_LONG).show();
+
+        } catch (DocumentException e) {
+            e.printStackTrace();
+            Log.e("DocumentException",e.getMessage() );
+        }
+        endDocPdf();
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && (context.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+                if (report != 13 && report != 14 && report != 16&& report != 17&& report != 18) showPdf(pdfFileName);
+                Log.e("SDK_INT", "Permission is granted");
+            } else {
+
+                Log.e("SDK_INT", "Permission is revoked");
+                ActivityCompat.requestPermissions(
+                        (Activity) context,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+                        1);
+            }
+        } else { // permission is automatically granted on sdk<23 upon
+            // installation
+            showPdf(pdfFileName);
+            Log.e("here,", "Permission is granted");
+        }
+
+    }
     public void exportListToPdf(List<?> list, String headerDate, String date, int report) {
 
         PdfPTable pdfPTable = new PdfPTable(1);
@@ -1109,15 +1154,81 @@ public class PdfConverter {
 
     private PdfPTable getHeaderTable(List<?> list, int reportType, String headerDate, String
             date) {
+        companyInfo = obj.getAllCompanyInfo().get(0);
         PdfPTable pdfPTableHeader = new PdfPTable(7);
         pdfPTableHeader.setWidthPercentage(100f);
         pdfPTableHeader.setSpacingAfter(20);
         pdfPTableHeader.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
 //        pdfPTableHeader.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
-        if (reportType != 13 && reportType != 14&& reportType != 16&& reportType != 17&& reportType != 18)
+        if (reportType != 13 && reportType != 14&& reportType != 16&& reportType != 17&& reportType != 18&&reportType != 10)
             insertCell(pdfPTableHeader, context.getString(R.string.date) + " : " + date, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
         if (reportType == 10)
-            insertCell(pdfPTableHeader, context.getString(R.string.cust_name) + " : " + CustomerListShow.Customer_Name, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
+        {
+            if (companyInfo.getLogo() != null && !companyInfo.getLogo().equals("")) {
+                Bitmap imageBytes = companyInfo.getLogo();
+                imageBytes = getResizedBitmap(imageBytes, 80, 80);
+                byte[] bytes = convertBitmapToByteArray(imageBytes);
+
+
+                BitmapFactory.decodeByteArray(bytes, 0, 10);
+                try {
+
+                    Image imageView = Image.getInstance(bytes);
+                    imageView.setAlignment(ALIGN_CENTER);
+                    //   imageView.scaleToFit(10,10);
+
+                    doc.add(imageView);
+
+                } catch (Exception e) {
+                }
+
+
+//                doc.add(headertable);
+
+            }
+//            insertCell(pdfPTableHeader, companyInfo.getCompanyName()+"" , ALIGN_CENTER, 7, arabicFontHeader, BaseColor.BLACK);
+//            insertCell(pdfPTableHeader, context.getString(R.string.app_account_report)+"" , ALIGN_CENTER, 7, arabicFontHeader, BaseColor.BLACK);
+//            insertCell(pdfPTableHeader, "\t\t"+context.getString(R.string.from_date)+"  \t\t"+headerDate+"  \t\t "+context.getString(R.string.to_date)+"  \t"+date+"\t\t" , ALIGN_CENTER, 7, arabicFontHeader, BaseColor.BLACK);
+//
+//            insertCell(pdfPTableHeader, context.getString(R.string.customer_number) + " : " + CustomerListShow.Customer_Account, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
+//
+//            insertCell(pdfPTableHeader, context.getString(R.string.cust_name) + " : " + CustomerListShow.Customer_Name, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
+            PdfPTable table = new PdfPTable(1);
+            table.setWidthPercentage(100f);
+
+            if (!Locale.getDefault().getLanguage().equals("ar")) {
+
+
+                table.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+
+                //   headertable.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+
+            } else {
+                table.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+
+
+            }
+            PdfPCell cell14 = new PdfPCell(new Paragraph(companyInfo.getCompanyName() , arabicFontHeaderprint));
+            PdfPCell cell144 = new PdfPCell(new Paragraph(context.getString(R.string.app_account_report) , arabicFontHeaderprint));
+            PdfPCell cell13 = new PdfPCell(new Paragraph("\t\t"+context.getString(R.string.from_date)+"  \t\t"+headerDate+"  \t\t "+context.getString(R.string.to_date)+"  \t"+date+"\t\t", arabicFontHeaderprint));
+            PdfPCell cell16 = new PdfPCell(new Paragraph(context.getString(R.string.customer_number) + " : " + CustomerListShow.Customer_Account, arabicFontHeaderprint));
+            PdfPCell cell15 = new PdfPCell(new Paragraph(context.getString(R.string.cust_name) + " : " + CustomerListShow.Customer_Name, arabicFontHeaderprint));
+            cell14.setBorder(Rectangle.NO_BORDER);
+            cell144.setBorder(Rectangle.NO_BORDER);
+            cell13.setBorder(Rectangle.NO_BORDER);
+            cell15.setBorder(Rectangle.NO_BORDER);
+            cell16.setBorder(Rectangle.NO_BORDER);
+            table.addCell(cell14);table.addCell(cell144);
+            table.addCell(cell13); table.addCell(cell16); table.addCell(cell15);
+
+            try {
+                doc.add(table);
+                doc.add(new Paragraph("\n"));
+                doc.add(new Paragraph("\n"));
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            }
+        }
 
 
         return pdfPTableHeader;

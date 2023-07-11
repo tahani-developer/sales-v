@@ -121,6 +121,7 @@ public class bMITP extends Activity {
     List<Item> allStudents;
     LinearLayout mainLinearPrinting;
     TextView text_hideDialog;
+   public  static int  printItemNumberSetting=0;
     double itemDiscount=0;
 
     static {
@@ -340,6 +341,7 @@ public class bMITP extends Activity {
         this.chkDisconnect.setChecked(true);
         this.context = this;
         obj=new DatabaseHandler(bMITP.this);
+        printItemNumberSetting=obj.getPrinterSetting_().get(0).getPrintItemNumber();
 
 
 //

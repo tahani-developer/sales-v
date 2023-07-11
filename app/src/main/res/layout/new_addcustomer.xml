@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
+    android:layout_width="350dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
@@ -83,7 +83,7 @@
             android:id="@+id/custEditText"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:padding="3dp"
             android:paddingEnd="3dp"
             android:imeOptions="actionNext"
@@ -92,13 +92,14 @@
             android:background="@drawable/back_border_edit"
             android:textColor="@color/add_button" />
     </LinearLayout>
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:paddingTop="2dp"
-            android:visibility="gone"
+
             android:layout_width="match_parent">
 
             <TextView
@@ -117,7 +118,7 @@
                 android:id="@+id/MarketName"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 android:padding="3dp"
                 android:paddingEnd="3dp"
                 android:imeOptions="actionNext"
@@ -151,7 +152,7 @@
             android:id="@+id/addressEditText"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
 
             android:padding="3dp"
             android:textSize="14sp"
@@ -185,7 +186,7 @@
             android:id="@+id/phoneEditText"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:paddingEnd="3dp"
             android:padding="3dp"
             android:textSize="14sp"
@@ -218,7 +219,7 @@
             android:id="@+id/person_contactEditText"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
 
 
             android:textSize="14sp"
@@ -251,7 +252,7 @@
             android:id="@+id/remarkEditText"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:padding="3dp"
             android:paddingEnd="3dp"
             android:textSize="14sp"
@@ -284,11 +285,43 @@
                 android:id="@+id/MaxDEditText"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 android:padding="3dp"
                 android:paddingEnd="3dp"
                 android:textSize="14sp"
                 android:imeOptions="actionNext"
+                android:inputType="text"
+                android:background="@drawable/back_border_edit"
+                android:textColor="@color/add_button" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingTop="2dp"
+            android:layout_width="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:text="@string/max_credit"
+                android:textColor="@color/text_view_color"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:textStyle="bold"
+                />
+
+            <EditText
+                android:id="@+id/max_credit"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:padding="3dp"
+                android:paddingEnd="3dp"
+                android:imeOptions="actionNext"
+                android:textSize="14sp"
                 android:inputType="text"
                 android:background="@drawable/back_border_edit"
                 android:textColor="@color/add_button" />

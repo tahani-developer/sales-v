@@ -217,9 +217,10 @@ List<String> spinnerArray = new ArrayList<>();
 
     }
     public  void exportToPdf(){
-
+        from=from_date.getText().toString().trim();
+        toDate=to_date.getText().toString().trim();
         PdfConverter pdf =new PdfConverter(AccountStatment.this);
-        pdf.exportListToPdf(listCustomerInfo,getResources().getString(R.string.AccountStatment),"21/12/2020",10);
+        pdf.exportListToPdf_account(listCustomerInfo,getResources().getString(R.string.AccountStatment),from,toDate,10);
     }
     @SuppressLint("WrongConstant")
     private void initialView() {

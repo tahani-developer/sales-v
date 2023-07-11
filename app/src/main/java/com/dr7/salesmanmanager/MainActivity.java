@@ -2916,6 +2916,8 @@ public void New_openAddCustomerDialog() {
     final EditText contactPerson = (EditText) dialog.findViewById(R.id.person_contactEditText);
     final EditText MarketName = (EditText) dialog.findViewById(R.id.MarketName);
     final EditText  MaxDEditText= (EditText) dialog.findViewById(R.id.MaxDEditText);
+    final EditText  max_credit= (EditText) dialog.findViewById(R.id.max_credit);
+
     Button done = (Button) dialog.findViewById(R.id.doneButton);
     RadioGroup paymentTermRadioGroup=dialog.findViewById(R.id.paymentTermRadioGroup);
     LinearLayout   linear = dialog.findViewById(R.id.linear);
@@ -2978,7 +2980,7 @@ public void New_openAddCustomerDialog() {
                             String time= generalMethod.getCurentTimeDate(2);
                             String salesman=mDbHandler.getAllSettings().get(0).getSalesMan_name();
                             NewAddedCustomer addedCustomer = new NewAddedCustomer(addCus.getText().toString(), remark.getText().toString(),
-                                    cutmer_lat+"", cutmer_long+"", salesman, Login.salesMan, "0", address.getText().toString(), telephone.getText().toString(), contactPerson.getText().toString(),MarketName.getText().toString(),date,time,MaxDEditText.getText().toString());
+                                    cutmer_lat+"", cutmer_long+"", salesman, Login.salesMan, "0", address.getText().toString(), telephone.getText().toString(), contactPerson.getText().toString(),MarketName.getText().toString(),date,time,MaxDEditText.getText().toString(),max_credit.getText().toString());
 
                             customerDao.add(addedCustomer);
                             dialog.dismiss();
@@ -4905,7 +4907,7 @@ Log.e("stopService","main");
         }
 
         final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name,innerPrinter,innerPrinter_image;
-        CheckBox short_Invoice,dontPrintHeader,altayee_checkbox,headerprintorder;
+        CheckBox short_Invoice,dontPrintHeader,altayee_checkbox,headerprintorder,printItemNumber;
         RadioGroup netsal_radioGroup = (RadioGroup) dialog.findViewById(R.id.netsal_radioGrp);
         RadioButton valu_radio =  dialog.findViewById(R.id.valu_radio);
         RadioButton netsal_radio =  dialog.findViewById(R.id.netsal_radio);
@@ -4929,6 +4931,7 @@ Log.e("stopService","main");
         short_Invoice=(CheckBox) dialog.findViewById(R.id.shortInvoice);
         altayee_checkbox=(CheckBox) dialog.findViewById(R.id.altayee_checkbox);
         headerprintorder=(CheckBox) dialog.findViewById(R.id.headerprintorder);
+        printItemNumber=(CheckBox) dialog.findViewById(R.id.printItemNumber);
         dontPrintHeader=dialog.findViewById(R.id.dontPrintheader_checkbox);
         lk30 = (RadioButton) dialog.findViewById(R.id.LK30);
         lk31 = (RadioButton) dialog.findViewById(R.id.LK31);
@@ -5017,6 +5020,11 @@ Log.e("stopService","main");
                 headerprintorder.setChecked(true);
 
             else    headerprintorder.setChecked(false);
+            if(printer.get(0).getPrintItemNumber()==1)
+
+                printItemNumber.setChecked(true);
+
+            else    printItemNumber.setChecked(false);
 }else {
     lk30.setChecked(true);
     normalnam.setChecked(true);
@@ -5105,6 +5113,15 @@ Log.e("stopService","main");
                 }
                 else {
                     printerSetting.setDontrprintheadeInOrders(0);
+
+                }
+                if(printItemNumber.isChecked())
+                {
+                    printerSetting.setPrintItemNumber(1);
+
+                }
+                else {
+                    printerSetting.setPrintItemNumber(0);
 
                 }
 
@@ -5345,7 +5362,9 @@ Log.e("stopService","main");
                 Toast.makeText(MainActivity.this, "cancelled", Toast.LENGTH_SHORT).show();
             } else {
 
-                Log.e("MainActivity", "" + Result.getContents());
+                Log.e("MainActivity", "1=" + Result.getContents());
+                Log.e("MainActivity", "" + resultCode);
+                Log.e("MainActivity", "" + requestCode);
 //                    Toast.makeText(this, "Scan ___" + Result.getContents(), Toast.LENGTH_SHORT).show();
 //                TostMesage(getResources().getString(R.string.scan)+Result.getContents());
 //                barCodTextTemp.setText(Result.getContents() + "");
@@ -5372,9 +5391,13 @@ Log.e("stopService","main");
 
                     openDialog=false;
                     break;
+
                 default:
                     break;
             }
+                break;
+            case 49374:
+                customerNameTextView.setText(Result.getContents());
                 break;
         }
     }

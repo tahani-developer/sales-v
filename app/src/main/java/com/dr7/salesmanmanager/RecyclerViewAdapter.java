@@ -3638,7 +3638,8 @@ public static     float CountOfItems=1;
                     });
 
 
-                } else {
+                } else
+                {
                     current_itemHasSerial = 0;
                     dialog.setContentView(R.layout.add_item_dialog_small);
                     WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -3664,7 +3665,7 @@ public static     float CountOfItems=1;
             TextView bonuss_text = dialog.findViewById(R.id.bonuss_text);
             checkState_recycler = dialog.findViewById(R.id.checkState);
             mainLinear = dialog.findViewById(R.id.mainLinearAddItem);
-            unitQty.requestFocus();
+
 
             try {
                 if (languagelocalApp.equals("ar")) {
@@ -3688,6 +3689,7 @@ public static     float CountOfItems=1;
             final Spinner unit = dialog.findViewById(R.id.unit);
             final TextView textQty = dialog.findViewById(R.id.textQty);
             unitQty = dialog.findViewById(R.id.unitQty);
+            unitQty.requestFocus();// ERORRRRRRR
             final EditText unitWeight = dialog.findViewById(R.id.unitWeight);
             final CheckBox useWeightValue = dialog.findViewById(R.id.use_weight);
 

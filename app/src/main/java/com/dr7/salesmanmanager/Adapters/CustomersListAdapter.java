@@ -179,7 +179,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
               //  Log.e("case2","case2");
                 holder.linearLayout.setEnabled(true);
             }else
-            {   Log.e("DB_salesManPlanListadapter====",MainActivity.DB_salesManPlanList.size()+"");
+            {   Log.e("DB_salesManPlanLi",MainActivity.DB_salesManPlanList.size()+"");
                 if (MainActivity.DB_salesManPlanList.size() == 0) {
                 holder.linearLayout.setEnabled(true);
             } else {
@@ -306,10 +306,11 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                     constraint = constraint.toString().toLowerCase();
                     for (int i = 0; i < mOriginalValues.size(); i++) {
                         String data = mOriginalValues.get(i).getCustName();
+                        String dataCustNo = mOriginalValues.get(i).getCustId();
                         int paymetho = mOriginalValues.get(i).getPayMethod();
 
                       //  Log.e("mOriginalpaymetho" , "paymetho"+paymetho);
-                        if (data.toLowerCase().contains(constraint.toString())) {
+                        if (data.toLowerCase().contains(constraint.toString())||dataCustNo.contains(constraint.toString())) {
                             FilteredArrList.add(new Customer(mOriginalValues.get(i).getCustId(),mOriginalValues.get(i).getCustName(),mOriginalValues.get(i).getPayMethod()));
                           //  Log.e("mOriginalValues" , "*********2" + constraint + "*" + mOriginalValues.get(i).getPayMethod());
                         }

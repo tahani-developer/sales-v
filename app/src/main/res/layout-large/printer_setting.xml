@@ -2,9 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/layer3"
     android:layoutDirection="locale"
     android:id="@+id/mainLinear"
+    app:layout_goneMarginTop="2dp"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -83,6 +85,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:text="@string/headerprint"
+        android:textColor="@color/text_view_color"
+        android:textSize="14sp" />
+    <CheckBox
+        android:id="@+id/printItemNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:text="@string/printItemNumber"
         android:textColor="@color/text_view_color"
         android:textSize="14sp" />
     <LinearLayout

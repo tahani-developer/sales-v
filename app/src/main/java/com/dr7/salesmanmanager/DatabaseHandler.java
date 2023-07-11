@@ -30,6 +30,7 @@ import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
 import com.dr7.salesmanmanager.Modles.ItemsReturn;
 import com.dr7.salesmanmanager.Modles.MainGroup_Id_Count;
+import com.dr7.salesmanmanager.Modles.NetworkLogModel;
 import com.dr7.salesmanmanager.Modles.OfferGroupModel;
 import com.dr7.salesmanmanager.Modles.OfferListMaster;
 import com.dr7.salesmanmanager.Modles.Offers;
@@ -82,12 +83,23 @@ import org.jetbrains.annotations.NotNull;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 216;
+    private static final int DATABASE_VERSION = 219;
 //
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
+    //----------------------------------------------------------------------
+    private static final String NetworkTableLog = "NetworkTableLog";
+
+     private static final String TransNo    = "TransNo";
+     private static final String LinkRequest = "LinkRequest";
+     private static final String DateTrand   = "DateTrand";
+     private static final String TimeTrans   = "TimeTrans";
+     private static final String CustomerNo   = "CustomerNo";
+     private static final String ResponseLink = "ResponseLink";
+     private static final String NoteExport="NoteExport";
+
     //----------------------------------------------------------------------
     private static final String GroupOffer_Item = "GroupOffer_Item";
 
@@ -242,6 +254,7 @@ import org.jetbrains.annotations.NotNull;
     private static final String SHORT_INVOICE ="SHORT_INVOICE";
     private static final String DONT_PRINT_HEADER ="DONT_PRINT_HEADER";
     private static final String TAYE_LAYOUT="TAYE_LAYOUT";
+     private static final String PrintItemNumber="PrintItemNumber";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
     private static final String VISIT_RATE="VISIT_RATE";
@@ -977,7 +990,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                + DONT_PRINT_HEADER + " INTEGER,"
                + TAYE_LAYOUT + " INTEGER,"
                + netsalFLAG + " TEXT , "
-               + HeaderprintInOrders + " INTEGER "
+               + HeaderprintInOrders + " INTEGER , "
+               +PrintItemNumber+ " INTEGER  "
 
                + ")";
        db.execSQL(CREATE_PRINTER_SETTING_TABLE);
@@ -1558,6 +1572,17 @@ try {
 
                 + ")";
         db.execSQL(CREATE_ItemsVisitTABLE );
+        String CREATE_NetworkTABLE = "CREATE TABLE IF NOT EXISTS " + NetworkTableLog + "("
+                + TransNo + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + LinkRequest + " TEXT,"
+                + DateTrand + " TEXT,"
+                + TimeTrans + " TEXT,"
+                + CustomerNo + " TEXT,"
+                + ResponseLink + " TEXT,"
+                +NoteExport + " TEXT "
+
+                + ")";
+        db.execSQL(CREATE_NetworkTABLE );
     }
 
 
@@ -2841,6 +2866,27 @@ try {
 
                 + ")";
         db.execSQL(CREATE_ItemsVisitTABLE );
+        String CREATE_NetworkTABLE = "CREATE TABLE IF NOT EXISTS " + NetworkTableLog + "("
+                + TransNo + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + LinkRequest + " TEXT,"
+                + DateTrand + " TEXT,"
+                + TimeTrans + " TEXT,"
+                + CustomerNo + " TEXT,"
+                + ResponseLink + " TEXT"
+                + ")";
+        db.execSQL(CREATE_NetworkTABLE );
+        try {
+            db.execSQL("ALTER TABLE NetworkTableLog ADD '" +  NoteExport + "'  TEXT DEFAULT ''");
+
+        } catch (Exception e) {
+
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try {
+            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD PrintItemNumber  INTEGER NOT NULL DEFAULT '0'");
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage().toString() + "DONT_PRINT_HEADER");
+        }
     }
 
     ////B
@@ -3479,6 +3525,7 @@ else   selectQuery = "SELECT PaymentSerials_cridt FROM " + PaymentSerials ;
         values.put(TAYE_LAYOUT,printer.getTayeeLayout());
         values.put(netsalFLAG,printer.getNetsalflag());
         values.put(HeaderprintInOrders,printer.getDontrprintheadeInOrders());
+        values.put(PrintItemNumber,printer.getPrintItemNumber());
         db.insert(PRINTER_SETTING_TABLE, null, values);
 
         db.close();
@@ -6951,6 +6998,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 printerSetting.setTayeeLayout(cursor.getInt(4));
                 printerSetting.setNetsalflag(cursor.getInt(5));
                 printerSetting.setDontrprintheadeInOrders(cursor.getInt(6));
+                printerSetting.setPrintItemNumber(cursor.getInt(7));
                 keyvalue.add(printerSetting);
             } while (cursor.moveToNext());
         }
@@ -10745,6 +10793,49 @@ void updateDataForClient(){
          return maxV;
 
      }
+     public void addNetworkLog(@NotNull NetworkLogModel listNetworkItem) {
+         db = this.getReadableDatabase();
+         ContentValues values = new ContentValues();
+//         for(int i=0;i<listNetworkItem.size();i++){
+             values.put(LinkRequest, listNetworkItem.LinkRequest);
+             values.put(DateTrand, listNetworkItem.DateTrand);
+             values.put(TimeTrans, listNetworkItem.TimeTrans);
+             values.put(CustomerNo, listNetworkItem.CustomerNo);
+             values.put( ResponseLink,listNetworkItem.ResponseLink);
+             values.put(NoteExport,listNetworkItem.NoteExport);
+             db.insert(NetworkTableLog, null, values);
+//         }
+         db.close();
+     }
+     public List< NetworkLogModel> getNetworkData( String itemNo) {
+         List<NetworkLogModel> list=new ArrayList<>();
+         String selectQuery = "select * from  NetworkTableLog ";
+         Log.e("getNetworkData==", selectQuery+"\t\t");
+         //  db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+         Log.e("getNetworkData==", cursor.getCount()+"\t\t");
+         if (cursor.moveToFirst()) {
+             do {
+                 NetworkLogModel     itemUnitDetails=new NetworkLogModel();
+                 itemUnitDetails.TransNumber=(cursor.getString(0));
+                 itemUnitDetails.LinkRequest=cursor.getString(1);
+                 itemUnitDetails.DateTrand=cursor.getString(2);
+                 itemUnitDetails.TimeTrans=cursor.getString(3);
+                 itemUnitDetails.CustomerNo=cursor.getString(4);
+                 itemUnitDetails.ResponseLink=cursor.getString(5);
+                 itemUnitDetails.NoteExport=cursor.getString(6);
+                 list.add(itemUnitDetails);
+
+
+             } while (cursor.moveToNext());
+         }
+         Log.e("getNetworkData=c==", list.size()+"\t\t");
+
+         return list;
+     }
+
+
+
      public void addItemVisit(@NotNull List<Item> listSelectedItem) {
          Log.e("addVisitMedical", "items ===="+listSelectedItem.size());
          db = this.getReadableDatabase();

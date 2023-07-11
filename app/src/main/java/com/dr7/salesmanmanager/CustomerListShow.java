@@ -1,5 +1,6 @@
 package com.dr7.salesmanmanager;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -32,6 +33,7 @@ import androidx.fragment.app.DialogFragment;
 import com.dr7.salesmanmanager.Adapters.CustomersListAdapter;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.Settings;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -82,7 +84,7 @@ public class CustomerListShow extends DialogFragment {
     DatabaseHandler mHandler;
     private ProgressDialog progressDialog;
     LinearLayout mainlayout;
-    TextView mSpeakBtn;
+    TextView mSpeakBtn,btnScan;
     String ipAddress="",ipWithPort,SalesManLogin,CONO;
 
     public CustomerListShow.CustomerListShow_interface getListener() {
@@ -117,6 +119,10 @@ public class CustomerListShow extends DialogFragment {
                 Log.e("startVoiceInput2","on");
                 startVoiceInput(1);
             }
+        });
+        btnScan= view.findViewById(R.id.btnScan);
+        btnScan.setOnClickListener(v->{
+            openSmallScanerTextView();
         });
         try {
             if (languagelocalApp.equals("ar"))
@@ -308,7 +314,10 @@ Log.e("customerList===",customerList.size()+"");
         this.listener = null;
     }
 
+    public void openSmallScanerTextView() {
 
+        new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
+    }
     public void storeInDatabase() {
 
         mHandler.deleteAllCustomers();

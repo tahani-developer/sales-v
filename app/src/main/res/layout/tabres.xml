@@ -22,6 +22,26 @@
             android:textSize="16sp"
             android:textStyle="bold" />
     </TableRow>
+    <TableRow
+        android:id="@+id/linear_itemNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginBottom="5dp">
+        <TextView
+            android:id="@+id/itemNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:gravity="right"
+
+            android:textColor="@color/add_button"
+
+            android:textDirection="ltr"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </TableRow>
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

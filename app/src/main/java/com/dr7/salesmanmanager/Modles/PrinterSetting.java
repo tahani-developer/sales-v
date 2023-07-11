@@ -10,6 +10,15 @@ public class PrinterSetting {
     private int tayeeLayout;
     private int netsalflag;
     private int dontrprintheadeInOrders;
+    private int printItemNumber;
+
+    public int getPrintItemNumber() {
+        return printItemNumber;
+    }
+
+    public void setPrintItemNumber(int printItemNumber) {
+        this.printItemNumber = printItemNumber;
+    }
 
     public int getDontrprintheadeInOrders() {
         return dontrprintheadeInOrders;

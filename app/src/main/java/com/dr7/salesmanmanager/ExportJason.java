@@ -31,6 +31,7 @@ import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.InventoryShelf;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.NetworkLogModel;
 import com.dr7.salesmanmanager.Modles.Payment;
 
 import static com.dr7.salesmanmanager.Login.SalsManPlanFlage;
@@ -135,6 +136,7 @@ public class ExportJason extends AppCompatActivity {
     GeneralMethod generalMethod;
     public int exportJustCustomer=0;
     List<Response_Link> listOfResponse;
+    List<String> paymentExportNo=new ArrayList<>();
 
     public ExportJason(Context context) throws JSONException {
         this.context = context;
@@ -499,11 +501,13 @@ public class ExportJason extends AppCompatActivity {
         for (int i = 0; i < payments.size(); i++)
         {
             if (payments.get(i).getIsPosted() == 0) {
-                Log.e("paymentshere===",payments.size()+"");
+
+                paymentExportNo.add(payments.get(i).getVoucherNumber()+"");
                 jsonArrayPayments.put(payments.get(i).getJSONObjectDelphi());
             }
         }
         try {
+            Log.e("paymentpaymentExportNo===",paymentExportNo.size()+"");
             vouchersObject=new JSONObject();
             vouchersObject.put("JSN",jsonArrayPayments);
             Log.e("paymentsvouchersObject",vouchersObject.toString()+"");
@@ -941,6 +945,7 @@ public class ExportJason extends AppCompatActivity {
         //55555555
         private  Response_Link res_linkObject=new Response_Link();
         public  String salesNo="",finalJson;
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -962,7 +967,7 @@ public class ExportJason extends AppCompatActivity {
 
                             URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/ExportSALES_VOUCHER_M";
                         res_linkObject.link_url="ExportSALES_VOUCHER_M";
-                        res_linkObject.order=listOfResponse.size()+1;;
+                        networkLogModel.LinkRequest="ExportSALES_VOUCHER_M";
 
 
                         Log.e("URL_TO_HIT",""+URL_TO_HIT);
@@ -1050,7 +1055,8 @@ public class ExportJason extends AppCompatActivity {
             res_linkObject.response_link=result+"";
             Log.e("onPostExecute","---1---"+result);
 
-
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
 
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
@@ -1078,9 +1084,9 @@ public class ExportJason extends AppCompatActivity {
                 });
             }
             listOfResponse.add(res_linkObject);
-            Log.e("listOfResponseresult",listOfResponse.get(0).response_link+"");
-            Log.e("listOfResponseresult",listOfResponse.get(0).link_url+"");
-            Log.e("listOfResponseresult",listOfResponse.get(0).state+"");
+//            Log.e("listOfResponseresult",listOfResponse.get(0).response_link+"");
+//            Log.e("listOfResponseresult",listOfResponse.get(0).link_url+"");
+//            Log.e("listOfResponseresult",listOfResponse.get(0).state+"");
 
         }
     }
@@ -1090,6 +1096,9 @@ public class ExportJason extends AppCompatActivity {
         private BufferedReader reader = null;
         SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -1117,10 +1126,11 @@ public class ExportJason extends AppCompatActivity {
 
             }
 
-
+            networkLogModel.LinkRequest="ExportPAYMENTS";
+            networkLogModel.NoteExport=paymentExportNo.toString();
 
                 String ipAddress = "",JsonResponse="";
-                Log.e("tagexPORT", "JsonResponse");
+
 
                 try {
                     ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
@@ -1142,6 +1152,7 @@ public class ExportJason extends AppCompatActivity {
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                     nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
                     nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
+
                     Log.e("payments,nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
 
 
@@ -1185,7 +1196,8 @@ public class ExportJason extends AppCompatActivity {
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
 //            progressDialog.dismiss();
-
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
             Log.e("onPostExecute","ExportPAYMENTS---6--"+result);
 
             if (result != null && !result.equals("")) {
@@ -1209,6 +1221,9 @@ public class ExportJason extends AppCompatActivity {
         SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
         private  Response_Link res_linkObject=new Response_Link();
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -1231,7 +1246,7 @@ public class ExportJason extends AppCompatActivity {
 
                     URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+ "/ExportPAYMENTS_CHECKS";
                     res_linkObject.link_url="ExportPAYMENTS_CHECKS";
-
+                    networkLogModel.LinkRequest="ExportPAYMENTS_CHECKS";
 
                     Log.e("URL_TO_HIT",""+URL_TO_HIT);
                 }
@@ -1313,8 +1328,10 @@ public class ExportJason extends AppCompatActivity {
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
 //            progressDialog.dismiss();
-            Log.e("onPostExecute","ExportPAYMENTS---7---"+result);
+//            Log.e("onPostExecute","ExportPAYMENTS---7---"+result);
             res_linkObject.response_link=result;
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
             pdVoucher.setTitle("Export Payment Paper");
             if (result != null && !result.equals("")) {
 //                Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();
@@ -1349,6 +1366,10 @@ public class ExportJason extends AppCompatActivity {
         SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
         private  Response_Link res_linkObject=new Response_Link();
+
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -1375,6 +1396,7 @@ public class ExportJason extends AppCompatActivity {
                      link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/ExportADDED_CUSTOMERS";
                     Log.e("tagexPORT", "Added==Jsonlink"+link);
                     res_linkObject.link_url="ExportADDED_CUSTOMERS";
+                    networkLogModel.LinkRequest="ExportADDED_CUSTOMERS";
                 } catch (Exception e) {
                     progressDialog.dismiss();
                     Toast.makeText(ExportJason.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
@@ -1436,6 +1458,8 @@ public class ExportJason extends AppCompatActivity {
 //            progressDialog.dismiss();
             res_linkObject.response_link=result;
 
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
             pdVoucher.setTitle("Export Added Customer");
 //"ErrorCode":"1","ErrorDesc":"ORA-12899: value too large for column "A2022_295"."VE_ADDED_CUSTOMERS"."REMARK" (actual: 51, maximum: 45)"}
             if (result != null && !result.equals("")) {
@@ -1690,6 +1714,7 @@ public class ExportJason extends AppCompatActivity {
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
         private  Response_Link res_linkObject=new Response_Link();
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
 //        SweetAlertDialog pdItem=null;
 
         @Override
@@ -1708,7 +1733,7 @@ public class ExportJason extends AppCompatActivity {
                     String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+ "/ExportSALES_VOUCHER_D";
             Log.e("link==", link+"");
             res_linkObject.link_url="ExportSALES_VOUCHER_D";
-            res_linkObject.order=listOfResponse.size()+1;
+            networkLogModel.LinkRequest="ExportSALES_VOUCHER_D";
 
 
             String ipAddress = "";
@@ -1779,6 +1804,8 @@ public class ExportJason extends AppCompatActivity {
             super.onPostExecute(result);
             Log.e("onPostExecute","---2---__");
             Log.e("onPostExecute,result",result+"");
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
 //            pdItem.dismiss();
            // Log.e("onPostExecute","ExportSALES_VOUCHER_D"+result);
             res_linkObject.response_link=result+"";
@@ -1819,6 +1846,18 @@ public class ExportJason extends AppCompatActivity {
         }
     }
 
+    private void addDetailsToNetwork_saveLocal(NetworkLogModel networkLogModel) {
+//        Log.e("addDetailsToNetwork_",""+networkLogModel.NoteExport+"\t"+networkLogModel.LinkRequest);
+        networkLogModel.CustomerNo=CustomerListShow.Customer_Account;
+        networkLogModel.DateTrand=generalMethod.getCurentTimeDate(1);
+        networkLogModel.TimeTrans=generalMethod.getCurentTimeDate(2);
+        if(networkLogModel.NoteExport==null)
+            networkLogModel.NoteExport="";
+
+        mHandler.addNetworkLog(networkLogModel);
+
+    }
+
     private void saveExpot() {//15
        // http://localhost:8082/SaveVouchers?CONO=290&STRNO=5
         new JSONTaskSaveVouchers().execute();
@@ -1842,6 +1881,9 @@ public class ExportJason extends AppCompatActivity {
         public  String salesNo="",finalJson;
 
         private  Response_Link res_linkObject=new Response_Link();
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -1877,6 +1919,7 @@ public class ExportJason extends AppCompatActivity {
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin+"&VHFTYPE="+taxType;
                 Log.e("tag_link", "ExportData -->" + link);
                 Log.e("tag_data", "ExportData -->" + data);
+                networkLogModel.LinkRequest="SaveVouchers";
 
 ////
                 URL url = new URL(link);
@@ -1934,6 +1977,8 @@ public class ExportJason extends AppCompatActivity {
             super.onPostExecute(result);
             progressSave.setTitle("Saved Vouchers");
             Log.e("onPostExecute","---15----"+result);
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
             res_linkObject.response_link=result;
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
@@ -1961,6 +2006,8 @@ public class ExportJason extends AppCompatActivity {
         private BufferedReader reader = null;
         //        SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
 
         private  Response_Link res_linkObject=new Response_Link();
         @Override
@@ -2008,6 +2055,7 @@ public class ExportJason extends AppCompatActivity {
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
                 Log.e("JSONTaskSaveLoadVan", "ExportData -->" + link);
                 Log.e("JSONTaskSaveLoadVan", "ExportData -->" + data);
+                networkLogModel.LinkRequest="SaveLoadVan";
 
 ////
                 URL url = new URL(link);
@@ -2066,6 +2114,8 @@ public class ExportJason extends AppCompatActivity {
             res_linkObject.response_link=   result;
             progressSave.setTitle("Saved Load");
             progressSave.dismissWithAnimation();
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
             Log.e("onPostExecute","---15----"+result);
 
             if (result != null && !result.equals("")) {
@@ -2105,6 +2155,10 @@ public class ExportJason extends AppCompatActivity {
         //        SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
         private  Response_Link res_linkObject=new Response_Link();
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
+
+
 
         @Override
         protected void onPreExecute() {
@@ -2125,6 +2179,7 @@ public class ExportJason extends AppCompatActivity {
                 // Log.e("ipAdress", "ip -->" + ip);
                 res_linkObject.link_url="SavePayment";
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
+                networkLogModel.LinkRequest="SavePayment";
                 Log.e("tag_link", "ExportData -->" + link);
                 Log.e("tag_data", "ExportData -->" + data);
 
@@ -2186,7 +2241,8 @@ public class ExportJason extends AppCompatActivity {
             super.onPostExecute(result);
             Log.e("onPostExecute","---17----"+result);
             res_linkObject.response_link=result;
-
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
             progressSave.dismissWithAnimation();
             if (result != null && !result.equals("")) {
 //                Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();
@@ -2222,6 +2278,9 @@ listOfResponse.add(res_linkObject) ;  }
         //        SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
         private  Response_Link res_linkObject=new Response_Link();
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
+
 
         @Override
         protected void onPreExecute() {
@@ -2246,6 +2305,7 @@ listOfResponse.add(res_linkObject) ;  }
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
                 Log.e("tag_link", "ExportData -->" + link);
                 Log.e("tag_data", "ExportData -->" + data);
+                networkLogModel.LinkRequest="SaveItemSerials";
                 res_linkObject.link_url="SaveItemSerials";
                 URL url = new URL(link);
 
@@ -2302,6 +2362,8 @@ listOfResponse.add(res_linkObject) ;  }
             super.onPostExecute(result);
             Log.e("onPostExecute","---16----"+result);
             res_linkObject.response_link=result;
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully")) {
 
@@ -2800,6 +2862,9 @@ listOfResponse.add(res_linkObject) ;  }
         SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
         private  Response_Link res_linkObject=new Response_Link();
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -2814,6 +2879,7 @@ listOfResponse.add(res_linkObject) ;  }
             String ipAddress = "";
             Log.e("tagexPORT", "JsonResponse");
             res_linkObject.link_url="ExportITEMSERIALS";
+            networkLogModel.LinkRequest="ExportITEMSERIALS";
             try {
                 ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
 
@@ -2876,6 +2942,8 @@ listOfResponse.add(res_linkObject) ;  }
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
             Log.e("onPostExecute","updateVoucherExported---4---");
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
           //  Log.e("onPostExecute","Serial updateVoucherExported---4---"+result);
             res_linkObject.response_link=result;
             if (result != null && !result.equals("")) {
@@ -2907,6 +2975,9 @@ listOfResponse.add(res_linkObject) ;  }
         private BufferedReader reader = null;
         SweetAlertDialog pdItem=null;
         public  String salesNo="",finalJson;
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -2923,6 +2994,7 @@ listOfResponse.add(res_linkObject) ;  }
                 URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/ExportTRANSACTIONS";
 
                 String ipAddress = "",JsonResponse="";
+            networkLogModel.LinkRequest="ExportTRANSACTIONS";
                 Log.e("tagexPORT", "JsonResponse");
 
                 try {
@@ -2990,7 +3062,8 @@ listOfResponse.add(res_linkObject) ;  }
 //            progressDialog.dismiss();
             Log.e("onPostExecuteTrans","JSONTask_TransactionDelphi---11---"+result);
             pdVoucher.setTitle("Export Transaction");
-
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully")) {
 
@@ -3013,6 +3086,8 @@ listOfResponse.add(res_linkObject) ;  }
 
     }
     private class JSONTask_InventoryShelfDelphi extends AsyncTask<String, String, String> {
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
 
         @Override
         protected String doInBackground(String... params) {
@@ -3020,6 +3095,7 @@ listOfResponse.add(res_linkObject) ;  }
             URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/EXPORTDROPPRICE";
 
             String JsonResponse="";
+            networkLogModel.LinkRequest="EXPORTDROPPRICE";
             Log.e("tagexPORT", "JsonResponseEXPORT_DROPPRICE");
             try {
                 HttpClient client = new DefaultHttpClient();
@@ -3077,6 +3153,8 @@ listOfResponse.add(res_linkObject) ;  }
             super.onPostExecute(result);
             Log.e("onPostExecuteTrans","JSONTask_InventoryShelfDelphi---13"+result);
             pdVoucher.setTitle("Export Transaction");
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
 //            pdVoucher.dismissWithAnimation();
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
@@ -3171,6 +3249,8 @@ listOfResponse.add(res_linkObject) ;  }
         }
     }
     private class JSONTask_LoadVanDelphi extends AsyncTask<String, String, String> {
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
 
         @Override
         protected String doInBackground(String... params) {
@@ -3179,6 +3259,7 @@ listOfResponse.add(res_linkObject) ;  }
 
             String JsonResponse="";
             Log.e("tagexPORT", "EXPORT_LOADVAN");
+            networkLogModel.LinkRequest="EXPORTLOADVAN";
             try {
                 HttpClient client = new DefaultHttpClient();
                 HttpPost request = new HttpPost();
@@ -3244,6 +3325,8 @@ listOfResponse.add(res_linkObject) ;  }
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
             Log.e("onPostExecuteTrans","JSONTask_EXPORTLOADVAN---132"+result);
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
 //            pdVoucher.setTitle("Export LOADVAN");
 //            pdVoucher.dismissWithAnimation();
             if (result != null && !result.equals("")) {
@@ -3317,6 +3400,8 @@ listOfResponse.add(res_linkObject) ;  }
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
         int flag_export=0;//0 from normal export /// 2 from dialog  re export
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
 
         public JSONTask_RE_EXPORT_STOCK(int floag) {
             this.flag_export=floag;
@@ -3342,7 +3427,7 @@ listOfResponse.add(res_linkObject) ;  }
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin+"&VHFTYPE="+taxType;
                 Log.e("tag_link", "ExportData -->" + link);
                 Log.e("tag_data", "ExportData -->" + data);
-
+                networkLogModel.LinkRequest="EXPORTTOSTOCK";
 
 ////
                 URL url = new URL(link);
@@ -3398,7 +3483,8 @@ listOfResponse.add(res_linkObject) ;  }
         @Override
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
-
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
             Log.e("onPostExecute","EXPORT_STOCK---18----"+result);
             pdStosk.dismissWithAnimation();
             if (result != null && !result.equals("")) {
@@ -3422,6 +3508,9 @@ listOfResponse.add(res_linkObject) ;  }
         private BufferedReader reader = null;
         int flag_export=0;//0 from normal export /// 2 from dialog  re export
         private  Response_Link res_linkObject=new Response_Link();
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
+
         public JSONTaskEXPORT_STOCK(int floag) {
             this.flag_export=floag;
         }
@@ -3446,7 +3535,7 @@ listOfResponse.add(res_linkObject) ;  }
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin+"&VHFTYPE="+taxType;
                 Log.e("tag_link", "ExportData -->" + link);Log.e("tag_data", "ExportData -->" + data);
                 res_linkObject.response_link="EXPORTTOSTOCK";
-
+                networkLogModel.LinkRequest="EXPORTTOSTOCK";
 ////
                 URL url = new URL(link);
 
@@ -3503,7 +3592,8 @@ listOfResponse.add(res_linkObject) ;  }
             super.onPostExecute(result);
 
             Log.e("onPostExecute","EXPORT_STOCK---18----"+result);
-
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully")) {
                     Log.e("EXPORT_STOCK","result_start");
@@ -3537,6 +3627,8 @@ listOfResponse.add(res_linkObject);
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
         public  int typeExport=0;//2 from dialog
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
 
 
         public JSONTaskExportItem_Serial(int type) {
@@ -3569,6 +3661,7 @@ listOfResponse.add(res_linkObject);
                 String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/ExportItem_Serial";
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
                 Log.e("ExportItem_Serial", "ExportData -->" + link);
+                networkLogModel.LinkRequest="ExportItem_Serial";
 
                 URL url = new URL(link);
 
@@ -3626,6 +3719,8 @@ listOfResponse.add(res_linkObject);
 
             Log.e("onPostExecute","EXPORT_STOCK---18----"+result);
 
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully")) {
 
@@ -3656,6 +3751,9 @@ listOfResponse.add(res_linkObject);
         private BufferedReader reader = null;
         int type_Export=0;// 0 fromexport pending data //1 from normal
         private  Response_Link res_linkObject=new Response_Link();
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
+
         public JSONTaskEXPORT_STOCK_Payment(int expo) {
             this.type_Export=expo;
             Log.e("JSONTaskEXPORT_STOCK_Payment",""+type_Export);
@@ -3677,6 +3775,7 @@ listOfResponse.add(res_linkObject);
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
 
                 res_linkObject.link_url="ExportPaymentToSTK";
+                networkLogModel.LinkRequest="ExportPaymentToSTK";
 ////
                 URL url = new URL(link);
 
@@ -3736,7 +3835,8 @@ listOfResponse.add(res_linkObject);
 
             res_linkObject.response_link=result;
             Log.e("onPostExecute","EXPORTpayment=19---"+result);
-
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully")) {
                     res_linkObject.state=200;
@@ -3776,6 +3876,8 @@ listOfResponse.add(res_linkObject);
         private String JsonResponse = null;
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
 
         private  Response_Link res_linkObject=new Response_Link();
         @Override
@@ -3796,7 +3898,7 @@ listOfResponse.add(res_linkObject);
                link = "http://"+ipAddress.trim()+":"+ipWithPort+headerDll.trim()+"/UpdateReturn";
                     res_linkObject.link_url="UpdateReturn";
 
-
+                    networkLogModel.LinkRequest="UpdateReturn";
                     Log.e("URL_TO_HIT",""+link);
                 }
             } catch (Exception e) {
@@ -3847,6 +3949,8 @@ listOfResponse.add(res_linkObject);
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
 //            progressDialog.dismiss();
+            networkLogModel.ResponseLink=result;
+            addDetailsToNetwork_saveLocal(networkLogModel);
             Log.e("onPostExecuteReturn",""+result);
             res_linkObject.response_link=result;
 
@@ -3893,6 +3997,9 @@ listOfResponse.add(res_linkObject);
     }
 
     private class JSONTaskIIs_SaveVanRequst extends AsyncTask<String, String, String> {
+        private NetworkLogModel networkLogModel=new NetworkLogModel();
+
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -3910,6 +4017,7 @@ listOfResponse.add(res_linkObject);
 //                    URL_TO_HIT = "http://" + ipAddress+":"+ipWithPort +  headerDll.trim() +"/SaveTempLoadVan";
                     URL_TO_HIT = "http://" + ipAddress+":"+ipWithPort +  headerDll.trim() +"/EXPORTLOADVAN";
                     Log.e("URL_TO_HIT",URL_TO_HIT);
+                    networkLogModel.LinkRequest="EXPORTLOADVAN";
                 }
             } catch (Exception e) {
 
@@ -3978,6 +4086,8 @@ listOfResponse.add(res_linkObject);
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             pdVoucher.dismissWithAnimation();
+            networkLogModel.ResponseLink=s;
+            addDetailsToNetwork_saveLocal(networkLogModel);
             if (s != null) {
                 if (s.contains("Saved Successfully")) {
 

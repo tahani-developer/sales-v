@@ -16,6 +16,18 @@ public class NewAddedCustomer {
     private String  time;
     private String  MaxD;
 
+    private String  MaxC;
+
+
+
+    public String getMaxC() {
+        return MaxC;
+    }
+
+    public void setMaxC(String maxC) {
+        MaxC = maxC;
+    }
+
     public String getMaxD() {
         return MaxD;
     }
@@ -77,7 +89,10 @@ public class NewAddedCustomer {
     }
 
 
-    public NewAddedCustomer(String custName, String remark, String latitude, String longtitude, String salesMan, String salesmanNo, String isPosted, String ADRESS_CUSTOMER, String TELEPHONE, String CONTACT_PERSON,String MarketName,String date,String time,String Maxd) {
+    public NewAddedCustomer(String custName, String remark, String latitude, String longtitude,
+                            String salesMan, String salesmanNo, String isPosted, String ADRESS_CUSTOMER,
+                            String TELEPHONE, String CONTACT_PERSON, String marketName,
+                            String date, String time, String maxD,  String maxC) {
         this.custName = custName;
         this.remark = remark;
         this.latitude = latitude;
@@ -88,10 +103,11 @@ public class NewAddedCustomer {
         this.ADRESS_CUSTOMER = ADRESS_CUSTOMER;
         this.TELEPHONE = TELEPHONE;
         this.CONTACT_PERSON = CONTACT_PERSON;
-      this.MarketName=  MarketName;
-        this.date=date;
-        this.time=time;
-        this.MaxD =Maxd;
+        MarketName = marketName;
+        this.date = date;
+        this.time = time;
+        MaxD = maxD;
+        MaxC = maxC;
     }
 
     public String getCustName() {

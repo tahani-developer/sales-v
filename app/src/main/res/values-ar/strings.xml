@@ -1,11 +1,13 @@
 <resources>
+    <string name="printItemNumber">طباعة رقم المادة</string>
+    <string name="max_credit">السقف المقترح للشيكات</string>
     <string name="VisitMedicalReport">تقرير الزيارات الطبية</string>
     <string name="Adoption">النوع</string>
     <string name="tool">الأدوات</string>
     <string name="item_info">معلومات المواد</string>
     <string name="doubleVisit">زيارة مزدوجة</string>
     <string name="app_name">نظام الصقور للمندوبين</string>
-
+    <string name="cust_store">اسم المتجر</string>
     <string name="app_username">اسم المستخدم</string>
     <string name="app_password">كلمة السر</string>
     <string name="app_dataManagement">ادارة البيانات</string>
