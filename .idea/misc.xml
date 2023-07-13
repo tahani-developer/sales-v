@@ -22,8 +22,16 @@
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/fragment_sales_invoice.xml" value="0.5154185022026432" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/nav_header_main.xml" value="0.10625" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/voucher_info_dialog2.xml" value="0.25" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable-mdpi/edittext_back.xml" value="0.2255" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable-xhdpi/cancel_button.xml" value="0.1775" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable-xhdpi/done_button.xml" value="0.2078125" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/back_border_dark.xml" value="0.2255" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/back_border_edit.xml" value="0.2255" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/back_border_shape.xml" value="0.251" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/back_edit_dark.xml" value="0.251" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/back_fillcolor.xml" value="0.251" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/back_payment.xml" value="0.2255" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/background.xml" value="0.251" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/background_container.xml" value="0.20052083333333334" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/custom_checkbox.xml" value="0.266" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/ic_add_location_black_24dp.xml" value="0.18935185185185185" />
@@ -35,6 +43,7 @@
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/ic_launcher_foreground_tick.xml" value="0.27708333333333335" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/ic_print_black_24dp.xml" value="0.1685185185185185" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/ic_refresh_black_24dp.xml" value="0.1865" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/ic_scan_black_24dp.xml" value="0.1755" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-land/customer_log_report.xml" value="0.19973544973544974" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-land/fragment_setting.xml" value="0.2028301886792453" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-land/inventory_report.xml" value="0.25" />
@@ -52,7 +61,7 @@
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-large/fragment_stock_request.xml" value="0.15885416666666666" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-large/items_report.xml" value="0.39140625" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-large/print_vouchers.xml" value="0.5" />
-        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-large/printer_setting.xml" value="0.33" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-large/printer_setting.xml" value="0.22" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-mdpi/account_row.xml" value="0.33" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-mdpi/activity_account_statment.xml" value="0.22" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal-land/items_report.xml" value="0.19400352733686066" />
@@ -64,7 +73,7 @@
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/check_info_dialog.xml" value="0.20208333333333334" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/fragment_receipt_voucher.xml" value="0.33" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/fragment_sales_invoice.xml" value="0.5" />
-        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/fragment_stock_request.xml" value="0.1324561403508772" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/fragment_stock_request.xml" value="0.2" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/inventory_report.xml" value="0.33" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/item_horizontal_listview.xml" value="0.25" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/items_report.xml" value="0.22" />
@@ -87,10 +96,13 @@
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_login.xml" value="0.171875" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_main.xml" value="0.22291666666666668" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_maps.xml" value="0.1736111111111111" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_medical_visit.xml" value="0.33" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_medical_visit_report.xml" value="0.2" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_reports.xml" value="0.22" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_return_by_voucher_no.xml" value="0.22" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_serial_report.xml" value="0.2609375" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_shelf_inventoery_report.xml" value="0.2609375" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_stock_.xml" value="0.1736842105263158" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_target_report.xml" value="0.22" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_un_collected_data.xml" value="0.33" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/add_customer_dialog.xml" value="0.6395833333333333" />
@@ -103,10 +115,11 @@
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/cash_report.xml" value="0.5" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/company_info_dialog.xml" value="0.6572769953051644" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/content_main.xml" value="0.1618421052631579" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/cust_trans_reportrow.xml" value="0.18982471141513468" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/customer_log_report.xml" value="0.16" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/customers_item.xml" value="0.14537037037037037" />
-        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/customers_list.xml" value="0.1736111111111111" />
-        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/dashbord_activities.xml" value="0.22291666666666668" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/customers_list.xml" value="0.22" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/dashbord_activities.xml" value="0.1" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/de_export_dialog.xml" value="0.21458333333333332" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/footer_voucher_print.xml" value="0.20657894736842106" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/fragment_customer_check_in.xml" value="0.2953125" />
@@ -123,11 +136,15 @@
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/item_serial_recycler.xml" value="0.19479166666666667" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/item_spinner_acc.xml" value="0.18935185185185185" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/item_stock_rwo_.xml" value="0.17587719298245613" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/item_visit_medical_dialog.xml" value="0.21" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/items_list.xml" value="0.5" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/items_stock_list.xml" value="0.1736842105263158" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/list_inventory_report.xml" value="0.34296875" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/login_free_size.xml" value="0.28828125" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/max_discount_info_dialog.xml" value="0.25" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/more_settings_dialog.xml" value="0.25" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/nav_header_main.xml" value="0.1618421052631579" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/new_addcustomer.xml" value="0.33" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/offer_dialog.xml" value="0.67" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/password_dialog.xml" value="0.23369565217391305" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/pending_inv_row.xml" value="0.5" />
@@ -148,6 +165,7 @@
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/tabres.xml" value="0.18796296296296297" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/transactions_report.xml" value="0.1986842105263158" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/update_qty_dialog.xml" value="0.2" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/visit_report_row.xml" value="0.18982471141513468" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/voucher_info_dialog.xml" value="0.2171875" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/voucher_info_dialog2.xml" value="0.5145833333333333" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/vouchers_report.xml" value="0.25" />

@@ -38,12 +38,12 @@ public class Item implements Serializable {
     private double itemL;
     private double minSalePrice;
     private double posPrice;
-    private String salesmanNo;
+    private  String salesmanNo;
     private  String Kind_item;
     private  String cust;
     private  String serialCode;
     private  String vouchDate;
-    private String itemHasSerial;
+    private  String itemHasSerial;
     private  double discountCustomer;
     private  double currentQty;
 

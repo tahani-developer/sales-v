@@ -1154,7 +1154,12 @@ public class PdfConverter {
 
     private PdfPTable getHeaderTable(List<?> list, int reportType, String headerDate, String
             date) {
-        companyInfo = obj.getAllCompanyInfo().get(0);
+        try {
+            companyInfo = obj.getAllCompanyInfo().get(0);
+        }catch (Exception e){
+            Toast.makeText(context, ""+context.getResources().getString(R.string.error_companey_info), Toast.LENGTH_SHORT).show();
+        }
+
         PdfPTable pdfPTableHeader = new PdfPTable(7);
         pdfPTableHeader.setWidthPercentage(100f);
         pdfPTableHeader.setSpacingAfter(20);
@@ -1163,7 +1168,7 @@ public class PdfConverter {
         if (reportType != 13 && reportType != 14&& reportType != 16&& reportType != 17&& reportType != 18&&reportType != 10)
             insertCell(pdfPTableHeader, context.getString(R.string.date) + " : " + date, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
         if (reportType == 10)
-        {
+        {  try {
             if (companyInfo.getLogo() != null && !companyInfo.getLogo().equals("")) {
                 Bitmap imageBytes = companyInfo.getLogo();
                 imageBytes = getResizedBitmap(imageBytes, 80, 80);
@@ -1228,6 +1233,9 @@ public class PdfConverter {
             } catch (DocumentException e) {
                 e.printStackTrace();
             }
+        }catch (Exception e){
+            Toast.makeText(context, ""+context.getResources().getString(R.string.error_companey_info), Toast.LENGTH_SHORT).show();
+        }
         }
 
 

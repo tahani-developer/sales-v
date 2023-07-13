@@ -711,7 +711,7 @@ if(settingsList.size()>0)
             Log.e("eee==",""+ DB_salesManPlanList.size());
         }
 
-        Log.e(" DB_salesManPlanListlast==",""+ DB_salesManPlanList.size());
+
 
 
         if(approveAdmin==1) {
@@ -6161,7 +6161,7 @@ Log.e("Exception==",e.getMessage());
             Log.e("obj.getPostalCode()",obj.getPostalCode()+"");
             Log.e("obj.getSubAdminArea()",obj.getSubAdminArea()+"");
             Log.e("obj.getLocality()",obj.getLocality()+"");
-            Log.e("obj.getSubThoroughfare()",obj.getSubThoroughfare()+"");
+
 
 
             Log.e("IGA", "Address" + add);

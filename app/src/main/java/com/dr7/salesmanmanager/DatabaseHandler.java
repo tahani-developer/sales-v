@@ -1111,7 +1111,7 @@ try {
     db.execSQL(CREATE_TABLE_CONTACTS);
     Log.e("TABLE_TRANSACTIONS====",CREATE_TABLE_CONTACTS);
 }catch (Exception exception){
-    Log.e("Exception,TABLE_TRANSACTIONS", exception.getMessage());
+    Log.e("Exception,TABLE_", exception.getMessage());
 }
 
        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -9271,15 +9271,17 @@ if(name==null) name = "";
         return  itemUnit;
     }
 
-    public String getUnitPrice(String itemNo,String rate,double countItems) {
-       //  Log.e("getUnitPrice","itemNo"+itemNo+"\trate="+rate);
+    public String getUnitPrice(String itemNo,String rate,float countItems) {
+//         Log.e("getUnitPrice","itemNo"+itemNo+"\tcountItems="+countItems);
         String selectQuery="";
-        try {
-            DecimalFormat decimalFormat = new DecimalFormat("00.000");
-            countItems= Double.parseDouble(convertToEnglish(decimalFormat.format(countItems)));
-        }catch (Exception exception){
-
-        }
+//        try {
+//            DecimalFormat decimalFormat = new DecimalFormat("00.000");
+//        countItems=Math.round(Float.parseFloat(countItems+""));
+//        Log.e("getUnitPrice","itemNo"+itemNo+"\tcountItems="+countItems);
+//            countItems= Double.parseDouble(convertToEnglish(decimalFormat.format(countItems)));
+//        }catch (Exception exception){
+//
+//        }
 
 
         switch (rate){
@@ -9297,7 +9299,7 @@ if(name==null) name = "";
 
                 break;
 
-           case "-1":   selectQuery = "select PriceUnit from Item_Unit_Details where ItemNo='"+itemNo.trim()+"'  and  CAST(ConvRate as double)='"+countItems+"'";
+           case "-1":   selectQuery = "select PriceUnit from Item_Unit_Details where ItemNo='"+itemNo.trim()+"'  and  CAST(ConvRate as float)='"+countItems+"'";
 
               break;
             case "-2":
@@ -10521,7 +10523,7 @@ void updateDataForClient(){
        db.close();
     }
     public String getConvRate(String itemNo,String UnitID) {
-        Log.e("getConvRate==","getConvRate");
+        Log.e("getConvRate==","getConvRate"+UnitID);
       String ConvRate="1";
        // units.add("1");
        String selectQuery = "select DISTINCT  ConvRate  from " + Item_Unit_Details + " where ItemNo = '" + itemNo + "' and UnitID= '"+UnitID+"' ";
@@ -10531,8 +10533,14 @@ void updateDataForClient(){
 
        if (cursor.moveToFirst()) {
           do {
-             ConvRate=cursor.getString(0);
-             Log.e("ConvRate==",ConvRate+"");
+              try {
+                  ConvRate=cursor.getDouble(0)+"";
+              }catch (Exception e){
+                  Log.e("ConvRateE==",e.getMessage()+"");
+                  ConvRate=cursor.getString(0);
+              }
+
+             Log.e("ConvRate***==",ConvRate+"");
           } while (cursor.moveToNext());
        }
 

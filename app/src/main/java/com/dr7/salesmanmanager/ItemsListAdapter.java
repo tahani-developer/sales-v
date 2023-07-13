@@ -156,15 +156,15 @@ public class ItemsListAdapter extends BaseAdapter {
             if(unitsItems_select==1){
                 if(!itemList.get(i).getWhichu_qty().equals(""))
                     try {
-                        itemUnitPrice=databaseHandler.getUnitPrice(itemList.get(i).getItemNo().trim(),"-1",Double.parseDouble(itemList.get(i).getWhichu_qty()));
-                        Log.e("itemUnitPrice","1==="+itemUnitPrice);
+                        itemUnitPrice=databaseHandler.getUnitPrice(itemList.get(i).getItemNo().trim(),"-1",Float.parseFloat(itemList.get(i).getWhichu_qty()));
+//                        Log.e("itemUnitPrice","1==="+itemUnitPrice);
                     }catch (Exception e){
                         Log.e("itemUnitPrice",""+e.getMessage());
                     }
             }else {
                 itemUnitPrice=databaseHandler.getUnitPrice(itemList.get(i).getItemNo().trim(),rate,0);
             }
-            Log.e("priceTextView","2="+itemUnitPrice);
+
             if(!itemUnitPrice.equals(""))
             {
                 if(itemList.get(i).getOneUnitItem().equals("1"))

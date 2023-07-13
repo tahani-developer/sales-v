@@ -1309,7 +1309,13 @@ public static     float CountOfItems=1;
 
                                                                  String ITEMS_unitsQTY = mHandler.getItemsUnitsQTY(itemNumber.getText().toString(), Item_unit.getSelectedItem().toString());
                                                                  unit_qty.setText(ITEMS_unitsQTY);
-                                                                 allItemsList.get(position).setMinSalePrice(Double.parseDouble(price.getText().toString()));
+                                                                 try {
+                                                                     allItemsList.get(position).setMinSalePrice(Double.parseDouble(price.getText().toString()));//crash
+                                                                 }catch (Exception e){
+                                                                     Log.e("Exception",""+e.getMessage());
+                                                                     allItemsList.get(position).setMinSalePrice(1);
+                                                                 }
+
                                                         //         Log.e("CountOfItems", CountOfItems + " ,ITEMS_unitsQTY=" + ITEMS_unitsQTY);
                                                              }else
                                                              {
@@ -2865,6 +2871,7 @@ public static     float CountOfItems=1;
                                                                @Override
                                                                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                                                                  CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
+
                                                                  if(!Item_unit.getSelectedItem().toString().equals("")) {
 
                                                                      discount.setText("");
@@ -2874,6 +2881,7 @@ public static     float CountOfItems=1;
 //                                                                         priceCustomer=mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
 //
 //                                                                     }
+
                                                                          price_value=mHandler.getUnitPrice(itemNumber.getText().toString(), "-1", CountOfItems);
                                                                      if(!priceCustomer.equals(""))
                                                                      price.setText(priceCustomer);
@@ -5513,12 +5521,14 @@ public static     float CountOfItems=1;
              (MainActivity.OffersJustForSalsFlag == 1 &&SalesInvoice.voucherType == 504));
  }
   public static   float getCountOfItems(String itemcode,String unitid ){
+      Log.e("getCountOfItems","unitid="+unitid);
         String CountOfItems=MHandler.getConvRate(itemcode, unitid);
         float resule=1;
         if(CountOfItems!=null && !CountOfItems.equals(""))
         {
-            try {
+            try {  Log.e("getCountOfItems","1CountOfItems="+CountOfItems);
                 resule=Float.parseFloat(CountOfItems);
+                Log.e("getCountOfItems","2CountOfItems="+CountOfItems);
 
             }catch (Exception e){
                 Log.e("getCountOfItems",""+e.getMessage());
