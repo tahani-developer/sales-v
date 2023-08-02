@@ -407,7 +407,8 @@ LinearLayout row221;
         });
 
         voucherNumber = mDbHandler.getMaxSerialNumber(1) + 1;//for test 1
-        Log.e("voucherNumber", "onCreateView" +voucherNumber);
+        Log.e("voucherNumber", "onCreateView" +voucherNumber+"\t"+Login.MaxpaymentvochFromServ);
+        Log.e("voucherNumber", "MAX_ServoucherNumber=" +MAX_ServoucherNumber);
         if(Login.MaxpaymentvochFromServ==0)
         voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
         else
@@ -1502,8 +1503,22 @@ LinearLayout row221;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void saveAmount(int voucherType) {
+//        try {
+//            voucherNumber=Integer.parseInt(voucherNo.getText().toString().trim());
+//            Log.e("voucherNumber","=="+voucherNumber);
+//        }catch (Exception e){
+//
+//        }
 
+        if(Login.MaxpaymentvochFromServ==1){
+            try {
+                voucherNumber=Integer.parseInt(String.valueOf(MAX_ServoucherNumber));
+//                Log.e("voucherNumber","=="+voucherNumber);
+            }catch (Exception e){
 
+            }
+
+        }
         Toast.makeText(getActivity(), "Amount Saved***", Toast.LENGTH_LONG).show();
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
@@ -1522,7 +1537,10 @@ LinearLayout row221;
         Double amount = Double.parseDouble(amountEditText.getText().toString());
 
 
+
+
         int salesMan = Integer.parseInt(Login.salesMan);
+//        Log.e("voucherNumber","=="+voucherNumber);
 
         payment = new Payment(0, voucherNumber, salesMan, payDate,
                 remark, amount, 0, cusNumber, cusName, voucherType, Integer.parseInt(paymentYear));

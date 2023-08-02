@@ -94,7 +94,6 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
         }
         mDbHandler = new DatabaseHandler(context);
         hideQty=mDbHandler.getAllSettings().get(0).getHide_qty();
-        Log.e("hideQty","StockRecyclerViewAdapter="+hideQty);
     }
 
     @Override

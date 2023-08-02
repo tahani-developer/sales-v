@@ -159,7 +159,7 @@ public class AddItemsStockFragment extends DialogFragment {
                             filteredList.add(jsonItemsList.get(j));
                     }
                     StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(filteredList, getActivity());
-                    recyclerView.setAdapter(adapter);
+                    recyclerView.setAdapter(adapter) ;
                 } else {
                     StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(jsonItemsList, getActivity());
                     recyclerView.setAdapter(adapter);
@@ -188,8 +188,8 @@ public class AddItemsStockFragment extends DialogFragment {
 
                 if (!categorySpinner.getSelectedItem().toString().equals("no filter")) {
                     ArrayList<Item> filteredList = new ArrayList<>();
-                    jsonItemsList.clear();
-                    jsonItemsList.addAll(itemsRequiredList);
+//                    jsonItemsList.clear();
+//                    jsonItemsList.addAll(itemsRequiredList);
 //                    jsonItemsList=itemsRequiredList;
                     for (int k = 0; k < jsonItemsList.size(); k++) {
                         if (jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))

@@ -3855,7 +3855,8 @@ listOfResponse.add(res_linkObject);
             if(importDataAfter==0&&type_Export==0)
             getData();
             else if(importDataAfter==2&&type_Export==0)
-            {Log.e("importDataAfter","else"+importDataAfter);
+            {
+                Log.e("importDataAfter","else"+importDataAfter);
                 ImportJason obj = new ImportJason(context);
                 obj.getSerialData(voucherNo_ReturnNo);
             }

@@ -691,6 +691,8 @@ if(settingsList.size()>0)
             OffersJustForSalsFlag=settingsList.get(settingsList.size()-1).getOffersJustForSales();
             checkQtyForOrdersFlage=settingsList.get(settingsList.size()-1).getCheckQtyinOrder();
             UNITFLAGE=settingsList.get(settingsList.size()-1).getItems_Unit();
+            if(UNITFLAGE==0)
+                UNITFLAGE=settingsList.get(settingsList.size()-1).getItemUnit();
             Acountatatment=settingsList.get(settingsList.size()-1).getAcountatatmentVisable();
     SharWhatsAppForm=settingsList.get(settingsList.size()-1).getSharWhatsAppForm();
     AddCustomerPer=settingsList.get(settingsList.size()-1).getAdd_CustumerPer();

@@ -43,7 +43,11 @@ class MedicalVisit : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         fillAdoption(binding)
         fillItemName(binding)
         binding.buttonAdd.setOnClickListener({view ->
-            getData(binding)
+            if(binding.editTextqty.text.toString().length!=0)
+            {
+                getData(binding)
+            }
+        else binding.editTextqty.setError("Required")
         })
         binding.buttonSaveVisit.setOnClickListener({view ->
             saveData(binding)
@@ -96,7 +100,12 @@ class MedicalVisit : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         item.itemName= itemName_value
         item.originaLvoucherNo=voucherNo.toInt();
 //        Log.e("getData","qty="+item.qty)
-        item.qty=binding.editTextqty.text.toString().toFloat()
+        try {
+            item.qty=binding.editTextqty.text.toString().toFloat()
+        }catch ( err: Exception ){
+            item.qty= 1F;
+        }
+
         Log.e("getData","qty="+item.qty)
         item.cust=userNo
         listSelectedItem.add(item)

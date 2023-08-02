@@ -95,6 +95,8 @@ public class Login extends AppCompatActivity {
    public static String SETTINGS_PREFERENCES="SETTINGS_PREFERENCES";
     public static String Items_Orent_PREF="Items_Orent_PREF";
     public static String  Smallericon_PREF="Smallericon_PREF";
+    public static String  UpdateFlag="UpdateFlag";
+    public static String  FirstRun_3="FirstRun_4";
     public static SharedPreferences sharedPref;
     public static boolean Items_Orent =true;
 
@@ -203,14 +205,8 @@ public class Login extends AppCompatActivity {
          sharedPref = getSharedPreferences(SETTINGS_PREFERENCES, MODE_PRIVATE);
          Items_Orent = sharedPref.getBoolean(Items_Orent_PREF,true);
 
+
      //if(   password_talaat==1) Secondpassword_setting ="2022111";
-
-
-
-
-
-
-
 //        try{
 //            exportForClient();
 //        }catch (Exception e){
@@ -218,7 +214,24 @@ public class Login extends AppCompatActivity {
 //        }
 
 //        getIpAddressForDevice();
+//        if(sharedPref==null)  sharedPref = getActivity().getSharedPreferences("SETTINGS_PREFERENCES", MODE_PRIVATE);
+//        if  (sharedPref.getBoolean(Login.Smallericon_PREF, false)){}
+        boolean isFirstRun = sharedPref.getBoolean(Login.FirstRun_3, true);
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        Log.e("isFirstRun","1"+isFirstRun);
+        if (isFirstRun) {
+            // Code to run once
+            Log.e("isFirstRun","2"+isFirstRun);
+            mDHandler.deleteSerialsPayment();
+
+            editor.putBoolean(Login.FirstRun_3, false);
+            editor.apply();
+        }
+         isFirstRun = sharedPref.getBoolean(Login.FirstRun_3, true);
+        Log.e("isFirstRun","33"+isFirstRun);
         validLocation();
+
 
  //       getPasswords();
         try {

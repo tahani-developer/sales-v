@@ -1756,7 +1756,8 @@ public static     float CountOfItems=1;
                     String solidQty = MHandler.getSolidQtyForItem(allItemsList.get(position).getItemNo(), voucherDate);
                     // Log.e("sumCurentQty","solidQty=="+solidQty);
                     float qtyCurent = Float.parseFloat(solidQty);
-                    holder.unitQty.setText("" + (allItemsList.get(position).getQty() - qtyCurent));
+//                    holder.unitQty.setText("" + (allItemsList.get(position).getQty() - qtyCurent));
+                    holder.unitQty.setText("" + (allItemsList.get(position).getQty()));
                     holder.textViewUnit_qty_.setText("" + (allItemsList.get(position).getQty() - qtyCurent));
                 } catch (Exception e) {
 
@@ -5059,18 +5060,15 @@ public static     float CountOfItems=1;
                 ||(Purchase_Order==1)) {
             return true;
         }
-//        if(MHandler.getAllSettings().get(0).getQtyServer()==1)
-//        {
-//            qtyCurrent=importJason.getAvailableQty(itemNoSelected);
-//            if (qtyCurrent >= qtyRequired)
-//            {
-//                return  true;
-//            }
-//
-//            return  true;
-//        }
-//        else {
-    else    if (qtyRequired <= qtyCurrent) {
+     if(String.valueOf(qtyCurrent).length()>5)
+     {
+        String qtyValue=String.valueOf(qtyCurrent).substring(0,5);
+         qtyCurrent = Float.parseFloat(qtyValue);
+         Log.e("validQty==", "qtyValue=" + qtyValue + "\tqtyCurrent=" + qtyCurrent);
+     }
+
+
+    if (qtyRequired <= qtyCurrent) {
             return true;
         }
 //        }

@@ -228,6 +228,7 @@ else
         recyclerView.setLayoutManager(linearLayoutManager);
         final ListInventoryAdapter adapter = new ListInventoryAdapter(itemsReportinventory, context);
         recyclerView.setAdapter(adapter);
+
         setTextTotalQty( adapter.TotalQtyInventoey());
 
 //      load  Inventory Report  when choose item from spinner category

@@ -1683,6 +1683,7 @@ this.activtyflage=activtyflage;
                             } else {//others
 
                                 {
+                                    Log.e("maxVoucherLong","="+maxVoucherLong);
                                     if(mHandler.getPaymentSerialsCount()==0)
                                     mHandler.insertPaymentSerials(2,maxVoucherLong+"");
                                     else

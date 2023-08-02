@@ -59,6 +59,8 @@ import com.dr7.salesmanmanager.Modles.visitMedicalModel;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -4825,6 +4827,12 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
      }
 
+
+     public  void deleteSerialsPayment(){
+         SQLiteDatabase db = this.getWritableDatabase();
+         db.execSQL("delete from " + PaymentSerials);
+         db.close();
+     }
     public int getMaxVoucherNumber() {
         String selectQuery = "SELECT  MAX(VOUCHER_NUMBER) FROM " + PAYMENTS;
         db = this.getWritableDatabase();
@@ -5887,6 +5895,20 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 item.setItemNo(cursor.getString(0));
                 item.setItemName(cursor.getString(1));
                 item.setCategory(cursor.getString(2));
+                try {
+                    String itemQty=cursor.getString(3);
+                    Log.e("itemQty","1=="+itemQty);
+                    if(itemQty.length()>5){
+                        itemQty=itemQty.substring(0,5);
+                        Log.e("itemQty","2=="+itemQty);
+                    }
+
+                    item.setQty(Float.parseFloat(itemQty+""));
+                    Log.e("itemQty","3=="+item.getQty());
+                }catch ( Exception e){
+                    Log.e("Exceptionitem.setQty",""+e.getMessage());
+                    item.setQty(Float.parseFloat(cursor.getString(3)));
+                }
                 item.setQty(Float.parseFloat(cursor.getString(3)));
                 item.setPrice(Float.parseFloat(cursor.getString(4)));
                 item.setTaxPercent(Float.parseFloat(cursor.getString(5)));
@@ -7774,12 +7796,17 @@ Log.e("addCompanyInfo","addCompanyInfo");
         float existQty = 0;
         if (cursor.moveToFirst()) {
             do {
-                existQty = Float.parseFloat(cursor.getString(0));
+               String qtyValue= cursor.getString(0);
+               if(qtyValue.length()>5)
+                   qtyValue=qtyValue.substring(0,5);
+                existQty = Float.parseFloat(qtyValue);
             } while (cursor.moveToNext());
         }
+        Log.e("updateSalesManItemsBalance1" , "1existQty"+existQty);
+
         existQty -= qty;
 
-        Log.e("qty1 ***" , ""+existQty);
+        Log.e("updateSalesManItemsBalance1" , "2"+existQty);
         db.execSQL("update SalesMan_Items_Balance SET  Qty = '"+existQty+"' where SalesManNo = '"+salesMan+"' and  ItemNo = '"+itemNo+"' ");
 
     }
@@ -7800,7 +7827,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
         }
         existQty += qty;
 
-        Log.e("qty2 ***" , ""+existQty);
+        Log.e("updateSalesManItemsBalance222" , ""+existQty);
 
         ContentValues values = new ContentValues();
         values.put(Qty5, existQty);
