@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="wrap_content"
     android:background="@color/layer7"
 
     android:orientation="vertical">
@@ -67,6 +67,56 @@
             android:text="" />
 
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/LinearMedical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
+        android:layout_gravity="center"
+        android:gravity="center"
+
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:background="@color/done_button3"
+        android:orientation="horizontal"
+
+
+        >
+
+        <!--        -->
+        <TextView
+            android:id="@+id/calssTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:inputType="text"
+            android:gravity="center"
+            android:lines="1"
+            android:text="@string/app_cust_no"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+
+        <TextView
+            android:id="@+id/acc_nTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/cust_name"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/spicialityTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/cust_name"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+
+    </LinearLayout>
 
 </LinearLayout>

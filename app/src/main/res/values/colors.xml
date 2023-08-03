@@ -29,6 +29,7 @@
     <color name="add_button">#25383C</color>
     <color name="done_button">#3F86B5</color>
     <color name="done_button2">#7CC8FA</color>
+    <color name="done_button3">#C6B5DCF7</color>
 <!--    <color name="done_button">#327C41</color>-->
 
     <color name="cancel_button">#E6CA221C</color>

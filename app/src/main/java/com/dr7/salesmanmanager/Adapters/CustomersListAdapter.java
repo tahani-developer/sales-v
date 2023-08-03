@@ -1,5 +1,7 @@
 package com.dr7.salesmanmanager.Adapters;
 
+import static com.dr7.salesmanmanager.MainActivity.EndTrip_Report;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -78,9 +80,10 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
     }
 
     private class ViewHolder {
-        LinearLayout linearLayout;
+        LinearLayout linearLayout,LinearMedical;
         TextView custAccountTextView,showloction;
-        TextView custNameTextView;
+        TextView custNameTextView,calssTextView,acc_nTextView,spicialityTextView;
+
 
     }
 
@@ -91,9 +94,13 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         view = View.inflate(context, R.layout.customers_item, null);
 
         holder.linearLayout = (LinearLayout) view.findViewById(R.id.LinearLayout01);
+        holder.LinearMedical = (LinearLayout) view.findViewById(R.id.LinearMedical);
 
         holder.custAccountTextView = (TextView) view.findViewById(R.id.custAccTextView);
         holder.custNameTextView = (TextView) view.findViewById(R.id.custNameTextView);
+        holder.calssTextView = (TextView) view.findViewById(R.id.calssTextView);
+        holder.acc_nTextView = (TextView) view.findViewById(R.id.acc_nTextView);
+        holder.spicialityTextView = (TextView) view.findViewById(R.id.spicialityTextView);
         holder. showloction= (TextView) view.findViewById(R.id.showloction);
 
         if(showCustomerLoc_sett==0)
@@ -171,8 +178,15 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
             }
         });
         holder.custAccountTextView.setText("" + custList.get(i).getCustId());
+        holder.acc_nTextView.setText(custList.get(i).getZipCode());
+        holder.calssTextView.setText(custList.get(i).getFax());
+        holder.spicialityTextView.setText(custList.get(i).geteMail());
         holder.custNameTextView.setText(custList.get(i).getCustName());
       //  Log.e("getView2===",i+"");
+        if(EndTrip_Report==1)
+        {
+            holder.LinearMedical.setVisibility(View.VISIBLE);
+        }else  holder.LinearMedical.setVisibility(View.GONE);
         if(Login.SalsManPlanFlage==1) {
         //    Log.e("case1","case1");
             if(MainActivity.plantype==2){

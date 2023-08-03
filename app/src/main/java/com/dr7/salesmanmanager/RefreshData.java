@@ -603,6 +603,18 @@ public class RefreshData {
                             Customer.setACCPRC("0");
 
                         }
+                        try {
+                            Customer.setC_THECATEG(finalObject.getString("C_THECATEG"));
+                            Customer.seteMail(finalObject.getString("EMail"));
+                            Customer.setFax(finalObject.getString("Fax"));
+                            Customer.setZipCode(finalObject.getString("ZipCode"));
+
+                        }catch (Exception e){
+                            Customer.setC_THECATEG("");
+                            Customer.seteMail("");
+                            Customer.setFax("");
+                            Customer.setZipCode("");
+                        }
                         //*******************************
 
                         customerList.add(Customer);

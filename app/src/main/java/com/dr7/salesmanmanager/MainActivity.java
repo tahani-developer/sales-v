@@ -201,10 +201,12 @@ public class MainActivity extends AppCompatActivity
 
     TextView  Addrss_map;
     MapView mMapView;
-    public static int menuItemState,OffersJustForSalsFlag=0,checkQtyForOrdersFlage=0,Acountatatment=1,SharWhatsAppForm=0,AddCustomerPer=1,LastCustPriceflage=0,Locationtrack=0,CompanyinfoINPdf_Hide=0,AddedCustomer_PERM=0;
+    public static int menuItemState,OffersJustForSalsFlag=0,checkQtyForOrdersFlage=0,Acountatatment=1,
+            SharWhatsAppForm=0,AddCustomerPer=1,LastCustPriceflage=0,Locationtrack=0,CompanyinfoINPdf_Hide=0,
+            AddedCustomer_PERM=0,EndTrip_Report=0;
     public static boolean enter=false;
     String typeImport="";
-    int  approveAdmin=-1,workOnLine=-1,EndTrip_Report=0,ReturnVoch_approveAdmin=0;
+    int  approveAdmin=-1,workOnLine=-1,ReturnVoch_approveAdmin=0;
     public  static  EditText passwordFromAdmin, password ;
     static public TextView mainTextView,timeTextView,salesmanPlanRespon,getplan,notExportedTextView,openPendingTextView;
     LinearLayout checkInLinearLayout, checkOutLinearLayout;

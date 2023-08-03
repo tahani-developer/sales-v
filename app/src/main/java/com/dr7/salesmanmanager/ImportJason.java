@@ -2721,6 +2721,7 @@ this.activtyflage=activtyflage;
 
                 try {
                     JSONArray parentArrayCustomers = parentObject.getJSONArray("CUSTOMERS");
+                    Log.e("parentArrayCustomers","==="+parentArrayCustomers.toString());
 
                     if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
                     {
@@ -2819,6 +2820,23 @@ this.activtyflage=activtyflage;
                             Customer.setACCPRC("0");
 
                         }
+                            try {
+
+                                Customer.seteMail(finalObject.getString("EMail"));
+                                Customer.setFax(finalObject.getString("Fax"));
+                                Customer.setZipCode(finalObject.getString("ZipCode"));
+                                Customer.setC_THECATEG(finalObject.getString("C_THECATEG"));
+                                Log.e("CUSTOMERSSS","=="+Customer.geteMail());
+                            }catch (Exception e){
+                                Customer.setC_THECATEG("");
+                                Customer.seteMail("");
+                                Customer.setFax("");
+                                Customer.setZipCode("");
+                                Log.e("CUSTOMERSSS","=Exception=="+e.getMessage());
+                            }
+
+
+
                             customerList.add(Customer);
 
                     }
@@ -5411,6 +5429,21 @@ this.activtyflage=activtyflage;
                             Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
                             Customer.setACCPRC("0");
 
+                        }
+                        try {
+
+                            Customer.seteMail(finalObject.getString("EMail"));
+                            Customer.setFax(finalObject.getString("Fax"));
+                            Customer.setZipCode(finalObject.getString("ZipCode"));
+                            Customer.setC_THECATEG(finalObject.getString("C_THECATEG"));
+                            Log.e("C_THECATEG", "1Exception" + Customer.geteMail());
+
+                        }catch (Exception e){
+                            Log.e("C_THECATEG", "Exception" + e.getMessage());
+                            Customer.setC_THECATEG("");
+                            Customer.seteMail("");
+                            Customer.setFax("");
+                            Customer.setZipCode("");
                         }
                         //*******************************
 

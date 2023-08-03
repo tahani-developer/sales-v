@@ -85,7 +85,7 @@ import org.jetbrains.annotations.NotNull;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 219;
+    private static final int DATABASE_VERSION = 220;
 //
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -294,6 +294,10 @@ import org.jetbrains.annotations.NotNull;
     private static final String IS_POST = "IS_POST";
     private static final String CUS_ID_Text="CUS_ID_Text";
      private static final String MAXD="MAXD";
+     private static final String FAX="FAX";
+     private static final String ZipCode="ZipCode";
+     private static final String EMail="EMail";
+     private static final String C_THECATEG="C_THECATEG";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Item_Unit_Details = "Item_Unit_Details";
@@ -922,10 +926,14 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
 
                + IS_POST + " INTEGER not null default  0,"
                + CUS_ID_Text + " TEXT,"
-               +   MAXD + " TEXT DEFAULT '0'"
-
+               +   MAXD + " TEXT DEFAULT '0',"
+               +   FAX + " TEXT DEFAULT '0',"
+               +   ZipCode + " TEXT DEFAULT '0',"
+               +   EMail + " TEXT DEFAULT '0',"
+               +   C_THECATEG + " TEXT DEFAULT '0'"
                + ")";
 
+       Log.e("CREATE_TABLE_CUSTOMER_MASTER",""+CREATE_TABLE_CUSTOMER_MASTER);
        db.execSQL(CREATE_TABLE_CUSTOMER_MASTER);
 
        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -2889,6 +2897,20 @@ try {
         } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString() + "DONT_PRINT_HEADER");
         }
+        try {
+
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD '" + FAX + "' TEXT DEFAULT ''");
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD '" + ZipCode + "' TEXT DEFAULT ''");
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD '" + EMail + "' TEXT DEFAULT ''");
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD '" + C_THECATEG + "' TEXT DEFAULT ''");
+
+            Log.e("CREATE_TABLE_CUSTOMER_MASTER","trueee");
+        } catch (Exception e) {
+
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
     }
 
     ////B
@@ -3559,6 +3581,12 @@ else   selectQuery = "SELECT PaymentSerials_cridt FROM " + PaymentSerials ;
             values.put(IS_POST, 1);
             values.put(CUS_ID_Text, customer.get(i).getCustomerIdText());
             values.put(MAXD, customer.get(i).getMaxD());
+
+            values.put(FAX       , customer.get(i).getFax());
+            values.put(ZipCode   , customer.get(i).getZipCode());
+            values.put(EMail     , customer.get(i).geteMail());
+            values.put(C_THECATEG, customer.get(i).getC_THECATEG());
+
             db.insertWithOnConflict(CUSTOMER_MASTER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 
         }
@@ -5007,6 +5035,19 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
                 customer.setACCPRC(cursor.getString(13));
                 customer.setHide_val(cursor.getInt(14));
+                try {
+                    customer.setFax(cursor.getString(18));
+                    customer.setZipCode(cursor.getString(19));
+                    customer.seteMail(cursor.getString(20));
+                    customer.setC_THECATEG(cursor.getString(21));
+                }
+                catch (Exception e){
+                    customer.setFax("");
+                    customer.setZipCode("");
+                    customer.seteMail("");
+                    customer.setC_THECATEG("");
+                }
+
 //                customer.setCustId(cursor.getString(16));// for test talley
                 // 16 column isPosted
                 // Adding transaction to list
@@ -5018,6 +5059,80 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
     // get customer cridit limit and cash credit balance  by customer No
 
+
+
+     public List<Customer> getAllCustomersFilters(String classifica,String acc,String spicilisty) {
+         List<Customer> customers = new ArrayList<Customer>();
+         // Select All Query
+         String qundition="";
+         if(!classifica.equals("")) {
+             if(!acc.equals("")||!spicilisty.equals(""))
+             qundition += "FAX='" + classifica + "' and ";
+             else  qundition += "FAX='" + classifica+ "' ";
+
+
+         }
+
+         if(!acc.equals(""))
+         {
+             if(!spicilisty.equals(""))
+             qundition+="ZipCode='"+acc+"' and ";
+             else   qundition+="ZipCode='"+acc+"'";
+         }
+
+
+         if(!spicilisty.equals(""))
+             qundition+="EMail='"+spicilisty+"'";
+         Log.e("qundition",""+qundition);
+
+         String selectQuery ="";
+         if(qundition.length()!=0)
+         selectQuery = "SELECT  * FROM  CUSTOMER_MASTER where "+qundition+" ";
+         else  selectQuery = "SELECT  * FROM  CUSTOMER_MASTER ";
+         Log.e("qundition","selectQuery="+selectQuery);
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+
+         // looping through all rows and adding to list
+         if (cursor.moveToFirst()) {
+             do {
+                 Customer customer = new Customer();
+                 customer.setCompanyNumber(cursor.getString(0));
+                 customer.setCustId(cursor.getString(1));
+                 customer.setCustName(cursor.getString(2));
+                 customer.setAddress(cursor.getString(3));
+                 customer.setIsSuspended(Integer.parseInt(cursor.getString(4)));
+                 customer.setPriceListId(cursor.getString(5));
+                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
+                 customer.setSalesManNumber(cursor.getString(7));
+                 customer.setCreditLimit(Double.parseDouble(cursor.getString(8)));
+                 customer.setPayMethod(Integer.parseInt((cursor.getString(9))));
+                 customer.setCustLat(cursor.getString(10));
+                 customer.setCustLong(cursor.getString(11));
+                 customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
+                 customer.setACCPRC(cursor.getString(13));
+                 customer.setHide_val(cursor.getInt(14));
+                 try {
+                     customer.setFax(cursor.getString(18));
+                     customer.setZipCode(cursor.getString(19));
+                     customer.seteMail(cursor.getString(20));
+                     customer.setC_THECATEG(cursor.getString(21));
+                 }
+                 catch (Exception e){
+                     customer.setFax("");
+                     customer.setZipCode("");
+                     customer.seteMail("");
+                     customer.setC_THECATEG("");
+                 }
+
+//                customer.setCustId(cursor.getString(16));// for test talley
+                 // 16 column isPosted
+                 // Adding transaction to list
+                 customers.add(customer);
+             } while (cursor.moveToNext());
+         }
+         return customers;
+     }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public List<Customer> getCustomer_byNo(String number) {
         List<Customer> customer_balance = new ArrayList<Customer>();
@@ -5101,6 +5216,18 @@ Log.e("addCompanyInfo","addCompanyInfo");
              }
              customer.setACCPRC(cursor.getString(13));
              customer.setHide_val(cursor.getInt(14));
+              try {
+                  customer.setFax(cursor.getString(18));
+                  customer.setZipCode(cursor.getString(19));
+                  customer.seteMail(cursor.getString(20));
+                  customer.setC_THECATEG(cursor.getString(21));
+              }
+              catch (Exception e){
+                  customer.setFax("");
+                  customer.setZipCode("");
+                  customer.seteMail("");
+                  customer.setC_THECATEG("");
+              }
 //                customer.setCustId(cursor.getString(16));// test talley
              // Adding transaction to list
 
@@ -5144,6 +5271,18 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 }
                 customer.setACCPRC(cursor.getString(13));
                 customer.setHide_val(cursor.getInt(14));
+                try {
+                    customer.setFax(cursor.getString(18));
+                    customer.setZipCode(cursor.getString(19));
+                    customer.seteMail(cursor.getString(20));
+                    customer.setC_THECATEG(cursor.getString(21));
+                }
+                catch (Exception e){
+                    customer.setFax("");
+                    customer.setZipCode("");
+                    customer.seteMail("");
+                    customer.setC_THECATEG("");
+                }
 //                customer.setCustId(cursor.getString(16));// test talley
                 // Adding transaction to list
                 customers.add(customer);
@@ -10953,5 +11092,40 @@ void updateDataForClient(){
          Log.e("list",""+list.size());
          return  list;
      }
+
+
+     @NotNull
+     public List<String> getAllFilterMedical(int flag) {
+         List<String> items = new ArrayList<>();
+
+         String  selectQuery="";
+         switch (flag)
+         {
+             case 0:
+                 selectQuery=" SELECT DISTINCT FAX FROM CUSTOMER_MASTER ORDER BY FAX ASC";
+                 break;
+             case 1:
+                 selectQuery=" SELECT DISTINCT ZipCode FROM CUSTOMER_MASTER ORDER BY ZipCode ASC";
+                 break;
+             case 2:
+                 selectQuery=" SELECT DISTINCT EMail FROM CUSTOMER_MASTER ORDER BY EMail ASC";
+                 break;
+
+         }
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+
+         if (cursor.moveToFirst()) {
+             do {
+                 items.add(cursor.getString(0));
+                 Log.e("getItemPrices","items="+cursor.getString(0));
+
+             } while (cursor.moveToNext());
+         }
+
+         return items;
+     }
+
+
  }
 

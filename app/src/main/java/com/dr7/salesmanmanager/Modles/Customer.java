@@ -27,6 +27,43 @@ public class Customer {
     private  String customerIdText;
     private  String MaxD;
 
+    private  String fax;
+    private  String zipCode;
+    private  String eMail;
+    private  String c_THECATEG;
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String geteMail() {
+        return eMail;
+    }
+
+    public void seteMail(String eMail) {
+        this.eMail = eMail;
+    }
+
+    public String getC_THECATEG() {
+        return c_THECATEG;
+    }
+
+    public void setC_THECATEG(String c_THECATEG) {
+        this.c_THECATEG = c_THECATEG;
+    }
+
     public String getMaxD() {
         return MaxD;
     }

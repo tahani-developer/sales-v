@@ -20,10 +20,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +63,7 @@ import java.util.List;
 
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.typaImport;
+import static com.dr7.salesmanmanager.MainActivity.EndTrip_Report;
 
 public class CustomerListShow extends DialogFragment {
     private String URL_TO_HIT = "";
@@ -83,10 +86,14 @@ public class CustomerListShow extends DialogFragment {
     CustomersListAdapter customersListAdapter;
     DatabaseHandler mHandler;
     private ProgressDialog progressDialog;
-    LinearLayout mainlayout;
+    LinearLayout mainlayout,linearFilter;
     TextView mSpeakBtn,btnScan;
     String ipAddress="",ipWithPort,SalesManLogin,CONO;
 
+    Spinner classificatSp,accSp,spiciliSp;
+    List<String> classifi_items   = new ArrayList<>();
+    List<String> accn_items       = new ArrayList<>();
+    List<String> spicilisty_items = new ArrayList<>();
     public CustomerListShow.CustomerListShow_interface getListener() {
         return listener;
     }
@@ -112,6 +119,14 @@ public class CustomerListShow extends DialogFragment {
         final View view = inflater.inflate(R.layout.customers_list, container, false);
         mainlayout = (LinearLayout) view.findViewById(R.id.discLayout);
         mSpeakBtn= view.findViewById(R.id.btnSpeak);
+        linearFilter= (LinearLayout) view.findViewById(R.id.discLayout);
+        if(EndTrip_Report==1)
+            linearFilter.setVisibility(View.VISIBLE);
+        else  linearFilter.setVisibility(View.GONE);
+        spiciliSp     = (Spinner) view.findViewById(R.id.spiciliSp);
+        accSp         = (Spinner) view.findViewById(R.id.accSp);
+        classificatSp= (Spinner) view.findViewById(R.id.classificatSp);
+
         mSpeakBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -173,6 +188,8 @@ public class CustomerListShow extends DialogFragment {
                 customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList,showCustomerLoc);
                 itemsListView.setAdapter(customersListAdapter);
             }
+            if(EndTrip_Report==1)
+            fillSpiners();
 
 /*
         for(int i=0;i< customerList .size();i++)
@@ -301,6 +318,71 @@ Log.e("customerList===",customerList.size()+"");
         });
 
         return view;
+    }
+
+    private void fillSpiners() {
+        try {
+
+            classifi_items=mHandler.getAllFilterMedical(0);
+            accn_items=mHandler.getAllFilterMedical(1);
+            spicilisty_items=mHandler.getAllFilterMedical(2);
+            
+            classifi_items.add(0,"");
+            accn_items.add(0,"");
+            spicilisty_items.add(0,"");
+
+        } catch (Exception e) {
+            classifi_items.add("");
+            accn_items.add("");
+            spicilisty_items.add("");
+        }
+        final ArrayAdapter<String> adapter_spici = new ArrayAdapter<>(getActivity(), R.layout.spinner_style, classifi_items);
+        spiciliSp.setAdapter(adapter_spici);
+
+        final ArrayAdapter<String> accSpAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_style, accn_items);
+        accSp.setAdapter(accSpAdapter);
+
+        final ArrayAdapter<String> spicilistyAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_style, spicilisty_items);
+        classificatSp.setAdapter(spicilistyAdapter);
+        //kind item
+        spiciliSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                      filterAllSp();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        accSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                filterAllSp();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        classificatSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                filterAllSp();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+    }
+
+    private void filterAllSp() {
+        customerList=   mHandler.getAllCustomersFilters(spiciliSp.getSelectedItem().toString(),accSp.getSelectedItem().toString(),classificatSp.getSelectedItem().toString());
+
+        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList,showCustomerLoc);
+        itemsListView.setAdapter(customersListAdapter);
     }
 
 
@@ -562,6 +644,18 @@ Log.e("customerList===",customerList.size()+"");
                             Customer.setACCPRC("0");
 
                         }
+                        try {
+                            Customer.setC_THECATEG(finalObject.getString("C_THECATEG"));
+                            Customer.seteMail(finalObject.getString("EMail"));
+                            Customer.setFax(finalObject.getString("Fax"));
+                            Customer.setZipCode(finalObject.getString("ZipCode"));
+
+                        }catch (Exception e){
+                            Customer.setC_THECATEG("");
+                            Customer.seteMail("");
+                            Customer.setFax("");
+                            Customer.setZipCode("");
+                        }
                         //*******************************
 
                         customerList.add(Customer);
@@ -775,6 +869,18 @@ Log.e("customerList===",customerList.size()+"");
                         Log.e("ImportError","Null_ACCPRC"+e.getMessage());
                         Customer.setACCPRC("0");
 
+                    }
+                    try {
+                        Customer.setC_THECATEG(finalObject.getString("C_THECATEG"));
+                        Customer.seteMail(finalObject.getString("EMail"));
+                        Customer.setFax(finalObject.getString("Fax"));
+                        Customer.setZipCode(finalObject.getString("ZipCode"));
+
+                    }catch (Exception e){
+                        Customer.setC_THECATEG("");
+                        Customer.seteMail("");
+                        Customer.setFax("");
+                        Customer.setZipCode("");
                     }
                     //*******************************
 
