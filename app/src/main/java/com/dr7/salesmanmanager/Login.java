@@ -173,8 +173,8 @@ public class Login extends AppCompatActivity {
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-//    public  static    String  headerDll = "/Falcons/VAN.dll";
-  public  static    String headerDll = "";
+    public  static    String  headerDll = "/Falcons/VAN.dll";
+//  public  static    String headerDll = "";
 
     public  static  int gone_noTax_totalDisc=0;
     public  static  int ExportedVochTaxFlage=0;
@@ -224,7 +224,6 @@ public class Login extends AppCompatActivity {
             // Code to run once
             Log.e("isFirstRun","2"+isFirstRun);
             mDHandler.deleteSerialsPayment();
-
             editor.putBoolean(Login.FirstRun_3, false);
             editor.apply();
         }

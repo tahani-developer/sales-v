@@ -82,7 +82,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
     private class ViewHolder {
         LinearLayout linearLayout,LinearMedical;
         TextView custAccountTextView,showloction;
-        TextView custNameTextView,calssTextView,acc_nTextView,spicialityTextView;
+        TextView custNameTextView,calssTextView,acc_nTextView,spicialityTextView,categTextView;
 
 
     }
@@ -102,6 +102,8 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         holder.acc_nTextView = (TextView) view.findViewById(R.id.acc_nTextView);
         holder.spicialityTextView = (TextView) view.findViewById(R.id.spicialityTextView);
         holder. showloction= (TextView) view.findViewById(R.id.showloction);
+        holder.categTextView = (TextView) view.findViewById(R.id.categTextView);
+
 
         if(showCustomerLoc_sett==0)
         {
@@ -181,12 +183,14 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         holder.acc_nTextView.setText(custList.get(i).getZipCode());
         holder.calssTextView.setText(custList.get(i).getFax());
         holder.spicialityTextView.setText(custList.get(i).geteMail());
+        holder.categTextView.setText(custList.get(i).getC_THECATEG());
         holder.custNameTextView.setText(custList.get(i).getCustName());
       //  Log.e("getView2===",i+"");
         if(EndTrip_Report==1)
         {
             holder.LinearMedical.setVisibility(View.VISIBLE);
         }else  holder.LinearMedical.setVisibility(View.GONE);
+
         if(Login.SalsManPlanFlage==1) {
         //    Log.e("case1","case1");
             if(MainActivity.plantype==2){

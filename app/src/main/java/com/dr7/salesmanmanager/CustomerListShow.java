@@ -90,10 +90,11 @@ public class CustomerListShow extends DialogFragment {
     TextView mSpeakBtn,btnScan;
     String ipAddress="",ipWithPort,SalesManLogin,CONO;
 
-    Spinner classificatSp,accSp,spiciliSp;
+    Spinner classificatSp,accSp,spiciliSp,categSp;
     List<String> classifi_items   = new ArrayList<>();
     List<String> accn_items       = new ArrayList<>();
     List<String> spicilisty_items = new ArrayList<>();
+    List<String> categ_items = new ArrayList<>();
     public CustomerListShow.CustomerListShow_interface getListener() {
         return listener;
     }
@@ -119,14 +120,15 @@ public class CustomerListShow extends DialogFragment {
         final View view = inflater.inflate(R.layout.customers_list, container, false);
         mainlayout = (LinearLayout) view.findViewById(R.id.discLayout);
         mSpeakBtn= view.findViewById(R.id.btnSpeak);
-        linearFilter= (LinearLayout) view.findViewById(R.id.discLayout);
+        linearFilter= (LinearLayout) view.findViewById(R.id.linearFilter);
+
         if(EndTrip_Report==1)
             linearFilter.setVisibility(View.VISIBLE);
         else  linearFilter.setVisibility(View.GONE);
         spiciliSp     = (Spinner) view.findViewById(R.id.spiciliSp);
         accSp         = (Spinner) view.findViewById(R.id.accSp);
         classificatSp= (Spinner) view.findViewById(R.id.classificatSp);
-
+        categSp= (Spinner) view.findViewById(R.id.categSp);
         mSpeakBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -326,15 +328,16 @@ Log.e("customerList===",customerList.size()+"");
             classifi_items=mHandler.getAllFilterMedical(0);
             accn_items=mHandler.getAllFilterMedical(1);
             spicilisty_items=mHandler.getAllFilterMedical(2);
-            
+            categ_items=mHandler.getAllFilterMedical(3);
             classifi_items.add(0,"");
             accn_items.add(0,"");
             spicilisty_items.add(0,"");
-
+            categ_items.add(0,"");
         } catch (Exception e) {
             classifi_items.add("");
             accn_items.add("");
             spicilisty_items.add("");
+            categ_items.add(0,"");
         }
         final ArrayAdapter<String> adapter_spici = new ArrayAdapter<>(getActivity(), R.layout.spinner_style, classifi_items);
         spiciliSp.setAdapter(adapter_spici);
@@ -344,7 +347,21 @@ Log.e("customerList===",customerList.size()+"");
 
         final ArrayAdapter<String> spicilistyAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_style, spicilisty_items);
         classificatSp.setAdapter(spicilistyAdapter);
+
+        final ArrayAdapter<String> categAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_style, categ_items);
+        categSp.setAdapter(categAdapter);
         //kind item
+        categSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                filterAllSp();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
         spiciliSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -379,7 +396,7 @@ Log.e("customerList===",customerList.size()+"");
     }
 
     private void filterAllSp() {
-        customerList=   mHandler.getAllCustomersFilters(spiciliSp.getSelectedItem().toString(),accSp.getSelectedItem().toString(),classificatSp.getSelectedItem().toString());
+        customerList=   mHandler.getAllCustomersFilters(spiciliSp.getSelectedItem().toString(),accSp.getSelectedItem().toString(),classificatSp.getSelectedItem().toString(),categSp.getSelectedItem().toString());
 
         customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList,showCustomerLoc);
         itemsListView.setAdapter(customersListAdapter);

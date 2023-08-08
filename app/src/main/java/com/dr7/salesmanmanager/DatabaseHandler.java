@@ -5061,28 +5061,33 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
 
 
-     public List<Customer> getAllCustomersFilters(String classifica,String acc,String spicilisty) {
+     public List<Customer> getAllCustomersFilters(String classifica,String acc,String spicilisty,String categ) {
          List<Customer> customers = new ArrayList<Customer>();
          // Select All Query
          String qundition="";
          if(!classifica.equals("")) {
-             if(!acc.equals("")||!spicilisty.equals(""))
+             if(!acc.equals("")||!spicilisty.equals("")|| !categ.equals(""))
              qundition += "FAX='" + classifica + "' and ";
              else  qundition += "FAX='" + classifica+ "' ";
-
-
          }
-
          if(!acc.equals(""))
          {
-             if(!spicilisty.equals(""))
+             if(!spicilisty.equals("")||!categ.equals(""))
              qundition+="ZipCode='"+acc+"' and ";
              else   qundition+="ZipCode='"+acc+"'";
          }
-
-
          if(!spicilisty.equals(""))
+         {
+             if(!categ.equals("")){
+                 qundition+="EMail='"+spicilisty+"' and ";
+             }else
              qundition+="EMail='"+spicilisty+"'";
+             Log.e("qundition",""+qundition);
+         }
+
+
+         if(!categ.equals(""))
+             qundition+="C_THECATEG='"+categ+"'";
          Log.e("qundition",""+qundition);
 
          String selectQuery ="";
@@ -11110,6 +11115,10 @@ void updateDataForClient(){
              case 2:
                  selectQuery=" SELECT DISTINCT EMail FROM CUSTOMER_MASTER ORDER BY EMail ASC";
                  break;
+             case 3:
+                 selectQuery=" SELECT DISTINCT C_THECATEG FROM CUSTOMER_MASTER ORDER BY C_THECATEG ASC";
+                 break;
+
 
          }
          db = this.getWritableDatabase();

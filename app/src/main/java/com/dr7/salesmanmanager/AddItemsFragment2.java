@@ -472,24 +472,8 @@ public class AddItemsFragment2 extends DialogFragment {
         Kind_item_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (!Kind_item_Spinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
-                    if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
-                        filterTow();
-                    } else {
-                        filterKindItem();
-                    }
+                filterKindSpinner();
 
-
-                } else {
-                  //  Log.e("categorySpinner", "else" + categorySpinner.getSelectedItemPosition());
-                    if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
-                        filterCategoury();// filter about categoury
-
-                    } else {
-                        fillAllItems();
-                    }
-
-                }
 
 
             }
@@ -664,10 +648,15 @@ public class AddItemsFragment2 extends DialogFragment {
                  //   Toast.makeText(context, ""+filteredList.size(), Toast.LENGTH_SHORT).show();
 
                 } else {
-                    ArrayList<Item> filteredList = new ArrayList<>();
-                    filteredList=   getFilteredZero();
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
-                    recyclerView.setAdapter(adapter);
+                    filterKindSpinner();
+//                    ArrayList<Item> filteredList = new ArrayList<>();
+//                    filteredList =   getFilteredZero();
+//                    filteredMap.clear();
+//                    for (int  i=0;i<filteredList.size();i++ )
+//                        filteredMap.put(i,filteredList.get(i));
+
+//                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+//                    recyclerView.setAdapter(adapter);
                 }
                 return false;
             }
@@ -965,6 +954,27 @@ public class AddItemsFragment2 extends DialogFragment {
         return view;
     }
 
+    private void filterKindSpinner() {
+        if (!Kind_item_Spinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
+            if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
+                filterTow();
+            } else {
+                filterKindItem();
+            }
+
+
+        } else {
+            //  Log.e("categorySpinner", "else" + categorySpinner.getSelectedItemPosition());
+            if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
+                filterCategoury();// filter about categoury
+
+            } else {
+                fillAllItems();
+            }
+
+        }
+    }
+
     private void doAllFilters() {
         if (!Kind_item_Spinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
             if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
@@ -1052,6 +1062,9 @@ public class AddItemsFragment2 extends DialogFragment {
        // Log.e("filterTow",filteredList_allItem.size()+ "     *    "  +Kind_item_Spinner.getSelectedItem().toString() );
      //   Log.e("filterTow",filteredList_allItem.size()+ "     *    "  +categorySpinner.getSelectedItem().toString() );
 
+        filteredMap.clear();
+        for (int  i=0;i<filteredList_allItem.size();i++ )
+            filteredMap.put(i,filteredList_allItem.get(i));
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList_allItem, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
     }
@@ -1127,6 +1140,9 @@ public class AddItemsFragment2 extends DialogFragment {
             }
 
         }
+        filteredMap.clear();
+        for (int  i=0;i<filteredList_allItem.size();i++ )
+            filteredMap.put(i,filteredList_allItem.get(i));
      //   Log.e("filterKindItem",filteredList_allItem.size() + "     *    "  +Kind_item_Spinner.getSelectedItem().toString() );
 
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList_allItem, AddItemsFragment2.this);
@@ -1146,6 +1162,9 @@ public class AddItemsFragment2 extends DialogFragment {
                 filteredList_allItem.add(jsonItemsList.get(k));
             }
         }
+        filteredMap.clear();
+        for (int  i=0;i<filteredList_allItem.size();i++ )
+            filteredMap.put(i,filteredList_allItem.get(i));
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList_allItem,AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
     }
@@ -1169,6 +1188,9 @@ public class AddItemsFragment2 extends DialogFragment {
             }
 
         }
+        filteredMap.clear();
+        for (int  i=0;i<filteredList_allItem.size();i++ )
+            filteredMap.put(i,filteredList_allItem.get(i));
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList_allItem, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
     }
