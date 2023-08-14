@@ -1805,12 +1805,20 @@ public static     float CountOfItems=1;
 //                    itemBitmap=StringToBitMap(items.position).getItemPhoto()get(holder.getAdapterPosition()).getItemPhoto());
                     //   showImageOfCheck(items.get(position).getItemPhoto());
                     String url = allItemsList.get(position).getItemPhoto();
-                    Log.e("url", "imagespecial" + url);
-                    if (url.contains("Products")) {
-                        int index = url.indexOf("Products");
-                        url = url.substring(index);
+//                    url="d:/ISAPI/6943478010024.jpg";
+//                    Log.e("imagespecial_","=="+url+"\t"+url.lastIndexOf("\\"));
+                    try {
+
+
+                    if (url.lastIndexOf("\\") != -1)
+                        url = url.substring(url.lastIndexOf("\\"));
+                    else
+                        url = url.substring(url.lastIndexOf("/"));
+                    Log.e("imagespecial_", "==" + url);
+
+                }catch (Exception e){
+                        Log.e("imagespecial_", "Exception==" +e.getMessage());
                     }
-                    Log.e("url", "imagespecial2" + url);
                     getImage(url);
                 }
             });
@@ -1821,12 +1829,21 @@ public static     float CountOfItems=1;
 //                    itemBitmap=StringToBitMap(items.position).getItemPhoto()get(holder.getAdapterPosition()).getItemPhoto());
                     //   showImageOfCheck(items.get(position).getItemPhoto());
                     String url = allItemsList.get(position).getItemPhoto();
-                 //   Log.e("url", "imagespecial" + url);
-                    if (url.contains("Products")) {
-                        int index = url.indexOf("Products");
-                        url = url.substring(index);
+//                    url="http://46.185.138.63//falcons/Products%20Photo%202021/Be%20Clean/4-Be%20Clean%20Foam%20Hand%20Sanitizer.jpg"
+//                    url="d:/ISAPI/6943478010024.jpg";
+//                    Log.e("imagespecial_","=="+url+"\t"+url.lastIndexOf("/"));
+//                    Log.e("imagespecial_","=="+url);
+                    try {
+
+                        if (url.lastIndexOf("\\") != -1)
+                            url = url.substring(url.lastIndexOf("\\"));
+                        else
+                            url = url.substring(url.lastIndexOf("/"));
+                        Log.e("imagespecial", "==" + url);
+                    }catch ( Exception e){
+                        Log.e("imagespecia", "Exception==" +e.getMessage());
                     }
-                 //   Log.e("url", "imagespecial2" + url);
+
                     getImage(url);
                 }
             });
