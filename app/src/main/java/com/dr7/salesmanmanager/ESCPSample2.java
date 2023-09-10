@@ -997,7 +997,7 @@ public class ESCPSample2
 					break;
 			}
 
-			posPtr.setAsync(false);// تضرب بكل الطابعات اذا كانت ترو 
+			posPtr.setAsync(false);// تضرب بكل الطابعات اذا كانت ترو
 			CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 			taxCalc = obj.getAllSettings().get(0).getTaxClarcKind();
 			if (companyInfo.getLogo() != null) {
