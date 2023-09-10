@@ -2979,7 +2979,7 @@ public void New_openAddCustomerDialog() {
                         int payMethod = 0;
                         if (isCustExist(addCus.getText().toString().trim()) == 0) {
 
-                            CustomerDao customerDao = new CustomerDao(MainActivity.this);
+                            CustomerDao customerDao = new CustomerDao(MainActivity.this,0);
                             String date= generalMethod.getCurentTimeDate(1);
                             String time= generalMethod.getCurentTimeDate(2);
                             String salesman=mDbHandler.getAllSettings().get(0).getSalesMan_name();
@@ -4912,10 +4912,12 @@ Log.e("stopService","main");
 
         final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name,innerPrinter,innerPrinter_image;
         CheckBox short_Invoice,dontPrintHeader,altayee_checkbox,headerprintorder,printItemNumber;
+       EditText currency_valuetxt;
         RadioGroup netsal_radioGroup = (RadioGroup) dialog.findViewById(R.id.netsal_radioGrp);
         RadioButton valu_radio =  dialog.findViewById(R.id.valu_radio);
         RadioButton netsal_radio =  dialog.findViewById(R.id.netsal_radio);
         innerPrinter_image=  dialog.findViewById(R.id.innerPrinter_image);
+        currency_valuetxt= dialog.findViewById(R.id.currency_valuetxt);
         netsal_radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -4954,6 +4956,12 @@ Log.e("stopService","main");
 
 
         if(printer.size()!=0) {
+            if(printer.get(0).getCurency().length()!=0)
+            {
+                currency_valuetxt.setText(printer.get(0).getCurency());
+            }else {
+                currency_valuetxt.setText("JD");
+            }
 
             if(printer.get(0).getNetsalflag()==0) {
                 netsal_radio.setChecked(true);
@@ -5033,6 +5041,7 @@ Log.e("stopService","main");
     lk30.setChecked(true);
     normalnam.setChecked(true);
     short_Invoice.setChecked(false);
+     currency_valuetxt.setText("JD");
 }
 
 
@@ -5041,7 +5050,8 @@ Log.e("stopService","main");
             public void onClick(View v) {
                 mDbHandler.deleteAllPrinterSetting();
                 PrinterSetting printerSetting = new PrinterSetting();
-
+               String currency= currency_valuetxt.getText().toString().trim();
+               printerSetting.setCurency(currency);
                 if(normalnam.isChecked()){
                     printerSetting.setPrinterShape(0);
                 }else  if(large_name.isChecked()){

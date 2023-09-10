@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="900dp"
-    android:layout_height="430dp"
-    android:minWidth="900dp"
-    android:minHeight="400dp"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layoutDirection="locale"
     android:id="@+id/add_item"
     android:background="@color/layer7"
     android:orientation="vertical">
-
+<!--    android:layout_width="900dp"-->
+<!--    android:layout_height="430dp"-->
+<!--    android:minWidth="900dp"-->
+<!--    android:minHeight="400dp"-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
 
         android:background="@color/layer6"
 
@@ -84,10 +86,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:orientation="horizontal"
         android:paddingVertical="5dp"
-        android:paddingHorizontal="10dp"
+        android:paddingHorizontal="5dp"
         >
         <TextView
             android:id="@+id/textViewItemName"
@@ -110,6 +112,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/firstSpinerLable"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
@@ -203,7 +206,8 @@
     <RelativeLayout
         android:id="@+id/allitemLayout"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="match_parent"
+        android:layout_weight="6"
         android:visibility="visible"
         android:gravity="center"
         android:layout_gravity="center">
@@ -215,7 +219,7 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="10dp"
-            android:layout_weight="3"
+
             android:background="@drawable/background_container"
             android:orientation="horizontal"
             android:paddingLeft="5dp"
@@ -233,7 +237,7 @@
             android:layout_marginTop="10dp"
             android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="240dp"
+            android:layout_height="match_parent"
 
             android:orientation="vertical"
 
@@ -277,7 +281,7 @@
 
             />
         <TableRow
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_width="match_parent"
             android:background="@color/colorblue_dark"
 
@@ -333,8 +337,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="5.5"
+        android:layout_height="100dp"
         android:gravity="center"
         android:orientation="horizontal">
 

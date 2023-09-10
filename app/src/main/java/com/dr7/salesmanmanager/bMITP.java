@@ -230,17 +230,21 @@ public class bMITP extends Activity {
             Manifest.permission.BLUETOOTH_SCAN,
             Manifest.permission.BLUETOOTH_CONNECT,
             Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.BLUETOOTH,
+            Manifest.permission.BLUETOOTH_ADMIN,
     };
 
     public static void requestBlePermissions(Activity activity, int requestCode) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S )
             ActivityCompat.requestPermissions(activity, ANDROID_12_BLE_PERMISSIONS, requestCode);
-//        else
-//            ActivityCompat.requestPermissions(activity, BLE_PERMISSIONS, requestCode);
+        else
+            ActivityCompat.requestPermissions(activity, BLE_PERMISSIONS, requestCode);
     }
     public void onPermission()
     {
-// Permision can add more at your convinient
+        Log.e("onPermission",""+Build.VERSION.SDK_INT);
+        Log.e("onPermission",""+Build.VERSION_CODES.S);
+// Permision can ad;d more at your convinient
         //  ((ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH ))!= PackageManager.PERMISSION_GRANTED))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ){
             if ((ContextCompat.checkSelfPermission(this,
@@ -271,7 +275,7 @@ public class bMITP extends Activity {
 //                            },
 //                    0
 //            );
-                requestBlePermissions(this,0);
+                requestBlePermissions(this,Build.VERSION.SDK_INT);
             }
         }else {
             if ((ContextCompat.checkSelfPermission(this,
@@ -300,7 +304,7 @@ public class bMITP extends Activity {
 //                            },
 //                    0
 //            );
-                requestBlePermissions(this,0);
+                requestBlePermissions(this,Build.VERSION.SDK_INT);
             }
         }
 
@@ -312,7 +316,7 @@ public class bMITP extends Activity {
     }
 
     private void addPairedDevices() {
-        Iterator iter = this.mBluetoothAdapter.getBondedDevices().iterator();
+        Iterator iter = this.mBluetoothAdapter.getBondedDevices().iterator();// erroooooer
 
         while(iter.hasNext()) {
             BluetoothDevice pairedDevice = (BluetoothDevice)iter.next();
@@ -906,7 +910,7 @@ public class bMITP extends Activity {
                 catch (Exception e){
                     Log.e("Exc","print222222***"+e.getMessage());
                 }
-                    finish();
+//                    finish();// كان يضرب على اجهزة البلاك فيو
 
 
                 if (bMITP.this.chkDisconnect.isChecked()) {
@@ -918,7 +922,7 @@ public class bMITP extends Activity {
                    dialog.dismiss();
                 }
 
-                AlertView.showAlert("Disconnect Bluetoothُ", "Try Again ,,,.", bMITP.this.context);
+//                AlertView.showAlert("Disconnect Bluetoothُ", "Try Again ,,,.", bMITP.this.context);
             }
 
             super.onPostExecute(result);

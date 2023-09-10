@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layoutDirection="locale"
-
-    android:layout_height="match_parent">
-
-
+    android:layout_height="wrap_content">
     <androidx.cardview.widget.CardView
 
         android:id="@+id/cardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="7dp"
-        android:layout_weight="1"
-        android:background="@color/layer2"
-        app:cardCornerRadius="2dp">
+        android:layout_width="140dp"
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="@color/layer7"
+        android:layout_margin="2dp"
+        android:elevation="5dp"
+        app:cardCornerRadius="20dp">
 
 
         <LinearLayout
@@ -28,140 +26,128 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                >
 
-                android:orientation="horizontal"
-                android:padding="3dp">
+                <!--                <ImageView-->
+                <!--                    android:id="@+id/imagespecial"-->
+                <!--                    android:layout_width="50dp"-->
+                <!--                    android:layout_height="50sp"-->
+                <!--                    android:text="Test Item"-->
+                <!--                    android:layout_gravity="left"-->
+                <!--                    android:visibility="visible"-->
 
-<!--                <ImageView-->
-<!--                    android:id="@+id/imagespecial"-->
-<!--                    android:layout_width="50dp"-->
-<!--                    android:layout_height="50sp"-->
-<!--                    android:text="Test Item"-->
-<!--                    android:layout_gravity="left"-->
-<!--                    android:visibility="visible"-->
-
-<!--                    android:src="@drawable/specialred"-->
-<!--                 />-->
-                <de.hdodenhof.circleimageview.CircleImageView
+                <!--                    android:src="@drawable/specialred"-->
+                <!--                 />-->
+                <ImageView
                     android:id="@+id/imagespecial"
-                    android:layout_width="75dp"
-                    android:layout_height="100sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
                     android:layout_gravity="center"
-                    android:layout_margin="10dp"
+                    android:layout_margin="2dp"
                     android:src="@drawable/ic_photo_red_24dp"
                     android:text="Test Item"
                     android:visibility="gone"
                     app:civ_border_color="@color/colorPrimaryDark" />
 
 
+                <!--                <ScrollView-->
+                <!--                    android:layout_height="match_parent"-->
 
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    >-->
                 <TextView
                     android:id="@+id/textViewItemName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="4dp"
+                    android:layout_margin="3dp"
+
+                    android:background="@drawable/back_border_shape"
+                    android:lines="1"
+                    android:maxLines="1"
+
                     android:gravity="center"
-                    android:layout_marginBottom="5dp"
+                    android:scrollbars = "vertical"
 
-                    android:text="Test Item"
-                    android:textStyle="bold"
-                    android:textColor="@color/cancel_button"
-                    android:textSize="16sp"
 
-                    app:autoSizeMaxTextSize="16sp"
-                    app:autoSizeMinTextSize="12sp"
-                    app:autoSizeStepGranularity="1sp"
-                    app:autoSizeTextType="uniform"
+
+                    android:textColor="@color/layer7"
+                    android:textSize="14sp"
 
 
 
                     />
+                <!--                </ScrollView>-->
 
 
             </LinearLayout>
-            <TextView
 
-                android:layout_height="1dp"
-                android:layout_width="match_parent"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
 
-                android:background="@color/layer5"
-                />
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:gravity="center"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                android:padding="3dp">-->
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:gravity="center"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:padding="3dp">-->
+            <!--                <TextView-->
+            <!--                    android:id="@+id/textViewItemName"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:text="Test Item"-->
+            <!--                    android:textColor="@color/layer5"-->
+            <!--                  android:textSize="12sp" />-->
 
-<!--                <TextView-->
-<!--                    android:id="@+id/textViewItemName"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Test Item"-->
-<!--                    android:textColor="@color/layer5"-->
-<!--                    android:textSize="16sp" />-->
-
-<!--            </LinearLayout>-->
+            <!--            </LinearLayout>-->
 
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="3dp">
+                android:padding="1dp">
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="3dp">
+                    android:background="@drawable/background_container"
+                    android:id="@+id/rowItemNumber"
+                    android:layout_margin="2dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/item_number"
-                        android:textColor="@color/layer5"
-                        android:textSize="16sp"
-
-
-                        app:autoSizeMaxTextSize="16sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="1sp"
-                        app:autoSizeTextType="uniform"
-
-                        />
+                        android:text="@string/No"
+                        android:visibility="gone"
+                        android:textColor="@color/redlighht"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/textViewItemNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginStart="15dp"
-                        android:textColor="@color/layer5"
-                        android:textSize="16sp"
-
-
-                        app:autoSizeMaxTextSize="16sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="1sp"
-                        app:autoSizeTextType="uniform" />
-
+                        android:text="1456394518541"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginStart="2dp"
+                        android:gravity="center"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="12sp" />
                 </TableRow>
+
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                    android:layout_margin="3dp">
+                    android:layout_margin="1dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/item_name"
                         android:textColor="@color/layer5"
-                        android:textSize="16sp" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/textViewTradeMark"
@@ -170,42 +156,34 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/layer5"
-                        android:textSize="16sp" />
+                        android:textSize="12sp" />
 
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="3dp">
+                    android:background="@drawable/background_container"
+                    android:layout_margin="2dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/category"
-                        android:textColor="@color/layer5"
-                        android:textSize="16sp"
+                        android:textColor="@color/colorblue_dark"
+                        android:textSize="12sp"
 
 
-                        app:autoSizeMaxTextSize="16sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="1sp"
-                        app:autoSizeTextType="uniform" />
+                        />
 
                     <TextView
                         android:id="@+id/textViewCategory"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginStart="15dp"
-                        android:textColor="@color/layer5"
-                        android:textSize="16sp"
-
-
-                        app:autoSizeMaxTextSize="16sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="1sp"
-                        app:autoSizeTextType="uniform"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginStart="2dp"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="12sp"
                         />
 
                 </TableRow>
@@ -214,107 +192,56 @@
                     android:id="@+id/row_qty"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/background_container"
                     android:visibility="visible"
-                    android:layout_margin="3dp">
+                    android:layout_margin="2dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/unit_qty"
-                        android:textColor="@color/layer5"
-                        android:textSize="16sp"
-
-
-                        app:autoSizeMaxTextSize="16sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="1sp"
-                        app:autoSizeTextType="uniform" />
+                        android:text="@string/qty"
+                        android:textColor="@color/colorblue_dark"
+                        android:textSize="12sp"
+                        />
 
                     <TextView
                         android:id="@+id/textViewUnit_qty"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginStart="15dp"
-                        android:textColor="@color/layer5"
-                        android:textSize="16sp"
-
-
-                        app:autoSizeMaxTextSize="16sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="1sp"
-                        app:autoSizeTextType="uniform" />
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="12sp"
+                        />
 
                 </TableRow>
+
+
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="3dp">
-
-                    <TextView
-                        android:id="@+id/textViewPricee"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/app_price"
-                        android:textColor="@color/layer5"
-                        android:textSize="16sp"
-
-
-                        app:autoSizeMaxTextSize="16sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="1sp"
-                        app:autoSizeTextType="uniform" />
-
-                    <TextView
-                        android:id="@+id/textViewPrice"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginStart="15dp"
-                        android:textColor="@color/layer5"
-                        android:textSize="16sp"
-
-
-                        app:autoSizeMaxTextSize="16sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="1sp"
-                        app:autoSizeTextType="uniform" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="3dp">
+                    android:id="@+id/rowTax"
+                    android:background="@drawable/background_container"
+                    android:layout_margin="2dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tax"
-                        android:textColor="@color/layer5"
-                        android:textSize="16sp"
-
-
-                        app:autoSizeMaxTextSize="16sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="1sp"
-                        app:autoSizeTextType="uniform" />
+                        android:textColor="@color/colorblue_dark"
+                        android:textSize="12sp"
+                        />
 
                     <TextView
                         android:id="@+id/textViewTax"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginStart="15dp"
-                        android:textColor="@color/layer5"
-                        android:textSize="16sp"
-
-
-                        app:autoSizeMaxTextSize="16sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="1sp"
-                        app:autoSizeTextType="uniform" />
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="12sp"
+                        />
                 </TableRow>
                 <TableRow
                     android:id="@+id/table_solidQty"
@@ -335,15 +262,60 @@
                         android:id="@+id/textViewsolidQty"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         android:textColor="@color/text_view_color"
                         android:textSize="12sp"
                         />
                 </TableRow>
+                <TextView
+
+                    android:layout_height="1dp"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="3dp"
+
+                    android:background="@color/layer5"
+                    />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp">
+
+                    <TextView
+                        android:id="@+id/textViewPricee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:text="@string/app_price"
+
+                        android:textColor="@color/layer5"
+                        android:textSize="12sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center"
+                        android:layout_marginStart="5dp"
+                        android:textColor="@color/redlighht"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:text="200  JD"
+                        app:autoSizeMaxTextSize="16sp"
+                        app:autoSizeMinTextSize="10sp"
+                        app:autoSizeStepGranularity="1sp"
+                        app:autoSizeTextType="uniform" />
+
+                </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:visibility="gone"
                     android:layout_margin="1dp">
 
                     <TextView
@@ -351,7 +323,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/barcode"
                         android:textColor="@color/text_view_color"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:visibility="invisible"
                         />
 
@@ -362,7 +334,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/second_color"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:visibility="invisible" />
 
                 </TableRow>
@@ -370,14 +342,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:visibility="gone"
-                    android:layout_margin="3dp">
+                    android:layout_margin="1dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Pos_price"
                         android:textColor="@color/text_view_color"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:visibility="visible" />
 
                     <TextView
@@ -387,7 +359,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/second_color"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:visibility="visible" />
 
                 </TableRow>
@@ -395,6 +367,7 @@
             </TableLayout>
 
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
     <LinearLayout
         android:layout_width="match_parent"
@@ -449,12 +422,12 @@
             android:text="200  JD"
             android:textSize="14sp"
             />
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/imagespecial_"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="2dp"
             android:src="@drawable/ic_photo_red_24dp"
             android:text="Test Item"
 

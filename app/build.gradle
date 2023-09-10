@@ -32,9 +32,6 @@ android {
         exclude 'META-INF/NOTICE.md'
         exclude 'META-INF/LICENSE.md'
     }
-    dataBinding {
-        android.buildFeatures.dataBinding = true
-    }
     dataBinding{
         enabled=true
 
@@ -127,4 +124,5 @@ dependencies {
     //to see data in browser
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
     implementation 'com.android.support:design:26.1.0'
+    implementation 'com.squareup.picasso:picasso:2.8'
 }

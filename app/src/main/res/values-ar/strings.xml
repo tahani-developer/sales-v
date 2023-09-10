@@ -725,6 +725,7 @@
     <string name="showMap"> تحديد الموقع على الخريطة</string>
     <string name="Customerdatasentsuccessfully">
 تم إرسال بيانات العميل إلى المسؤول بنجاح</string>
+    <string name="brand">الماركة</string>
 
     <string-array name="DaysOfWeek">
         <item>السبت</item>

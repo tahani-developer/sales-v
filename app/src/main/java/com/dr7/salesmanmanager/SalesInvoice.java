@@ -211,6 +211,7 @@ public class SalesInvoice extends Fragment {
     public static int noTax=1,priceByCustomer=0,Exported_Tax=0;
     SimpleDateFormat dateFormat, timeformat;
     String dateCurent="",timevocher;
+    public  static  String curency="JD";
     public static  int updatedSerial=0,addNewSerial=0,taxCalcType=0;
     int typeRequest = 0, haveResult = 0, approveAdmin = 0,countNormalQty=0,countBunosQty=0,contiusReading=0;
     int counterSerial;
@@ -1314,6 +1315,13 @@ public class SalesInvoice extends Fragment {
         Log.e("VERSION","= "+VERSION);
         isDataSmoke=mDbHandler.getAllSettings().get(0).getDiscAfterTax();
         Log.e("isDataSmoke"," = "+isDataSmoke);
+        try {
+            curency=mDbHandler.getPrinterSetting_().get(0).getCurency();
+
+        }catch (Exception e){
+            Log.e("curency"," = "+e.getMessage());
+        }
+        Log.e("curency"," = "+curency);
         return view;
     }
 

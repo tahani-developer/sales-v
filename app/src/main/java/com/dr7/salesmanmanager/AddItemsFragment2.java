@@ -23,12 +23,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -147,6 +149,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
     ProgressBar progress_circular;
     RelativeLayout allitemLayout;
+    TextView firstSpinerLable;
     public AddItemsInterface getListener() {
         return listener;
     }
@@ -162,7 +165,7 @@ public class AddItemsFragment2 extends DialogFragment {
         // Required empty public constructor
     }
 
-
+    int showPicture=0;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -179,6 +182,7 @@ public class AddItemsFragment2 extends DialogFragment {
         List = new ArrayList<Item>();
         List.clear();
 
+
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(false);
         setCancelable(false);
@@ -192,6 +196,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
         LinearLayout add_item = view.findViewById(R.id.add_item);
         progress_circular= view.findViewById(R.id.progress_circular);
+        firstSpinerLable= view.findViewById(R.id.firstSpinerLable);
         allitemLayout= view.findViewById(R.id.allitemLayout);
         try {
             if (languagelocalApp.equals("ar")) {
@@ -209,6 +214,11 @@ public class AddItemsFragment2 extends DialogFragment {
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
 
         userNo = mDbHandler.getAllUserNo();
+        showPicture=mHandler.getAllSettings().get(0).getShowItemImage();
+        if(showPicture==1)
+        {
+            firstSpinerLable.setText(getActivity().getResources().getString(R.string.brand));
+        }
         try {
             if (!userNo.equals("")) {
                 if(mDbHandler.getAllSettings().get(0).getItemUnit()==1)
@@ -282,9 +292,10 @@ public class AddItemsFragment2 extends DialogFragment {
 
                 if(b)
                 {
+                    fillItemRecycler(1);
 
-                    linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-                    recyclerView.setLayoutManager(linearLayoutManager);
+//                    linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+//                    recyclerView.setLayoutManager(linearLayoutManager);
 
                     int numberOfColumns = 6;
                     recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), numberOfColumns));
@@ -295,8 +306,11 @@ public class AddItemsFragment2 extends DialogFragment {
                     editor.apply();
                 }
                 else
-                {    linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);}
-                recyclerView.setLayoutManager(linearLayoutManager);
+                {
+                    fillItemRecycler(0);
+//                    linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+                }
+//                recyclerView.setLayoutManager(linearLayoutManager);
                 SharedPreferences.Editor editor = getContext().getSharedPreferences( Login.SETTINGS_PREFERENCES, MODE_PRIVATE).edit();
                 editor.putBoolean(Login.Items_Orent_PREF, b);
 
@@ -343,8 +357,9 @@ public class AddItemsFragment2 extends DialogFragment {
                 if(b)
                 {
                     Smallericon_checkbox.setButtonDrawable(getResources().getDrawable(R.drawable.blueic_baseline_table_view_24));
-                    linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-                    recyclerView.setLayoutManager(linearLayoutManager);
+//                    linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+//                    recyclerView.setLayoutManager(linearLayoutManager);
+                    fillItemRecycler(1);
                     Smallericon_checkbox.setButtonDrawable(getResources().getDrawable(R.drawable.blueic_baseline_table_view_24));
                     HeaderNewLin.setVisibility(View.VISIBLE);
                     SharedPreferences.Editor editor = getContext().getSharedPreferences( Login.SETTINGS_PREFERENCES, MODE_PRIVATE).edit();
@@ -360,11 +375,13 @@ public class AddItemsFragment2 extends DialogFragment {
                     editor.apply();
                     HeaderNewLin.setVisibility(View.GONE);
                     if(orientation_checkbox.isChecked()==true) {
-                        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-                        recyclerView.setLayoutManager(linearLayoutManager);
+                        fillItemRecycler(1);
+//                        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+//                        recyclerView.setLayoutManager(linearLayoutManager);
                     }   else {
-                        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-                        recyclerView.setLayoutManager(linearLayoutManager);
+                        fillItemRecycler(1);
+//                        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+//                        recyclerView.setLayoutManager(linearLayoutManager);
                     }
 
                 }}
@@ -399,27 +416,32 @@ public class AddItemsFragment2 extends DialogFragment {
          orientation_checkbox.setChecked(false);
 
         if(orientation_checkbox.isChecked()==true) {
-            linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-            recyclerView.setLayoutManager(linearLayoutManager);
+            fillItemRecycler(1);
+//            linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+//            recyclerView.setLayoutManager(linearLayoutManager);
         }   else {
-            linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(linearLayoutManager);
+            fillItemRecycler(0);
+//            linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+//            recyclerView.setLayoutManager(linearLayoutManager);
         }
 
 
         if(Smallericon_checkbox.isChecked()==true) {
-            linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(linearLayoutManager);
+            fillItemRecycler(0);
+//            linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+//            recyclerView.setLayoutManager(linearLayoutManager);
         }
         else
         {
 
             if(orientation_checkbox.isChecked()==true) {
-                linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-                recyclerView.setLayoutManager(linearLayoutManager);
+                fillItemRecycler(1);
+//                linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+//                recyclerView.setLayoutManager(linearLayoutManager);
             }   else {
-                linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-                recyclerView.setLayoutManager(linearLayoutManager);
+                fillItemRecycler(0);
+//                linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+//                recyclerView.setLayoutManager(linearLayoutManager);
             }
 
 
@@ -436,7 +458,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //
 
 //        fillListViewAllItem();
-        fillItemRecycler();
+        fillItemRecycler(0);
 
 //       }
 
@@ -951,6 +973,16 @@ public class AddItemsFragment2 extends DialogFragment {
         });
 
 
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if(view.getHeight() > 0 && view.getWidth() > 0) {
+                    //cache values
+                    view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            }
+        });
+
         return view;
     }
 
@@ -1006,29 +1038,26 @@ public class AddItemsFragment2 extends DialogFragment {
         recyclerView.setAdapter(adapter);
     }
 
-    private void fillItemRecycler() {
+    private void fillItemRecycler(int type) {
         listAllItemsView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
-
         RecyclerViewAdapter adapter;
-
            // Log.e("forAdapter",""+jsonItemsList.size());
+//            adapter = new RecyclerViewAdapter(itemAdapter, AddItemsFragment2.this);
+            if(type==0) {
+                linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
+            }else {
+                linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
+            }
 
-            adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
-
-                    recyclerView.setAdapter(adapter);
-
-//            recyclerView.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                    recyclerView.setAdapter(adapter);
-//                }
-//            },100);
-
-
+//                    recyclerView.setLayoutManager(linearLayoutManager);
+                GridLayoutManager layoutManager=new GridLayoutManager(getActivity(),2);
+                recyclerView.setLayoutManager(layoutManager);
+//            }else {
+//                recyclerView.setAdapter(adapter);
+//            }
     }
 
     private void fillListViewAllItem() {

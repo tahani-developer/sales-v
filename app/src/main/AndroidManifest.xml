@@ -53,10 +53,11 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION " />
-    <uses-permission android:name="android.permission.BLUETOOTH_DEBUG"/>
-    <uses-permission
-        android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
+<!--    <uses-permission android:name="android.permission.BLUETOOTH_DEBUG"/>-->
+<!--    <uses-permission-->
+<!--        android:name="android.permission.QUERY_ALL_PACKAGES"-->
+<!--        tools:ignore="QueryAllPackagesPermission" />-->
+<!--   / <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>-->
 
     <application
         android:allowBackup="false"

@@ -186,7 +186,8 @@ public class CustomerListShow extends DialogFragment {
                 customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList,showCustomerLoc);
                 itemsListView.setAdapter(customersListAdapter);
 
-            } else { Log.e("c2","c2");
+            } else {
+                Log.e("c2","c2");
                 customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList,showCustomerLoc);
                 itemsListView.setAdapter(customersListAdapter);
             }

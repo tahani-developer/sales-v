@@ -61,6 +61,7 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.squareup.picasso.Picasso;
 
 
 import java.io.InputStream;
@@ -99,6 +100,7 @@ import static com.dr7.salesmanmanager.Login.offerTalaat;
 
 import static com.dr7.salesmanmanager.Login.offernasleh;
 import static com.dr7.salesmanmanager.Login.sharedPref;
+import static com.dr7.salesmanmanager.SalesInvoice.curency;
 import static com.dr7.salesmanmanager.SalesInvoice.discountRequest;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.items;
@@ -1235,7 +1237,7 @@ public static     float CountOfItems=1;
                                                      ArrayAdapter<String> unitsList = new ArrayAdapter<String>(cont, R.layout.spinner_style, units);
                                                      unit.setAdapter(unitsList);
 
-                                                     ArrayAdapter<String> itemsunitsList = new ArrayAdapter<String>(cont, R.layout.spinner_style, ITEMS_units);
+                                                     ArrayAdapter<String> itemsunitsList = new ArrayAdapter<String>(cont, R.layout.support_simple_spinner_dropdown_item, ITEMS_units);
                                                      Item_unit.setAdapter(itemsunitsList);
                                                      if(MHandler.getAllSettings().get(0).getItems_Unit()==1&& MHandler.getAllSettings().get(0).getPriceByCust()==1){
                                                          spinerItemPrices=dialog.findViewById(R.id.item_prices_sp);
@@ -1786,18 +1788,38 @@ public static     float CountOfItems=1;
 //        }
         // second solution is you can set the path inside decodeFile function
 
-        holder.imagespecial.setVisibility(View.VISIBLE);
-        holder. imagespecial_.setVisibility(View.VISIBLE);
         if (showItemImageSetting == 1) {
-//            if (items.get(position).getItemPhoto() != null) {
-////            itemBitmap = StringToBitMap(items.get(position).getItemPhoto());
-//                holder.imagespecial.setImageBitmap(items.get(position).getItemPhoto());
-//            } else {
-//                holder.imagespecial.setImageDrawable(this.context.getResources().getDrawable(R.drawable.specialred));
-//            }
+            String url = allItemsList.get(position).getItemPhoto();
+//                    url="d:/ISAPI/6943478010024.jpg";
+            Log.e("1imagespecial_","=="+url);
+            try {
+                if (url.lastIndexOf("\\") != -1)
+                    url = url.substring(url.lastIndexOf("\\")+1);
+                else
+                    url = url.substring(url.lastIndexOf("/")+1);
+                Log.e("2imagespecial_","=="+url);
+            }catch (Exception e){
 
-//
+            }
+            holder.imagespecial.setVisibility(View.VISIBLE);
+            holder. imagespecial_.setVisibility(View.VISIBLE);
+            String urlStr = "http://" + ipAddress.trim() +":"+ipWithPort.trim()+ "//FALCONS/" + url.trim();
 
+//        Log.e("urlStr","*****"+urlStr);
+            Picasso.get()
+                    .load(urlStr)
+                    .placeholder(R.drawable.items_icon).fit()
+//                .resize(500, 500)
+                    .into(holder. imagespecial);
+            Picasso.get()
+                    .load(urlStr)
+                    .placeholder(R.drawable.items_icon).fit()
+//                .resize(500, 500)
+                    .into(holder. imagespecial_);
+//            holder. rowItemNumber.setVisibility(View.GONE);
+            holder. rowTax.setVisibility(View.GONE);
+            holder.tax.setVisibility(View.GONE);
+//            holder.itemNumber.setVisibility(View.GONE);
             holder.imagespecial_.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1811,9 +1833,9 @@ public static     float CountOfItems=1;
 
 
                     if (url.lastIndexOf("\\") != -1)
-                        url = url.substring(url.lastIndexOf("\\"));
+                        url = url.substring(url.lastIndexOf("\\")+1);
                     else
-                        url = url.substring(url.lastIndexOf("/"));
+                        url = url.substring(url.lastIndexOf("/")+1);
                     Log.e("imagespecial_", "==" + url);
 
                 }catch (Exception e){
@@ -1836,9 +1858,9 @@ public static     float CountOfItems=1;
                     try {
 
                         if (url.lastIndexOf("\\") != -1)
-                            url = url.substring(url.lastIndexOf("\\"));
+                            url = url.substring(url.lastIndexOf("\\")+1);
                         else
-                            url = url.substring(url.lastIndexOf("/"));
+                            url = url.substring(url.lastIndexOf("/")+1);
                         Log.e("imagespecial", "==" + url);
                     }catch ( Exception e){
                         Log.e("imagespecia", "Exception==" +e.getMessage());
@@ -1859,12 +1881,7 @@ public static     float CountOfItems=1;
 //
 //        }else {
         if (itemUnit == 1 && unitsItems_select==0) {
-//            if(items.get(position).getPrice()!=0)
-//            {
-//                holder.price.setText("" + items.get(position).getPrice());
-//            }else{
 
-     //       Log.e("rate_customer", "" + rate_customer);
             String postPriceUniteValue="",price_value="";
             if(MHandler.getAllSettings().get(0).getPriceByCust()==1)
             {
@@ -1882,12 +1899,12 @@ public static     float CountOfItems=1;
                 priceUnit = allItemsList.get(position).getPrice();
             }
 
-            holder.price.setText(convertToEnglish(threeDForm.format(priceUnit)) + "\t\tJD");
-            holder.   textViewPrice_.setText(convertToEnglish(threeDForm.format(priceUnit)) + "\t\tJD");
+            holder.price.setText(convertToEnglish(threeDForm.format(priceUnit)) + "\t\t"+curency);
+            holder.   textViewPrice_.setText(convertToEnglish(threeDForm.format(priceUnit)) + "\t\t"+curency);
 //            }
         } else {
-            holder.price.setText(convertToEnglish(threeDForm.format(allItemsList.get(position).getPrice())) + "\t\tJD");
-            holder.textViewPrice_.setText(convertToEnglish(threeDForm.format(allItemsList.get(position).getPrice())) + "\t\tJD");
+            holder.price.setText(convertToEnglish(threeDForm.format(allItemsList.get(position).getPrice())) + "\t\t"+curency);
+            holder.textViewPrice_.setText(convertToEnglish(threeDForm.format(allItemsList.get(position).getPrice())) + "\t\t"+curency);
         }
         if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {// for ejabi ***** test
             String priceCus = MHandler.getItemPrice(allItemsList.get(position).getItemNo());
@@ -1900,7 +1917,7 @@ public static     float CountOfItems=1;
         if(getlastPriceforCust == 1){
             String priceCus = MHandler.getLastPriceforCustomer(allItemsList.get(position).getItemNo());
             if (!priceCus.equals("")) {
-                holder.price.setText(priceCus+"\t JD");
+                holder.price.setText(priceCus+"\t "+curency);
                 allItemsList.get(position).setPrice(Float.parseFloat(priceCus));
             }
 
@@ -5424,7 +5441,7 @@ public static     float CountOfItems=1;
 
         LinearLayout linearLayout,newlin;
         CardView cardView;
-        TableRow row_qty, table_solidQty,taxrow,Categoryrow,itemnumrow,pricerow;
+        TableRow row_qty, table_solidQty,taxrow,Categoryrow,itemnumrow,pricerow,  rowItemNumber, rowTax;
         TextView itemNumber, itemName, tradeMark, category, unitQty, price, tax, barcode, posprice, textViewTax, textViewsolidQty;
         ImageView imagespecial,imagespecial_;
 
@@ -5440,9 +5457,11 @@ public static     float CountOfItems=1;
             tradeMark = itemView.findViewById(R.id.textViewTradeMark);
             category = itemView.findViewById(R.id.textViewCategory);
             unitQty = itemView.findViewById(R.id.textViewUnit_qty);
-            taxrow= itemView.findViewById(R.id.taxrow);
+
             pricerow= itemView.findViewById(R.id.pricerow);
             price = itemView.findViewById(R.id.textViewPrice);
+            rowItemNumber= itemView.findViewById(R.id.rowItemNumber);
+            rowTax       = itemView.findViewById(R.id.rowTax);
             textViewPrice_= itemView.findViewById(R.id.textViewPrice_);
             textViewUnit_qty_= itemView.findViewById(R.id.textViewUnit_qty_);
             textViewItemName_= itemView.findViewById(R.id.textViewItemName_);
@@ -5458,7 +5477,6 @@ public static     float CountOfItems=1;
             row_qty = itemView.findViewById(R.id.row_qty);
             table_solidQty = itemView.findViewById(R.id.table_solidQty);
             Categoryrow= itemView.findViewById(R.id.categoryrow);
-            itemnumrow= itemView.findViewById(R.id.itemnumrow);
             textViewsolidQty = itemView.findViewById(R.id.textViewsolidQty);
             imagespecial = itemView.findViewById(R.id.imagespecial);
             threeDForm = new DecimalFormat("00.000");

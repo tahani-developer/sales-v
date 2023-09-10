@@ -2525,7 +2525,12 @@ this.activtyflage=activtyflage;
             } catch (JSONException e) {
                 Log.e("Customer", "********ex3  " + e.toString());
                 e.printStackTrace();
-            } finally {
+            }
+
+            catch (Exception e){
+                Log.e("Customer", "4Exception********finally"+e.getMessage());
+            }
+            finally {
                 Log.e("Customer", "********finally");
 //                if (connection != null) {
 //                    Log.e("Customer", "********ex4");
@@ -3346,7 +3351,11 @@ this.activtyflage=activtyflage;
                 e.printStackTrace();
             } catch (URISyntaxException e) {
                 e.printStackTrace();
-            } finally {
+            }
+            catch (Exception e){
+                Log.e("Customer", "Exception********finally"+e.getMessage());
+            }
+            finally {
                 Log.e("Customer", "********finally");
                 progressDialog.dismiss();
                 Handler h = new Handler(Looper.getMainLooper());
@@ -3589,7 +3598,11 @@ this.activtyflage=activtyflage;
                 e.printStackTrace();
             } catch (URISyntaxException e) {
                 e.printStackTrace();
-            } finally {
+            }
+            catch (Exception e){
+                Log.e("Customer", "2Exception********finally"+e.getMessage());
+            }
+            finally {
                 Log.e("Customer", "********finally");
                 progressDialog.dismiss();
 //                if (connection != null) {
@@ -5480,7 +5493,11 @@ this.activtyflage=activtyflage;
                 e.printStackTrace();
             } catch (URISyntaxException e) {
                 e.printStackTrace();
-            } finally {
+            }
+            catch (Exception e){
+                Log.e("Customer", "3Exception********finally"+e.getMessage());
+            }
+            finally {
                 Log.e("Customer", "********finally");
 
                 try {

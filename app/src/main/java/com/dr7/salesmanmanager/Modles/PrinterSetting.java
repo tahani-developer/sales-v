@@ -11,6 +11,15 @@ public class PrinterSetting {
     private int netsalflag;
     private int dontrprintheadeInOrders;
     private int printItemNumber;
+    private  String curency;
+
+    public String getCurency() {
+        return curency;
+    }
+
+    public void setCurency(String curency) {
+        this.curency = curency;
+    }
 
     public int getPrintItemNumber() {
         return printItemNumber;

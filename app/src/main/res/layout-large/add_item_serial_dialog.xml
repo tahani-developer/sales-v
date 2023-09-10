@@ -98,10 +98,10 @@
         <Spinner
             android:id="@+id/Item_unit"
             android:layout_width="0dp"
-            android:layout_height="20dp"
-            android:layout_marginVertical="9dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
+            android:layout_height="25dp"
+            android:layout_marginVertical="2dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginLeft="2dp"
             android:visibility="gone"
             android:layout_weight="1"
             android:gravity="center"
@@ -118,17 +118,17 @@
             android:gravity="center"
             android:padding="3dp"
             android:visibility="gone" />
-        <Spinner
-            android:id="@+id/Item_unit"
-            android:layout_width="0dp"
-            android:layout_height="20dp"
-            android:layout_marginVertical="9dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:visibility="gone"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="16sp" />
+<!--        <Spinner-->
+<!--            android:id="@+id/Item_unit"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_marginVertical="9dp"-->
+<!--            android:layout_marginStart="5dp"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            android:visibility="gone"-->
+<!--            android:layout_weight="1"-->
+<!--            android:gravity="center"-->
+<!--            android:textSize="16sp" />-->
 
         <TextView
             android:id="@+id/textQty"

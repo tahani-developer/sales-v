@@ -997,7 +997,7 @@ public class ESCPSample2
 					break;
 			}
 
-			posPtr.setAsync(true);
+			posPtr.setAsync(false);// تضرب بكل الطابعات اذا كانت ترو 
 			CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 			taxCalc = obj.getAllSettings().get(0).getTaxClarcKind();
 			if (companyInfo.getLogo() != null) {
@@ -1114,22 +1114,6 @@ public class ESCPSample2
 
 						itemDiscount += itemforPrint.get(i).getDisc();
 						String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
-//						if (itemforPrint.get(i).getItemName().length() <= 12) {
-//							String space = itemforPrint.get(i).getItemName();
-//							for (int g = 0; g < 12 - itemforPrint.get(i).getItemName().length(); g++) {
-//								space =  space+" " ;
-//							}
-//							posPtr.printAndroidFont(null,true,space + "  " + itemforPrint.get(i).getUnit() + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount))))+ "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
-//
-//						} else {
-//							String space = itemforPrint.get(i).getItemName().substring(0, 10);
-////                        for (int g = 0; g < 16 - itemforPrint.get(i).getItemName().length(); g++) {
-////                            space = " " + space;
-////                        }
-//							String fullString = itemforPrint.get(i).getItemName().substring(10, itemforPrint.get(i).getItemName().length() - 1);
-//							posPtr.printAndroidFont( null,true,space + "\t\t\t" + itemforPrint.get(i).getUnit() + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" + fullString + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
-//
-//						}
 						String space = itemforPrint.get(i).getItemNo();
 						for (int g = 0; g < (10 - itemforPrint.get(i).getItemNo().length()); g++) {
 							space = space + " ";
@@ -1144,32 +1128,6 @@ public class ESCPSample2
 					}
 				}
 				//*************************************************************************************
-
-//				for (int i = 0; i < itemforPrint.size(); i++) {
-//					if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
-//						total_Qty+=itemforPrint.get(i).getQty();
-//
-//						String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
-//						if (itemforPrint.get(i).getItemName().length() <= 12) {
-//							String space = itemforPrint.get(i).getItemName();
-//							for (int g = 0; g < 12 - itemforPrint.get(i).getItemName().length(); g++) {
-//								space =  space+" " ;
-//							}
-//							posPtr.printAndroidFont(null,true,space + "  " + itemforPrint.get(i).getUnit() + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount))))+ "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
-//
-//						} else {
-//							String space = itemforPrint.get(i).getItemName().substring(0, 10);
-////                        for (int g = 0; g < 16 - itemforPrint.get(i).getItemName().length(); g++) {
-////                            space = " " + space;
-////                        }
-//							String fullString = itemforPrint.get(i).getItemName().substring(10, itemforPrint.get(i).getItemName().length() - 1);
-//							posPtr.printAndroidFont( null,true,space + "\t\t\t" + itemforPrint.get(i).getUnit() + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" + fullString + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
-//
-//						}
-//
-//
-//					}
-//				}
 			} else {
 				total_Qty = 0;
 				itemDiscount = 0;
@@ -1297,7 +1255,7 @@ public class ESCPSample2
 
 			posPtr.lineFeed(4);
 			//	posPtr.cutPaper();
-
+//
 //			try {
 //				Thread.sleep(3000);
 //			} catch (InterruptedException e) {

@@ -96,22 +96,39 @@
         android:textSize="14sp" />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
-        android:visibility="gone"
-        android:background="@drawable/back_border_edit"
+        android:layout_height="40dp"
+
+
+
         android:layout_marginBottom="5dp"
         android:orientation="horizontal">
 
-        <CheckBox
-            android:id="@+id/shortInvoice"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/textcur"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="14sp"
             android:layout_weight="1"
-            android:text="@string/shortInvoice"
-            android:textColor="@color/text_view_color"
-            />
+
+            android:gravity="center"
+            android:text="currency"
+
+            android:textColor="@color/add_button"
+
+            android:textDirection="ltr"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+        <EditText
+            android:id="@+id/currency_valuetxt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/back_border_edit"
+            android:gravity="center"
+            android:text="JD"
+            android:textColor="@color/add_button"
+            android:textDirection="ltr"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
 
     </LinearLayout>

@@ -14,6 +14,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,6 +51,7 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.dr7.salesmanmanager.Adapters.TapsAdapter;
+import com.dr7.salesmanmanager.Interface.CustomerDao;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Flag_Settings;
 import com.dr7.salesmanmanager.Modles.Password;
@@ -97,9 +100,10 @@ public class Login extends AppCompatActivity {
     public static String  Smallericon_PREF="Smallericon_PREF";
     public static String  UpdateFlag="UpdateFlag";
     public static String  FirstRun_3="FirstRun_4";
+    public static String  MACKIPEXIST="MACKIPEXIST";
     public static SharedPreferences sharedPref;
     public static boolean Items_Orent =true;
-
+    CustomerDao customerDao ;
     public static EditText storeNo_edit;
     String user="", password="";
     List<Flag_Settings> flag_settingsList;
@@ -119,6 +123,7 @@ public class Login extends AppCompatActivity {
     public static String userNo = "";
     SweetAlertDialog dialogTem, sweetAlertDialog;
     ImportJason importData;
+    GeneralMethod generalMethod;
 
     DatabaseHandler mDHandler;
     String shortUserName = "", fullUserName = "";
@@ -200,7 +205,8 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login_free_size);
         context=Login.this;
         initialView();
-
+        generalMethod=new GeneralMethod(this);
+        customerDao = new CustomerDao(Login.this,1);
 
          sharedPref = getSharedPreferences(SETTINGS_PREFERENCES, MODE_PRIVATE);
          Items_Orent = sharedPref.getBoolean(Items_Orent_PREF,true);
@@ -458,6 +464,16 @@ public class Login extends AppCompatActivity {
 //
 //        }
 
+    }
+
+    private String getmackAddressDevice() {
+        String mack=getIpAddressForDevice();
+
+        if(mack.equals("")){
+            mack=salesManInt+curentDate+curentTime;
+        }
+        Log.e("getmackAddressDevice","mack"+mack);
+        return mack;
     }
 
     private void getPasswords() {
@@ -1385,9 +1401,9 @@ public class Login extends AppCompatActivity {
 //        startActivity(intent);
     }
 
-//    private String getIpAddressForDevice() {
-//        String ipNo="";
-//
+    private String getIpAddressForDevice() {
+        String ipNo="";
+
 //        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
 //            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 101);
 //        }
@@ -1402,14 +1418,18 @@ public class Login extends AppCompatActivity {
 //
 //        }
 //        else {
-//            ipNo = Build.SERIAL;
+            ipNo = Build.SERIAL;
 //        }
-//        Log.e("getMacAddress","MAC Address : " + ipNo);
-//
-//
-//        Log.e("getMacAddress","serialNo2"+ipNo);
-//        return ipNo;
-//    }
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        String macAddress = wifiInfo.getMacAddress();
+//        String build = Build.VERSION.BASE_OS;
+        Log.e("getMacAddress","MAC Address == " + macAddress);
+
+
+        Log.e("getMacAddress","serialNo2"+ipNo);
+        return macAddress;
+    }
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -1870,6 +1890,7 @@ public class Login extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public  void mainIntent(){
+        checkFirebase();
         Log.e("mainIntent===","mainIntent");
         if(LocationTracker==1) {
             boolean locCheck= locationPermissionRequest.checkLocationPermission();
@@ -1896,6 +1917,23 @@ public class Login extends AppCompatActivity {
            startActivity(main);
         }
     }
+
+    private void checkFirebase() {
+        try {
+            boolean isFirstRun = sharedPref.getBoolean(Login.MACKIPEXIST, true);
+            SharedPreferences.Editor editor = sharedPref.edit();
+                if (isFirstRun) {
+            // Code to run once
+            String mackAddress=getmackAddressDevice();
+            String date= generalMethod.getCurentTimeDate(1);
+            String time= generalMethod.getCurentTimeDate(2);
+            customerDao.addMACK(mackAddress,(salesMan+"_"+date+time));
+                }
+        }catch (Exception e){
+            Log.e("isFirstRun",""+e.getMessage());
+        }
+    }
+
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -57,6 +57,7 @@ public class AddItemsStockFragment extends DialogFragment {
     SearchView search ;
     private ArrayList<String> itemsList;
     private List<Item> jsonItemsList;
+    private List<Item> jsonItemsListAll=new ArrayList<>();
     RecyclerView recyclerView;
     private float descPerc;
     boolean added = false;
@@ -67,8 +68,8 @@ public class AddItemsStockFragment extends DialogFragment {
     TextView textViewItemNum,textViewUnit_qty;
     DatabaseHandler mHandler;
 
-
-
+     Spinner categorySpinner;
+     Spinner Kind_item_Spinner;
     public AddItemsInterface getListener() {
         return listener;
     }
@@ -125,14 +126,14 @@ public class AddItemsStockFragment extends DialogFragment {
 
         // ****************************** Category Spinner Spenner*****************************************************
 
-        final Spinner categorySpinner = view.findViewById(R.id.cat);
+       categorySpinner = view.findViewById(R.id.cat);
         List<String> categories = mHandler.getAllExistingCategories();
         categories.add(0 , "no filter");
 
         ArrayAdapter<String> ad = new ArrayAdapter<>(getActivity() , R.layout.spinner_style, categories);
         categorySpinner.setAdapter(ad);
 
-        final Spinner Kind_item_Spinner = view.findViewById(R.id.spinner_kind_item);
+       Kind_item_Spinner = view.findViewById(R.id.spinner_kind_item);
         List<String> Kind_item=new ArrayList<>();
         try {
             Kind_item = mHandler.getAllKindItems();
@@ -151,19 +152,8 @@ public class AddItemsStockFragment extends DialogFragment {
         Kind_item_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (!Kind_item_Spinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
-                    ArrayList<Item> filteredList = new ArrayList<>();
-                    for (int j = 0; j < jsonItemsList.size(); j++) {
-                        Log.e("llog", jsonItemsList.get(j).getKind_item() + "     *    " + Kind_item_Spinner.getSelectedItem().toString());
-                        if (jsonItemsList.get(j).getKind_item().equals(Kind_item_Spinner.getSelectedItem().toString()))
-                            filteredList.add(jsonItemsList.get(j));
-                    }
-                    StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(filteredList, getActivity());
-                    recyclerView.setAdapter(adapter) ;
-                } else {
-                    StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(jsonItemsList, getActivity());
-                    recyclerView.setAdapter(adapter);
-                }
+                fillterKind();
+
 
 
             }
@@ -186,21 +176,8 @@ public class AddItemsStockFragment extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                if (!categorySpinner.getSelectedItem().toString().equals("no filter")) {
-                    ArrayList<Item> filteredList = new ArrayList<>();
-//                    jsonItemsList.clear();
-//                    jsonItemsList.addAll(itemsRequiredList);
-//                    jsonItemsList=itemsRequiredList;
-                    for (int k = 0; k < jsonItemsList.size(); k++) {
-                        if (jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
-                            filteredList.add(jsonItemsList.get(k));
-                    }
-                    StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(filteredList, getActivity());
-                    recyclerView.setAdapter(adapter);
-                } else {
-                    StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(jsonItemsList, getActivity());
-                    recyclerView.setAdapter(adapter);
-                }
+                filterCategory();
+
             }
 
 
@@ -269,12 +246,19 @@ public class AddItemsStockFragment extends DialogFragment {
 //                    "jkgb".matches()
 
                     boolean isFound = false;
-                    for (int i = 0; i < jsonItemsList.size(); i++) {
+                    List<Item> jsonItemsSearch=new ArrayList<>();
+                    if(jsonItemsListAll.size()!=0)
+                    {
+                        jsonItemsSearch.addAll(jsonItemsListAll);
+                    }
+                    else  jsonItemsSearch.addAll(jsonItemsList);
+
+                    for (int i = 0; i < jsonItemsSearch.size(); i++) {
                         for (int j = 0; j < arrOfStr.length; j++) {
                             String lowers = arrOfStr[j].toLowerCase();
                             String uppers = arrOfStr[j].toUpperCase();
 
-                            if (jsonItemsList.get(i).getItemName().toLowerCase().contains(lowers) || jsonItemsList.get(i).getItemName().toUpperCase().contains(uppers)) {
+                            if (jsonItemsSearch.get(i).getItemName().toLowerCase().contains(lowers) || jsonItemsSearch.get(i).getItemName().toUpperCase().contains(uppers)) {
 
                                 isFound = true;
 
@@ -286,7 +270,7 @@ public class AddItemsStockFragment extends DialogFragment {
 
                         }
                         if (isFound) {
-                            filteredList.add(jsonItemsList.get(i));
+                            filteredList.add(jsonItemsSearch.get(i));
                         }
 
 
@@ -297,8 +281,7 @@ public class AddItemsStockFragment extends DialogFragment {
 
 
                 } else {
-                    StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(jsonItemsList, getActivity());
-                    recyclerView.setAdapter(adapter);
+                    filterCategory();
                 }
                 return false;
             }
@@ -361,6 +344,49 @@ public class AddItemsStockFragment extends DialogFragment {
             }
         });
         return view;
+    }
+
+    private void fillterKind() {
+        if (!Kind_item_Spinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
+            ArrayList<Item> filteredList = new ArrayList<>();
+            for (int j = 0; j < jsonItemsList.size(); j++) {
+                Log.e("llog", jsonItemsList.get(j).getKind_item() + "     *    " + Kind_item_Spinner.getSelectedItem().toString());
+                if (jsonItemsList.get(j).getKind_item().equals(Kind_item_Spinner.getSelectedItem().toString()))
+                    filteredList.add(jsonItemsList.get(j));
+            }
+            jsonItemsListAll.clear();
+            jsonItemsListAll.addAll(filteredList);
+            StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(filteredList, getActivity());
+            recyclerView.setAdapter(adapter) ;
+        } else {
+            jsonItemsListAll.clear();
+            jsonItemsListAll.addAll(jsonItemsList);
+            StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(jsonItemsList, getActivity());
+            recyclerView.setAdapter(adapter);
+        }
+    }
+
+    private void filterCategory() {
+        if (!categorySpinner.getSelectedItem().toString().equals("no filter")) {
+            ArrayList<Item> filteredList = new ArrayList<>();
+//                    jsonItemsList.clear();
+//                    jsonItemsList.addAll(itemsRequiredList);
+//                    jsonItemsList=itemsRequiredList;
+            for (int k = 0; k < jsonItemsList.size(); k++) {
+                if (jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
+                    filteredList.add(jsonItemsList.get(k));
+            }
+            jsonItemsListAll.clear();
+            jsonItemsListAll.addAll(filteredList);
+            StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(filteredList, getActivity());
+            recyclerView.setAdapter(adapter);
+        } else {
+            fillterKind();
+//            jsonItemsListAll.clear();
+//            jsonItemsListAll.addAll(jsonItemsList);
+//            StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(jsonItemsList, getActivity());
+//            recyclerView.setAdapter(adapter);
+        }
     }
 
     private void addItemsList() {
