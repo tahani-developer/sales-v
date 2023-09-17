@@ -1,5 +1,6 @@
  package com.dr7.salesmanmanager;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -30,6 +31,7 @@ import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
 import com.dr7.salesmanmanager.Modles.ItemsReturn;
 import com.dr7.salesmanmanager.Modles.MainGroup_Id_Count;
+import com.dr7.salesmanmanager.Modles.NoteSalesPlane;
 import com.dr7.salesmanmanager.Modles.NetworkLogModel;
 import com.dr7.salesmanmanager.Modles.OfferGroupModel;
 import com.dr7.salesmanmanager.Modles.OfferListMaster;
@@ -85,7 +87,7 @@ import org.jetbrains.annotations.NotNull;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 221;
+    private static final int DATABASE_VERSION = 228;
 //
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -698,7 +700,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     private static final String orederd = "ORDERED";
     private static final String typeorederd = "TYPEORDERED";
-    private static final String LogoutStatus = "LogoutStatus";
+     private static final String LogoutStatus = "LogoutStatus";
+     private static final String ID = "ID";
  //------------------------------------------------------------------------------
  private static final String SalesMan_Item_availability = "SalesMan_Item_availability";
 
@@ -749,11 +752,26 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
      private static final String  ItemName="ItemName";
      private static final String  QtyItem="QtyItem";
 
-    public DatabaseHandler(Context context) {
+     //---------------------------------------
+     private static final String  NOTE_PLAN_TABLE="NOTE_PLAN_TABLE";
+
+     private static final String  SERIALS="SERIALS";
+     private static final String  SERIAL_FOR_PLAN_TABLE="SERIAL_FOR_PLAN_TABLE";
+     private static final String  NOTE_START="NOTE_START";
+     private static final String  NOTE_END="NOTE_END";
+     private static final String  EDIT_NOTE_START="EDIT_NOTE_START";
+     private static final String  EDIT_NOTE_END="EDIT_NOTE_END";
+     private static final String  DATE_NOTE="DATE_NOTE";
+     private static final String  CUSTOMER_NO_NOTE="CUSTOMER_NO";
+
+
+
+     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
 
+    @SuppressLint("LongLogTag")
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -1504,7 +1522,8 @@ try {
                     + LONGITUDE + " TEXT,"
                     + orederd + " INTEGER,"
                     + typeorederd + " INTEGER,"
-                    + LogoutStatus + " INTEGER DEFAULT '0'" +
+                    + LogoutStatus + " INTEGER DEFAULT '0' ," +
+                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT" +
                     ")";
             db.execSQL(CREATE_TABLE_SalesMan_Plan);}
         catch (Exception e){
@@ -1576,6 +1595,19 @@ try {
         db.execSQL(CREATE_VisitTABLE );
 
         String CREATE_ItemsVisitTABLE = "CREATE TABLE IF NOT EXISTS " + ItemsVisit + "("
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
+        String CREATE_TABLE_NOTE_PLAN = "CREATE TABLE IF NOT EXISTS " + NOTE_PLAN_TABLE + "("
+                + SERIALS + " INTEGER PRIMARY KEY   AUTOINCREMENT ,"
+                + SERIAL_FOR_PLAN_TABLE + " INTEGER,"
+                + NOTE_START + " TEXT,"
+                + NOTE_END + " TEXT,"
+                + EDIT_NOTE_START + " INTEGER,"
+                + EDIT_NOTE_END + " INTEGER,"
+                + DATE_NOTE + " TEXT,"
+                + CUSTOMER_NO_NOTE + " TEXT "
+                + ")";
+        db.execSQL(CREATE_TABLE_NOTE_PLAN);
 
                 + VoucherNoItem + " TEXT,"
                 + CustNoItem + " TEXT,"
@@ -2855,6 +2887,22 @@ try {
             Log.e(TAG, e.getMessage().toString());
         }
 
+        try{
+            String CREATE_TABLE_NOTE_PLAN = "CREATE TABLE IF NOT EXISTS " + NOTE_PLAN_TABLE + "("
+                    + SERIALS + " INTEGER PRIMARY KEY   AUTOINCREMENT ,"
+                    + SERIAL_FOR_PLAN_TABLE + " INTEGER,"
+                    + NOTE_START + " TEXT,"
+                    + NOTE_END + " TEXT,"
+                    + EDIT_NOTE_START + " INTEGER,"
+                    + EDIT_NOTE_END + " INTEGER,"
+                    + DATE_NOTE + " TEXT,"
+                    + CUSTOMER_NO_NOTE + " TEXT "
+                    + ")";
+            db.execSQL(CREATE_TABLE_NOTE_PLAN);
+        }catch (Exception e){
+            Log.e(TAG, e.getMessage().toString());
+        }
+
 
         String CREATE_VisitTABLE = "CREATE TABLE IF NOT EXISTS " + VisitMedicalTable + "("
                 + " VoucherNo INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -2918,6 +2966,36 @@ try {
         }
 
 
+        try{
+
+            db.execSQL("BEGIN TRANSACTION;");
+
+            db.execSQL("ALTER TABLE SalesMan_Plan RENAME TO SalesMan_Plan_2");
+
+            String CREATE_TABLE_SalesMan_Plan = "CREATE TABLE  IF NOT EXISTS " + SalesMan_Plan + "("
+                    + DATE + " TEXT,"
+                    + SALES_MAN_NUMBER + " INTEGER,"
+                    + CUSTOMER_NAME + " TEXT,"
+                    + CUSTOMER_NO + " INTEGER,"
+                    + LATITUDE + " TEXT,"
+                    + LONGITUDE + " TEXT,"
+                    + orederd + " INTEGER,"
+                    + typeorederd + " INTEGER,"
+                    +  LogoutStatus + " INTEGER DEFAULT '0' ,"
+                    + ID + " INTEGER PRIMARY KEY AUTOINCREMENT" +
+                    ")";
+            db.execSQL(CREATE_TABLE_SalesMan_Plan);
+
+
+            db.execSQL("INSERT INTO SalesMan_Plan (DATE, SALES_MAN_NUMBER, CUSTOMER_NAME, CUSTOMER_NO ,LATITUDE,LONGITUDE,ORDERED,TYPEORDERED,LogoutStatus) SELECT DATE, SALES_MAN_NUMBER, CUSTOMER_NAME, CUSTOMER_NO ,LATITUDE,LONGITUDE,ORDERED,TYPEORDERED,LogoutStatus FROM SalesMan_Plan_2");
+
+            db.execSQL("COMMIT;");
+        }catch (Exception e)
+        {
+
+            Log.e("notePlanError","n= "+e.toString());
+        }
+
     }
 
     ////B
@@ -2964,6 +3042,76 @@ try {
        db.close();
 
     }
+
+
+     public void insertNote(NoteSalesPlane noteSalesPlane) {
+
+         db = this.getReadableDatabase();
+         ContentValues values = new ContentValues();
+
+         Log.e("SerialTex",""+noteSalesPlane.getPlaneSerial());
+
+         values.put(SERIAL_FOR_PLAN_TABLE, noteSalesPlane.getPlaneSerial());
+         values.put(NOTE_START, noteSalesPlane.getNoteStart());
+         values.put(NOTE_END, noteSalesPlane.getNoteEnd());
+         values.put(EDIT_NOTE_START, noteSalesPlane.getEditStart());
+         values.put(EDIT_NOTE_END, noteSalesPlane.getEditEnd());
+         values.put(DATE_NOTE, noteSalesPlane.getDate());
+         values.put(CUSTOMER_NO_NOTE, noteSalesPlane.getCustomerId());
+
+
+         db.insert(NOTE_PLAN_TABLE, null, values);
+         db.close();
+
+     }
+
+
+     public List<NoteSalesPlane> getAllNote() {
+         List<NoteSalesPlane> settings = new ArrayList<>();
+         String selectQuery = "SELECT  * FROM " + NOTE_PLAN_TABLE;
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+         if (cursor.moveToFirst()) {
+             do {
+                 NoteSalesPlane setting = new NoteSalesPlane();
+                 setting.setSerial(cursor.getString(0));
+                 setting.setPlaneSerial(cursor.getString(1));
+                 setting.setNoteStart(cursor.getString(2));
+                 setting.setNoteEnd(cursor.getString(3));
+                 setting.setEditStart(cursor.getString(4));
+                 setting.setEditEnd(cursor.getString(5));
+                 setting.setDate(cursor.getString(6));
+                 setting.setCustomerId(cursor.getString(7));
+
+                 settings.add(setting);
+             } while (cursor.moveToNext());
+         }
+         return settings;
+     }
+     public NoteSalesPlane getNoteBySerial(String serialP) {
+         NoteSalesPlane settings = new NoteSalesPlane();
+         String selectQuery = "SELECT  * FROM " + NOTE_PLAN_TABLE +" where SERIAL_FOR_PLAN_TABLE="+serialP;
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+         if (cursor.moveToFirst()) {
+             do {
+                 NoteSalesPlane setting = new NoteSalesPlane();
+                 setting.setSerial(cursor.getString(0));
+                 setting.setPlaneSerial(cursor.getString(1));
+                 setting.setNoteStart(cursor.getString(2));
+                 setting.setNoteEnd(cursor.getString(3));
+                 setting.setEditStart(cursor.getString(4));
+                 setting.setEditEnd(cursor.getString(5));
+                 setting.setDate(cursor.getString(6));
+                 setting.setCustomerId(cursor.getString(7));
+
+                 settings=setting;
+             } while (cursor.moveToNext());
+         }
+         return settings;
+     }
+
+
      public void insertPaymentSerials(int type,String SERIAL) {
          Log.e("insertPaymentSerials","insertPaymentSerials");
          db = this.getReadableDatabase();
@@ -4274,6 +4422,24 @@ Log.e("addCompanyInfo","addCompanyInfo");
         db.update(SalesMenLogIn, values,null,null);
         db.close();
     }
+
+
+     public void updateNote(String  note,String SEFlag ,String Nserial) {
+         db = this.getReadableDatabase();
+         ContentValues values = new ContentValues();
+         if(SEFlag.equals("1")){
+
+             values.put(NOTE_START,note);
+             values.put(EDIT_NOTE_START,"1");
+
+         }else{
+             values.put(NOTE_END,note);
+             values.put(EDIT_NOTE_END,"1");
+         }
+
+         db.update(NOTE_PLAN_TABLE, values,SERIAL_FOR_PLAN_TABLE + "=" + Nserial,null);
+         db.close();
+     }
     public void addPaymentPaper(Payment payment) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
@@ -4586,6 +4752,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
         }
         return infos;
     }
+    @SuppressLint("LongLogTag")
     public List<serialModel> getAllSerialItems() {
        Log.e("getAllSerialItems==", "getAllSerialItems");
         List<serialModel> infos = new ArrayList<>();
@@ -7851,6 +8018,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
         values.put(IS_POSTED, 1);
         db.update(SALES_VOUCHER_DETAILS, values, IS_POSTED + "=" + 0, null);
     }
+    @SuppressLint("LongLogTag")
     public void updateVoucherDetailsByDate(String VOUCHER_NUMBER) {
        Log.e("updateVoucherDetailsByDate","VOUCHER_NUMBER="+VOUCHER_NUMBER);
        db = this.getWritableDatabase();
@@ -9965,7 +10133,12 @@ if(name==null) name = "";
         ArrayList< SalesManPlan > SalesManPlanlist=new ArrayList<>();
 
         Log.e("date==", date+"");
-        String selectQuery = " select * from SalesMan_Plan where DATE= '"+convertToEnglish(date)+"'";
+
+//        String selectQ=" select t1.* , (select NOTE_START  from NOTE_PLAN_TABLE  where t1.ID=SERIAL_FOR_PLAN_TABLE )as sn ,(select NOTE_END  from NOTE_PLAN_TABLE  where t1.ID=SERIAL_FOR_PLAN_TABLE )as EN  from SalesMan_Plan t1 where t1.DATE= '2'";
+
+//        String selectQuery = " select * from SalesMan_Plan where DATE= '"+convertToEnglish(date)+"'";
+
+        String selectQuery="select t1.* , (select NOTE_START  from NOTE_PLAN_TABLE  where t1.ID=SERIAL_FOR_PLAN_TABLE )as startN ,(select NOTE_END  from NOTE_PLAN_TABLE  where t1.ID=SERIAL_FOR_PLAN_TABLE )as endN from SalesMan_Plan t1 where t1.DATE= '"+convertToEnglish(date)+"'";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -9991,7 +10164,20 @@ if(name==null) name = "";
                         plan.setOrder(cursor.getInt(6));
                         plan.setTypeOrder(cursor.getInt(7));
                         plan.setLogoutStatus(cursor.getInt(8));
+                        plan.setSerial(cursor.getInt(9));
+                        Log.e("SS", "serial=" + plan.getSerial());
 
+                        try {
+                            plan.setStartNote(cursor.getString(10));
+                        }catch (Exception e){
+                            plan.setStartNote("");
+
+                        }
+                        try {
+                            plan.setEndNote(cursor.getString(11));
+                        }catch (Exception e){
+                            plan.setEndNote("");
+                        }
 
                         SalesManPlanlist.add(plan);
                         Log.e("SalesManPlanlist", "SalesManPlanlist=" + SalesManPlanlist.size());
@@ -10013,6 +10199,59 @@ if(name==null) name = "";
         //
         return   SalesManPlanlist;
     }
+
+     public ArrayList< SalesManPlan >getSalesmanPlanByLogOut(String date,String status) {
+         ArrayList< SalesManPlan > SalesManPlanlist=new ArrayList<>();
+
+         Log.e("date==", date+"");
+         String selectQuery = " select * from SalesMan_Plan where DATE= '"+convertToEnglish(date)+"' and LogoutStatus='"+convertToEnglish(status)+"'";
+
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+
+         try {
+             Log.e("getSalesmanPlan1==", "getSalesmanPlan");
+
+             if (cursor.moveToFirst()) {
+                 do {
+                     Log.e("getSalesmanPlan4==", "getSalesmanPlan");
+
+                     if (cursor.getString(0) == null) {
+                         Log.e("getSalesmanPlan2==", "getSalesmanPlan");
+                     } else {
+                         Log.e("getSalesmanPlan3==", "getSalesmanPlan");
+                         SalesManPlan plan = new SalesManPlan();
+                         plan.setDate(cursor.getString(0));
+                         plan.setSaleManNumber(cursor.getInt(1));
+                         plan.setCustName(cursor.getString(2));
+                         plan.setCustNumber(cursor.getString(3));
+                         plan.setLatitud(cursor.getDouble(4));
+                         plan.setLongtude(cursor.getDouble(5));
+                         plan.setOrder(cursor.getInt(6));
+                         plan.setTypeOrder(cursor.getInt(7));
+                         plan.setLogoutStatus(cursor.getInt(8));
+
+
+                         SalesManPlanlist.add(plan);
+                         Log.e("SalesManPlanlist", "SalesManPlanlist=" + SalesManPlanlist.size());
+
+                     }
+
+                 } while (cursor.moveToNext());
+             }
+         }
+
+         catch ( Exception e)
+         {
+             Log.e("Exception","getUnitForItem"+e.getMessage());
+         }
+
+
+         //
+
+         //
+         return   SalesManPlanlist;
+     }
 
     public void updateLogStatusInPlan(String cusCode,String currentDate) {
         db = this.getWritableDatabase();
@@ -10856,7 +11095,7 @@ void updateDataForClient(){
 
      public void updateLastVoucher() {
 //         select max(VOUCHER_NUMBER)+1 from SALES_VOUCHER_MASTER where VOUCHER_NUMBER<>20000053
-     
+
          List<ItemUnitDetails> list=new ArrayList<>();
          // Select All Query
 

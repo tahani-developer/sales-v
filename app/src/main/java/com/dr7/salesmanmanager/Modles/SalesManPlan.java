@@ -20,6 +20,34 @@ public class SalesManPlan  implements Comparable {
 
     private int logoutStatus;
 
+    private int serial;
+    private String startNote;
+    private String endNote;
+
+    public String getStartNote() {
+        return startNote;
+    }
+
+    public void setStartNote(String startNote) {
+        this.startNote = startNote;
+    }
+
+    public String getEndNote() {
+        return endNote;
+    }
+
+    public void setEndNote(String endNote) {
+        this.endNote = endNote;
+    }
+
+    public int getSerial() {
+        return serial;
+    }
+
+    public void setSerial(int serial) {
+        this.serial = serial;
+    }
+
     public String getCustName() {
         return custName;
     }

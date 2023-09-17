@@ -11,20 +11,26 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.SalesManPlan;
 import com.dr7.salesmanmanager.Modles.SalesManPlanAdapter;
+import com.dr7.salesmanmanager.Modles.Voucher;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.ImportJason.listCustomerInfo;
+import static com.dr7.salesmanmanager.Login.Plan_Kind;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class ShowPlan extends AppCompatActivity {
@@ -32,11 +38,18 @@ public static RecyclerView planRec;
 LinearLayout linearPlan, showlocation_lin;
 TextView salManName,date,plantype,showlocation;
 RadioButton TYPEPOFPLAN1,TYPEPOFPLAN2;
+Spinner status,noteS;
+TextView share,pdf;
+public static String state="",noteType="";
     public static   PolylineOptions rectLine;
     public static SalesManPlanAdapter planAdapter;
     public static  ArrayList<LatLng>  directionPoint =new ArrayList<>();;
     Spinner mtrl_calendar_days_of_week;
     int NumOfDayWeek;
+    ArrayAdapter<String> statusAdapter,noteAdapter;
+    List<String> statusList,noteList;
+    ArrayList <SalesManPlan> salesTemp=new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,9 +132,28 @@ RadioButton TYPEPOFPLAN1,TYPEPOFPLAN2;
 
     }
     public void  init() {
+        share=findViewById(R.id.share);
+        pdf=findViewById(R.id.pdf);
+
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sharwhats();
+            }
+        });
+
+        pdf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                exportToPdf();
+            }
+        });
+
         mtrl_calendar_days_of_week=findViewById(R.id.mtrl_calendar_days_of_week);
         showlocation_lin = findViewById(R.id.showlocation_lin );
                 showlocation = findViewById(R.id.showlocation );
+        status=findViewById(R.id.status);
+        noteS=findViewById(R.id.noteS);
         TYPEPOFPLAN1 = findViewById(R.id.TYPEPOFPLAN1 );
                 TYPEPOFPLAN2 = findViewById(R.id.TYPEPOFPLAN2 );
         planRec = findViewById(R.id.planRec);
@@ -129,6 +161,87 @@ RadioButton TYPEPOFPLAN1,TYPEPOFPLAN2;
         salManName = findViewById(R.id.sales_man_name1);
                 date = findViewById(R.id.date);
         plantype = findViewById(R.id.plantype);
+
+        statusList=new ArrayList<>();
+        statusList.add("All");
+        statusList.add("Visit");
+        statusList.add("Not Visit");
+
+        noteList=new ArrayList<>();
+        noteList.add("Start Note");
+        noteList.add("End Note");
+
+
+        statusAdapter=new ArrayAdapter<String>(ShowPlan.this, R.layout.spinner_style,statusList);
+        status.setAdapter(statusAdapter);
+        salesTemp=new ArrayList<>();
+
+        noteAdapter=new ArrayAdapter<String>(ShowPlan.this, R.layout.spinner_style,noteList);
+        noteS.setAdapter(noteAdapter);
+
+        noteS.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                noteType=noteList.get(i);
+                Log.e("list132",""+noteType);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        status.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                salesTemp.clear();
+
+                if(i==0){
+                  //  salesTemp=MainActivity.DB_salesManPlanList;
+                    for(int r=0;r<MainActivity.DB_salesManPlanList.size();r++){
+                        SalesManPlan s=MainActivity.DB_salesManPlanList.get(r);
+                            salesTemp.add(s);
+                    }
+                    fillAdapterData( ShowPlan.this   ,salesTemp);
+
+                    state="All";
+                }else {
+//                    salesTemp.clear();
+                    int a=0;
+                   if(i==1){
+                       a=1;
+                       state="Visit";
+
+                   }else {
+//                       salesTemp.clear();
+                       a=0;
+                       state="not Visit";
+
+                   }
+
+                    for(int r=0;r<MainActivity.DB_salesManPlanList.size();r++){
+                        if(MainActivity.DB_salesManPlanList.get(r).getLogoutStatus()==a){
+                            SalesManPlan s=MainActivity.DB_salesManPlanList.get(r);
+
+                            salesTemp.add(s);                        }
+                    }
+
+                    fillAdapterData(ShowPlan.this,salesTemp);
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         if(MainActivity.DB_salesManPlanList.size()!=0) {
             salManName.setText(MainActivity.DB_salesManPlanList.get(0).getSaleManNumber()+"");
             date.setText(MainActivity.DB_salesManPlanList.get(0).getDate());
@@ -164,5 +277,22 @@ RadioButton TYPEPOFPLAN1,TYPEPOFPLAN2;
         planRec.setAdapter(planAdapter);
 
 
+    }
+
+
+    public void sharwhats() {
+
+        try {
+            PdfConverter pdf = new PdfConverter(ShowPlan.this);
+            pdf.exportListToPdf(salesTemp, "Vocher", "", 19);
+        } catch (Exception e) {
+            Log.e("Exception22==", "" + e.getMessage());
+        }
+    }
+
+    public  void exportToPdf(){
+
+        PdfConverter pdf =new PdfConverter(ShowPlan.this);
+        pdf.exportListToPdf(salesTemp,getResources().getString(R.string.AccountStatment),"",20);
     }
 }

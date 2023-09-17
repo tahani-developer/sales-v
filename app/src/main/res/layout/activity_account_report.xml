@@ -167,9 +167,11 @@
                 android:id="@+id/scrolview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/layer3"
-                android:layout_margin="10dp"
-                >
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/layer3">
 
                 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/tableAccountReport"
@@ -189,8 +191,8 @@
                             android:layout_margin="2dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:textColor="@color/white"
                             android:text="@string/date"
+                            android:textColor="@color/white"
                             android:textStyle="bold" />
 
 
@@ -201,9 +203,9 @@
                             android:layout_margin="2dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:textColor="@color/white"
-
                             android:text="@string/transfer_name"
+
+                            android:textColor="@color/white"
                             android:textStyle="bold" />
 
 
@@ -213,9 +215,9 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="2dp"
                             android:layout_weight="1"
-                            android:textColor="@color/white"
                             android:gravity="center"
                             android:text="@string/Debtor"
+                            android:textColor="@color/white"
                             android:textStyle="bold" />
 
                         <TextView

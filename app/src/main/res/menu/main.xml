@@ -68,4 +68,10 @@
         android:title="@string/SetVochsPosted"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_addPic"
+        android:orderInCategory="100"
+        android:title="@string/addPic"
+        app:showAsAction="never" />
+
 </menu>

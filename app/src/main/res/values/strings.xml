@@ -699,6 +699,7 @@
     <string name="showMap"> Set Location in Map</string>
     <string name="Customerdatasentsuccessfully">Customer data has been sent to the Admin successfully</string>
     <string name="brand">Brand</string>
+    <string name="addPic">Add Picture</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
@@ -765,4 +766,17 @@
         <item>Friday</item>
 
     </string-array>
+    <string name="Add_Picture">Add Picture</string>
+    <string name="Note">Note</string>
+
+    <string name="noteType">Note Type</string>
+    <string name="StartNote">Start Note</string>
+    <string name="EndNote">End Note</string>
+    <string name="CustomerName">Customer Name</string>
+    <string name="AddNote">Add Note</string>
+    <string name="VisitStatus">Visit Status</string>
+    <string name="Visit">Visit</string>
+    <string name="NotVisit">Not Visit</string>
+
+
 </resources>

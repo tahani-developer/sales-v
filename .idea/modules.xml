@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SalesmanManager.iml" filepath="$PROJECT_DIR$/.idea/modules/SalesmanManager.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SalesmanManager.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SalesmanManager.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/van_sales.iml" filepath="$PROJECT_DIR$/.idea/modules/van_sales.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/van_sales.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/van_sales.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/van_sales.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/van_sales.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/van_sales.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/van_sales.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/van_sales.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/van_sales.app.unitTest.iml" />
     </modules>
   </component>
 </project>
