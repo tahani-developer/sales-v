@@ -323,7 +323,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/wifi_protected_setup/baseline_wifi_protected_setup_24.xml" />
+                                      <entry key="url" value="file:/$PROJECT_DIR$/../../../mr%20gamer/AppData/Local/Android/Sdk/icons/material/materialicons/image/baseline_image_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -333,8 +333,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="222b56" />
-                            <entry key="outputName" value="ic_baseline_loading_24" />
+                            <entry key="color" value="ffffff" />
+                            <entry key="outputName" value="ic_baseline_image_24" />
                             <entry key="sourceFile" value="C:\Users\dell54" />
                           </map>
                         </option>

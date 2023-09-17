@@ -1,13 +1,32 @@
 package com.dr7.salesmanmanager;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import static com.dr7.salesmanmanager.NumberToArabic.getArabicString;
+import static com.dr7.salesmanmanager.PrintPayment.pay1;
+import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
+import static com.dr7.salesmanmanager.PrintVoucher.items;
+import static com.dr7.salesmanmanager.PrintVoucher.vouch1;
+import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
+import static com.dr7.salesmanmanager.Reports.CashReport.cash;
+import static com.dr7.salesmanmanager.Reports.CashReport.cashPayment;
+import static com.dr7.salesmanmanager.Reports.CashReport.credit;
+import static com.dr7.salesmanmanager.Reports.CashReport.creditCardPayment;
+import static com.dr7.salesmanmanager.Reports.CashReport.creditPayment;
+import static com.dr7.salesmanmanager.Reports.CashReport.date;
+import static com.dr7.salesmanmanager.Reports.CashReport.net;
+import static com.dr7.salesmanmanager.Reports.CashReport.returnCash;
+import static com.dr7.salesmanmanager.Reports.CashReport.returnCridet;
+import static com.dr7.salesmanmanager.Reports.CashReport.total;
+import static com.dr7.salesmanmanager.Reports.CashReport.total_cash;
+import static com.dr7.salesmanmanager.Reports.InventoryReport.itemsInventoryPrint;
+import static com.dr7.salesmanmanager.Reports.InventoryReport.typeQty;
+import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
+import static com.dr7.salesmanmanager.SalesInvoice.noTax;
+import static com.dr7.salesmanmanager.SalesInvoice.valueCheckHidPrice;
+import static com.dr7.salesmanmanager.SalesInvoice.voucher;
+import static com.dr7.salesmanmanager.StockRequest.clearData;
+import static com.dr7.salesmanmanager.StockRequest.listItemStock;
+import static com.dr7.salesmanmanager.StockRequest.totalQty;
+import static com.dr7.salesmanmanager.StockRequest.voucherStockItem;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -18,19 +37,13 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-//import android.support.v4.content.ContextCompat;
 import android.os.Build;
 import android.util.Log;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.print.PrintHelper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -48,38 +61,15 @@ import com.sewoo.jpos.command.ESCPOS;
 import com.sewoo.jpos.command.ESCPOSConst;
 import com.sewoo.jpos.printer.ESCPOSPrinter;
 import com.sewoo.jpos.printer.LKPrint;
-import com.sewoo.jpos.request.RequestQueue;
 
-import static com.dr7.salesmanmanager.NumberToArabic.getArabicString;
-import static com.dr7.salesmanmanager.PrintPayment.pay1;
-import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
-import static com.dr7.salesmanmanager.PrintVoucher.items;
-import static com.dr7.salesmanmanager.PrintVoucher.vouch1;
-import static com.dr7.salesmanmanager.ReceiptVoucher.payment;
-import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
-import static com.dr7.salesmanmanager.Reports.CashReport.cash;
-import static com.dr7.salesmanmanager.Reports.CashReport.cashPayment;
-import static com.dr7.salesmanmanager.Reports.CashReport.credit;
-import static com.dr7.salesmanmanager.Reports.CashReport.creditCardPayment;
-import static com.dr7.salesmanmanager.Reports.CashReport.creditPayment;
-import static com.dr7.salesmanmanager.Reports.CashReport.date;
-import static com.dr7.salesmanmanager.Reports.CashReport.net;
-import static com.dr7.salesmanmanager.Reports.CashReport.returnCash;
-import static com.dr7.salesmanmanager.Reports.CashReport.returnCridet;
-import static com.dr7.salesmanmanager.Reports.CashReport.total;
-import static com.dr7.salesmanmanager.Reports.CashReport.total_cash;
-import static com.dr7.salesmanmanager.Reports.InventoryReport.itemsInventoryPrint;
-import static com.dr7.salesmanmanager.Reports.InventoryReport.typeQty;
-import static com.dr7.salesmanmanager.SalesInvoice.Exported_Tax;
-import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
-
-import static com.dr7.salesmanmanager.SalesInvoice.noTax;
-import static com.dr7.salesmanmanager.SalesInvoice.valueCheckHidPrice;
-import static com.dr7.salesmanmanager.SalesInvoice.voucher;
-import static com.dr7.salesmanmanager.StockRequest.clearData;
-import static com.dr7.salesmanmanager.StockRequest.listItemStock;
-import static com.dr7.salesmanmanager.StockRequest.totalQty;
-import static com.dr7.salesmanmanager.StockRequest.voucherStockItem;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class ESCPSample2
 {
@@ -994,8 +984,8 @@ public class ESCPSample2
 					voucherTyp = "طلب جديد";
 					break;
 			}
-
-			posPtr.setAsync(true);
+//for taleat pos true
+			posPtr.setAsync(false);
 			CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 			taxCalc = obj.getAllSettings().get(0).getTaxClarcKind();
 			if (companyInfo.getLogo() != null) {
@@ -1296,12 +1286,13 @@ public class ESCPSample2
 			posPtr.lineFeed(4);
 			//	posPtr.cutPaper();
 
-//			try {
-//				Thread.sleep(3000);
-//			} catch (InterruptedException e) {
-//				Log.e("IOException","printeThread.sleep="+e.getMessage());
-//				e.printStackTrace();
-//			}
+			//for taleat pos commite
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				Log.e("IOException","printeThread.sleep="+e.getMessage());
+				e.printStackTrace();
+			}
 		} catch (Exception e) {
 			Log.e("printerType","3="+e.getMessage());
 			Toast.makeText(context, "printException"+e.getMessage(), Toast.LENGTH_SHORT).show();
