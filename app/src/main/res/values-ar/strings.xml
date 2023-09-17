@@ -714,7 +714,7 @@
     <string name="ITEM_QTY">  كمية المادة</string>
     <string name="getReceiptSerials"> جاري جلب سيريلات سندات القبض</string>
     <string name="maxpaymentvoch"> اكبر رقم تسلسلي لسندات القبض من السيرفر</string>
-
+    <string name="auto_search">بحث تلقائي</string>
     <string name="voch_sett">  إعدادات الفاتورة</string>
     <string name="customers_sett">  إعدادات العملاء</string>
     <string name="Printer_sett">  إعدادات الطباعة</string>

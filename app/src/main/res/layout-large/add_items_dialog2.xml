@@ -263,30 +263,24 @@
 
         <CheckBox
             android:id="@+id/Smallericon_checkbox"
-
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_below="@+id/orientation_checkbox"
             android:layout_gravity="center"
-
             android:layout_marginLeft="5dp"
             android:layout_marginTop="1dp"
-
             android:layout_marginRight="5dp"
             android:clickable="true"
             android:gravity="top"
             android:textColor="@color/text_view_color"
             android:textSize="12sp"
             android:textStyle="bold"
-
             />
         <TableRow
             android:layout_height="35dp"
             android:layout_width="match_parent"
             android:background="@color/colorblue_dark"
-
             android:id="@+id/HeaderNewLin"
-
             android:padding="2dp">
 
             <TextView
@@ -316,9 +310,7 @@
             <TextView
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-
                 android:gravity="center"
-
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 

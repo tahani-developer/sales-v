@@ -143,7 +143,7 @@ public class AddItemsFragment2 extends DialogFragment {
     SimpleDateFormat df, df2;
     Date currentTimeAndDate;
     String userNo="";
-    int itemUnit=0,countListVisible=0;
+    int itemUnit=0,countListVisible=0,autoSearchFlag=0;
     private static DatabaseHandler mDbHandler;
     private DecimalFormat decimalFormat    = new DecimalFormat("00.000");;
 
@@ -540,146 +540,19 @@ public class AddItemsFragment2 extends DialogFragment {
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
+                if(autoSearchFlag==0){
+                    filterQueryName(query);
+                }
                 return false;
 
             }
 
             @Override
             public boolean onQueryTextChange(String query) {
-                //FILTER AS YOU TYPE
-//                adapter.getFilter().filter(query);
-                boolean isFound = false;
-//                try {
-//
-//                    Log.e("jsonItemsList=", jsonItemsList.size()+"" );
-//                    for(int i=0;i<jsonItemsList.size();i++) {
-//                        Log.e("getItemName=", "" +jsonItemsList.get(i).getItemName());
-//
-//                        if (fisrtchar(jsonItemsList.get(i).getItemName(), query.toString())) {
-//                            Log.e("fisrtchar=", "" + "true");
-//                            isFound = true;
-//                        } else {
-//                            Log.e("fisrtchar=", "" + "false");
-//                            isFound = false;
-//                        }
-//                    }
-//
-//                }catch (Exception e){
-//                    Log.e("ifmatch=",""+"Exception");
-//                }
+                if(autoSearchFlag==1){
+                    filterQueryName(query);
+                }else  filterKindSpinner();
 
-
-
-                filteredList_allItem.clear();
-                if (query != null && query.length() > 0) {
-                    String[] arrOfStr = query.split(" ");
-                    int[] countResult = new int[arrOfStr.length];
-
-
-                    ArrayList<Item> filteredList = new ArrayList<>();
-//                    filteredList_allItem
-
-// old search
-                    /*
-                    if(filteredList_allItem.size()==0){
-                        filteredList_allItem.addAll(jsonItemsList);
-                    }
-
-
-                    for (int i = 0; i < filteredList_allItem.size(); i++) {
-                       // filteredList_allItem.stream().map(::get).filter(s -> s.contains(searchTerm));
-                        if (filteredList_allItem.get(i).getItemName().toLowerCase().trim().replaceAll("\\s", "").contains(query.toString().trim().replaceAll("\\s", ""))
-                                || filteredList_allItem.get(i).getItemName().toUpperCase().trim().replaceAll("\\s", "").contains(query.toString().trim().replaceAll("\\s", ""))
-//                        ||
-//                                FisrtCharsFromString(jsonItemsList.get(i).getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
-                                ||
-                                SubStringtoMoreThanOne(jsonItemsList.get(i).getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
-
-                        ) {
-                            isFound = true;
-                        }
-                             else {
-                                isFound = false;
-
-
-                        }
-//                        for (int j = 0; j < arrOfStr.length; j++) {
-//                            String lowers = arrOfStr[j].toLowerCase();
-//                            String uppers = arrOfStr[j].toUpperCase();
-//
-//                            if (filteredList_allItem.get(i).getItemName().toLowerCase().contains(lowers)
-//                                    || filteredList_allItem.get(i).getItemName().toUpperCase().contains(uppers)) {
-//
-//                                isFound = true;
-//
-//                            } else {
-//                                isFound = false;
-//                               break;
-//                            }
-//
-//
-//                        }
-                        if (isFound) {
-
-                            if(qtyGreatZero==1)
-                            {
-                                if(jsonItemsList.get(i).getQty()>0)
-                                {
-                                    filteredList.add(filteredList_allItem.get(i));
-
-                                }
-                            }else {
-                                filteredList.add(filteredList_allItem.get(i));
-                            }
-
-
-
-
-
-                        }
-
-
-                    }
-
-                    */
-
-                    for(Map.Entry<Integer,Item> m : filteredMap.entrySet()){
-                        Item item=m.getValue();
-//                        if(item.getItemName().toString().contains(query))
-//                        {
-// scan through all candidate titles
-                            if (item.getItemName().toLowerCase().trim().contains(query.toString().toLowerCase(Locale.ROOT).trim())
-//                                    || item.getItemName().toUpperCase().trim().contains(query.toString().trim())
-                        ||
-//                                FisrtCharsFromString(item.getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))) {
-//                                    ||
-                                    SubStringtoMoreThanOne(item.getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
-                                    ){
-                                filteredList.add(item);
-//                                Log.e("filteredMap1-", m.getKey() + " " + item.getItemName());
-                            }
-//                        }
-
-
-                    }
-                    Log.e("filteredMap2-",filteredList.size()+"");
-
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
-                    recyclerView.setAdapter(adapter);
-                 //   Toast.makeText(context, ""+filteredList.size(), Toast.LENGTH_SHORT).show();
-
-                } else {
-                    filterKindSpinner();
-//                    ArrayList<Item> filteredList = new ArrayList<>();
-//                    filteredList =   getFilteredZero();
-//                    filteredMap.clear();
-//                    for (int  i=0;i<filteredList.size();i++ )
-//                        filteredMap.put(i,filteredList.get(i));
-
-//                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
-//                    recyclerView.setAdapter(adapter);
-                }
                 return false;
             }
         });
@@ -983,7 +856,148 @@ public class AddItemsFragment2 extends DialogFragment {
             }
         });
 
+        if(sharedPref==null)  sharedPref = getActivity().getSharedPreferences("SETTINGS_PREFERENCES", MODE_PRIVATE);
+        if  (sharedPref.getBoolean(Login.UtoSearch_PREF, false)){
+            autoSearchFlag=1;
+        }else  autoSearchFlag=0;
+
         return view;
+    }
+
+    private void filterQueryName(String query) {
+        //FILTER AS YOU TYPE
+//                adapter.getFilter().filter(query);
+        boolean isFound = false;
+//                try {
+//
+//                    Log.e("jsonItemsList=", jsonItemsList.size()+"" );
+//                    for(int i=0;i<jsonItemsList.size();i++) {
+//                        Log.e("getItemName=", "" +jsonItemsList.get(i).getItemName());
+//
+//                        if (fisrtchar(jsonItemsList.get(i).getItemName(), query.toString())) {
+//                            Log.e("fisrtchar=", "" + "true");
+//                            isFound = true;
+//                        } else {
+//                            Log.e("fisrtchar=", "" + "false");
+//                            isFound = false;
+//                        }
+//                    }
+//
+//                }catch (Exception e){
+//                    Log.e("ifmatch=",""+"Exception");
+//                }
+
+
+
+        filteredList_allItem.clear();
+        if (query != null && query.length() > 0) {
+            String[] arrOfStr = query.split(" ");
+            int[] countResult = new int[arrOfStr.length];
+
+
+            ArrayList<Item> filteredList = new ArrayList<>();
+//                    filteredList_allItem
+
+// old search
+                    /*
+                    if(filteredList_allItem.size()==0){
+                        filteredList_allItem.addAll(jsonItemsList);
+                    }
+
+
+                    for (int i = 0; i < filteredList_allItem.size(); i++) {
+                       // filteredList_allItem.stream().map(::get).filter(s -> s.contains(searchTerm));
+                        if (filteredList_allItem.get(i).getItemName().toLowerCase().trim().replaceAll("\\s", "").contains(query.toString().trim().replaceAll("\\s", ""))
+                                || filteredList_allItem.get(i).getItemName().toUpperCase().trim().replaceAll("\\s", "").contains(query.toString().trim().replaceAll("\\s", ""))
+//                        ||
+//                                FisrtCharsFromString(jsonItemsList.get(i).getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
+                                ||
+                                SubStringtoMoreThanOne(jsonItemsList.get(i).getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
+
+                        ) {
+                            isFound = true;
+                        }
+                             else {
+                                isFound = false;
+
+
+                        }
+//                        for (int j = 0; j < arrOfStr.length; j++) {
+//                            String lowers = arrOfStr[j].toLowerCase();
+//                            String uppers = arrOfStr[j].toUpperCase();
+//
+//                            if (filteredList_allItem.get(i).getItemName().toLowerCase().contains(lowers)
+//                                    || filteredList_allItem.get(i).getItemName().toUpperCase().contains(uppers)) {
+//
+//                                isFound = true;
+//
+//                            } else {
+//                                isFound = false;
+//                               break;
+//                            }
+//
+//
+//                        }
+                        if (isFound) {
+
+                            if(qtyGreatZero==1)
+                            {
+                                if(jsonItemsList.get(i).getQty()>0)
+                                {
+                                    filteredList.add(filteredList_allItem.get(i));
+
+                                }
+                            }else {
+                                filteredList.add(filteredList_allItem.get(i));
+                            }
+
+
+
+
+
+                        }
+
+
+                    }
+
+                    */
+
+            for(Map.Entry<Integer,Item> m : filteredMap.entrySet()){
+                Item item=m.getValue();
+//                        if(item.getItemName().toString().contains(query))
+//                        {
+// scan through all candidate titles
+                if (item.getItemName().toLowerCase().trim().contains(query.toString().toLowerCase(Locale.ROOT).trim())
+//                                    || item.getItemName().toUpperCase().trim().contains(query.toString().trim())
+                        ||
+//                                FisrtCharsFromString(item.getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))) {
+//                                    ||
+                (autoSearchFlag==0)  &&SubStringtoMoreThanOne(item.getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
+                ){
+                    filteredList.add(item);
+//                                Log.e("filteredMap1-", m.getKey() + " " + item.getItemName());
+                }
+//                        }
+
+
+            }
+            Log.e("filteredMap2-",filteredList.size()+"");
+
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+            recyclerView.setAdapter(adapter);
+            //   Toast.makeText(context, ""+filteredList.size(), Toast.LENGTH_SHORT).show();
+
+        } else {
+            filterKindSpinner();
+//                    ArrayList<Item> filteredList = new ArrayList<>();
+//                    filteredList =   getFilteredZero();
+//                    filteredMap.clear();
+//                    for (int  i=0;i<filteredList.size();i++ )
+//                        filteredMap.put(i,filteredList.get(i));
+
+//                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+//                    recyclerView.setAdapter(adapter);
+        }
     }
 
     private void filterKindSpinner() {

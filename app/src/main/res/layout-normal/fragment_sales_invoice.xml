@@ -559,6 +559,25 @@
                             android:textSize="12sp" />
 
                     </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/row5"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="2"
+                        android:background="@drawable/back_border_edit"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/autoSearch"
+                            android:text="@string/auto_search"
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:textSize="12sp"
+                            />
+
+                    </LinearLayout>
 <!--                    <LinearLayout-->
 <!--                        android:id="@+id/row5uil"-->
 <!--                        android:layout_width="match_parent"-->

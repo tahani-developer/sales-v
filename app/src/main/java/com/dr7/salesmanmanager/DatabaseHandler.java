@@ -10706,7 +10706,13 @@ void updateDataForClient(){
         Log.e("getConvRate==","getConvRate"+UnitID);
       String ConvRate="1";
        // units.add("1");
-       String selectQuery = "select DISTINCT  ConvRate  from " + Item_Unit_Details + " where ItemNo = '" + itemNo + "' and UnitID= '"+UnitID+"' ";
+        String selectQuery ="";
+        if(UnitID.equals("-1"))
+        {
+            selectQuery = "select DISTINCT  ConvRate  from " + Item_Unit_Details + " where ItemNo = '" + itemNo + "'";
+
+        }else
+        selectQuery = "select DISTINCT  ConvRate  from " + Item_Unit_Details + " where ItemNo = '" + itemNo + "' and UnitID= '"+UnitID+"' ";
         Log.e("selectQuery==",selectQuery+"");
        db = this.getWritableDatabase();
        Cursor cursor = db.rawQuery(selectQuery, null);

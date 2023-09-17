@@ -1287,8 +1287,11 @@ public static     float CountOfItems=1;
                                                      }
 
                                                      try {
-                                                         CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
-                                                       //  Log.e("CountOfItems",CountOfItems+"");
+                                                         if(mHandler.getAllSettings().get(0).getItemUnit()==1)
+                                                             CountOfItems=getCountOfItems(itemNumber.getText().toString(),"-1");
+                                                         else
+                                                             CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
+                                                         Log.e("CountOfItems",CountOfItems+"");
                                                      }catch (Exception e){}
 
                                                      Item_unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1883,22 +1886,22 @@ public static     float CountOfItems=1;
         if (itemUnit == 1 && unitsItems_select==0) {
 
             String postPriceUniteValue="",price_value="";
-            if(MHandler.getAllSettings().get(0).getPriceByCust()==1)
-            {
-                 postPriceUniteValue = MHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
+//            if(MHandler.getAllSettings().get(0).getPriceByCust()==1)
+//            {
+//                 postPriceUniteValue = MHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
+//
+//            }
+//                price_value = MHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer,0);
 
-            }
-                price_value = MHandler.getUnitPrice(allItemsList.get(position).getItemNo(), rate_customer,0);
-
-            if (!postPriceUniteValue.equals("")) {
-                try {
-                    priceUnit = Float.parseFloat(postPriceUniteValue);
-                } catch (Exception e) {
-                }
-            } else {
-                priceUnit = allItemsList.get(position).getPrice();
-            }
-
+//            if (!postPriceUniteValue.equals("")) {
+//                try {
+//                    priceUnit = Float.parseFloat(postPriceUniteValue);
+//                } catch (Exception e) {
+//                }
+//            } else {
+//                priceUnit = allItemsList.get(position).getPrice();
+//            }
+            priceUnit = allItemsList.get(position).getPrice();
             holder.price.setText(convertToEnglish(threeDForm.format(priceUnit)) + "\t\t"+curency);
             holder.   textViewPrice_.setText(convertToEnglish(threeDForm.format(priceUnit)) + "\t\t"+curency);
 //            }
@@ -1906,14 +1909,14 @@ public static     float CountOfItems=1;
             holder.price.setText(convertToEnglish(threeDForm.format(allItemsList.get(position).getPrice())) + "\t\t"+curency);
             holder.textViewPrice_.setText(convertToEnglish(threeDForm.format(allItemsList.get(position).getPrice())) + "\t\t"+curency);
         }
-        if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {// for ejabi ***** test
-            String priceCus = MHandler.getItemPrice(allItemsList.get(position).getItemNo());
-            if (!priceCus.equals("")) {
-                holder.price.setText(priceCus);
-                allItemsList.get(position).setPrice(Float.parseFloat(priceCus));
-            }
-
-        }
+//        if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {// for ejabi ***** test
+//            String priceCus = MHandler.getItemPrice(allItemsList.get(position).getItemNo());
+//            if (!priceCus.equals("")) {
+//                holder.price.setText(priceCus);
+//                allItemsList.get(position).setPrice(Float.parseFloat(priceCus));
+//            }
+//
+//        }
         if(getlastPriceforCust == 1){
             String priceCus = MHandler.getLastPriceforCustomer(allItemsList.get(position).getItemNo());
             if (!priceCus.equals("")) {
@@ -2898,6 +2901,9 @@ public static     float CountOfItems=1;
                                                            }
 
                                                         try {
+                                                            if(mHandler.getAllSettings().get(0).getItemUnit()==1)
+                                                            CountOfItems=getCountOfItems(itemNumber.getText().toString(),"-1");
+                                                            else
                                                             CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
                                                  Log.e("CountOfItems",CountOfItems+"");
                                                         }catch (Exception e){}
@@ -5080,11 +5086,14 @@ public static     float CountOfItems=1;
 
     private boolean validQty(float qtyCurrent, float qtyRequired) {
        Log.e("validQty==", "qtyCurrent=" + qtyCurrent + "\tqtyRequired=" + qtyRequired);
-        if( (((SalesInvoice.voucherType == 504)||(SalesInvoice.voucherType == 508&&  MainActivity.checkQtyForOrdersFlage==1))&&MainActivity.UNITFLAGE==1&&MHandler.getAllSettings().get(0).getAllowMinus() == 0)){
+        if( (((SalesInvoice.voucherType == 504)||
+                (SalesInvoice.voucherType == 508&&  MainActivity.checkQtyForOrdersFlage==1))&&MainActivity.UNITFLAGE==1&&MHandler.getAllSettings().get(0).getAllowMinus() == 0)){
             Log.e("validQty2==", "qtyCurrent2=" + qtyCurrent + "\tqtyRequired=" + qtyRequired+"CountOfItems="+CountOfItems);
             Log.e("validQty3=="," "+ qtyCurrent/CountOfItems);
-            if (qtyRequired <=(qtyCurrent/CountOfItems) )
+//            if (qtyRequired <=(qtyCurrent/CountOfItems) )
+                if ((qtyCurrent/CountOfItems) >=qtyRequired )
                 return true;
+                else    return false;
         }
 
      else   if (MHandler.getAllSettings().get(0).getAllowMinus() == 1

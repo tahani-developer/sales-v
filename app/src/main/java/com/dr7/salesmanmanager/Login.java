@@ -98,6 +98,7 @@ public class Login extends AppCompatActivity {
    public static String SETTINGS_PREFERENCES="SETTINGS_PREFERENCES";
     public static String Items_Orent_PREF="Items_Orent_PREF";
     public static String  Smallericon_PREF="Smallericon_PREF";
+    public static String  UtoSearch_PREF="UtoSearch_PREF";
     public static String  UpdateFlag="UpdateFlag";
     public static String  FirstRun_3="FirstRun_4";
     public static String  MACKIPEXIST="MACKIPEXIST";

@@ -16,6 +16,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -134,6 +135,7 @@ import static android.content.Context.LOCATION_SERVICE;
 //import static android.support.v4.app.DialogFragment.STYLE_NO_FRAME;
 //import static android.support.v4.content.ContextCompat.getSystemService;
 //import static android.support.v4.content.ContextCompat.getSystemServiceName;
+import static android.content.Context.MODE_PRIVATE;
 import static android.widget.LinearLayout.VERTICAL;
 import static com.dr7.salesmanmanager.Activities.currentKey;
 import static com.dr7.salesmanmanager.Activities.currentKeyTotalDiscount;
@@ -158,6 +160,7 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.offerQasion;
 import static com.dr7.salesmanmanager.Login.offerTalaat;
+import static com.dr7.salesmanmanager.Login.sharedPref;
 import static com.dr7.salesmanmanager.Login.talaatLayoutAndPassowrd;
 import static com.dr7.salesmanmanager.Login.voucherReturn_spreat;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.price;
@@ -357,7 +360,7 @@ public class SalesInvoice extends Fragment {
     double limit_offer = 0;
     ImageButton maxDiscount;
     int voucherNo = 0, itemCountTable;
-    CheckBox check_HidePrice,totalDiscount_checkbox;;
+    CheckBox check_HidePrice,totalDiscount_checkbox,autoSearch;
     public static int valueCheckHidPrice = 0;
     LinearLayout mainlayout;
     double curentLatitude, curentLongitude;
@@ -572,10 +575,30 @@ public class SalesInvoice extends Fragment {
         Log.e("Purchase_Order","111="+Purchase_Order);
         flag_settingsList = mDbHandler.getFlagSettings();
             totalDiscount_checkbox= (CheckBox)view. findViewById(R.id.totalDiscount_checkbox);
-        totalDiscount_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        autoSearch= (CheckBox)view. findViewById(R.id.autoSearch);
+            totalDiscount_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 calculateTotals(0);
+            }
+        });
+        if(sharedPref==null)  sharedPref = getActivity().getSharedPreferences("SETTINGS_PREFERENCES", MODE_PRIVATE);
+        sharedPref.getBoolean(Login.UtoSearch_PREF, false);
+        if  (sharedPref.getBoolean(Login.UtoSearch_PREF, false))
+        {
+            autoSearch.setChecked(true);
+
+        }
+        else
+        {  autoSearch.setChecked(false);
+
+        }
+        autoSearch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharedPreferences.Editor editor = getActivity().getSharedPreferences( Login.SETTINGS_PREFERENCES, MODE_PRIVATE).edit();
+                editor.putBoolean(Login.UtoSearch_PREF, b);
+                editor.apply();
             }
         });
         valueTotalDiscount= (EditText) view.findViewById(R.id.valueTotalDiscount);
@@ -758,7 +781,7 @@ public class SalesInvoice extends Fragment {
 
 
         Log.e("total_items_quantity","=="+total_items_quantity+"\t"+limit_offer);
-        refrechItemForReprint();
+//        refrechItemForReprint();
         //*************************************************************************
 
         salesRadioButton.setOnClickListener(RADIOCLECKED);
