@@ -5657,7 +5657,22 @@ if(editable.toString().trim().equals("refreshtext")){
 
             }
 
-
+            double discTotalPercentOffer=0;
+            Log.e("ayanetTotal22=====","="+"netTotal=="+netTotal);
+            for (int j = 0; j < list_discount_offers.size(); j++) {
+                if (list_discount_offers.get(j).getPaymentType() == 100) {
+                    if (subTotal>=list_discount_offers.get(j).getQTY()  ) {
+                        discTotalPercentOffer =  list_discount_offers.get(j).getDiscountValue();
+                    }
+                }
+            }
+            try {
+                Log.e("ayanetTotal22=====","="+"discTotalPercentOffer=="+discTotalPercentOffer);
+                if(  discTotalPercentOffer!=0) {
+                    totalDiscount = subTotal * discTotalPercentOffer / 100;
+                }
+                Log.e("ayanetTotal22=====","="+"totalDiscount=="+totalDiscount);
+            }catch (Exception e){}
             if(discType_static==0)// value
             {
                 totalDiscount+=discvalue_static;
@@ -5891,12 +5906,27 @@ if(editable.toString().trim().equals("refreshtext")){
                 itemTotalAfterTax = items.get(i).getAmount();
                 subTotal = subTotal + itemTotal;
             }
+                double discTotalPercentOffer=0;
+                Log.e("ayanetTotal22=====","="+"netTotal=="+subTotal);
+                for (int j = 0; j < list_discount_offers.size(); j++) {
+                    if (list_discount_offers.get(j).getPaymentType() == 100) {
+                        if (subTotal>=list_discount_offers.get(j).getQTY()  ) {
+                            discTotalPercentOffer =  list_discount_offers.get(j).getDiscountValue();
+                        }
+                    }
+                }
+                try {
+                            Log.e("ayanetTotal22=====","="+"discTotalPercentOffer=="+discTotalPercentOffer);
+                    if(  discTotalPercentOffer!=0) {
+                        totalDiscount = subTotal * discTotalPercentOffer / 100;
+                    }
+        Log.e("ayanetTotal22=====","="+"totalDiscount=="+totalDiscount);
+                }catch (Exception e){}
                 // for rawat almazaq
                 if(discType_static==0)// value
                 {
                     totalDiscount+=discvalue_static;
                 }else {// percent
-
                     discvalue_static=subTotal*(DiscountFragment.getDiscountPerc()/100);
                     totalDiscount+=discvalue_static;
                 }
@@ -5941,7 +5971,6 @@ if(editable.toString().trim().equals("refreshtext")){
                 }
                 totalTaxValue = totalTaxValue + itemTax;
             }
-
 //            totalDiscount+=getTotalDiscSetting(netTotal);
 //            Log.e("TOTAL", "noTax3totalTaxValue==" +totalTaxValue);
 
@@ -5983,7 +6012,23 @@ if(editable.toString().trim().equals("refreshtext")){
             subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
         }
 
-        Log.e("ayanetTotal22=====","="+"netTotal"+netTotal);
+        double discTotalPercentOffer=0;
+        Log.e("ayanetTotal22=====","="+"netTotal=="+netTotal);
+//        for (int j = 0; j < list_discount_offers.size(); j++) {
+//                if (list_discount_offers.get(j).getPaymentType() == 100) {
+//                    if (netTotal>=list_discount_offers.get(j).getQTY()  ) {
+//                        discTotalPercentOffer =  list_discount_offers.get(j).getDiscountValue();
+//                    }
+//                }
+//        }
+//        try {
+//          //        Log.e("ayanetTotal22=====","="+"discTotalPercentOffer=="+discTotalPercentOffer);
+//          if(  discTotalPercentOffer!=0) {
+//              totalDiscount = subTotal * discTotalPercentOffer / 100;
+//              subTotal -= totalDiscount;
+//          }
+////        Log.e("ayanetTotal22=====","="+"totalDiscount=="+totalDiscount);
+//        }catch (Exception e){}
 
         if(visaPayFlag==1)totalDiscount = 0;
         discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discTextView.getText().toString()))));

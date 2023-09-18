@@ -742,8 +742,8 @@
     <string name="Add_Picture">اضافة صورة</string>
     <string name="Note">ملاحظة</string>
     <string name="noteType">نوع الملاحظة</string>
-    <string name="StartNote">الملاحظة الاولية</string>
-    <string name="EndNote">الملاحظة النهائية</string>
+    <string name="StartNote"> الاولية</string>
+    <string name="EndNote"> النهائية</string>
     <string name="CustomerName">اسم الزبون</string>
     <string name="AddNote">اضافة الملاحظة</string>
     <string name="VisitStatus">حالة الزيارة</string>

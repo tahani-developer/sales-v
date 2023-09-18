@@ -135,7 +135,7 @@ class MedicalVisitReport : AppCompatActivity() {
     fun exportToPdf(itemsReportinventory: List<visitMedicalModel?>) {
         Log.e("exportToPdf", "" + itemsReportinventory.size)
         val pdf = PdfConverter(this@MedicalVisitReport)
-        pdf.exportListToPdf(itemsReportinventory, "MedicalVisitReport", "21/12/2020", 19)
+        pdf.exportListToPdf(itemsReportinventory, "MedicalVisitReport", "21/12/2020", 21)
     }
     private fun inflateBoomMenu(binding: ActivityMedicalVisitReportBinding) {
         val bmb = findViewById<View>(R.id.bmb) as BoomMenuButton

@@ -102,17 +102,17 @@ public static String state="",noteType="";
 //          for(int i=0; i<MainActivity.DB_salesManPlanList.size();i++)
 //                directionPoint.add(new LatLng( MainActivity.DB_salesManPlanList.get(i).getLatitud(),MainActivity.DB_salesManPlanList.get(i).getLongtude()));
 
-          directionPoint.add(new LatLng(31.974571023429526, 35.913833717317296));
-                directionPoint.add(new LatLng(31.98185160760809, 35.89726839457524));
-                directionPoint.add(new LatLng(31.986146881335287, 35.87924395014088 ));
-
-                directionPoint.add(new LatLng(31.98782125560162, 35.865768532159 ));
-
-                directionPoint.add(new LatLng(31.955565031943042, 35.866183786712476 ));
-                directionPoint.add(new LatLng(31.94137136465222, 35.88798768856344 ));
-
-                directionPoint.add(new LatLng(31.955565031943042, 35.866183786712476 ));
-                directionPoint.add(new LatLng(31.98185160760809, 35.89726839457524));
+//          directionPoint.add(new LatLng(31.974571023429526, 35.913833717317296));
+//                directionPoint.add(new LatLng(31.98185160760809, 35.89726839457524));
+//                directionPoint.add(new LatLng(31.986146881335287, 35.87924395014088 ));
+//
+//                directionPoint.add(new LatLng(31.98782125560162, 35.865768532159 ));
+//
+//                directionPoint.add(new LatLng(31.955565031943042, 35.866183786712476 ));
+//                directionPoint.add(new LatLng(31.94137136465222, 35.88798768856344 ));
+//
+//                directionPoint.add(new LatLng(31.955565031943042, 35.866183786712476 ));
+//                directionPoint.add(new LatLng(31.98185160760809, 35.89726839457524));
 
               rectLine = new PolylineOptions().width(8).color(
                         Color.BLUE);

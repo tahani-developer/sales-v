@@ -1,5 +1,7 @@
 package com.dr7.salesmanmanager.Adapters;
 
+
+
 import static com.dr7.salesmanmanager.MainActivity.EndTrip_Report;
 
 import android.app.AlertDialog;
@@ -206,7 +208,8 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                     holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.red_background));
 
                 holder.showloction.setVisibility(View.VISIBLE);
-                if (Integer.parseInt(custList.get(i).getCustId()) == getAllowedCust()) {
+                if (custList.get(i).getCustId().equals( getAllowedCust()) )
+                {
                     holder.linearLayout.setEnabled(true);
                     holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.colorblue_dark));
                 } else
@@ -344,20 +347,22 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         };
         return filter;
     }
-   int getAllowedCust(){
+
+    String getAllowedCust() {
 
 
-int CusNum=-1;
+        String CusNum = "-1";
 
-  for(int i=0;i< MainActivity.DB_salesManPlanList .size();i++)
-           if(MainActivity.DB_salesManPlanList .get(i).getLogoutStatus()==0) {
-               CusNum = Integer.parseInt(MainActivity.DB_salesManPlanList .get(i).getCustNumber());
-          break;
+        for (int i = 0; i < MainActivity.DB_salesManPlanList.size(); i++)
+            if (MainActivity.DB_salesManPlanList.get(i).getLogoutStatus() == 0) {
+                CusNum = MainActivity.DB_salesManPlanList.get(i).getCustNumber();
+                break;
 
-           }
+            }
 
 
- return  CusNum;   }
+        return CusNum;
+    }
    boolean IsHaveOrder(String id){
 
 

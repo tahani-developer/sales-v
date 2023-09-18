@@ -206,20 +206,19 @@ public class MainActivity extends AppCompatActivity
 
     TextView Addrss_map;
     MapView mMapView;
-    public static int menuItemState, OffersJustForSalsFlag = 0, checkQtyForOrdersFlage = 0, Acountatatment = 1, SharWhatsAppForm = 0, AddCustomerPer = 1, LastCustPriceflage = 0, Locationtrack = 0, CompanyinfoINPdf_Hide = 0, AddedCustomer_PERM = 0;
-    public static boolean enter = false;
+
     String typeImport = "";
-    int approveAdmin = -1, workOnLine = -1, EndTrip_Report = 0, ReturnVoch_approveAdmin = 0;
+    int approveAdmin = -1, workOnLine = -1, ReturnVoch_approveAdmin = 0;
     public static EditText passwordFromAdmin, password;
     static public TextView mainTextView, timeTextView, salesmanPlanRespon, getplan, notExportedTextView, openPendingTextView;
-    public static int menuItemState,OffersJustForSalsFlag=0,checkQtyForOrdersFlage=0,Acountatatment=1,
-            SharWhatsAppForm=0,AddCustomerPer=1,LastCustPriceflage=0,Locationtrack=0,CompanyinfoINPdf_Hide=0,
-            AddedCustomer_PERM=0,EndTrip_Report=0;
-    public static boolean enter=false;
-    String typeImport="";
-    int  approveAdmin=-1,workOnLine=-1,ReturnVoch_approveAdmin=0;
-    public  static  EditText passwordFromAdmin, password ;
-    static public TextView mainTextView,timeTextView,salesmanPlanRespon,getplan,notExportedTextView,openPendingTextView;
+    public static int menuItemState, OffersJustForSalsFlag = 0, checkQtyForOrdersFlage = 0, Acountatatment = 1,
+            SharWhatsAppForm = 0, AddCustomerPer = 1, LastCustPriceflage = 0, Locationtrack = 0, CompanyinfoINPdf_Hide = 0,
+            AddedCustomer_PERM = 0 ,EndTrip_Report = 0;
+    public static boolean enter = false;
+//    String typeImport = "";
+//    int approveAdmin = -1, workOnLine = -1, ReturnVoch_approveAdmin = 0;
+//    public static EditText passwordFromAdmin, password;
+//    static public TextView mainTextView, timeTextView, salesmanPlanRespon, getplan, notExportedTextView, openPendingTextView;
     LinearLayout checkInLinearLayout, checkOutLinearLayout;
     public static ImageView checkInImageView, checkOutImageView;
     static int checknum;
@@ -681,28 +680,28 @@ public class MainActivity extends AppCompatActivity
 
         settingsList = mDbHandler.getAllSettings();
         try {
-if(settingsList.size()>0)
-{   EndTrip_Report=settingsList.get(settingsList.size()-1).getEndTripReport();
-            Log.e("EndTrip_Report===",EndTrip_Report+"");
-            approveAdmin=settingsList.get(settingsList.size()-1).getApproveAdmin();
-    ReturnVoch_approveAdmin=settingsList.get(settingsList.size()-1).getReturnVoch_approveAdmin();
-            OffersJustForSalsFlag=settingsList.get(settingsList.size()-1).getOffersJustForSales();
-            checkQtyForOrdersFlage=settingsList.get(settingsList.size()-1).getCheckQtyinOrder();
-            UNITFLAGE=settingsList.get(settingsList.size()-1).getItems_Unit();
-            if(UNITFLAGE==0)
-                UNITFLAGE=settingsList.get(settingsList.size()-1).getItemUnit();
-            Acountatatment=settingsList.get(settingsList.size()-1).getAcountatatmentVisable();
-    SharWhatsAppForm=settingsList.get(settingsList.size()-1).getSharWhatsAppForm();
-    AddCustomerPer=settingsList.get(settingsList.size()-1).getAdd_CustumerPer();
-    LastCustPriceflage=settingsList.get(settingsList.size()-1).getLastCustPrice();
-    Login.Plan_Kind =settingsList.get(settingsList.size()-1).getPlanKind();
-    CompanyinfoINPdf_Hide=settingsList.get(settingsList.size()-1).getCompanyinfoINPdf();
-    Locationtrack=settingsList.get(settingsList.size()-1).getLocationtracker();
-    AddedCustomer_PERM=settingsList.get(settingsList.size()-1).getAddedCustomer_PERM();
-}
-        }catch (Exception e){
-            approveAdmin=0;
-            ReturnVoch_approveAdmin=0;
+            if (settingsList.size() > 0) {
+                EndTrip_Report = settingsList.get(settingsList.size() - 1).getEndTripReport();
+                Log.e("EndTrip_Report===", EndTrip_Report + "");
+                approveAdmin = settingsList.get(settingsList.size() - 1).getApproveAdmin();
+                ReturnVoch_approveAdmin = settingsList.get(settingsList.size() - 1).getReturnVoch_approveAdmin();
+                OffersJustForSalsFlag = settingsList.get(settingsList.size() - 1).getOffersJustForSales();
+                checkQtyForOrdersFlage = settingsList.get(settingsList.size() - 1).getCheckQtyinOrder();
+                UNITFLAGE = settingsList.get(settingsList.size() - 1).getItems_Unit();
+                if (UNITFLAGE == 0)
+                    UNITFLAGE = settingsList.get(settingsList.size() - 1).getItemUnit();
+                Acountatatment = settingsList.get(settingsList.size() - 1).getAcountatatmentVisable();
+                SharWhatsAppForm = settingsList.get(settingsList.size() - 1).getSharWhatsAppForm();
+                AddCustomerPer = settingsList.get(settingsList.size() - 1).getAdd_CustumerPer();
+                LastCustPriceflage = settingsList.get(settingsList.size() - 1).getLastCustPrice();
+                Login.Plan_Kind = settingsList.get(settingsList.size() - 1).getPlanKind();
+                CompanyinfoINPdf_Hide = settingsList.get(settingsList.size() - 1).getCompanyinfoINPdf();
+                Locationtrack = settingsList.get(settingsList.size() - 1).getLocationtracker();
+                AddedCustomer_PERM = settingsList.get(settingsList.size() - 1).getAddedCustomer_PERM();
+            }
+        } catch (Exception e) {
+            approveAdmin = 0;
+            ReturnVoch_approveAdmin = 0;
             if (settingsList.size() > 0) {
                 EndTrip_Report = settingsList.get(settingsList.size() - 1).getEndTripReport();
                 Log.e("EndTrip_Report===", EndTrip_Report + "");
@@ -720,10 +719,11 @@ if(settingsList.size()>0)
                 Locationtrack = settingsList.get(settingsList.size() - 1).getLocationtracker();
                 AddedCustomer_PERM = settingsList.get(settingsList.size() - 1).getAddedCustomer_PERM();
             }
-        } catch (Exception e) {
-            approveAdmin = 0;
-            ReturnVoch_approveAdmin = 0;
         }
+//        catch (Exception e) {
+//            approveAdmin = 0;
+//            ReturnVoch_approveAdmin = 0;
+//        }
 
         if (Login.SalsManPlanFlage == 1) {
             getSalesmanPlanFromDB(MainActivity.this);
@@ -957,6 +957,7 @@ if(settingsList.size()>0)
 
         //  getLocation();
     }
+
 
     public void openExportDialog() {
         final Dialog dialog = new Dialog(MainActivity.this);
@@ -2928,13 +2929,13 @@ if(settingsList.size()>0)
                                                     sweetAlertDialog.dismissWithAnimation();
                                                 }
                                             }).setCancelButton(MainActivity.this.getResources().getString(R.string.cancel), new SweetAlertDialog.OnSweetClickListener() {
-                                                @Override
-                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                    cutmer_lat = latu;
-                                                    cutmer_long = longi;
-                                                    sweetAlertDialog.dismissWithAnimation();
-                                                }
-                                            })
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            cutmer_lat = latu;
+                                            cutmer_long = longi;
+                                            sweetAlertDialog.dismissWithAnimation();
+                                        }
+                                    })
                                             .show();
 
                                 }
@@ -2969,102 +2970,106 @@ if(settingsList.size()>0)
                 }
 
 
-    final EditText addCus = (EditText) dialog.findViewById(R.id.custEditText);
-    final EditText remark = (EditText) dialog.findViewById(R.id.remarkEditText);
-    final EditText address = (EditText) dialog.findViewById(R.id.addressEditText);
-    final EditText telephone = (EditText) dialog.findViewById(R.id.phoneEditText);
-    final EditText contactPerson = (EditText) dialog.findViewById(R.id.person_contactEditText);
-    final EditText MarketName = (EditText) dialog.findViewById(R.id.MarketName);
-    final EditText  MaxDEditText= (EditText) dialog.findViewById(R.id.MaxDEditText);
-    final EditText  max_credit= (EditText) dialog.findViewById(R.id.max_credit);
+//                final EditText addCus = (EditText) dialog.findViewById(R.id.custEditText);
+//                final EditText remark = (EditText) dialog.findViewById(R.id.remarkEditText);
+//                final EditText address = (EditText) dialog.findViewById(R.id.addressEditText);
+//                final EditText telephone = (EditText) dialog.findViewById(R.id.phoneEditText);
+//                final EditText contactPerson = (EditText) dialog.findViewById(R.id.person_contactEditText);
+//                final EditText MarketName = (EditText) dialog.findViewById(R.id.MarketName);
+//                final EditText MaxDEditText = (EditText) dialog.findViewById(R.id.MaxDEditText);
+                final EditText max_credit = (EditText) dialog.findViewById(R.id.max_credit);
 
-    Button done = (Button) dialog.findViewById(R.id.doneButton);
-    RadioGroup paymentTermRadioGroup=dialog.findViewById(R.id.paymentTermRadioGroup);
-    LinearLayout   linear = dialog.findViewById(R.id.linear);
-    try {
-        if (languagelocalApp.equals("ar")) {
-            linear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        } else {
-            if (languagelocalApp.equals("en")) {
-                linear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-            }
-
-            }
-        } catch (Exception e) {
-            linear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        }
-
-
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-
-            locationListener = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    latitude_main = location.getLatitude();
-                    longitude_main = location.getLongitude();
-
-
-                    Log.e("onLocationChanged", "" + longitude_main);
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider) {
-                }
-
-                @Override
-                public void onProviderDisabled(String provider) {
-
-                }
-            };
-
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-
-
-            done.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!addCus.getText().toString().equals("")) {
-                        if (!telephone.getText().toString().equals("")) {
-                            int payMethod = 0;
-                            if (isCustExist(addCus.getText().toString().trim()) == 0) {
-
-                            CustomerDao customerDao = new CustomerDao(MainActivity.this,0);
-                            String date= generalMethod.getCurentTimeDate(1);
-                            String time= generalMethod.getCurentTimeDate(2);
-                            String salesman=mDbHandler.getAllSettings().get(0).getSalesMan_name();
-                            NewAddedCustomer addedCustomer = new NewAddedCustomer(addCus.getText().toString(), remark.getText().toString(),
-                                    cutmer_lat+"", cutmer_long+"", salesman, Login.salesMan, "0", address.getText().toString(), telephone.getText().toString(), contactPerson.getText().toString(),MarketName.getText().toString(),date,time,MaxDEditText.getText().toString(),max_credit.getText().toString());
-
-                                customerDao.add(addedCustomer);
-                                dialog.dismiss();
-
-                            } else {
-                                addCus.setError(getResources().getString(R.string.duplicate_name));
-                            }
-
-                        } else {
-                            telephone.setError(getResources().getString(R.string.reqired_filled));
-                            Toast.makeText(MainActivity.this, "Please add customer phone", Toast.LENGTH_SHORT).show();
-
-                        }
+//                Button done = (Button) dialog.findViewById(R.id.doneButton);
+//                RadioGroup paymentTermRadioGroup = dialog.findViewById(R.id.paymentTermRadioGroup);
+//                LinearLayout linear = dialog.findViewById(R.id.linear);
+                try {
+                    if (languagelocalApp.equals("ar")) {
+                        linear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
                     } else {
-                        addCus.setError(getResources().getString(R.string.reqired_filled));
-                        Toast.makeText(MainActivity.this, "Please add customer name", Toast.LENGTH_SHORT).show();
+                        if (languagelocalApp.equals("en")) {
+                            linear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                        }
 
                     }
+                } catch (Exception e) {
+                    linear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
                 }
 
-            });
+
+                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+
+                    locationListener = new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location location) {
+                            latitude_main = location.getLatitude();
+                            longitude_main = location.getLongitude();
 
 
-            dialog.show();
+                            Log.e("onLocationChanged", "" + longitude_main);
+                        }
+
+                        @Override
+                        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                        }
+
+                        @Override
+                        public void onProviderEnabled(String provider) {
+                        }
+
+                        @Override
+                        public void onProviderDisabled(String provider) {
+
+                        }
+                    };
+
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+
+
+                    done.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (!addCus.getText().toString().equals("")) {
+                                if (!telephone.getText().toString().equals("")) {
+                                    int payMethod = 0;
+                                    if (isCustExist(addCus.getText().toString().trim()) == 0) {
+
+                                        CustomerDao customerDao = new CustomerDao(MainActivity.this, 0);
+                                        String date = generalMethod.getCurentTimeDate(1);
+                                        String time = generalMethod.getCurentTimeDate(2);
+                                        String salesman = mDbHandler.getAllSettings().get(0).getSalesMan_name();
+                                        NewAddedCustomer addedCustomer = new NewAddedCustomer(addCus.getText().toString(), remark.getText().toString(),
+                                                cutmer_lat + "", cutmer_long + "", salesman, Login.salesMan, "0", address.getText().toString(), telephone.getText().toString(), contactPerson.getText().toString(), MarketName.getText().toString(), date, time, MaxDEditText.getText().toString(), max_credit.getText().toString());
+
+                                        customerDao.add(addedCustomer);
+                                        dialog.dismiss();
+
+                                    } else {
+                                        addCus.setError(getResources().getString(R.string.duplicate_name));
+                                    }
+
+                                } else {
+                                    telephone.setError(getResources().getString(R.string.reqired_filled));
+                                    Toast.makeText(MainActivity.this, "Please add customer phone", Toast.LENGTH_SHORT).show();
+
+                                }
+                            } else {
+                                addCus.setError(getResources().getString(R.string.reqired_filled));
+                                Toast.makeText(MainActivity.this, "Please add customer name", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+
+                    });
+
+
+                    dialog.show();
+                }
+            }
+        }catch (Exception e){
+
         }
     }
 

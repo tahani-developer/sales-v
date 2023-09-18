@@ -87,7 +87,7 @@ import org.jetbrains.annotations.NotNull;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 228;
+    private static final int DATABASE_VERSION = 230;
 //
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -1594,7 +1594,14 @@ try {
                 + ")";
         db.execSQL(CREATE_VisitTABLE );
 
-        String CREATE_ItemsVisitTABLE = "CREATE TABLE IF NOT EXISTS " + ItemsVisit + "("
+//        String CREATE_ItemsVisitTABLE = "CREATE TABLE IF NOT EXISTS " + ItemsVisit + "("
+//        + VoucherNoItem + " TEXT,"
+//                + CustNoItem + " TEXT,"
+//                + ItemName + " TEXT,"
+//                + QtyItem + " TEXT"
+//
+//                + ")";
+//        db.execSQL(CREATE_ItemsVisitTABLE );
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
         String CREATE_TABLE_NOTE_PLAN = "CREATE TABLE IF NOT EXISTS " + NOTE_PLAN_TABLE + "("
@@ -1609,13 +1616,7 @@ try {
                 + ")";
         db.execSQL(CREATE_TABLE_NOTE_PLAN);
 
-                + VoucherNoItem + " TEXT,"
-                + CustNoItem + " TEXT,"
-                + ItemName + " TEXT,"
-                + QtyItem + " TEXT"
 
-                + ")";
-        db.execSQL(CREATE_ItemsVisitTABLE );
         String CREATE_NetworkTABLE = "CREATE TABLE IF NOT EXISTS " + NetworkTableLog + "("
                 + TransNo + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + LinkRequest + " TEXT,"

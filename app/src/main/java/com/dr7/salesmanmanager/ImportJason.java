@@ -5596,7 +5596,7 @@ this.activtyflage=activtyflage;
 
                    // http://10.0.0.22:8085/ADMGetPlan?CONO=290&SALESNO=1&PDATE=17/01/2022
                     URL_TO_HIT =
-                    "http://" + ipAddress + ":"+ ipWithPort.trim() + headerDll.trim() +"/ADMGetPlan?CONO="+CONO.trim()+"&SALESNO="+SalesmanNum+"&PDATE=2";//+date;
+                    "http://" + ipAddress + ":"+ ipWithPort.trim() + headerDll.trim() +"/ADMGetPlan?CONO="+CONO.trim()+"&SALESNO="+SalesmanNum+"&PDATE="+date;//+date;
 
                     Log.e("link", "" +  URL_TO_HIT );
                 }

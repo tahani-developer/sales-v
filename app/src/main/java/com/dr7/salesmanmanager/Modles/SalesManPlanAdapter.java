@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dr7.salesmanmanager.Adapters.AccountStatmentAdapter;
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.MainActivity;
 import com.dr7.salesmanmanager.R;
 
 import java.util.ArrayList;
@@ -85,6 +86,9 @@ public class SalesManPlanAdapter extends  RecyclerView.Adapter<SalesManPlanAdapt
                 NoteSalesPlane noteSalesPlane=databaseHandler.getNoteBySerial(""+salesManPlans.get(position).getSerial());
                 try {
                     note.setText("" + noteSalesPlane.getNoteStart());
+                    salesManPlans.get(position).setStartNote(noteSalesPlane.getNoteStart());
+                    salesManPlans.get(position).setEndNote(noteSalesPlane.getNoteEnd());
+
 
                 }catch (Exception e){
 
@@ -164,6 +168,18 @@ public class SalesManPlanAdapter extends  RecyclerView.Adapter<SalesManPlanAdapt
                                 }
                                 noteForPlan.dismiss();
                                 Toast.makeText(context, "update Successful", Toast.LENGTH_LONG).show();
+                            }
+
+                            try {
+                                if(start.isChecked()) {
+                                    salesManPlans.get(position).setStartNote(note.getText().toString());
+                                }else{
+                                    salesManPlans.get(position).setEndNote(note.getText().toString());
+
+                                }
+
+                            }catch (Exception e){
+
                             }
                         }else{
                             note.setError("Required!");

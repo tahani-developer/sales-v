@@ -393,10 +393,7 @@ public class PdfConverter {
                 }
 
         break;
-            case 19:
-                Log.e("createserials",""+list.size());
-                tableContent=createMedicalReport((List<visitMedicalModel>) list);
-                break;
+
             case 19:
                 Log.e("createReturnVocher", "" + list.size());
                 //    tableContent=
@@ -410,6 +407,10 @@ public class PdfConverter {
                 Log.e("createReturnVocher", "" + list.size());
                 createInvoiceForSharePlan ((List<SalesManPlan>) list);
 
+                break;
+            case 21:
+                Log.e("createserials",""+list.size());
+                tableContent=createMedicalReport((List<visitMedicalModel>) list);
                 break;
         }
 
