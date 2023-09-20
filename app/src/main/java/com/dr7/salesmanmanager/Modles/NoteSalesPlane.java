@@ -13,6 +13,7 @@ public class NoteSalesPlane extends AppCompatActivity {
     private String editEnd;
     private String date;
     private String customerId;
+    private String visitStatus;
 
     public NoteSalesPlane(){
     }
@@ -26,6 +27,15 @@ public class NoteSalesPlane extends AppCompatActivity {
         this.editEnd = editEnd;
         this.date = date;
         this.customerId = customerId;
+    }
+
+
+    public String getVisitStatus() {
+        return visitStatus;
+    }
+
+    public void setVisitStatus(String visitStatus) {
+        this.visitStatus = visitStatus;
     }
 
     public String getSerial() {

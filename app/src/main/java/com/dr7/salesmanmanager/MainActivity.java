@@ -878,6 +878,7 @@ public class MainActivity extends AppCompatActivity
                             trip.setTripEndTime(currentTime);
                             trip.setTripStatus("2");
                             databaseHandler.UpdateSaleManTrip(trip);
+
                         }
 
                     } else {
@@ -3246,6 +3247,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
+
+                String serial= CustomerListShow.Customer_Account+generalMethod.getCurentTimeDate(1).replace("/","");
+                databaseHandler.updateVisitStutsNote(""+serial);
                 checknum = 0;
                 String cutm_num = CustomerListShow.Customer_Account;
                 String cutm_name = CustomerListShow.Customer_Name;
@@ -5715,7 +5719,9 @@ public class MainActivity extends AppCompatActivity
                         trip.setTripEndDate(currentDate);
                         trip.setTripEndTime(currentTime);
                         trip.setTripStatus("2");
+//                        String serial= CustomerListShow.Customer_No+generalMethod.getCurentTimeDate(1).replace("/","");
                         databaseHandler.UpdateSaleManTrip(trip);
+//                        databaseHandler.updateVisitStutsNote(""+serial);
                         dialog.dismiss();
                         Toast.makeText(MainActivity.this, getResources().getString(R.string.tripisending), Toast.LENGTH_SHORT).show();
                     } else {

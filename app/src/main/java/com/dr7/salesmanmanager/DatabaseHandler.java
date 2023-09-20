@@ -87,7 +87,7 @@ import org.jetbrains.annotations.NotNull;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 230;
+    private static final int DATABASE_VERSION = 234;
 //
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -763,6 +763,7 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
      private static final String  EDIT_NOTE_END="EDIT_NOTE_END";
      private static final String  DATE_NOTE="DATE_NOTE";
      private static final String  CUSTOMER_NO_NOTE="CUSTOMER_NO";
+     private static final String  NOTE_VISIT_STATUS="NOTE_VISIT_STATUS";
 
 
 
@@ -1606,13 +1607,14 @@ try {
 
         String CREATE_TABLE_NOTE_PLAN = "CREATE TABLE IF NOT EXISTS " + NOTE_PLAN_TABLE + "("
                 + SERIALS + " INTEGER PRIMARY KEY   AUTOINCREMENT ,"
-                + SERIAL_FOR_PLAN_TABLE + " INTEGER,"
                 + NOTE_START + " TEXT,"
                 + NOTE_END + " TEXT,"
                 + EDIT_NOTE_START + " INTEGER,"
                 + EDIT_NOTE_END + " INTEGER,"
                 + DATE_NOTE + " TEXT,"
-                + CUSTOMER_NO_NOTE + " TEXT "
+                + CUSTOMER_NO_NOTE + " TEXT ,"
+                + NOTE_VISIT_STATUS + " TEXT ,"
+                + SERIAL_FOR_PLAN_TABLE + " TEXT"
                 + ")";
         db.execSQL(CREATE_TABLE_NOTE_PLAN);
 
@@ -2889,20 +2891,35 @@ try {
         }
 
         try{
+
+            db.execSQL("DROP TABLE IF EXISTS NOTE_PLAN_TABLE ");
             String CREATE_TABLE_NOTE_PLAN = "CREATE TABLE IF NOT EXISTS " + NOTE_PLAN_TABLE + "("
                     + SERIALS + " INTEGER PRIMARY KEY   AUTOINCREMENT ,"
-                    + SERIAL_FOR_PLAN_TABLE + " INTEGER,"
                     + NOTE_START + " TEXT,"
                     + NOTE_END + " TEXT,"
                     + EDIT_NOTE_START + " INTEGER,"
                     + EDIT_NOTE_END + " INTEGER,"
                     + DATE_NOTE + " TEXT,"
-                    + CUSTOMER_NO_NOTE + " TEXT "
+                    + CUSTOMER_NO_NOTE + " TEXT ,"
+                    + NOTE_VISIT_STATUS + " TEXT ,"
+                    + SERIAL_FOR_PLAN_TABLE + " TEXT "
                     + ")";
             db.execSQL(CREATE_TABLE_NOTE_PLAN);
         }catch (Exception e){
             Log.e(TAG, e.getMessage().toString());
         }
+
+//        try{
+//            db.execSQL(" ALTER TABLE NOTE_PLAN_TABLE ADD  SERIAL_FOR_PLAN_TABLE_2  TEXT");
+//            db.execSQL("UPDATE NOTE_PLAN_TABLE SET SERIAL_FOR_PLAN_TABLE_2 = CAST(SERIAL_FOR_PLAN_TABLE as TEXT)");
+//            db.execSQL("ALTER TABLE NOTE_PLAN_TABLE  DROP  COLUMN  SERIAL_FOR_PLAN_TABLE");
+//            db.execSQL(" ALTER TABLE NOTE_PLAN_TABLE ADD  SERIAL_FOR_PLAN_TABLE  TEXT");
+//            db.execSQL("UPDATE NOTE_PLAN_TABLE SET SERIAL_FOR_PLAN_TABLE = CAST(SERIAL_FOR_PLAN_TABLE_2 as TEXT)");
+//            db.execSQL("ALTER TABLE NOTE_PLAN_TABLE  DROP  COLUMN  SERIAL_FOR_PLAN_TABLE_2");
+//
+//        }catch (Exception e){
+//
+//        }
 
 
         String CREATE_VisitTABLE = "CREATE TABLE IF NOT EXISTS " + VisitMedicalTable + "("
@@ -2969,7 +2986,7 @@ try {
 
         try{
 
-            db.execSQL("BEGIN TRANSACTION;");
+          //  db.execSQL("BEGIN TRANSACTION;");
 
             db.execSQL("ALTER TABLE SalesMan_Plan RENAME TO SalesMan_Plan_2");
 
@@ -2990,11 +3007,20 @@ try {
 
             db.execSQL("INSERT INTO SalesMan_Plan (DATE, SALES_MAN_NUMBER, CUSTOMER_NAME, CUSTOMER_NO ,LATITUDE,LONGITUDE,ORDERED,TYPEORDERED,LogoutStatus) SELECT DATE, SALES_MAN_NUMBER, CUSTOMER_NAME, CUSTOMER_NO ,LATITUDE,LONGITUDE,ORDERED,TYPEORDERED,LogoutStatus FROM SalesMan_Plan_2");
 
-            db.execSQL("COMMIT;");
+          //  db.execSQL("COMMIT;");
         }catch (Exception e)
         {
 
             Log.e("notePlanError","n= "+e.toString());
+        }
+
+
+        try {
+            db.execSQL("ALTER TABLE NOTE_PLAN_TABLE ADD '" + NOTE_VISIT_STATUS + "'  TEXT DEFAULT '0'");
+
+        } catch (Exception e) {
+
+            Log.e(TAG, e.getMessage().toString());
         }
 
     }
@@ -3059,6 +3085,7 @@ try {
          values.put(EDIT_NOTE_END, noteSalesPlane.getEditEnd());
          values.put(DATE_NOTE, noteSalesPlane.getDate());
          values.put(CUSTOMER_NO_NOTE, noteSalesPlane.getCustomerId());
+         values.put(NOTE_VISIT_STATUS, noteSalesPlane.getVisitStatus());
 
 
          db.insert(NOTE_PLAN_TABLE, null, values);
@@ -3076,13 +3103,15 @@ try {
              do {
                  NoteSalesPlane setting = new NoteSalesPlane();
                  setting.setSerial(cursor.getString(0));
-                 setting.setPlaneSerial(cursor.getString(1));
-                 setting.setNoteStart(cursor.getString(2));
-                 setting.setNoteEnd(cursor.getString(3));
-                 setting.setEditStart(cursor.getString(4));
-                 setting.setEditEnd(cursor.getString(5));
-                 setting.setDate(cursor.getString(6));
-                 setting.setCustomerId(cursor.getString(7));
+                 setting.setNoteStart(cursor.getString(1));
+                 setting.setNoteEnd(cursor.getString(2));
+                 setting.setEditStart(cursor.getString(3));
+                 setting.setEditEnd(cursor.getString(4));
+                 setting.setDate(cursor.getString(5));
+                 setting.setCustomerId(cursor.getString(6));
+                 setting.setVisitStatus(cursor.getString(7));
+                 setting.setPlaneSerial(cursor.getString(8));
+
 
                  settings.add(setting);
              } while (cursor.moveToNext());
@@ -3091,20 +3120,21 @@ try {
      }
      public NoteSalesPlane getNoteBySerial(String serialP) {
          NoteSalesPlane settings = new NoteSalesPlane();
-         String selectQuery = "SELECT  * FROM " + NOTE_PLAN_TABLE +" where SERIAL_FOR_PLAN_TABLE="+serialP;
+         String selectQuery = "SELECT  * FROM " + NOTE_PLAN_TABLE +" where SERIAL_FOR_PLAN_TABLE='"+serialP+"'";
          db = this.getWritableDatabase();
          Cursor cursor = db.rawQuery(selectQuery, null);
          if (cursor.moveToFirst()) {
              do {
                  NoteSalesPlane setting = new NoteSalesPlane();
                  setting.setSerial(cursor.getString(0));
-                 setting.setPlaneSerial(cursor.getString(1));
-                 setting.setNoteStart(cursor.getString(2));
-                 setting.setNoteEnd(cursor.getString(3));
-                 setting.setEditStart(cursor.getString(4));
-                 setting.setEditEnd(cursor.getString(5));
-                 setting.setDate(cursor.getString(6));
-                 setting.setCustomerId(cursor.getString(7));
+                 setting.setNoteStart(cursor.getString(1));
+                 setting.setNoteEnd(cursor.getString(2));
+                 setting.setEditStart(cursor.getString(3));
+                 setting.setEditEnd(cursor.getString(4));
+                 setting.setDate(cursor.getString(5));
+                 setting.setCustomerId(cursor.getString(6));
+                 setting.setVisitStatus(cursor.getString(7));
+                 setting.setPlaneSerial(cursor.getString(8));
 
                  settings=setting;
              } while (cursor.moveToNext());
@@ -4438,7 +4468,19 @@ Log.e("addCompanyInfo","addCompanyInfo");
              values.put(EDIT_NOTE_END,"1");
          }
 
-         db.update(NOTE_PLAN_TABLE, values,SERIAL_FOR_PLAN_TABLE + "=" + Nserial,null);
+         db.update(NOTE_PLAN_TABLE, values,SERIAL_FOR_PLAN_TABLE + "='" + Nserial+"'",null);
+         db.close();
+     }
+
+     public void updateVisitStutsNote(String Nserial) {
+         db = this.getReadableDatabase();
+         ContentValues values = new ContentValues();
+
+
+             values.put(NOTE_VISIT_STATUS,"1");
+
+
+         db.update(NOTE_PLAN_TABLE, values,SERIAL_FOR_PLAN_TABLE + "='" + Nserial+"'",null);
          db.close();
      }
     public void addPaymentPaper(Payment payment) {
@@ -4698,6 +4740,8 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
+
+//        db.close();
         return settings;
     }
 
@@ -5184,6 +5228,87 @@ Log.e("addCompanyInfo","addCompanyInfo");
         }
         return usertype;
     }
+
+     public List<Customer> getAllCustomersNote(String date) {
+         List<Customer> customers = new ArrayList<Customer>();
+         // Select All Query
+//         String selectQuery="select t1.* , (select NOTE_START  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+getCurentTimeDate(1).replace("/","")+" )as startN ,(select NOTE_END  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE=t1.CUS_ID || "+getCurentTimeDate(1).replace("/","")+")as endN ,(select NOTE_VISIT_STATUS  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+getCurentTimeDate(1).replace("/","")+")as flag  from CUSTOMER_MASTER t1 ";
+         String selectQuery="select t1.* , (select NOTE_START  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+date.replace("/","")+" )as startN ,(select NOTE_END  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE=t1.CUS_ID || "+date.replace("/","")+")as endN ,(select NOTE_VISIT_STATUS  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+date.replace("/","")+")as flag  from CUSTOMER_MASTER t1 ";
+         Log.e("stay",""+selectQuery);
+
+//         String selectQuery = "SELECT  * FROM " + CUSTOMER_MASTER;
+
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+
+         // looping through all rows and adding to list
+         if (cursor.moveToFirst()) {
+             do {
+                 Customer customer = new Customer();
+                 customer.setCompanyNumber(cursor.getString(0));
+                 customer.setCustId(cursor.getString(1));
+                 customer.setCustName(cursor.getString(2));
+                 customer.setAddress(cursor.getString(3));
+                 customer.setIsSuspended(Integer.parseInt(cursor.getString(4)));
+                 customer.setPriceListId(cursor.getString(5));
+                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
+                 customer.setSalesManNumber(cursor.getString(7));
+                 customer.setCreditLimit(Double.parseDouble(cursor.getString(8)));
+                 customer.setPayMethod(Integer.parseInt((cursor.getString(9))));
+                 customer.setCustLat(cursor.getString(10));
+                 customer.setCustLong(cursor.getString(11));
+                 customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
+                 customer.setACCPRC(cursor.getString(13));
+                 customer.setHide_val(cursor.getInt(14));
+                 try {
+                     customer.setFax(cursor.getString(18));
+                     customer.setZipCode(cursor.getString(19));
+                     customer.seteMail(cursor.getString(20));
+                     customer.setC_THECATEG(cursor.getString(21));
+                 }
+                 catch (Exception e){
+                     customer.setFax("");
+                     customer.setZipCode("");
+                     customer.seteMail("");
+                     customer.setC_THECATEG("");
+                 }
+
+                 if(cursor.getString(22)!=null){
+                     customer.setNoteS(cursor.getString(22));
+
+                 }else{
+                     customer.setNoteS("");
+
+                 }
+
+                 if(cursor.getString(23)!=null){
+                     customer.setNoteE(cursor.getString(23));
+
+                 }else{
+                     customer.setNoteE("");
+
+                 }
+
+                 if(cursor.getString(24)!=null){
+                     customer.setStatus(cursor.getString(24));
+Log.e("stay",""+customer.getStatus());
+                 }else{
+                     customer.setStatus("0");
+
+                 }
+
+
+
+//                customer.setCustId(cursor.getString(16));// for test talley
+                 // 16 column isPosted
+                 // Adding transaction to list
+                 customers.add(customer);
+             } while (cursor.moveToNext());
+         }
+         return customers;
+     }
+
+
     public List<Customer> getAllCustomers() {
         List<Customer> customers = new ArrayList<Customer>();
         // Select All Query

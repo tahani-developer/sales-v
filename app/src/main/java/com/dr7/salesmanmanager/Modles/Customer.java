@@ -31,6 +31,34 @@ public class Customer {
     private  String zipCode;
     private  String eMail;
     private  String c_THECATEG;
+    private  String noteS;
+    private  String noteE;
+    private  String status;
+
+
+    public String getNoteS() {
+        return noteS;
+    }
+
+    public void setNoteS(String noteS) {
+        this.noteS = noteS;
+    }
+
+    public String getNoteE() {
+        return noteE;
+    }
+
+    public void setNoteE(String noteE) {
+        this.noteE = noteE;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getFax() {
         return fax;

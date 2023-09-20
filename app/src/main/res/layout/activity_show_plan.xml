@@ -344,15 +344,15 @@ android:textSize="13sp"
                             android:text="@string/customers_locations"
                             android:textColor="@color/white"
                             android:textStyle="bold" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:padding="1dp"
-            android:text="@string/note"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="2"-->
+<!--            android:gravity="center"-->
+<!--            android:padding="1dp"-->
+<!--            android:text="@string/note"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textStyle="bold" />-->
 
                     </TableRow>
 

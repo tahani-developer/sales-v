@@ -161,9 +161,9 @@ public class SalesManPlanAdapter extends  RecyclerView.Adapter<SalesManPlanAdapt
 
                                 if(start.isChecked()) {
 
-                                    databaseHandler.updateNote(note.getText().toString(), "1",""+salesManPlans.get(position).getSerial());
+//                                    databaseHandler.updateNote(note.getText().toString(), "1",""+salesManPlans.get(position).getSerial());
                                 }else{
-                                    databaseHandler.updateNote(note.getText().toString(), "0",""+salesManPlans.get(position).getSerial());
+//                                    databaseHandler.updateNote(note.getText().toString(), "0",""+salesManPlans.get(position).getSerial());
 
                                 }
                                 noteForPlan.dismiss();
