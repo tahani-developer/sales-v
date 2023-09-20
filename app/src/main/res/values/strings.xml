@@ -13,7 +13,7 @@
     <string name="doubleVisit">Double Visit</string>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 300.14 </string>
+    <string name="version"> V 300.15 </string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -365,6 +365,7 @@
     <string name="voucherNo">Voucher No </string>
     <string name="toStore">To Store:</string>
     <string name="loadingItem">Loading Item ....</string>
+    <string name="loadingData">Loading Data ....</string>
     <string name="zero_value_taxAndNetSales">Wrong value  for zero netSales</string>
     <string name="salesman_name">Sales man name</string>
     <string name="cusSuspended">Sorry, this customer has been suspended</string>

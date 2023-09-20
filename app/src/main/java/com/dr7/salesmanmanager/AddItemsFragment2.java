@@ -972,7 +972,7 @@ public class AddItemsFragment2 extends DialogFragment {
                         ||
 //                                FisrtCharsFromString(item.getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))) {
 //                                    ||
-                (autoSearchFlag==0)  &&SubStringtoMoreThanOne(item.getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
+               SubStringtoMoreThanOne(item.getItemName().toLowerCase(Locale.ROOT), query.toString().toLowerCase(Locale.ROOT))
                 ){
                     filteredList.add(item);
 //                                Log.e("filteredMap1-", m.getKey() + " " + item.getItemName());

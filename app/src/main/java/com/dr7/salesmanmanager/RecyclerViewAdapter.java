@@ -5087,7 +5087,8 @@ public static     float CountOfItems=1;
     private boolean validQty(float qtyCurrent, float qtyRequired) {
        Log.e("validQty==", "qtyCurrent=" + qtyCurrent + "\tqtyRequired=" + qtyRequired);
         if( (((SalesInvoice.voucherType == 504)||
-                (SalesInvoice.voucherType == 508&&  MainActivity.checkQtyForOrdersFlage==1))&&MainActivity.UNITFLAGE==1&&MHandler.getAllSettings().get(0).getAllowMinus() == 0)){
+                (SalesInvoice.voucherType == 508&&  MainActivity.checkQtyForOrdersFlage==1))&&
+                MainActivity.UNITFLAGE==1&&MHandler.getAllSettings().get(0).getAllowMinus() == 0&& oneUnit==0)){
             Log.e("validQty2==", "qtyCurrent2=" + qtyCurrent + "\tqtyRequired=" + qtyRequired+"CountOfItems="+CountOfItems);
             Log.e("validQty3=="," "+ qtyCurrent/CountOfItems);
 //            if (qtyRequired <=(qtyCurrent/CountOfItems) )

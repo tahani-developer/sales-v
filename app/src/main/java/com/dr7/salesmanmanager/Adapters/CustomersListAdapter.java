@@ -44,7 +44,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Created by mohd darras on 15/04/2018.
  */
 
-public class CustomersListAdapter extends BaseAdapter implements Filterable {
+public class CustomersListAdapter extends BaseAdapter {
+//        implements Filterable {
 
     private Context context;
     private List<Customer> mOriginalValues;
@@ -52,6 +53,8 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
     private CustomerListShow customerListShow;
     public  int showCustomerLoc_sett;
     DatabaseHandler mDHandler;
+    int flagPlan=Login.SalsManPlanFlage;
+    int flagEndDay =EndTrip_Report;
 
     public CustomersListAdapter(CustomerListShow customerListShow, Context context, List<Customer> custList,int showCustomerLoc) {
         this.context = context;
@@ -182,18 +185,18 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
             }
         });
         holder.custAccountTextView.setText("" + custList.get(i).getCustId());
-        holder.acc_nTextView.setText(custList.get(i).getZipCode());
+        holder.custNameTextView.setText(custList.get(i).getCustName());
+      //  Log.e("getView2===",i+"");
+        if(flagEndDay==1)
+        {
+            holder.acc_nTextView.setText(custList.get(i).getZipCode());
         holder.calssTextView.setText(custList.get(i).getFax());
         holder.spicialityTextView.setText(custList.get(i).geteMail());
         holder.categTextView.setText(custList.get(i).getC_THECATEG());
-        holder.custNameTextView.setText(custList.get(i).getCustName());
-      //  Log.e("getView2===",i+"");
-        if(EndTrip_Report==1)
-        {
             holder.LinearMedical.setVisibility(View.VISIBLE);
         }else  holder.LinearMedical.setVisibility(View.GONE);
 
-        if(Login.SalsManPlanFlage==1) {
+        if(flagPlan==1) {
         //    Log.e("case1","case1");
             if(MainActivity.plantype==2){
               //  Log.e("case2","case2");
@@ -291,63 +294,63 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
 
 
 
-    @Override
-    public Filter getFilter() {
-        Filter filter = new Filter() {
-
-            @SuppressWarnings("unchecked")
-            @Override
-            protected void publishResults(CharSequence constraint,FilterResults results) {
-
-                custList = (ArrayList<Customer>) results.values; // has the filtered values
-                notifyDataSetChanged();  // notifies the data with new filtered values
-//                Log.e("here" , "*********1" + custList.get(0).getCustName());
-            }
-
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults results = new FilterResults();        // Holds the results of a filtering operation in values
-                ArrayList<Customer> FilteredArrList = new ArrayList<Customer>();
-
-                if (mOriginalValues == null) {
-                    mOriginalValues = new ArrayList<Customer>(custList); // saves the original data in mOriginalValues
-                }
-
-                /********
-                 *
-                 *  If constraint(CharSequence that is received) is null returns the mOriginalValues(Original) values
-                 *  else does the Filtering and returns FilteredArrList(Filtered)
-                 *
-                 ********/
-                if (constraint == null || constraint.length() == 0) {
-
-                    // set the Original result to return
-                    results.count = mOriginalValues.size();
-                    results.values = mOriginalValues;
-                } else {
-                    constraint = constraint.toString().toLowerCase();
-                    for (int i = 0; i < mOriginalValues.size(); i++) {
-                        String data = mOriginalValues.get(i).getCustName();
-                        String dataCustNo = mOriginalValues.get(i).getCustId();
-                        int paymetho = mOriginalValues.get(i).getPayMethod();
-
-                      //  Log.e("mOriginalpaymetho" , "paymetho"+paymetho);
-                        if (data.toLowerCase().contains(constraint.toString())||dataCustNo.contains(constraint.toString())) {
-                            FilteredArrList.add(new Customer(mOriginalValues.get(i).getCustId(),mOriginalValues.get(i).getCustName(),mOriginalValues.get(i).getPayMethod()));
-                          //  Log.e("mOriginalValues" , "*********2" + constraint + "*" + mOriginalValues.get(i).getPayMethod());
-                        }
-                    }
-                    // set the Filtered result to return
-                    results.count = FilteredArrList.size();
-                    results.values = FilteredArrList;
-
-//                    Log.e("here" , "*********3" + FilteredArrList.get(0).getCustName());
-                }
-                return results;
-            }
-        };
-        return filter;
-    }
+//    @Override
+//    public Filter getFilter() {
+//        Filter filter = new Filter() {
+//
+//            @SuppressWarnings("unchecked")
+//            @Override
+//            protected void publishResults(CharSequence constraint,FilterResults results) {
+//
+//                custList = (ArrayList<Customer>) results.values; // has the filtered values
+//                notifyDataSetChanged();  // notifies the data with new filtered values
+////                Log.e("here" , "*********1" + custList.get(0).getCustName());
+//            }
+//
+//            @Override
+//            protected FilterResults performFiltering(CharSequence constraint) {
+//                FilterResults results = new FilterResults();        // Holds the results of a filtering operation in values
+//                ArrayList<Customer> FilteredArrList = new ArrayList<Customer>();
+//
+//                if (mOriginalValues == null) {
+//                    mOriginalValues = new ArrayList<Customer>(custList); // saves the original data in mOriginalValues
+//                }
+//
+//                /********
+//                 *
+//                 *  If constraint(CharSequence that is received) is null returns the mOriginalValues(Original) values
+//                 *  else does the Filtering and returns FilteredArrList(Filtered)
+//                 *
+//                 ********/
+//                if (constraint == null || constraint.length() == 0) {
+//
+//                    // set the Original result to return
+//                    results.count = mOriginalValues.size();
+//                    results.values = mOriginalValues;
+//                } else {
+//                    constraint = constraint.toString().toLowerCase();
+//                    for (int i = 0; i < mOriginalValues.size(); i++) {
+//                        String data = mOriginalValues.get(i).getCustName();
+//                        String dataCustNo = mOriginalValues.get(i).getCustId();
+//                        int paymetho = mOriginalValues.get(i).getPayMethod();
+//
+//                      //  Log.e("mOriginalpaymetho" , "paymetho"+paymetho);
+//                        if (data.toLowerCase().contains(constraint.toString())||dataCustNo.contains(constraint.toString())) {
+//                            FilteredArrList.add(new Customer(mOriginalValues.get(i).getCustId(),mOriginalValues.get(i).getCustName(),mOriginalValues.get(i).getPayMethod()));
+//                          //  Log.e("mOriginalValues" , "*********2" + constraint + "*" + mOriginalValues.get(i).getPayMethod());
+//                        }
+//                    }
+//                    // set the Filtered result to return
+//                    results.count = FilteredArrList.size();
+//                    results.values = FilteredArrList;
+//
+////                    Log.e("here" , "*********3" + FilteredArrList.get(0).getCustName());
+//                }
+//                return results;
+//            }
+//        };
+//        return filter;
+//    }
 
     String getAllowedCust() {
 

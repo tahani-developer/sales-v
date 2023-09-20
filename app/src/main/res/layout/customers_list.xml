@@ -11,14 +11,14 @@ android:layout_height="400dp"
 android:layoutDirection="locale"
 android:background="@color/layer3"
 android:orientation="vertical"
-android:padding="10dp"
+android:padding="5dp"
 >
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginHorizontal="10dp"
+        android:layout_marginHorizontal="2dp"
         android:gravity="center"
         android:background="@drawable/background_container"
         android:orientation="horizontal">
@@ -44,9 +44,9 @@ android:padding="10dp"
             android:gravity="center" />
         <EditText
             android:id="@+id/customerNameTextView"
-            android:layout_width="250dp"
+            android:layout_width="200dp"
 
-            android:hint="@string/SearchByCustomerName"
+            android:hint="@string/app_cust_name"
             android:background="@drawable/back_border_edit"
 
             android:layout_height="wrap_content" />
@@ -167,12 +167,20 @@ android:padding="10dp"
 
 
     </LinearLayout>
+    <TextView
+        android:id="@+id/loadingText"
 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:gravity="center"
+        android:text="@string/loadingData" />
 
     <ListView
         android:id="@+id/customersList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="visible"
         android:layout_margin="5dp"
         android:layout_weight="5"
         android:background="@drawable/back_border_edit" />

@@ -727,7 +727,7 @@
 تم إرسال بيانات العميل إلى المسؤول بنجاح</string>
     <string name="brand">الماركة</string>
     <string name="addPic">اضافة صورة</string>
-
+    <string name="loadingData">جاري تحميل البيانات</string>
     <string-array name="DaysOfWeek">
         <item>السبت</item>
         <item>الأحد</item>
