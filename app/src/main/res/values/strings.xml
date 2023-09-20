@@ -778,6 +778,9 @@
     <string name="VisitStatus">Visit Status</string>
     <string name="Visit">Visit</string>
     <string name="NotVisit">Not Visit</string>
+    <string name="showCustomer">show Customer</string>
+
+    <string name="custNo">Cust No</string>
 
 
 </resources>

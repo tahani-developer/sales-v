@@ -32,6 +32,7 @@ import androidx.core.content.FileProvider;
 
 import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
+import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.NumberToWordExample3;
 import com.dr7.salesmanmanager.Modles.Payment;
@@ -98,6 +99,8 @@ import static com.dr7.salesmanmanager.Reports.CashReport.net;
 import static com.dr7.salesmanmanager.Reports.CashReport.returnCridet;
 import static com.dr7.salesmanmanager.Reports.CashReport.total;
 import static com.dr7.salesmanmanager.Reports.CashReport.total_cash;
+import static com.dr7.salesmanmanager.ShowCustomerNote.noteTypeN;
+import static com.dr7.salesmanmanager.ShowCustomerNote.stateN;
 import static com.dr7.salesmanmanager.ShowPlan.noteType;
 import static com.dr7.salesmanmanager.ShowPlan.state;
 import static com.itextpdf.text.Element.ALIGN_CENTER;
@@ -248,7 +251,7 @@ public class PdfConverter {
             }
         } else { // permission is automatically granted on sdk<23 upon
             // installation
-            if(report!=19) showPdf(pdfFileName);
+            if(report!=19 && report!=22) showPdf(pdfFileName);
             Log.e("here,", "Permission is granted");
         }
 
@@ -411,6 +414,21 @@ public class PdfConverter {
             case 21:
                 Log.e("createserials",""+list.size());
                 tableContent=createMedicalReport((List<visitMedicalModel>) list);
+                break;
+
+            case 22:
+                Log.e("createReturnVocher", "" + list.size());
+                //    tableContent=
+                createInvoiceForShareNote ((List<Customer>) list);
+                Log.e("path==", String.valueOf(pdfFileName));
+                GeneralMethod generalMethod9=new GeneralMethod(context);
+                generalMethod9.shareWhatsAppA(pdfFileName,2);
+                break;
+
+            case 23:
+                Log.e("createReturnVocher", "" + list.size());
+                createInvoiceForShareNote ((List<Customer>) list);
+
                 break;
         }
 
@@ -704,6 +722,25 @@ public class PdfConverter {
                     !companyInfo.getCompanyName().equals("") ) {
 
                 createvocherPDFForSharePlan("Plan" + ".pdf", list);
+            } else {
+                Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+            }
+        }
+
+
+    }
+
+    private void createInvoiceForShareNote(List<Customer> list) {
+
+        obj = new DatabaseHandler(context);
+
+
+        if (obj.getAllCompanyInfo().get(0) != null) {
+            companyInfo = obj.getAllCompanyInfo().get(0);
+            if (
+                    !companyInfo.getCompanyName().equals("") ) {
+
+                createvocherPDFForShareNote("CustomerNote" + ".pdf", list);
             } else {
                 Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();
             }
@@ -2048,6 +2085,223 @@ String a="",s="";
                         insertCell(pdfPTable3, "not Visit", ALIGN_CENTER, 1, arabicFontHeaderprint, BaseColor.BLACK);
 
                     }
+
+
+
+            }
+
+
+            doc.add(pdfPTable3);
+
+
+
+            Log.e("path44", "" + targetPdf);
+            pdfFileName = path;
+            Log.e("pdfFileName", "" + pdfFileName);
+
+
+        } catch (DocumentException e) {
+            e.printStackTrace();
+            Log.e("DocumentException11==", "" + e.getMessage());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Log.e("DocumentException==", "" +  e.getMessage());
+        }
+
+
+    }
+
+    void createvocherPDFForShareNote(String fileName, List<Customer> list) {
+        Log.e("createvocherPDFForShare", "" + "createvocherPDFForShare");
+        doc = new Document();
+
+        docWriter = null;
+
+        try {
+
+//            PdfPCell emptycell = new PdfPCell(new Paragraph("        ", arabicFontHeaderprint));
+//            emptycell.setBorder(Rectangle.NO_BORDER);
+            String directory_path = Environment.getExternalStorageDirectory().getPath() + "/ReportVanSales/";
+            file = new File(directory_path);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            String targetPdf = directory_path + fileName;
+
+            File path = new File(targetPdf);
+
+            docWriter = PdfWriter.getInstance(doc, new FileOutputStream(path));
+            docWriter.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+            doc.setPageSize(PageSize.A4);//size of page
+
+
+            //open document
+            doc.open();
+            String a="",s="";
+
+//            if(list.get(0).getTypeOrder()==0)
+//            {
+//                a=  context.getResources().getString(R.string.TYPEPOFPLAN1);
+//            }
+//            else {
+//                a=context.getResources().getString(R.string.TYPEPOFPLAN2);
+//            }
+
+
+
+            PdfPTable headertable = new PdfPTable(1);
+            headertable.setWidthPercentage(100f);
+            headertable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+            PdfPCell cell13 = new PdfPCell(new Paragraph("" + companyInfo.getCompanyName() + "\n", arabicFontHeaderVochprint));
+            cell13.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+            PdfPCell cell2 = new PdfPCell(new Paragraph( companyInfo.getcompanyTel(), arabicFontHeaderprint));
+
+            PdfPCell cell14 = new PdfPCell(new Paragraph("Sales Man No /رقم المندوب :"+ Login.salesMan + "\n", arabicFontHeader));
+            cell14.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+//            PdfPCell cell15 = new PdfPCell(new Paragraph("plan Type /نوع الخطة :"+a + "\n", arabicFontHeader));
+//            cell15.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+            PdfPCell cell16 = new PdfPCell(new Paragraph("plan Status /الحالة :"+ stateN+ "\n", arabicFontHeader));
+            cell16.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+
+            PdfPCell cell17 = new PdfPCell(new Paragraph("Note Type /نوع الملاحظة  :"+ noteTypeN+ "\n", arabicFontHeader));
+            cell17.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+
+//            doc.add(new Paragraph("\n"));
+
+            cell13.setBorder(Rectangle.NO_BORDER);
+            cell2.setBorder(Rectangle.NO_BORDER);
+            cell14.setBorder(Rectangle.NO_BORDER);
+//            cell15.setBorder(Rectangle.NO_BORDER);
+            cell16.setBorder(Rectangle.NO_BORDER);
+            cell17.setBorder(Rectangle.NO_BORDER);
+
+            if(MainActivity.CompanyinfoINPdf_Hide==0) {
+                headertable.addCell(cell13);
+                headertable.addCell(cell2);
+                headertable.addCell(cell14);
+//                headertable.addCell(cell15);
+                headertable.addCell(cell16);
+                headertable.addCell(cell17);
+            }
+            doc.add(headertable);
+            doc.add(new Paragraph("\n"));
+
+//            doc.add(new Paragraph("\n"));
+//                 doc.add(new Paragraph("\n"));
+
+            String date = getCurentTimeDate(1);
+
+            PdfPTable table = new PdfPTable(1);
+
+            PdfPTable pdfPTable = new PdfPTable(6);
+            pdfPTable.setWidthPercentage(100f);
+
+            PdfPTable pdfPTable3 = new PdfPTable(6);
+            pdfPTable3.setWidthPercentage(100f);
+
+            if (!Locale.getDefault().getLanguage().equals("ar")) {
+
+
+                table.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+                pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+                pdfPTable3.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+                //   headertable.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+
+            } else {
+
+                table.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+                pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+                pdfPTable3.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+
+
+            }
+
+//            table.addCell(emptycell);
+
+
+            PdfPTable table222 = new PdfPTable(5);
+            table222.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+
+            PdfPCell cell_101 = new PdfPCell(new Paragraph("الخطة", arabicFontHeaderprint));
+            cell_101.setHorizontalAlignment((cell_101.ALIGN_CENTER));
+//            PdfPCell cell_102 = new PdfPCell(new Paragraph("", arabicFontHeaderprint));
+//            cell_102.setBorder(Rectangle.NO_BORDER);
+
+//            PdfPCell cell_103 = new PdfPCell(new Paragraph("VanSale Plan", arabicFontHeaderprint));
+//            cell_103.setBorder(Rectangle.NO_BORDER);
+
+//            table222.addCell(cell_102);
+            table222.addCell(cell_101);
+//            table222.addCell(cell_103);
+
+            doc.add(table222);
+
+
+            PdfPTable table02 = new PdfPTable(3);
+            table02.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+
+//            PdfPCell cell201 = new PdfPCell(new Paragraph(paymentTyp, arabicFontHeaderprint));
+//            cell201.setBorder(Rectangle.BOTTOM);
+//            cell201.setHorizontalAlignment((cell201.ALIGN_CENTER));
+//            PdfPCell cell202 = new PdfPCell(new Paragraph("", arabicFontHeaderprint));
+//            cell202.setBorder(Rectangle.NO_BORDER);
+
+//            PdfPCell cell203 = new PdfPCell(new Paragraph("", arabicFontHeaderprint));
+//            cell203.setBorder(Rectangle.NO_BORDER);
+//
+//            table02.addCell(cell202);
+//            table02.addCell(cell201);
+//
+//            table02.addCell(cell203);
+//            doc.add(table02);
+
+            table.setWidthPercentage(100f);
+
+
+
+            /***********/
+
+            insertCell(pdfPTable, "customer No \n رقم الزبون ", ALIGN_CENTER, 1, arabicFontHeaderprint, BaseColor.BLACK);
+//            PdfPCell cell41 = new PdfPCell(new Paragraph("Item Code \nرمز المادة" +, arabicFontHeaderprint));
+//
+//            pdfPTable.addCell(cell41);
+
+
+            insertCell(pdfPTable, "Customer Name \n اسم العميل" ,ALIGN_CENTER, 2, arabicFontHeaderprint, BaseColor.BLACK);
+            if(noteTypeN.contains("Start")) {
+                insertCell(pdfPTable, "Start Note \n الملاحظة الاولية ", ALIGN_CENTER, 2, arabicFontHeaderprint, BaseColor.BLACK);
+            }else {
+                insertCell(pdfPTable, "End Note \n الملاحظة النهائية ", ALIGN_CENTER, 2, arabicFontHeaderprint, BaseColor.BLACK);
+            }
+            insertCell(pdfPTable, "status \n الحالة ", ALIGN_CENTER, 1, arabicFontHeaderprint, BaseColor.BLACK);
+
+            doc.add(pdfPTable);
+
+
+            /**************/
+
+            for (int i = 0; i < list.size(); i++) {
+
+                insertCell(pdfPTable3, String.valueOf(list.get(i).getCustId()), ALIGN_CENTER, 1, arabicFontHeaderprint, BaseColor.BLACK);
+
+                insertCell(pdfPTable3, String.valueOf(list.get(i).getCustName()), ALIGN_CENTER, 2, arabicFontHeaderprint, BaseColor.BLACK);
+                Log.e("noteTest",""+noteTypeN);
+                if(noteTypeN.contains("Start")){
+                    insertCell(pdfPTable3, String.valueOf(list.get(i).getNoteS()), ALIGN_CENTER, 2, arabicFontHeaderprint, BaseColor.BLACK);
+
+                }else {
+                    insertCell(pdfPTable3, String.valueOf(list.get(i).getNoteE()), ALIGN_CENTER, 2, arabicFontHeaderprint, BaseColor.BLACK);
+
+                }
+//                insertCell(pdfPTable3, String.valueOf(list.get(i).getEndNote()), ALIGN_CENTER, 1, arabicFontHeaderprint, BaseColor.BLACK);
+
+                if(list.get(i).getStatus().equals("1")){
+                    insertCell(pdfPTable3, "Visit", ALIGN_CENTER, 1, arabicFontHeaderprint, BaseColor.BLACK);
+
+                }else{
+                    insertCell(pdfPTable3, "not Visit", ALIGN_CENTER, 1, arabicFontHeaderprint, BaseColor.BLACK);
+
+                }
 
 
 

@@ -749,5 +749,8 @@
     <string name="VisitStatus">حالة الزيارة</string>
     <string name="Visit">تم الزيارة</string>
     <string name="NotVisit">لم تتم الزيارة</string>
+    <string name="showCustomer">عرض الملاحظات </string>
+    <string name="custNo">رقم الزبون</string>
+
 
 </resources>

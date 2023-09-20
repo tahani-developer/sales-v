@@ -31,6 +31,7 @@ import com.dr7.salesmanmanager.MainActivity;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.TransactionsInfo;
 import com.dr7.salesmanmanager.R;
+import com.dr7.salesmanmanager.ShowCustomerNote;
 import com.dr7.salesmanmanager.ShowPlan;
 
 import org.json.JSONException;
@@ -45,7 +46,7 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 public class Reports extends AppCompatActivity {
 
 
-    LinearLayout showplanLin,customer_log_report,transactions_report,stock_request_report,Inventory_report,cash_reoprt,
+    LinearLayout showCustomer,showplanLin,customer_log_report,transactions_report,stock_request_report,Inventory_report,cash_reoprt,
             custperformance  , return_report,serial_report,shelf_inventory_report,custwithouttrans_report,Target_Report,
             custvisit;
 
@@ -117,7 +118,10 @@ public class Reports extends AppCompatActivity {
         custvisit.setOnClickListener(onClickListener);
         showplanLin=findViewById(R.id.showplan);
         showplanLin.setOnClickListener(onClickListener);
-     if(Login.SalsManPlanFlage==0)   showplanLin.setVisibility(View.GONE);
+        showCustomer=findViewById(R.id.showCustomer);
+        showCustomer.setOnClickListener(onClickListener);
+
+        if(Login.SalsManPlanFlage==0)   showplanLin.setVisibility(View.GONE);
      else  showplanLin.setVisibility(View.VISIBLE);
         inventory_layout=(LinearLayout) findViewById(R.id.inventory_layout);
         if(settings.size() != 0) {
@@ -205,6 +209,11 @@ public class Reports extends AppCompatActivity {
                 case R.id.custvisit:
                     Intent intent13 = new Intent(Reports.this, MedicalVisitReport.class);
                     startActivity(intent13);
+                    break;
+
+                case R.id. showCustomer:
+                    Intent intent14 = new Intent(Reports.this, ShowCustomerNote.class);
+                    startActivity(intent14);
                     break;
 
             }

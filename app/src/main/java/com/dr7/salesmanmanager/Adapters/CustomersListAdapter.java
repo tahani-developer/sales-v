@@ -232,6 +232,7 @@ public class CustomersListAdapter extends BaseAdapter {
                 {
                     MainActivity.CusId=  custList.get(i).getCustId();
                 CustomerListShow.Customer_Name = custList.get(i).getCustName();
+//                CustomerListShow.Customer_No=custList.get(i).getCustId();
                 CustomerListShow.Customer_Account = custList.get(i).getCustId() + "";
                 CustomerListShow.CashCredit = custList.get(i).getCashCredit();
                 CustomerListShow.PriceListId = custList.get(i).getPriceListId();
