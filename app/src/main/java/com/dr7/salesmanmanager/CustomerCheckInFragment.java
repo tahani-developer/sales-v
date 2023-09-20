@@ -114,7 +114,7 @@ public class CustomerCheckInFragment extends DialogFragment {
 
     private static DatabaseHandler mDbHandler;
     CountDownTimer countDownTimer;
-
+    public static List<Customer> customerList;
     public Context context;
     LinearLayout discLayout;
     int  approveAdmin=-1;
@@ -173,6 +173,15 @@ public class CustomerCheckInFragment extends DialogFragment {
         okButton = (Button) view.findViewById(R.id.okButton);
         cancelButton = (Button) view.findViewById(R.id.cancelButton);
         mDbHandler = new DatabaseHandler(getActivity());
+        if(mDbHandler.getAllSettings().size() != 0) {
+
+            if (mDbHandler.getAllSettings().get(0).getSalesManCustomers() == 1) {
+                customerList = mDbHandler.getCustomersBySalesMan(Login.salesMan);
+            } else {
+                customerList = mDbHandler.getAllCustomers();
+
+            }
+        }
 //        if(mDbHandler.getAllSettings().get(0).getAllowOutOfRange()==1)// validate customer location
 //        {
 ////            getCurrentLocation();
