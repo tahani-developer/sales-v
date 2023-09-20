@@ -36,6 +36,7 @@ Spinner status,noteS;
 TextView share,pdf;
 TextView date;
 public static String stateN ="", noteTypeN ="",dateAll="";
+int satPdf=-1;
     public static   PolylineOptions rectLine;
     public static SalesManCustomerNoteAdapter planAdapter;
 //    public static  ArrayList<LatLng>  directionPoint =new ArrayList<>();;
@@ -231,16 +232,19 @@ EditText custSearch;
                     fillAdapterData( ShowCustomerNote.this   ,salesTemp);
 
                     stateN ="All";
+                    satPdf=-1;
                 }else {
 //                    salesTemp.clear();
                     int a=0;
                    if(i==1){
                        a=1;
                        stateN ="Visit";
+                       satPdf=1;
 
                    }else {
 //                       salesTemp.clear();
                        a=0;
+                       satPdf=0;
                        stateN ="not Visit";
 
                    }
@@ -309,8 +313,10 @@ EditText custSearch;
     public void sharwhats() {
 
         try {
+            List<Customer> CustNot=databaseHandler.getAllCustomersNoteWithNote(dateAll,satPdf);
+
             PdfConverter pdf = new PdfConverter(ShowCustomerNote.this);
-            pdf.exportListToPdf(salesTemp, "Vocher", "", 22);
+            pdf.exportListToPdf(CustNot, "Vocher", "", 22);
         } catch (Exception e) {
             Log.e("Exception22==", "" + e.getMessage());
         }
@@ -318,7 +324,8 @@ EditText custSearch;
 
     public  void exportToPdf(){
 
+        List<Customer> CustNot=databaseHandler.getAllCustomersNoteWithNote(dateAll,satPdf);
         PdfConverter pdf =new PdfConverter(ShowCustomerNote.this);
-        pdf.exportListToPdf(salesTemp,getResources().getString(R.string.AccountStatment),"",23);
+        pdf.exportListToPdf(CustNot,getResources().getString(R.string.AccountStatment),"",23);
     }
 }

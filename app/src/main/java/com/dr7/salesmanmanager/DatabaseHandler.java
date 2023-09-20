@@ -5308,6 +5308,92 @@ Log.e("stay",""+customer.getStatus());
          return customers;
      }
 
+     public List<Customer> getAllCustomersNoteWithNote(String date,int visitAll) {
+         List<Customer> customers = new ArrayList<Customer>();
+         // Select All Query
+//         String selectQuery="select t1.* , (select NOTE_START  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+getCurentTimeDate(1).replace("/","")+" )as startN ,(select NOTE_END  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE=t1.CUS_ID || "+getCurentTimeDate(1).replace("/","")+")as endN ,(select NOTE_VISIT_STATUS  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+getCurentTimeDate(1).replace("/","")+")as flag  from CUSTOMER_MASTER t1 ";
+//         String selectQuery="select t1.* , (select NOTE_START  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+date.replace("/","")+" )as startN ,(select NOTE_END  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE=t1.CUS_ID || "+date.replace("/","")+")as endN ,(select NOTE_VISIT_STATUS  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+date.replace("/","")+")as flag  from CUSTOMER_MASTER t1 ";
+         String selectQuery="";
+         if(visitAll==-1) {
+              selectQuery = "select t1.* , t2.NOTE_START ,t2.NOTE_END ,ifnull(t2.NOTE_VISIT_STATUS ,0)from CUSTOMER_MASTER t1 , NOTE_PLAN_TABLE t2 where t2.SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || " + date.replace("/", "");
+         }else {
+              selectQuery = "select t1.* , t2.NOTE_START ,t2.NOTE_END ,ifnull(t2.NOTE_VISIT_STATUS ,0)from CUSTOMER_MASTER t1 , NOTE_PLAN_TABLE t2 where t2.SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || " + date.replace("/", "")+" and (t2.NOTE_VISIT_STATUS="+visitAll+"  or ifnull(t2.NOTE_VISIT_STATUS,0)="+visitAll+")";
+
+         }
+         Log.e("stayN",""+selectQuery);
+
+//         String selectQuery = "SELECT  * FROM " + CUSTOMER_MASTER;
+
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+
+         // looping through all rows and adding to list
+         if (cursor.moveToFirst()) {
+             do {
+                 Customer customer = new Customer();
+                 customer.setCompanyNumber(cursor.getString(0));
+                 customer.setCustId(cursor.getString(1));
+                 customer.setCustName(cursor.getString(2));
+                 customer.setAddress(cursor.getString(3));
+                 customer.setIsSuspended(Integer.parseInt(cursor.getString(4)));
+                 customer.setPriceListId(cursor.getString(5));
+                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
+                 customer.setSalesManNumber(cursor.getString(7));
+                 customer.setCreditLimit(Double.parseDouble(cursor.getString(8)));
+                 customer.setPayMethod(Integer.parseInt((cursor.getString(9))));
+                 customer.setCustLat(cursor.getString(10));
+                 customer.setCustLong(cursor.getString(11));
+                 customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
+                 customer.setACCPRC(cursor.getString(13));
+                 customer.setHide_val(cursor.getInt(14));
+                 try {
+                     customer.setFax(cursor.getString(18));
+                     customer.setZipCode(cursor.getString(19));
+                     customer.seteMail(cursor.getString(20));
+                     customer.setC_THECATEG(cursor.getString(21));
+                 }
+                 catch (Exception e){
+                     customer.setFax("");
+                     customer.setZipCode("");
+                     customer.seteMail("");
+                     customer.setC_THECATEG("");
+                 }
+
+                 if(cursor.getString(22)!=null){
+                     customer.setNoteS(cursor.getString(22));
+
+                 }else{
+                     customer.setNoteS("");
+
+                 }
+
+                 if(cursor.getString(23)!=null){
+                     customer.setNoteE(cursor.getString(23));
+
+                 }else{
+                     customer.setNoteE("");
+
+                 }
+
+                 if(cursor.getString(24)!=null){
+                     customer.setStatus(cursor.getString(24));
+                     Log.e("stay",""+customer.getStatus());
+                 }else{
+                     customer.setStatus("0");
+
+                 }
+
+
+
+//                customer.setCustId(cursor.getString(16));// for test talley
+                 // 16 column isPosted
+                 // Adding transaction to list
+                 customers.add(customer);
+             } while (cursor.moveToNext());
+         }
+         return customers;
+     }
+
 
     public List<Customer> getAllCustomers() {
         List<Customer> customers = new ArrayList<Customer>();
