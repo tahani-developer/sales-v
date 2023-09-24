@@ -2892,7 +2892,7 @@ try {
 
         try{
 
-            db.execSQL("DROP TABLE IF EXISTS NOTE_PLAN_TABLE ");
+//            db.execSQL("DROP TABLE IF EXISTS NOTE_PLAN_TABLE ");
             String CREATE_TABLE_NOTE_PLAN = "CREATE TABLE IF NOT EXISTS " + NOTE_PLAN_TABLE + "("
                     + SERIALS + " INTEGER PRIMARY KEY   AUTOINCREMENT ,"
                     + NOTE_START + " TEXT,"
@@ -5233,7 +5233,11 @@ Log.e("addCompanyInfo","addCompanyInfo");
          List<Customer> customers = new ArrayList<Customer>();
          // Select All Query
 //         String selectQuery="select t1.* , (select NOTE_START  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+getCurentTimeDate(1).replace("/","")+" )as startN ,(select NOTE_END  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE=t1.CUS_ID || "+getCurentTimeDate(1).replace("/","")+")as endN ,(select NOTE_VISIT_STATUS  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+getCurentTimeDate(1).replace("/","")+")as flag  from CUSTOMER_MASTER t1 ";
-         String selectQuery="select t1.* , (select NOTE_START  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+date.replace("/","")+" )as startN ,(select NOTE_END  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE=t1.CUS_ID || "+date.replace("/","")+")as endN ,(select NOTE_VISIT_STATUS  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+date.replace("/","")+")as flag  from CUSTOMER_MASTER t1 ";
+//         String selectQuery="select t1.* , (select NOTE_START  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+date.replace("/","")+" )as startN ,(select NOTE_END  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE=t1.CUS_ID || "+date.replace("/","")+")as endN ,(select NOTE_VISIT_STATUS  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+date.replace("/","")+")as flag  from CUSTOMER_MASTER t1 ";
+         String selectQuery="select t1.* , (select NOTE_START  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE= t1.CUS_ID || "+date.replace("/","")+" )as startN ,(select NOTE_END  from NOTE_PLAN_TABLE  where SERIAL_FOR_PLAN_TABLE=t1.CUS_ID || "+date.replace("/","")+")as endN ,ifnull((select STATUS  from TRANSACTIONS  where CUS_CODE= t1.CUS_ID  and CHECK_IN_DATE='"+date+"') ,0 ) as flag  from CUSTOMER_MASTER t1 ";
+
+
+
          Log.e("stay",""+selectQuery);
 
 //         String selectQuery = "SELECT  * FROM " + CUSTOMER_MASTER;
