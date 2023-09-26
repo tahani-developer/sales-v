@@ -5448,6 +5448,55 @@ Log.e("stay",""+customer.getStatus());
         return customers;
     }
 
+     public List<Customer> getAllCustomersLike(String serch) {
+         List<Customer> customers = new ArrayList<Customer>();
+         // Select All Query
+         String selectQuery = "SELECT  * FROM " + CUSTOMER_MASTER +" where  CUS_NAME0 LIKE '%" + serch + "%'";
+
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+
+         // looping through all rows and adding to list
+         if (cursor.moveToFirst()) {
+             do {
+                 Customer customer = new Customer();
+                 customer.setCompanyNumber(cursor.getString(0));
+                 customer.setCustId(cursor.getString(1));
+                 customer.setCustName(cursor.getString(2));
+                 customer.setAddress(cursor.getString(3));
+                 customer.setIsSuspended(Integer.parseInt(cursor.getString(4)));
+                 customer.setPriceListId(cursor.getString(5));
+                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
+                 customer.setSalesManNumber(cursor.getString(7));
+                 customer.setCreditLimit(Double.parseDouble(cursor.getString(8)));
+                 customer.setPayMethod(Integer.parseInt((cursor.getString(9))));
+                 customer.setCustLat(cursor.getString(10));
+                 customer.setCustLong(cursor.getString(11));
+                 customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
+                 customer.setACCPRC(cursor.getString(13));
+                 customer.setHide_val(cursor.getInt(14));
+                 try {
+                     customer.setFax(cursor.getString(18));
+                     customer.setZipCode(cursor.getString(19));
+                     customer.seteMail(cursor.getString(20));
+                     customer.setC_THECATEG(cursor.getString(21));
+                 }
+                 catch (Exception e){
+                     customer.setFax("");
+                     customer.setZipCode("");
+                     customer.seteMail("");
+                     customer.setC_THECATEG("");
+                 }
+
+//                customer.setCustId(cursor.getString(16));// for test talley
+                 // 16 column isPosted
+                 // Adding transaction to list
+                 customers.add(customer);
+             } while (cursor.moveToNext());
+         }
+         return customers;
+     }
+
     // get customer cridit limit and cash credit balance  by customer No
 
 

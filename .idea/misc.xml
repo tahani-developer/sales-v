@@ -190,36 +190,140 @@
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/drawable/ic_baseline_image_24.xml" value="0.177" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/drawable/ic_baseline_loading_24.xml" value="0.177" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-land/activity_show_customer_note.xml" value="0.21" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-land/app_bar_layout.xml" value="0.17135416666666667" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-land/items_report.xml" value="0.724669603524229" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-land/salman_customer_note_row.xml" value="0.16979166666666667" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-large-land/fragment_sales_invoice.xml" value="0.5" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-large/activity_activities.xml" value="0.153125" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-large/activity_reports_test.xml" value="0.153125" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-large/add_item_dialog_small.xml" value="0.153125" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-large/add_items_dialog2.xml" value="0.153125" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-large/fragment_receipt_voucher.xml" value="0.153125" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-large/fragment_sales_invoice.xml" value="0.153125" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-mdpi/account_row.xml" value="0.1" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-mdpi/activity_account_statment.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-normal/add_item_dialog_small.xml" value="0.33" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-normal/add_items_dialog2.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-normal/fragment_sales_invoice.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-xhdpi/add_items_dialog2.xml" value="0.8634361233480177" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-xhdpi/add_items_stock_dialog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout-xxxhdpi/fragment_customer_check_in.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/active_key.xml" value="0.1" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activities2.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_account__report.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_account_report.xml" value="0.1" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_bluetoothprinter.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_car_stocking.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_custom_scanner.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_customer_list_show.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_customer_without_trasn_report.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_customers_performance_report.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_login.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_maps.xml" value="0.1" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_medical_visit.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_medical_visit_report.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_reports.xml" value="0.22" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_return_by_voucher_no.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_sales_man_plan_locations.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_scan.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_serial_report.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_shelf_inventoery_report.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_show_customer_note.xml" value="0.25" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_show_customer_note1.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_show_plan.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_small_capture.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_splashscreen.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_stock_.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_target_report.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_test_location.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_un_collected_data.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/activity_update__items.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/add_customer_dialog.xml" value="0.8166666666666667" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/add_item_dialog_small.xml" value="0.7136563876651982" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/add_item_dialog_small_stock.xml" value="0.33" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/add_item_serial_dialog.xml" value="0.724669603524229" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/add_items_dialog.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/add_items_dialog2.xml" value="1.225" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/add_items_stock_dialog.xml" value="0.8166666666666667" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/admin_retvochrequst.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/app_bar_main.xml" value="0.2" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/authenticdailog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/body_voucher_print.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/body_voucher_print_ejabe.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/carstockrow.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/content_activities.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/content_main.xml" value="0.2" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/content_splashscreen.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/cust_trans_reportrow.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/custom_barcode_scanner.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/customer_info_dialog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/customer_log_report.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/customerdailog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/customers_item.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/customers_list.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/dashbord_activities.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/fragment_customer_check_in.xml" value="0.8166666666666667" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/fragment_customersett.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/fragment_discount.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/fragment_genralsett.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/fragment_receipt_voucher_new.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/fragment_recive_transaction.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/fragment_sales_invoice.xml" value="0.724669603524229" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/fragment_send_transaction.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/fragment_transaction_.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/fragment_voucherssett.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/get_pic_dialog.xml" value="0.18" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/header_layout_print.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/header_voucher_print.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/header_voucher_print_ejabe.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/input_popup.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/ip_setting_dialog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/item__row_check_info.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/item_horizontal_listview.xml" value="1.225" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/item_horizontal_listview_stock.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/item_loading.xml" value="0.2" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/item_post.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/item_row_new.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/item_serial_recycler.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/item_spinner_acc.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/item_stock_rwo_.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/item_visit_medical_dialog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/itemdiffrow.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/items_dailog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/items_list.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/items_stock_list.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/itemtargetrow.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/label_sample_menu.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/list_inventory_report.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/location_requstdailog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/login_free_size.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/mapdailog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/max_discount_credit.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/max_discount_info_dialog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/more_settings_dialog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/nav_header_main.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/new_addcustomer.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/note_plan_dialog.xml" value="0.25" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/print_stock_request_sewo30.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/print_vouchers.xml" value="0.8634361233480177" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/printdialog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/printdialog_tally.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/printer_setting.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/printlay.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/progress_dialog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/progressbar.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/recept_voucher_ejabi.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/request_limit_cridet.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/salman_customer_note_row.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/salman_customer_note_row1.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/salman_plan_row.xml" value="0.2" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/screen_popup.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/serialrow.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/serialrow_return.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/voch_footer.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/voch_header.xml" value="0.2" />
+        <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/voucher_info_dialog.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/vs_promo_dailog.xml" value="0.2" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/layout/zone_search.xml" value="0.2" />
         <entry key="..\:/Users/mr gamer/AndroidStudioProjects/van_sales/app/src/main/res/menu/activity_main_drawer.xml" value="0.20416666666666666" />

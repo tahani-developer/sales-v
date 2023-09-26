@@ -67,6 +67,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import static com.dr7.salesmanmanager.CustomerCheckInFragment.customerList;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
@@ -92,6 +93,7 @@ public class CustomerListShow extends DialogFragment {
 
     public static double Max_Discount_value = 0;
     public static int CustHideValu = 0;
+    public  List<Customer> customerList2;
 
     CustomersListAdapter customersListAdapter;
     DatabaseHandler mHandler;
@@ -109,6 +111,7 @@ public class CustomerListShow extends DialogFragment {
     List<Settings> settings;
     final Handler handler = new Handler();
     TextView loadingText;
+    List<Customer> filteredList=new ArrayList<>();
 
     public CustomerListShow.CustomerListShow_interface getListener() {
         return listener;
@@ -145,6 +148,7 @@ public class CustomerListShow extends DialogFragment {
         accSp = (Spinner) view.findViewById(R.id.accSp);
         classificatSp = (Spinner) view.findViewById(R.id.classificatSp);
         categSp = (Spinner) view.findViewById(R.id.categSp);
+        customerList2=customerList;
         mSpeakBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -303,27 +307,12 @@ public class CustomerListShow extends DialogFragment {
 
         customerNameTextView.addTextChangedListener(new TextWatcher() {
 
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() != 0) {
-//
-                    // Call back the Adapter with current character to Filter
-//                    customersListAdapter.getFilter().filter(s.toString());
-                    searchNormal(s.toString());
+                if (!customerNameTextView.getText().toString().equals("") ) {
+                    searchNormal(customerNameTextView.getText().toString());
 
-
-                } else {
-//                    if (showCustomerList == 1) {
-////
-//                        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList, showCustomerLoc);
-//                        itemsListView.setAdapter(customersListAdapter);
-//                        //customersListAdapter.notifyDataSetChanged();
-//                    } else {
-//                        Log.e("c5", "c5");
-//                        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList, showCustomerLoc);
-//                        itemsListView.setAdapter(customersListAdapter);
-//                        // customersListAdapter.notifyDataSetChanged();
-//                    }
 
                 }
             }
@@ -334,31 +323,41 @@ public class CustomerListShow extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() != 0) {
-//                    if (showCustomerList == 1) {
-////
-//                        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList, showCustomerLoc);
-//                        itemsListView.setAdapter(customersListAdapter);
-//                        //customersListAdapter.notifyDataSetChanged();
-//                    } else {
-//                        Log.e("c5", "c5");
-//                        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList, showCustomerLoc);
-//                        itemsListView.setAdapter(customersListAdapter);
-//                        // customersListAdapter.notifyDataSetChanged();
-//                    }
-                }
+//                if (s.length() != 0) {
+////                    if (showCustomerList == 1) {
+//////
+////                        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList, showCustomerLoc);
+////                        itemsListView.setAdapter(customersListAdapter);
+////                        //customersListAdapter.notifyDataSetChanged();
+////                    } else {
+////                        Log.e("c5", "c5");
+////                        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList, showCustomerLoc);
+////                        itemsListView.setAdapter(customersListAdapter);
+////                        // customersListAdapter.notifyDataSetChanged();
+////                    }
+//                }
             }
         });
 
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void searchNormal(String querey) {
-        List<Customer> filteredList=new ArrayList<>();
-        for (int i=0;i<customerList.size();i++){
-            if(customerList.get(i).getCustName().toLowerCase().contains(querey))
-                filteredList.add(customerList.get(i));
-        }
+        filteredList.clear();
+//        for (int i=0;i<customerList2.size();i++){
+//            if(customerList2.get(i).getCustName().toLowerCase().contains(querey)) {
+//                Customer s=customerList2.get(i);
+//                filteredList.add(s);
+//            }
+//        }
+        filteredList = customerList2.stream().filter(v -> v.getCustName().contains(querey)).map(v -> v)
+                .collect(Collectors.toList());
+//        for (int i=0;i<indexes.size();i++){
+//            filteredList.add(customerList2.get(i));
+//        }
+
+//        filteredList=mHandler.getAllCustomersLike(querey);
         customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), filteredList, showCustomerLoc);
         itemsListView.setAdapter(customersListAdapter);
     }
