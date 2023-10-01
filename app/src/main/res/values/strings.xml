@@ -782,5 +782,6 @@
 
     <string name="custNo">Cust No</string>
 
-
+    <string name="Damaged">Damaged</string>
+    <string name="notDamaged">Not Damaded</string>
 </resources>

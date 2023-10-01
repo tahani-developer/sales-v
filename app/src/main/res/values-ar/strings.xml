@@ -752,5 +752,7 @@
     <string name="showCustomer">عرض الملاحظات </string>
     <string name="custNo">رقم الزبون</string>
 
+    <string name="Damaged">تالف</string>
+    <string name="notDamaged">Not Damaded</string>
 
 </resources>

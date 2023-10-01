@@ -968,8 +968,20 @@ public class PdfConverter {
 
     private PdfPTable creatTableVoucher(List<Voucher> list) {
         createPDF("Voucher_Report" + ".pdf");
-        PdfPTable pdfPTable = new PdfPTable(8);
+        PdfPTable pdfPTable = null;
+
+
+        if(list.size()!=0) {
+            if(list.get(0).getVoucherType()==506){
+                pdfPTable  = new PdfPTable(9);
+            }else {
+                pdfPTable  = new PdfPTable(8);
+
+            }
+
+        }
         pdfPTable.setWidthPercentage(100f);
+
 
 
         if (!Locale.getDefault().getLanguage().equals("ar")) {
@@ -991,8 +1003,11 @@ public class PdfConverter {
         insertCell(pdfPTable, context.getResources().getString(R.string.sub_total), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getResources().getString(R.string.tax), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getResources().getString(R.string.net_sales), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
-
+        if(list.size()!=0){
+            if(list.get(0).getVoucherType()==506) {
+                insertCell(pdfPTable, context.getResources().getString(R.string.Damaged), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            }
+        }
 //            pdfPTable.setHeaderRows(1);
         for (int i = 0; i < list.size(); i++) {
             insertCell(pdfPTable, String.valueOf(list.get(i).getCustName()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -1003,7 +1018,13 @@ public class PdfConverter {
             insertCell(pdfPTable, String.valueOf(list.get(i).getSubTotal()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(list.get(i).getTax()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(list.get(i).getNetSales()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+            if(list.get(i).getVoucherType()==506){
+                if(list.get(i).getVocherDamage()==0) {
+                    insertCell(pdfPTable, String.valueOf(context.getResources().getString(R.string.notDamaged)), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                }else {
+                    insertCell(pdfPTable, String.valueOf(context.getResources().getString(R.string.Damaged)), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                }
+            }
 //            insertCell(pdfPTable, String.valueOf(String.format("%.3f", (list.get(i).getSalesManId()))), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
         }

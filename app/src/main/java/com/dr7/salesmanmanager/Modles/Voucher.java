@@ -35,6 +35,15 @@ public class Voucher {
     private String time;
     private int ORIGINALvoucherNo;
     private  int taxTypa;
+    private  int vocherDamage;
+
+    public int getVocherDamage() {
+        return vocherDamage;
+    }
+
+    public void setVocherDamage(int vocherDamage) {
+        this.vocherDamage = vocherDamage;
+    }
 
     public int getTaxTypa() {
         return taxTypa;
