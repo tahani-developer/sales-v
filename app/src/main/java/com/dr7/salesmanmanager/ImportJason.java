@@ -1,6 +1,7 @@
 package com.dr7.salesmanmanager;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -102,6 +103,9 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
@@ -342,16 +346,63 @@ public class ImportJason extends AppCompatActivity {
             ipAddress = settings.get(0).getIpAddress();
             Log.e("getCustomerInfo", "*****");
             if (fromDate.equals("") && toDate.equals("")) {
+                    JSONTask_AccountStatment n = new JSONTask_AccountStatment(CustomerListShow.Customer_Account, type, fromDate, toDate);
+                n.execute();
+//                Thread thread1 = new Thread(){
+//                    public void run(){
+//                        try {
+//                            n.get(20000, TimeUnit.MILLISECONDS);  //set time in milisecond(in this timeout is 30 seconds
+//
+//                        } catch (Exception e) {
+//                            n.cancel(true);
+//                            ((Activity) context).runOnUiThread(new Runnable()
+//                            {
+//                                @SuppressLint("ShowToast")
+//                                public void run()
+//                                {
+//                                    Toast.makeText(context, "Time Out.", Toast.LENGTH_LONG).show();
+//                                    n.onCancelled();
+//                                    finish(); //will close the current activity comment if you don't want to close current activity.
+//                                }
+//                            });
+//                        }
+//                    }
+//                };
+//                thread1.start();
 
-                new JSONTask_AccountStatment(CustomerListShow.Customer_Account, type, fromDate, toDate).execute();
-            } else {
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run() {
 
-                new JSONTask_AccountStatment_Withdate(CustomerListShow.Customer_Account, type, fromDate, toDate).execute();
-            }
-            //  new SyncRemark().execute();
+                            if ( (n.getStatus() == AsyncTask.Status.RUNNING )|| (n.getStatus() ==AsyncTask.Status.PENDING ))
+                                n.onCancelled();
+
+                        }
+                    }, 10000 );
+
+
+        } else {
+                JSONTask_AccountStatment_Withdate task=  new JSONTask_AccountStatment_Withdate(CustomerListShow.Customer_Account, type, fromDate, toDate);
+                task.execute();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run() {
+
+                        if ( (task.getStatus() == AsyncTask.Status.RUNNING )|| (task.getStatus() ==AsyncTask.Status.PENDING ))
+                            task.onCancelled();
+
+                    }
+                }, 10000 );
+
+        }
+    }
         }
 
-    }
+
 
     public void getUnCollectedCheques(String fromDate, String toDate) {
         List<Settings> settings = mHandler.getAllSettings();
@@ -4294,7 +4345,7 @@ this.activtyflage=activtyflage;
 
     }
 
-    private class JSONTask_AccountStatment extends AsyncTask<String, String, String> {
+    public class JSONTask_AccountStatment extends AsyncTask<String, String, String> {
 
         private String custId = "";
         private int type = 0;
@@ -4493,9 +4544,16 @@ this.activtyflage=activtyflage;
             }
         }
 
+        @Override
+        protected void onCancelled() {
+            if(pdValidation!=null)
+            pdValidation.dismissWithAnimation();
+            super.onCancelled();
+        }
+
     }
 
-    private class JSONTask_AccountStatment_Withdate extends AsyncTask<String, String, String> {
+    public class JSONTask_AccountStatment_Withdate extends AsyncTask<String, String, String> {
 
         private String custId = "";
         private int type = 0;
@@ -4520,7 +4578,12 @@ this.activtyflage=activtyflage;
             String do_ = "my";
 
         }
-
+        @Override
+        protected void onCancelled() {
+            if(pdValidation!=null)
+                pdValidation.dismissWithAnimation();
+            super.onCancelled();
+        }
         @Override
         protected String doInBackground(String... params) {
 

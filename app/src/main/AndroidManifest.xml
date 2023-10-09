@@ -14,6 +14,7 @@
         android:largestWidthLimitDp="1200"
         android:normalScreens="true"
         android:requiresSmallestWidthDp="800"
+        android:enableOnBackInvokedCallback="true"
         android:resizeable="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />

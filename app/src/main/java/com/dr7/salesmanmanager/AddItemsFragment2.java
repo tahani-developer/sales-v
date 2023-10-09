@@ -143,7 +143,7 @@ public class AddItemsFragment2 extends DialogFragment {
     SimpleDateFormat df, df2;
     Date currentTimeAndDate;
     String userNo="";
-    int itemUnit=0,countListVisible=0,autoSearchFlag=0;
+    int itemUnit=0,countListVisible=0,autoSearchFlag=1,grid=0;
     private static DatabaseHandler mDbHandler;
     private DecimalFormat decimalFormat    = new DecimalFormat("00.000");;
 
@@ -297,8 +297,8 @@ public class AddItemsFragment2 extends DialogFragment {
 //                    linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 //                    recyclerView.setLayoutManager(linearLayoutManager);
 
-                    int numberOfColumns = 6;
-                    recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), numberOfColumns));
+//                    int numberOfColumns = 6;
+//                    recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), numberOfColumns));
 
 
                     SharedPreferences.Editor editor = getContext().getSharedPreferences( Login.SETTINGS_PREFERENCES, MODE_PRIVATE).edit();
@@ -309,12 +309,13 @@ public class AddItemsFragment2 extends DialogFragment {
                 {
                     fillItemRecycler(0);
 //                    linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-                }
+
 //                recyclerView.setLayoutManager(linearLayoutManager);
                 SharedPreferences.Editor editor = getContext().getSharedPreferences( Login.SETTINGS_PREFERENCES, MODE_PRIVATE).edit();
                 editor.putBoolean(Login.Items_Orent_PREF, b);
 
                 editor.apply();
+                }
             }
         });
 
@@ -378,8 +379,9 @@ public class AddItemsFragment2 extends DialogFragment {
                         fillItemRecycler(1);
 //                        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 //                        recyclerView.setLayoutManager(linearLayoutManager);
-                    }   else {
-                        fillItemRecycler(1);
+                    }
+                    else {
+                        fillItemRecycler(0);
 //                        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 //                        recyclerView.setLayoutManager(linearLayoutManager);
                     }
@@ -416,30 +418,36 @@ public class AddItemsFragment2 extends DialogFragment {
          orientation_checkbox.setChecked(false);
 
         if(orientation_checkbox.isChecked()==true) {
-            fillItemRecycler(1);
+            grid=1;
+//            fillItemRecycler(1);
 //            linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 //            recyclerView.setLayoutManager(linearLayoutManager);
         }   else {
-            fillItemRecycler(0);
+            grid=0;
+//            fillItemRecycler(0);
 //            linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 //            recyclerView.setLayoutManager(linearLayoutManager);
         }
 
 
         if(Smallericon_checkbox.isChecked()==true) {
-            fillItemRecycler(0);
+            grid=0;
+//            fillItemRecycler(0);
 //            linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 //            recyclerView.setLayoutManager(linearLayoutManager);
         }
         else
         {
 
+
             if(orientation_checkbox.isChecked()==true) {
-                fillItemRecycler(1);
+                grid=1;
+//                fillItemRecycler(1);
 //                linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 //                recyclerView.setLayoutManager(linearLayoutManager);
             }   else {
-                fillItemRecycler(0);
+//                fillItemRecycler(0);
+                grid=0;
 //                linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 //                recyclerView.setLayoutManager(linearLayoutManager);
             }
@@ -458,11 +466,14 @@ public class AddItemsFragment2 extends DialogFragment {
 //
 
 //        fillListViewAllItem();
-        fillItemRecycler(0);
+
 
 //       }
 
-
+        Log.e("grid","=="+grid);
+        if(grid==1)
+        fillItemRecycler(1);
+        else    fillItemRecycler(0);
         categorySpinner = view.findViewById(R.id.cat);
         List<String> categories = mHandler.getAllExistingCategories();
         categories.add(0, getResources().getString(R.string.all_item));
@@ -535,27 +546,48 @@ public class AddItemsFragment2 extends DialogFragment {
         });
 
         search = view.findViewById(R.id.mSearch);
+        if(sharedPref==null)
+            sharedPref = getActivity().getSharedPreferences("SETTINGS_PREFERENCES", MODE_PRIVATE);
+        if  (sharedPref.getBoolean(Login.UtoSearch_PREF, false)){
+            autoSearchFlag=1;
+        }else  autoSearchFlag=0;
+        Log.e("autoSearchFlag","=="+autoSearchFlag);
+        if(autoSearchFlag==0){
+            search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+//                    if(autoSearchFlag==0){
+                        filterQueryName(query);
+//                    }
+                    return false;
 
-
-        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if(autoSearchFlag==0){
-                    filterQueryName(query);
                 }
-                return false;
 
-            }
+                @Override
+                public boolean onQueryTextChange(String query) {
 
-            @Override
-            public boolean onQueryTextChange(String query) {
-                if(autoSearchFlag==1){
-                    filterQueryName(query);
-                }else  filterKindSpinner();
+                    return false;
+                }
+            });
+        }else {
+            search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
 
-                return false;
-            }
-        });
+                }
+
+                @Override
+                public boolean onQueryTextChange(String query) {
+//                    if(query.length()!=0){
+                        filterQueryName(query);
+//                    }else  filterKindSpinner();
+
+                    return false;
+                }
+            });
+        }
+
         //***************************************************************************************
         barcode = (EditText) view.findViewById(R.id.barcode);
         clearBarcode = (TextView) view.findViewById(R.id.clearBarcode);
@@ -856,10 +888,7 @@ public class AddItemsFragment2 extends DialogFragment {
             }
         });
 
-        if(sharedPref==null)  sharedPref = getActivity().getSharedPreferences("SETTINGS_PREFERENCES", MODE_PRIVATE);
-        if  (sharedPref.getBoolean(Login.UtoSearch_PREF, false)){
-            autoSearchFlag=1;
-        }else  autoSearchFlag=0;
+
 
         return view;
     }
@@ -981,22 +1010,22 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
             }
-            Log.e("filteredMap2-",filteredList.size()+"");
+//            Log.e("filteredMap2-",filteredList.size()+"");
 
             RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
             recyclerView.setAdapter(adapter);
             //   Toast.makeText(context, ""+filteredList.size(), Toast.LENGTH_SHORT).show();
 
         } else {
-            filterKindSpinner();
-//                    ArrayList<Item> filteredList = new ArrayList<>();
-//                    filteredList =   getFilteredZero();
-//                    filteredMap.clear();
-//                    for (int  i=0;i<filteredList.size();i++ )
-//                        filteredMap.put(i,filteredList.get(i));
+//            filterKindSpinner();
+                    ArrayList<Item> filteredList = new ArrayList<>();
+                    filteredList =   getFilteredZero();
+                    filteredMap.clear();
+                    for (int  i=0;i<filteredList.size();i++ )
+                        filteredMap.put(i,filteredList.get(i));
 
-//                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
-//                    recyclerView.setAdapter(adapter);
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+                    recyclerView.setAdapter(adapter);
         }
     }
 
@@ -1060,20 +1089,41 @@ public class AddItemsFragment2 extends DialogFragment {
 //            adapter = new RecyclerViewAdapter(itemAdapter, AddItemsFragment2.this);
             if(type==0) {
                 linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-
+                GridLayoutManager layoutManager=new GridLayoutManager(getActivity(),2);
+                recyclerView.setLayoutManager(layoutManager);
             }else {
-                linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
+                linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                linearLayoutManager.setAutoMeasureEnabled(false);
+//                GridLayoutManager layoutManager=new GridLayoutManager(getActivity(),2);
+                recyclerView.setLayoutManager(linearLayoutManager);
+//
+//                recyclerView.setAdapter(adapter);
             }
 
 //                    recyclerView.setLayoutManager(linearLayoutManager);
-                GridLayoutManager layoutManager=new GridLayoutManager(getActivity(),2);
-                recyclerView.setLayoutManager(layoutManager);
+
 //            }else {
 //                recyclerView.setAdapter(adapter);
 //            }
     }
+    private void onScrolledToBottom() {
+//        if (songMainList.size() < songAllList.size()) {
+//            int x, y;
+//            if ((songAllList.size() - songMainList.size()) >= 50) {
+//                x = songMainList.size();
+//                y = x + 50;
+//            } else {
+//                x = songMainList.size();
+//                y = x + songAllList.size() - songMainList.size();
+//            }
+//            for (int i = x; i < y; i++) {
+//                songMainList.add(songAllList.get(i));
+//            }
+//            songsAdapter.notifyDataSetChanged();
+//        }
 
+    }
     private void fillListViewAllItem() {
         Log.e("fillListViewAllItem","jsonItemsList="+jsonItemsList.size());
         allItemAdapterList = new AllItemRecyclerListViewAdapter( jsonItemsList,AddItemsFragment2.this);// if screen is landscape =====> 0

@@ -209,7 +209,12 @@ public class Activities extends AppCompatActivity implements
 //        salesInvoice.discTextView.setText(decimalFormat.format(discount));
         salesInvoice.calculateTotals(0);
     }
-
+    @Override
+    protected void onDestroy () {
+        super.onDestroy();
+        //call close() of the helper class
+        databaseHandler.close();
+    }
     Animation animZoomIn ;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("WrongViewCast")

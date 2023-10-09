@@ -3246,7 +3246,13 @@ else   selectQuery = "SELECT PaymentSerials_cridt FROM " + PaymentSerials ;
                 flagSettings.add(mySettings);
 
             } while (cursor.moveToNext());
-            cursor.close();
+            try {
+                if (cursor != null)
+                    cursor.close();
+                db.close();
+            }catch (Exception e){
+                Log.e("cursor=Exception",""+e.getMessage());
+            }
             Log.e("getFlagSettings", "" + flagSettings.size());
         }
         return flagSettings;
@@ -3779,6 +3785,12 @@ else   selectQuery = "SELECT PaymentSerials_cridt FROM " + PaymentSerials ;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
+        try {
+
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
 
     }
 
@@ -4741,7 +4753,13 @@ Log.e("addCompanyInfo","addCompanyInfo");
             } while (cursor.moveToNext());
         }
 
-//        db.close();
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return settings;
     }
 
@@ -5016,7 +5034,13 @@ Log.e("addCompanyInfo","addCompanyInfo");
         } catch (Exception e) {
             maxVoucher = 0;
         }
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return maxVoucher;
 
 
@@ -5046,7 +5070,13 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
             Log.e("getFromSerlizeTable","maxVoucher"+maxVoucher);
         }catch (Exception e){maxVoucher=0;}
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return maxVoucher;
 
     }
@@ -5576,6 +5606,13 @@ Log.e("stay",""+customer.getStatus());
                  customers.add(customer);
              } while (cursor.moveToNext());
          }
+         try {
+             if (cursor != null)
+                 cursor.close();
+             db.close();
+         }catch (Exception e){
+             Log.e("cursor=Exception",""+e.getMessage());
+         }
          return customers;
      }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -5734,6 +5771,13 @@ Log.e("stay",""+customer.getStatus());
             } while (cursor.moveToNext());
            Log.e("getCustomersBySalesMan","salesMan"+customers.size());
         }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return customers;
     }
 
@@ -5873,7 +5917,13 @@ Log.e("stay",""+customer.getStatus());
                 vouchers.add(Voucher);
             } while (cursor.moveToNext());
         }
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return vouchers;
     }
 
@@ -5915,7 +5965,13 @@ Log.e("stay",""+customer.getStatus());
 
             } while (cursor.moveToNext());
         }
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return Voucher;
     }
 
@@ -6045,6 +6101,13 @@ Log.e("stay",""+customer.getStatus());
             }
             while(cursor.moveToNext());
         }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return  mastersItemkinds;
     }
     public List<ItemsMaster> getItemMaster2() {
@@ -6070,6 +6133,13 @@ Log.e("stay",""+customer.getStatus());
                 masters.add(itemsMaster);
             }
             while(cursor.moveToNext());
+        }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
         }
         return  masters;
     }
@@ -6144,6 +6214,13 @@ Log.e("stay",""+customer.getStatus());
                 }
             } while (cursor.moveToNext());
         }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return items;
     }
 
@@ -6172,6 +6249,13 @@ Log.e("stay",""+customer.getStatus());
 
             } while (cursor.moveToNext());
         }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return voucherNumbers;
 
     }
@@ -6199,6 +6283,13 @@ Log.e("stay",""+customer.getStatus());
                 itemNoList.add(itemNo);
 
             } while (cursor.moveToNext());
+        }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
         }
         return itemNoList;
 
@@ -6280,6 +6371,13 @@ Log.e("stay",""+customer.getStatus());
                 items.add(item);
             } while (cursor.moveToNext());
         }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return items;
     }
     public List<Item> getAllItemsBYVOCHER(String voucherNo,int VOUCHETYPE) {
@@ -6336,6 +6434,13 @@ Log.e("stay",""+customer.getStatus());
                 items.add(item);
             } while (cursor.moveToNext());
         }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return items;
     }
     public String getRateOfCustomer()
@@ -6352,6 +6457,13 @@ Log.e("stay",""+customer.getStatus());
                 Log.e("rate ",""+rate+"\t"+customer_id);
             }
             while (cursor.moveToNext());
+        }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
         }
         return  rate;
 
@@ -6481,14 +6593,14 @@ Log.e("stay",""+customer.getStatus());
                 item.setCategory(cursor.getString(2));
                 try {
                     String itemQty=cursor.getString(3);
-                    Log.e("itemQty","1=="+itemQty);
+//                    Log.e("itemQty","1=="+itemQty);
                     if(itemQty.length()>5){
                         itemQty=itemQty.substring(0,5);
-                        Log.e("itemQty","2=="+itemQty);
+//                        Log.e("itemQty","2=="+itemQty);
                     }
 
                     item.setQty(Float.parseFloat(itemQty+""));
-                    Log.e("itemQty","3=="+item.getQty());
+//                    Log.e("itemQty","3=="+item.getQty());
                 }catch ( Exception e){
                     Log.e("Exceptionitem.setQty",""+e.getMessage());
                     item.setQty(Float.parseFloat(cursor.getString(3)));
@@ -6514,13 +6626,13 @@ Log.e("stay",""+customer.getStatus());
                 try {
                     if (cursor.getString(11) == null) {
                         item.setItemHasSerial("0");
-                        Log.e("setItemHasSerial", "" + item.getItemHasSerial() + "null");
+//                        Log.e("setItemHasSerial", "" + item.getItemHasSerial() + "null");
                     } else {
                         item.setItemHasSerial(cursor.getString(11));
                     }
                 } catch (Exception e) {
                     item.setItemHasSerial("0");
-                    Log.e("setItemHasSerial", "" + item.getItemHasSerial() + e.getMessage());
+//                    Log.e("setItemHasSerial", "" + item.getItemHasSerial() + e.getMessage());
 
                 }
 
@@ -6556,7 +6668,14 @@ Log.e("stay",""+customer.getStatus());
                 items.add(item);
             } while (cursor.moveToNext());
         }
-        Log.e("itemsall", "" +items.size() );
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
+//        Log.e("itemsall", "" +items.size() );
         return items;
     }
 //     public List<Item> getAllJsonItems1(String rate,int baseList ,int countVisibleTable) {// price from price list d
@@ -7264,7 +7383,13 @@ Log.e("stay",""+customer.getStatus());
             return  true;
 
         }
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return false;
     }
     /*      select DISTINCT  C.ItemNumber
@@ -7349,8 +7474,14 @@ Log.e("stay",""+customer.getStatus());
             TaxPerc=cursor_TaxPerc.getString(0);
         }
 
-        cursor_TaxPerc.close();
 
+        try {
+            if (cursor_TaxPerc != null)
+                cursor_TaxPerc.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return TaxPerc;
 
 
@@ -7373,8 +7504,14 @@ Log.e("stay",""+customer.getStatus());
         if (cursor_price.moveToFirst()){
             price=cursor_price.getString(0);
         }
+        try {
+            if (cursor_price != null)
+                cursor_price.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
 
-        cursor_price.close();
 
         return price;
 
@@ -7456,6 +7593,13 @@ Log.e("stay",""+customer.getStatus());
                 categories.add(cursor.getString(0));
             } while (cursor.moveToNext());
         }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return categories;
     }
     public List<String> getAllKindItems() {
@@ -7483,11 +7627,19 @@ Log.e("stay",""+customer.getStatus());
 
                 } while (cursor.moveToNext());
             }
+            try {
+                if (cursor != null)
+                    cursor.close();
+                db.close();
+            }catch (Exception e){
+                Log.e("cursor=Exception",""+e.getMessage());
+            }
         }catch (Exception e)
         {
             kind_items.add("**");
             Log.e("DB_Exception","kind_items"+e.getMessage());
         }
+
 
         return kind_items;
     }
@@ -7540,6 +7692,13 @@ Log.e("stay",""+customer.getStatus());
 
             } while (cursor.moveToNext());
         }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
 
         return itemsQtyOffers;
     }
@@ -7560,6 +7719,13 @@ Log.e("stay",""+customer.getStatus());
 
             } while (cursor.moveToNext());
         }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
 //        Log.e("new_Value_Qty_offers", "Db" + qtyOffers);
         return qtyOffers;
     }
@@ -7579,7 +7745,13 @@ Log.e("stay",""+customer.getStatus());
 
             } while (cursor.moveToNext());
         }
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return keyvalue;
 
 
@@ -7609,7 +7781,13 @@ Log.e("stay",""+customer.getStatus());
                 keyvalue.add(printerSetting);
             } while (cursor.moveToNext());
         }
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return keyvalue;
 
 
@@ -7630,6 +7808,13 @@ Log.e("stay",""+customer.getStatus());
                 units.add(cursor.getString(0));
             } while (cursor.moveToNext());
         }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
 
         return units;
     }
@@ -7646,7 +7831,13 @@ Log.e("stay",""+customer.getStatus());
              units.add(cursor.getString(0));
           } while (cursor.moveToNext());
        }
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
        return units;
     }
     public String getItemsUnitsQTY(String itemNo,String unitid) {
@@ -7662,7 +7853,13 @@ Log.e("stay",""+customer.getStatus());
            return   cursor.getString(0).toString();
           } while (cursor.moveToNext());
        }
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
        return "";
     }
     public List<Payment> getAllPayments() {
@@ -7860,6 +8057,13 @@ Log.e("stay",""+customer.getStatus());
 
 
             } while (cursor.moveToNext());
+        }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
         }
         Log.e("userNO=",userNO);
         return userNO;
@@ -8114,7 +8318,13 @@ Log.e("stay",""+customer.getStatus());
             } while (cursor.moveToNext());
         }
 
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return offers;
     }
     //*********************************************************
@@ -8141,7 +8351,13 @@ Log.e("stay",""+customer.getStatus());
 
         }
         Log.e("ListItemBalance",""+salesManItemsBalanceList.size());
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return salesManItemsBalanceList;
     }
     //*********************************************************
@@ -8188,6 +8404,13 @@ Log.e("stay",""+customer.getStatus());
                     break;
                 }
             } while (cursor.moveToNext());
+        }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
         }
         return isPosted;
     }
@@ -8394,7 +8617,8 @@ Log.e("stay",""+customer.getStatus());
 
         Log.e("updateSalesManItemsBalance1" , "2"+existQty);
         db.execSQL("update SalesMan_Items_Balance SET  Qty = '"+existQty+"' where SalesManNo = '"+salesMan+"' and  ItemNo = '"+itemNo+"' ");
-
+        if (cursor != null)
+            cursor.close();
     }
 
     public void updateSalesManItemsBalance2(float qty , int salesMan, String itemNo) {
@@ -8521,7 +8745,10 @@ Log.e("stay",""+customer.getStatus());
         Log.e("rateCustomer",""+rateCustomer);
         SQLiteDatabase db = this.getWritableDatabase();
         // delete from Price_List_D where PrNo <> 1
-        db.execSQL("delete from " + Price_List_D +" where PrNo <> '"+rateCustomer+"'");
+//        db.execSQL("delete from " + Price_List_D +" where PrNo <> '"+rateCustomer+"'");
+        if(rateCustomer.equals("2"))
+        db.execSQL("delete from " + Price_List_D +" where PrNo <> 0 and  PrNo <> 1  and  PrNo <> 2 ");
+        else  db.execSQL("delete from " + Price_List_D +" where PrNo <> 0  ");
         db.close();
     }
 
@@ -8692,7 +8919,12 @@ Log.e("stay",""+customer.getStatus());
 
         }
 
+        try {
 
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
 //        values.put(, serialModelItem.getStoreNo());
 
     }
@@ -9168,6 +9400,13 @@ Log.e("stay",""+customer.getStatus());
             Log.e("count=", "" + count + "\t");
 
         }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return count;
 
     }
@@ -9332,7 +9571,13 @@ if(name==null) name = "";
 
         }
 
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return infoLocation;
     }
     public Transaction getLastVisitInfo(String customerId,String salesManId) {
@@ -9356,7 +9601,13 @@ if(name==null) name = "";
 
 
         }
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
 
         return infoVisit;
     }
@@ -9475,6 +9726,13 @@ if(name==null) name = "";
         {
             valueSer = "not";
         }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return valueSer;
     }
     //************************************************
@@ -9503,7 +9761,13 @@ if(name==null) name = "";
 
 
         // Log.e("getLastTransactio", "isSerialCodePaied+\t" + voucherKind + "\t");
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return voucherKind;
     }
 
@@ -9542,7 +9806,13 @@ if(name==null) name = "";
                 offers.add(offer);
             } while (cursor.moveToNext());
         }
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
 
         return offers;
     }
@@ -9588,8 +9858,13 @@ if(name==null) name = "";
         catch ( Exception e)
         {soiledQty="0";
         }
-        if(cursor != null)
-            cursor.close();
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
 
         return soiledQty;
     }
@@ -9716,6 +9991,13 @@ if(name==null) name = "";
         }
         Log.e("isTableEmpty",""+isEmpty);
 
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return isEmpty;
     }
     public List<serialModel> getalllserialitems() {
@@ -9881,6 +10163,13 @@ if(name==null) name = "";
         {
             Log.e("Exception","getUnitForItem"+e.getMessage());
         }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return  itemUnit;
     }
 
@@ -9954,6 +10243,14 @@ if(name==null) name = "";
             Log.e("Exception","getUnitForItem"+e.getMessage());
         }
         Log.e("itemUnit","price=="+itemUnit);
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
+
         return  itemUnit;
     }
 
@@ -9991,6 +10288,13 @@ if(name==null) name = "";
         {
             Log.e("Exception","getUnitForItem"+e.getMessage());
         }
+         try {
+             if (cursor != null)
+                 cursor.close();
+             db.close();
+         }catch (Exception e){
+             Log.e("cursor=Exception",""+e.getMessage());
+         }
         return  itemUnit;
     }
 
@@ -10856,6 +11160,13 @@ if(name==null) name = "";
             {
             }
         }
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
         return count;
     }
     public void deleteAllPreviusYear() {
@@ -11234,6 +11545,13 @@ void updateDataForClient(){
           } while (cursor.moveToNext());
        }
 
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
        return ConvRate;
     }
 //    public List<ItemUnitDetails> getItemUnits(String itemNo) {
@@ -11278,7 +11596,13 @@ void updateDataForClient(){
 
           } while (cursor.moveToNext());
        }
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
 
        return list;
     }
@@ -11304,7 +11628,13 @@ void updateDataForClient(){
 
           } while (cursor.moveToNext());
        }
-
+        try {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
        return    available;
     }
     public String getLastPriceforCustomer(String itemNo) {
@@ -11325,6 +11655,13 @@ void updateDataForClient(){
           price=cursor_price.getString(0);
        }
        cursor_price.close();
+        try {
+            if (cursor_price != null)
+                cursor_price.close();
+            db.close();
+        }catch (Exception e){
+            Log.e("cursor=Exception",""+e.getMessage());
+        }
        Log.e("selectQuery2","price="+price);
        return price;
     }
@@ -11381,6 +11718,8 @@ void updateDataForClient(){
              } while (cursor.moveToNext());
          }
          Log.i("DatabaseHandler", "************************" + available);
+         if (cursor != null)
+             cursor.close();
       updateTableMax(available);
      }
 
@@ -11423,14 +11762,22 @@ void updateDataForClient(){
          if (cursor.moveToFirst()) {
              do {
                  prices.add(cursor.getString(0));
-                 Log.e("getItemPrices","prices="+cursor.getString(0));
+//                 Log.e("getItemPrices","prices="+cursor.getString(0));
                  prices.add(cursor.getString(1));
                  prices.add(cursor.getString(2));
                  prices.add(cursor.getString(3));
              } while (cursor.moveToNext());
          }
 
-         Log.e("getItemPrices","prices="+prices.size());
+         try {
+             if (cursor != null)
+                 cursor.close();
+                 db.close();
+         }catch (Exception e){
+             Log.e("cursor=Exception",""+e.getMessage());
+         }
+
+//         Log.e("getItemPrices","prices="+prices.size());
          return prices;
      }
 
@@ -11448,7 +11795,8 @@ void updateDataForClient(){
 
              } while (cursor.moveToNext());
          }
-
+         if (cursor != null)
+             cursor.close();
          Log.e("getAllItemsName","prices="+items.size());
          return items;
      }
@@ -11650,10 +11998,45 @@ void updateDataForClient(){
 
              } while (cursor.moveToNext());
          }
-
+         try {
+             if (cursor != null)
+                 cursor.close();
+             db.close();
+         }catch (Exception e){
+             Log.e("cursor=Exception",""+e.getMessage());
+         }
          return items;
      }
 
+
+     public boolean isExistVoucherNo(int voucherNumber, int voucherType) {
+        // select count(*) from PAYMENTS where VOUCHER_NUMBER=8000038 and PAY_METHOD3=0
+        boolean existItem=false;
+        String value="0";
+
+         String selectQuery = "select count(*) from PAYMENTS where VOUCHER_NUMBER= '"+voucherNumber+"' and PAY_METHOD3='"+voucherType+"'";
+
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+
+         if (cursor.moveToFirst()) {
+             value= cursor.getString(0);
+                 Log.e("isExistVoucherNo","prices="+value);
+
+         }
+
+         if(value.equals("0"))
+             return true;
+         else  return false;
+
+     }
+     @Override
+     public synchronized void close () {
+         if (db != null) {
+             db.close();
+             super.close();
+         }
+     }
 
  }
 

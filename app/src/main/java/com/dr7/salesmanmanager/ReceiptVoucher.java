@@ -669,7 +669,21 @@ LinearLayout row221;
                         if (spinner == getResources().getString(R.string.cash)) {
                             if (!s.equals("") && Double.parseDouble(s) != 0) {
                                 voucherType = 1;
+                                if(Login.MaxpaymentvochFromServ==1){
+                                    try {
+                                        voucherNumber=Integer.parseInt(String.valueOf(MAX_ServoucherNumber));
+//                Log.e("voucherNumber","=="+voucherNumber);
+                                    }catch (Exception e){
+
+                                    }
+
+                                }
+                                if(mDbHandler.isExistVoucherNo(voucherNumber,voucherType))
                                 saveAmount(voucherType);
+                                else {
+                                    Toast.makeText(getActivity(), "duplicate value", Toast.LENGTH_LONG).show();
+
+                                }
 
                             } else {
                                 Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
@@ -677,7 +691,12 @@ LinearLayout row221;
                         } else if (spinner == getResources().getString(R.string.app_creditCard)) {
                             if (!s.equals("") && Double.parseDouble(s) != 0) {
                                 voucherType = 2;
+                                if(mDbHandler.isExistVoucherNo(voucherNumber,voucherType))
                                 saveAmount(voucherType);
+                                else {
+                                    Toast.makeText(getActivity(), "duplicate value", Toast.LENGTH_LONG).show();
+
+                                }
 
                             } else {
                                 Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
@@ -687,7 +706,12 @@ LinearLayout row221;
                                 Toast.makeText(getActivity(), "Amount Value not matches Cheque Total", Toast.LENGTH_SHORT).show();
                             else {
 
+                                if(mDbHandler.isExistVoucherNo(voucherNumber,voucherType))
                                 saveChequ();
+                                else {
+                                    Toast.makeText(getActivity(), "duplicate value", Toast.LENGTH_LONG).show();
+
+                                }
 
 //                                if(!Login.salesMan.equals(""))
 //                                {

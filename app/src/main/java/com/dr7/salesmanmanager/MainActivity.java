@@ -377,7 +377,7 @@ public class MainActivity extends AppCompatActivity
     String provider;
     protected String latitude, longitude;
     protected boolean gps_enabled, network_enabled;
-
+    Settings settings;
 
     ////////
 
@@ -406,6 +406,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     FragmentManager childFragMang;
+
 
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -444,7 +445,14 @@ public class MainActivity extends AppCompatActivity
 
             databaseHandler = new DatabaseHandler(MainActivity.this);
 
+            settings=databaseHandler.getAllSettings().get(0);
             databaseHandler.getSalsmanLoc();
+            Log.e("settings","getPriceByCust=="+settings.getPriceByCust());
+            if(settings.getPriceByCust()==1)
+            databaseHandler. deletePriceListDCustomerRate("2");
+            else {
+                databaseHandler. deletePriceListDCustomerRate("0");
+            }
             Log.e(" DatabaseHandler.", "" + DatabaseHandler.SalmnLat + "");
             if (DatabaseHandler.SalmnLat == null && DatabaseHandler.SalmnLong == null) {
 

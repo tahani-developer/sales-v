@@ -45,6 +45,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -56,6 +57,7 @@ import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.RequestAdmin;
 import com.dr7.salesmanmanager.Modles.RequstTest;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.firebase.database.DatabaseReference;
@@ -183,6 +185,7 @@ public static     float CountOfItems=1;
     float priceUnit = 0;
     String rate_customer = "0";
 
+    Settings localSetting;
 
     public RecyclerViewAdapter(List<Item> items, AddItemsFragment2 context) {
         Log.e("RecyclerViewAdapter,,", "" + "RecyclerViewAdapter");
@@ -202,23 +205,24 @@ public static     float CountOfItems=1;
         vouch = Integer.parseInt(voucherNumberTextView.getText().toString());
         kindVoucher = voucherType;
         MHandler = new DatabaseHandler(cont);
-        settingPriceCus = MHandler.getAllSettings().get(0).getPriceByCust();
-        showItemImageSetting = MHandler.getAllSettings().get(0).getShowItemImage();
+        localSetting=MHandler.getAllSettings().get(0);
+        settingPriceCus = localSetting.getPriceByCust();
+        showItemImageSetting = localSetting.getShowItemImage();
         localItemNumber = new ArrayList<>();
-        if (MHandler.getAllSettings().get(0).getContinusReading() == 1) {
+        if (localSetting.getContinusReading() == 1) {
 
             contiusReading = 1;
             Log.e("sunmiDevice", "" + sunmiDevice);
         }
         generalMethod = new GeneralMethod(cont);
 //        this.listBitmap=listItemImage;
-        ipAddress = MHandler.getAllSettings().get(0).getIpAddress();
-        ipWithPort = MHandler.getAllSettings().get(0).getIpPort();
-        itemUnit = MHandler.getAllSettings().get(0).getItemUnit();
+        ipAddress = localSetting.getIpAddress();
+        ipWithPort = localSetting.getIpPort();
+        itemUnit = localSetting.getItemUnit();
         rate_customer = MHandler.getRateOfCustomer();
-        dontDuplicateItems = MHandler.getAllSettings().get(0).getDontduplicateItem();
-        sumCurentQty = MHandler.getAllSettings().get(0).getSumCurrentQty();
-        getlastPriceforCust=MHandler.getAllSettings().get(0).getLastCustPrice();
+        dontDuplicateItems =localSetting.getDontduplicateItem();
+        sumCurentQty =localSetting.getSumCurrentQty();
+        getlastPriceforCust=localSetting.getLastCustPrice();
         getTimeAndDate();
 
 
@@ -275,7 +279,7 @@ public static     float CountOfItems=1;
         holder.   textViewUnit_qty_.setText("" +allItemsList.get(position).getItemName());
 
 
-        holder.newlin.setOnClickListener(new View.OnClickListener() {
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
                                              @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
                                              @Override
                                              public void onClick(final View view) {
@@ -328,7 +332,7 @@ public static     float CountOfItems=1;
                                                              serialValue = dialog.findViewById(R.id.serialValue);
                                                              UnitSpinnerLinear= dialog.findViewById(R.id.linearUnit);
                                                              UnitSpinnerLinear.setVisibility(View.GONE);
-                                                             if(MHandler.getAllSettings().get(0).getItems_Unit()==1)UnitSpinnerLinear.setVisibility(View.VISIBLE);
+                                                             if(localSetting.getItems_Unit()==1)UnitSpinnerLinear.setVisibility(View.VISIBLE);
                                                              mainRequestLinear = dialog.findViewById(R.id.mainRequestLinear);
                                                              checkStateResult = dialog.findViewById(R.id.checkStateResult);
                                                              rejectDiscount = dialog.findViewById(R.id.rejectDiscount);
@@ -638,7 +642,7 @@ public static     float CountOfItems=1;
 
                                                              UnitSpinnerLinear= dialog.findViewById(R.id.linearUnit);
                                                              UnitSpinnerLinear.setVisibility(View.GONE);
-                                                             if(MHandler.getAllSettings().get(0).getItems_Unit()==1)UnitSpinnerLinear.setVisibility(View.VISIBLE);
+                                                             if(localSetting.getItems_Unit()==1)UnitSpinnerLinear.setVisibility(View.VISIBLE);
                                                              lp.gravity = Gravity.CENTER;
                                                              lp.windowAnimations = R.style.DialogAnimation;
                                                              dialog.getWindow().setAttributes(lp);
@@ -680,9 +684,9 @@ public static     float CountOfItems=1;
                                                      final Spinner   Item_unit= dialog.findViewById(R.id.Item_unit);
                                                      spinerItemPrices=dialog.findViewById(R.id.item_prices_sp);
                                                      spinerItemPrices.setVisibility(View.GONE);
-                                                     if(MHandler.getAllSettings().get(0).getItems_Unit()==1&& MHandler.getAllSettings().get(0).getPriceByCust()==1){
+                                                     if(localSetting.getItems_Unit()==1&& localSetting.getPriceByCust()==1){
                                                          spinerItemPrices.setVisibility(View.VISIBLE);
-                                                         List<String> prices_item = MHandler.getItemPrices(itemNumber.getText().toString());
+                                                         List<String> prices_item = MHandler.getItemPrices(itemNumber.getText().toString());//*******1********
                                                          ArrayAdapter<String> itemsPriceList = new ArrayAdapter<String>(cont, R.layout.spinner_style, prices_item);
                                                          spinerItemPrices.setAdapter(itemsPriceList);
 
@@ -785,7 +789,7 @@ public static     float CountOfItems=1;
                                                      //***************************************************************************************
                                                      addToList = dialog.findViewById(R.id.addToList);
                                                      Button cancel = dialog.findViewById(R.id.cancelAdd);
-                                                     if (MHandler.getAllSettings().get(0).getRequiNote() == 1) {
+                                                     if (localSetting.getRequiNote() == 1) {
                                                          discribtionItem_linear.setVisibility(View.VISIBLE);
 
                                                      } else {
@@ -794,9 +798,9 @@ public static     float CountOfItems=1;
                                                      }
 
 
-                                                     approveAdmin = MHandler.getAllSettings().get(0).getApproveAdmin();
+                                                     approveAdmin = localSetting.getApproveAdmin();
                                                      //**********************************************************************************************
-                                                     if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {
+                                                     if (localSetting.getPriceByCust() == 1) {
                                                          if (allItemsList.get(position).getDiscountCustomer() != 0.0) {
                                                              haveCstomerDisc = true;
                                                              discountCustomer = allItemsList.get(position).getDiscountCustomer() + "";
@@ -863,12 +867,12 @@ public static     float CountOfItems=1;
                                                                  bonus.setText("");
                                                                  addToList.setEnabled(true);
                                                                  unitQty.setEnabled(true);
-                                                                 if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                                 if (localSetting.getCanChangePrice_returnonly() == 1) {
                                                                      if (voucherType == 506) {
                                                                          price.setEnabled(true);
                                                                      }else {  price.setEnabled(false);}
                                                                  } else {
-                                                                     if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                                                     if (localSetting.getCanChangePrice() == 1) {
                                                                          price.setEnabled(true);
                                                                      }
                                                                  }
@@ -886,7 +890,7 @@ public static     float CountOfItems=1;
                                                      ImageView requestDiscount = dialog.findViewById(R.id.requestDiscount);
                                                      request = new requestAdmin(cont);
                                                      if (MHandler.getAllSettings().size() != 0) {
-                                                         if (MHandler.getAllSettings().get(0).getBonusNotAlowed() == 0) {//you can  add bonus
+                                                         if (localSetting.getBonusNotAlowed() == 0) {//you can  add bonus
                                                              bonusLinearLayout.setVisibility(View.VISIBLE);
 //                        bonusLinearLayout.setVisibility(View.GONE);//test Fro serial
                                                          } else {
@@ -896,7 +900,7 @@ public static     float CountOfItems=1;
 
                                                          }
 
-                                                         if (MHandler.getAllSettings().get(0).getApproveAdmin() == 0) {
+                                                         if (localSetting.getApproveAdmin() == 0) {
                                                              mainRequestLinear.setVisibility(View.GONE);
                                                              _linear_switch.setVisibility(View.GONE);
 
@@ -937,7 +941,7 @@ public static     float CountOfItems=1;
                                                              bonuss_text.setOnClickListener(new View.OnClickListener() {
                                                                  @Override
                                                                  public void onClick(View v) {
-                                                                     if(MHandler.getAllSettings().get(0).getBonusNotAlowed()==0)
+                                                                     if(localSetting.getBonusNotAlowed()==0)
                                                                      {
                                                                          typeRequest = 2;
                                                                          discountLinearLayout.setVisibility(View.GONE);
@@ -969,7 +973,7 @@ public static     float CountOfItems=1;
                                                                                      discountPerVal = 2;
                                                                                  }
                                                                              }
-                                                                             if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {
+                                                                             if (localSetting.getPriceByCust() == 1) {
                                                                                  if (allItemsList.get(position).getDiscountCustomer() != 0.0) {
                                                                                      discountText = discount.getText().toString();
                                                                                      haveCstomerDisc = true;
@@ -1047,14 +1051,14 @@ public static     float CountOfItems=1;
                                                                              discount.setError("required");
                                                                              discount.requestFocus();
                                                                              unitQty.setEnabled(true);
-                                                                             if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                                             if (localSetting.getCanChangePrice_returnonly() == 1) {
                                                                                  if (voucherType == 506) {
                                                                                      price.setEnabled(true);
                                                                                  }else {  price.setEnabled(false);}
                                                                              } else {
 
 
-                                                                                 if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                                                                 if (localSetting.getCanChangePrice() == 1) {
                                                                                      price.setEnabled(true);
                                                                                  }
                                                                              }
@@ -1085,12 +1089,12 @@ public static     float CountOfItems=1;
                                                                              bonus.setError("required");
                                                                              bonus.requestFocus();
                                                                              unitQty.setEnabled(true);
-                                                                             if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                                             if (localSetting.getCanChangePrice_returnonly() == 1) {
                                                                                  if (voucherType == 506) {
                                                                                      price.setEnabled(true);
                                                                                  }else {  price.setEnabled(false);}
                                                                              } else {
-                                                                                 if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                                                                 if (localSetting.getCanChangePrice() == 1) {
                                                                                      price.setEnabled(true);
                                                                                  }
                                                                              }
@@ -1163,13 +1167,13 @@ public static     float CountOfItems=1;
                                                      final DatabaseHandler mHandler = new DatabaseHandler(cont);
                                                      //*********************************** change Price with customer or not accourding to setting  ************************************
 
-                                                     if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                     if (localSetting.getCanChangePrice_returnonly() == 1) {
                                                          price.setText("" + allItemsList.get(position).getPrice());
                                                          if (voucherType == 506) {
                                                              price.setEnabled(true);
                                                          }else {  price.setEnabled(false);}
                                                      } else {
-                                                         if (mHandler.getAllSettings().get(0).getCanChangePrice() == 0) {
+                                                         if (localSetting.getCanChangePrice() == 0) {
                                                              price.setText("" + allItemsList.get(position).getPrice());
                                                              price.setEnabled(false);
                                                              //    price.setText("Desable");
@@ -1178,13 +1182,13 @@ public static     float CountOfItems=1;
                                                              price.setText("" + allItemsList.get(position).getPrice());
                                                          }
                                                      }
-                                                     if (mHandler.getAllSettings().get(0).getItemUnit() == 1&&unitsItems_select==0) {
+                                                     if (localSetting.getItemUnit() == 1&&unitsItems_select==0) {
 //                                                           if(items.get(position).getPrice()!=0)
 //                                                           {
 //                                                               price.setText("" + items.get(position).getPrice());
 //                                                           }else {
                                                                String itemUnitPrice="",price_value="";
-                                                         if(mHandler.getAllSettings().get(0).getPriceByCust()==1)
+                                                         if(localSetting.getPriceByCust()==1)
                                                          {
                                                               itemUnitPrice = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
 
@@ -1215,15 +1219,15 @@ public static     float CountOfItems=1;
 //                                                           price.setText(mHandler.getpreviusePriceSale(items.get(position).getItemNo()));
 //                                                       }
 
-                                                     if (mHandler.getAllSettings().get(0).getTaxClarcKind() == 1)
+                                                     if (localSetting.getTaxClarcKind() == 1)
 //                    discountLinearLayout.setVisibility(View.INVISIBLE);
 
-                                                         if (mHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1) {
+                                                         if (localSetting.getReadDiscountFromOffers() == 1) {
                                                              discountLinearLayout.setVisibility(View.VISIBLE);
                                                          }
 
 
-                                                     if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
+                                                     if (localSetting.getUseWeightCase() == 0) {
                                                          unitWeightLinearLayout.setVisibility(View.GONE);// For Serial
                                                          textQty.setText(view.getContext().getResources().getString(R.string.app_qty));
                                                          // useWeight.setChecked(false);
@@ -1239,55 +1243,56 @@ public static     float CountOfItems=1;
 
                                                      ArrayAdapter<String> itemsunitsList = new ArrayAdapter<String>(cont, R.layout.support_simple_spinner_dropdown_item, ITEMS_units);
                                                      Item_unit.setAdapter(itemsunitsList);
-                                                     if(MHandler.getAllSettings().get(0).getItems_Unit()==1&& MHandler.getAllSettings().get(0).getPriceByCust()==1){
-                                                         spinerItemPrices=dialog.findViewById(R.id.item_prices_sp);
-                                                         spinerItemPrices.setVisibility(View.VISIBLE);
-                                                         List<String> prices_item = MHandler.getItemPrices(itemNumber.getText().toString());
-                                                         ArrayAdapter<String> itemsPriceList = new ArrayAdapter<String>(cont, R.layout.spinner_style, prices_item);
-                                                         spinerItemPrices.setAdapter(itemsPriceList);
-
-                                                         spinerItemPrices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                                             @Override
-                                                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                                 if(   !spinerItemPrices.getSelectedItem().toString().equals("")) {
-                                                                     if(   !spinerItemPrices.getSelectedItem().toString().equals("0")) {
-                                                                         price.setText(spinerItemPrices.getSelectedItem().toString().trim());
-                                                                     }
-                                                                 }
-                                                             }
-
-                                                             @Override
-                                                             public void onNothingSelected(AdapterView<?> parent) {
-
-                                                             }
-                                                         });
-                                                     }     if(MHandler.getAllSettings().get(0).getItems_Unit()==1&& MHandler.getAllSettings().get(0).getPriceByCust()==1){
-
-                                                         spinerItemPrices=dialog.findViewById(R.id.item_prices_sp);
-                                                         spinerItemPrices.setVisibility(View.VISIBLE);
-                                                         List<String> prices_item = MHandler.getItemPrices(itemNumber.getText().toString());
-                                                         ArrayAdapter<String> itemsPriceList = new ArrayAdapter<String>(cont, R.layout.spinner_style, prices_item);
-                                                         spinerItemPrices.setAdapter(itemsPriceList);
-
-                                                         spinerItemPrices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                                             @Override
-                                                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                                 if(   !spinerItemPrices.getSelectedItem().toString().equals("")) {
-                                                                     if(   !spinerItemPrices.getSelectedItem().toString().equals("0")) {
-                                                                         price.setText(spinerItemPrices.getSelectedItem().toString().trim());
-                                                                     }
-                                                                 }
-                                                             }
-
-                                                             @Override
-                                                             public void onNothingSelected(AdapterView<?> parent) {
-
-                                                             }
-                                                         });
-                                                     }
+//                                                     if(localSetting.getItems_Unit()==1&& localSetting.getPriceByCust()==1){
+//                                                         spinerItemPrices=dialog.findViewById(R.id.item_prices_sp);
+//                                                         spinerItemPrices.setVisibility(View.VISIBLE);
+//                                                         List<String> prices_item = MHandler.getItemPrices(itemNumber.getText().toString());******2******
+//                                                         ArrayAdapter<String> itemsPriceList = new ArrayAdapter<String>(cont, R.layout.spinner_style, prices_item);
+//                                                         spinerItemPrices.setAdapter(itemsPriceList);
+//
+//                                                         spinerItemPrices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                                                             @Override
+//                                                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                                                                 if(   !spinerItemPrices.getSelectedItem().toString().equals("")) {
+//                                                                     if(   !spinerItemPrices.getSelectedItem().toString().equals("0")) {
+//                                                                         price.setText(spinerItemPrices.getSelectedItem().toString().trim());
+//                                                                     }
+//                                                                 }
+//                                                             }
+//
+//                                                             @Override
+//                                                             public void onNothingSelected(AdapterView<?> parent) {
+//
+//                                                             }
+//                                                         });
+//                                                     }
+//                                                     if(localSetting.getItems_Unit()==1&& localSetting.getPriceByCust()==1){
+//
+//                                                         spinerItemPrices=dialog.findViewById(R.id.item_prices_sp);
+//                                                         spinerItemPrices.setVisibility(View.VISIBLE);
+//                                                         List<String> prices_item = MHandler.getItemPrices(itemNumber.getText().toString());*******3*****
+//                                                         ArrayAdapter<String> itemsPriceList = new ArrayAdapter<String>(cont, R.layout.spinner_style, prices_item);
+//                                                         spinerItemPrices.setAdapter(itemsPriceList);
+//
+//                                                         spinerItemPrices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                                                             @Override
+//                                                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                                                                 if(   !spinerItemPrices.getSelectedItem().toString().equals("")) {
+//                                                                     if(   !spinerItemPrices.getSelectedItem().toString().equals("0")) {
+//                                                                         price.setText(spinerItemPrices.getSelectedItem().toString().trim());
+//                                                                     }
+//                                                                 }
+//                                                             }
+//
+//                                                             @Override
+//                                                             public void onNothingSelected(AdapterView<?> parent) {
+//
+//                                                             }
+//                                                         });
+//                                                     }
 
                                                      try {
-                                                         if(mHandler.getAllSettings().get(0).getItemUnit()==1)
+                                                         if(localSetting.getItemUnit()==1)
                                                              CountOfItems=getCountOfItems(itemNumber.getText().toString(),"-1");
                                                          else
                                                              CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
@@ -1325,7 +1330,7 @@ public static     float CountOfItems=1;
                                                              }else
                                                              {
                                                                  String price_text="";
-                                                                 if(mHandler.getAllSettings().get(0).getPriceByCust()==1){
+                                                                 if(localSetting.getPriceByCust()==1){
                                                                      price_text= mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
                                                                 if(price_text.trim().length()!=0)
                                                                 {
@@ -1406,7 +1411,7 @@ public static     float CountOfItems=1;
 
                                                              if (current_itemHasSerial == 0 || (current_itemHasSerial == 1 && countInvalidSerial == 0)) {
 
-                                                                 if (!TextUtils.isEmpty(qtyText) || mHandler.getAllSettings().get(0).getWork_serialNo() == 0) {
+                                                                 if (!TextUtils.isEmpty(qtyText) || localSetting.getWork_serialNo() == 0) {
                                                                      if (!price.getText().toString().equals("") && !(unitQty.getText().toString()).equals("")) {
                                                                          if (Double.parseDouble(price.getText().toString()) != 0) {
                                                                              if ((approveAdmin == 0) || (approveAdmin == 1 && TextUtils.isEmpty(bunosText) && typeRequest == 2)
@@ -1429,7 +1434,7 @@ public static     float CountOfItems=1;
                                                                                              useWeight = 0;
                                                                                          }
                                                                                          currentKey = "";
-                                                                                         if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
+                                                                                         if (localSetting.getUseWeightCase() == 0) {
                                                                                              unitValue = unit.getSelectedItem().toString();
                                                                                              // Log.e("unitValue", "" + unitValue);
 //                                                                                               if (items.get(holder.getAdapterPosition()).getQty() >= Double.parseDouble(unitQty.getText().toString())
@@ -1461,7 +1466,7 @@ public static     float CountOfItems=1;
                                                                                                  }
                                                                                              //    Log.e("ayah,priceafterdis", "" +priceafterdis);
 
-                                                                                                 if ( voucherType==506 || mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1   &&
+                                                                                                 if ( voucherType==506 || localSetting.getMinSalePric() == 0 || (localSetting.getMinSalePric() == 1   &&
                                                                                                          priceafterdis >= allItemsList.get(position).getMinSalePrice())) {
                                                                                                  //    Log.e("ayah,getMinSalePrice", "" +allItemsList.get(position).getMinSalePrice());
                                                                                                      AddItemsFragment2 obj = new AddItemsFragment2();
@@ -1602,9 +1607,9 @@ public static     float CountOfItems=1;
                                                                                                  Log.e("here**", "" + position);
                                                                                                  if (position > -1) {
                                                                                                      if (allItemsList.get(position).getQty() >= Double.parseDouble(qty)
-                                                                                                             || mHandler.getAllSettings().get(0).getAllowMinus() == 1
+                                                                                                             || localSetting.getAllowMinus() == 1
                                                                                                              || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508) {
-                                                                                                         if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
+                                                                                                         if (localSetting.getMinSalePric() == 0 || (localSetting.getMinSalePric() == 1 &&
                                                                                                                  Double.parseDouble(price.getText().toString()) >= allItemsList.get(position).getMinSalePrice())) {
 
                                                                                                              AddItemsFragment2 obj = new AddItemsFragment2();
@@ -1752,7 +1757,7 @@ public static     float CountOfItems=1;
         );
 
 
-        if (MHandler.getAllSettings().get(0).getHide_qty() == 1) {
+        if (localSetting.getHide_qty() == 1) {
             holder.row_qty.setVisibility(View.GONE);
 //            holder.unitQty.setVisibility(View.GONE);
         } else {
@@ -2008,7 +2013,7 @@ public static     float CountOfItems=1;
                                                                    serialValue = dialog.findViewById(R.id.serialValue);
                                                                    UnitSpinnerLinear= dialog.findViewById(R.id.linearUnit);
                                                                    UnitSpinnerLinear.setVisibility(View.GONE);
-                                                                   if(MHandler.getAllSettings().get(0).getItems_Unit()==1)UnitSpinnerLinear.setVisibility(View.VISIBLE);
+                                                                   if(localSetting.getItems_Unit()==1)UnitSpinnerLinear.setVisibility(View.VISIBLE);
                                                                    mainRequestLinear = dialog.findViewById(R.id.mainRequestLinear);
                                                                    checkStateResult = dialog.findViewById(R.id.checkStateResult);
                                                                    rejectDiscount = dialog.findViewById(R.id.rejectDiscount);
@@ -2317,7 +2322,7 @@ public static     float CountOfItems=1;
 
                                                                    UnitSpinnerLinear= dialog.findViewById(R.id.linearUnit);
                                                                    UnitSpinnerLinear.setVisibility(View.GONE);
-                                                                   if(MHandler.getAllSettings().get(0).getItems_Unit()==1)UnitSpinnerLinear.setVisibility(View.VISIBLE);
+                                                                   if(localSetting.getItems_Unit()==1)UnitSpinnerLinear.setVisibility(View.VISIBLE);
                                                                    lp.gravity = Gravity.CENTER;
                                                                    lp.windowAnimations = R.style.DialogAnimation;
                                                                    dialog.getWindow().setAttributes(lp);
@@ -2440,7 +2445,7 @@ public static     float CountOfItems=1;
                                                            //***************************************************************************************
                                                            addToList = dialog.findViewById(R.id.addToList);
                                                            Button cancel = dialog.findViewById(R.id.cancelAdd);
-                                                           if (MHandler.getAllSettings().get(0).getRequiNote() == 1) {
+                                                           if (localSetting.getRequiNote() == 1) {
                                                                discribtionItem_linear.setVisibility(View.VISIBLE);
 
                                                            } else {
@@ -2449,9 +2454,9 @@ public static     float CountOfItems=1;
                                                            }
 
 
-                                                           approveAdmin = MHandler.getAllSettings().get(0).getApproveAdmin();
+                                                           approveAdmin = localSetting.getApproveAdmin();
                                                            //**********************************************************************************************
-                                                           if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {
+                                                           if (localSetting.getPriceByCust() == 1) {
                                                                if (allItemsList.get(position).getDiscountCustomer() != 0.0) {
                                                                    haveCstomerDisc = true;
                                                                    discountCustomer = allItemsList.get(position).getDiscountCustomer() + "";
@@ -2518,12 +2523,12 @@ public static     float CountOfItems=1;
                                                                        bonus.setText("");
                                                                        addToList.setEnabled(true);
                                                                        unitQty.setEnabled(true);
-                                                                       if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                                       if (localSetting.getCanChangePrice_returnonly() == 1) {
                                                                            if (voucherType == 506) {
                                                                                price.setEnabled(true);
                                                                            }else {  price.setEnabled(false);}
                                                                        } else {
-                                                                           if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                                                           if (localSetting.getCanChangePrice() == 1) {
                                                                                price.setEnabled(true);
                                                                            }
                                                                        }
@@ -2541,7 +2546,7 @@ public static     float CountOfItems=1;
                                                            ImageView requestDiscount = dialog.findViewById(R.id.requestDiscount);
                                                            request = new requestAdmin(cont);
                                                            if (MHandler.getAllSettings().size() != 0) {
-                                                               if (MHandler.getAllSettings().get(0).getBonusNotAlowed() == 0) {//you can  add bonus
+                                                               if (localSetting.getBonusNotAlowed() == 0) {//you can  add bonus
                                                                    bonusLinearLayout.setVisibility(View.VISIBLE);
 //                        bonusLinearLayout.setVisibility(View.GONE);//test Fro serial
                                                                } else {
@@ -2551,7 +2556,7 @@ public static     float CountOfItems=1;
 
                                                                }
 
-                                                               if (MHandler.getAllSettings().get(0).getApproveAdmin() == 0) {
+                                                               if (localSetting.getApproveAdmin() == 0) {
                                                                    mainRequestLinear.setVisibility(View.GONE);
                                                                    _linear_switch.setVisibility(View.GONE);
 
@@ -2592,7 +2597,7 @@ public static     float CountOfItems=1;
                                                                    bonuss_text.setOnClickListener(new View.OnClickListener() {
                                                                        @Override
                                                                        public void onClick(View v) {
-                                                                           if(MHandler.getAllSettings().get(0).getBonusNotAlowed()==0)
+                                                                           if(localSetting.getBonusNotAlowed()==0)
                                                                            {
                                                                                typeRequest = 2;
                                                                                discountLinearLayout.setVisibility(View.GONE);
@@ -2624,7 +2629,7 @@ public static     float CountOfItems=1;
                                                                                            discountPerVal = 2;
                                                                                        }
                                                                                    }
-                                                                                   if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {
+                                                                                   if (localSetting.getPriceByCust() == 1) {
                                                                                        if (allItemsList.get(position).getDiscountCustomer() != 0.0) {
                                                                                            discountText = discount.getText().toString();
                                                                                            haveCstomerDisc = true;
@@ -2702,14 +2707,14 @@ public static     float CountOfItems=1;
                                                                                    discount.setError("required");
                                                                                    discount.requestFocus();
                                                                                    unitQty.setEnabled(true);
-                                                                                   if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                                                   if (localSetting.getCanChangePrice_returnonly() == 1) {
                                                                                        if (voucherType == 506) {
                                                                                            price.setEnabled(true);
                                                                                        }else {  price.setEnabled(false);}
                                                                                    } else {
 
 
-                                                                                       if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                                                                       if (localSetting.getCanChangePrice() == 1) {
                                                                                            price.setEnabled(true);
                                                                                        }
                                                                                    }
@@ -2740,12 +2745,12 @@ public static     float CountOfItems=1;
                                                                                    bonus.setError("required");
                                                                                    bonus.requestFocus();
                                                                                    unitQty.setEnabled(true);
-                                                                                   if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                                                   if (localSetting.getCanChangePrice_returnonly() == 1) {
                                                                                        if (voucherType == 506) {
                                                                                            price.setEnabled(true);
                                                                                        }else {  price.setEnabled(false);}
                                                                                    } else {
-                                                                                       if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                                                                       if (localSetting.getCanChangePrice() == 1) {
                                                                                            price.setEnabled(true);
                                                                                        }
                                                                                    }
@@ -2818,13 +2823,13 @@ public static     float CountOfItems=1;
                                                            final DatabaseHandler mHandler = new DatabaseHandler(cont);
                                                            //*********************************** change Price with customer or not accourding to setting  ************************************
 
-                                                           if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                           if (localSetting.getCanChangePrice_returnonly() == 1) {
                                                                price.setText("" + allItemsList.get(position).getPrice());
                                                                if (voucherType == 506) {
                                                                    price.setEnabled(true);
                                                                }else {  price.setEnabled(false);}
                                                            } else {
-                                                               if (mHandler.getAllSettings().get(0).getCanChangePrice() == 0) {
+                                                               if (localSetting.getCanChangePrice() == 0) {
                                                                price.setText("" + allItemsList.get(position).getPrice());
                                                                price.setEnabled(false);
                                                                //    price.setText("Desable");
@@ -2833,7 +2838,7 @@ public static     float CountOfItems=1;
                                                                price.setText("" + allItemsList.get(position).getPrice());
                                                            }
                                                        }
-                                                           if (mHandler.getAllSettings().get(0).getItemUnit() == 1&&unitsItems_select==0) {
+                                                           if (localSetting.getItemUnit() == 1&&unitsItems_select==0) {
 //                                                           if(items.get(position).getPrice()!=0)
 //                                                           {
 //                                                               price.setText("" + items.get(position).getPrice());
@@ -2852,15 +2857,15 @@ public static     float CountOfItems=1;
 //                                                           price.setText(mHandler.getpreviusePriceSale(items.get(position).getItemNo()));
 //                                                       }
 
-                                                           if (mHandler.getAllSettings().get(0).getTaxClarcKind() == 1)
+                                                           if (localSetting.getTaxClarcKind() == 1)
 //                    discountLinearLayout.setVisibility(View.INVISIBLE);
 
-                                                               if (mHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1) {
+                                                               if (localSetting.getReadDiscountFromOffers() == 1) {
                                                                    discountLinearLayout.setVisibility(View.VISIBLE);
                                                                }
 
 
-                                                           if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
+                                                           if (localSetting.getUseWeightCase() == 0) {
                                                                unitWeightLinearLayout.setVisibility(View.GONE);// For Serial
                                                                textQty.setText(view.getContext().getResources().getString(R.string.app_qty));
                                                                // useWeight.setChecked(false);
@@ -2876,10 +2881,10 @@ public static     float CountOfItems=1;
 
                                                            ArrayAdapter<String> itemsunitsList = new ArrayAdapter<String>(cont, R.layout.spinner_style, ITEMS_units);
                                                         Item_unit.setAdapter(itemsunitsList);
-                                                           if(MHandler.getAllSettings().get(0).getItems_Unit()==1&& MHandler.getAllSettings().get(0).getPriceByCust()==1){
+                                                           if(localSetting.getItems_Unit()==1&& localSetting.getPriceByCust()==1){
                                                                spinerItemPrices=dialog.findViewById(R.id.item_prices_sp);
                                                                spinerItemPrices.setVisibility(View.VISIBLE);
-                                                               List<String> prices_item = MHandler.getItemPrices(itemNumber.getText().toString());
+                                                               List<String> prices_item = MHandler.getItemPrices(itemNumber.getText().toString());//**********4**********
                                                                ArrayAdapter<String> itemsPriceList = new ArrayAdapter<String>(cont, R.layout.spinner_style, prices_item);
                                                                spinerItemPrices.setAdapter(itemsPriceList);
 
@@ -2901,7 +2906,7 @@ public static     float CountOfItems=1;
                                                            }
 
                                                         try {
-                                                            if(mHandler.getAllSettings().get(0).getItemUnit()==1)
+                                                            if(localSetting.getItemUnit()==1)
                                                             CountOfItems=getCountOfItems(itemNumber.getText().toString(),"-1");
                                                             else
                                                             CountOfItems=getCountOfItems(itemNumber.getText().toString(),Item_unit.getSelectedItem().toString());
@@ -2942,7 +2947,7 @@ public static     float CountOfItems=1;
                                                                  {
                                                                      String price_text="";
                                                                      unit_qty.setText("");
-                                                                     if(mHandler.getAllSettings().get(0).getPriceByCust()==1)
+                                                                     if(localSetting.getPriceByCust()==1)
                                                                  {
                                                                      price_text=mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
                                                                      if(price_text.trim().length()!=0){
@@ -3023,7 +3028,7 @@ public static     float CountOfItems=1;
 
                                                                  if (current_itemHasSerial == 0 || (current_itemHasSerial == 1 && countInvalidSerial == 0)) {
 
-                                                                     if (!TextUtils.isEmpty(qtyText) || mHandler.getAllSettings().get(0).getWork_serialNo() == 0) {
+                                                                     if (!TextUtils.isEmpty(qtyText) || localSetting.getWork_serialNo() == 0) {
                                                                          if (!price.getText().toString().equals("") && !(unitQty.getText().toString()).equals("")) {
                                                                              if (Double.parseDouble(price.getText().toString()) != 0) {
                                                                                  if ((approveAdmin == 0) || (approveAdmin == 1 && TextUtils.isEmpty(bunosText) && typeRequest == 2)
@@ -3046,7 +3051,7 @@ public static     float CountOfItems=1;
                                                                                                  useWeight = 0;
                                                                                              }
                                                                                              currentKey = "";
-                                                                                             if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
+                                                                                             if (localSetting.getUseWeightCase() == 0) {
                                                                                                  unitValue = unit.getSelectedItem().toString();
                                                                                                  // Log.e("unitValue", "" + unitValue);
 //                                                                                               if (items.get(holder.getAdapterPosition()).getQty() >= Double.parseDouble(unitQty.getText().toString())
@@ -3078,7 +3083,7 @@ public static     float CountOfItems=1;
                                                                                                      }
                                                                                                      Log.e("ayah,priceafterdis", "" +priceafterdis);
 
-                                                                                                     if ( voucherType==506 || mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1   &&
+                                                                                                     if ( voucherType==506 ||localSetting.getMinSalePric() == 0 || (localSetting.getMinSalePric() == 1   &&
                                                                                                                 priceafterdis >= allItemsList.get(position).getMinSalePrice())) {
                                                                                                          Log.e("ayah,getMinSalePrice", "" +allItemsList.get(position).getMinSalePrice());
                                                                                                          AddItemsFragment2 obj = new AddItemsFragment2();
@@ -3219,9 +3224,9 @@ public static     float CountOfItems=1;
                                                                                                      Log.e("here**", "" + position);
                                                                                                      if (position > -1) {
                                                                                                          if (allItemsList.get(position).getQty() >= Double.parseDouble(qty)
-                                                                                                                 || mHandler.getAllSettings().get(0).getAllowMinus() == 1
+                                                                                                                 || localSetting.getAllowMinus() == 1
                                                                                                                  || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508) {
-                                                                                                             if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
+                                                                                                             if (localSetting.getMinSalePric() == 0 || (localSetting.getMinSalePric() == 1 &&
                                                                                                                      Double.parseDouble(price.getText().toString()) >= allItemsList.get(position).getMinSalePrice())) {
 
                                                                                                                  AddItemsFragment2 obj = new AddItemsFragment2();
@@ -3788,7 +3793,7 @@ public static     float CountOfItems=1;
             //***************************************************************************************
             addToList = dialog.findViewById(R.id.addToList);
             Button cancel = dialog.findViewById(R.id.cancelAdd);
-            if (MHandler.getAllSettings().get(0).getRequiNote() == 1) {
+            if (localSetting.getRequiNote() == 1) {
                 discribtionItem_linear.setVisibility(View.VISIBLE);
 
             } else {
@@ -3797,9 +3802,9 @@ public static     float CountOfItems=1;
             }
 
 
-            approveAdmin = MHandler.getAllSettings().get(0).getApproveAdmin();
+            approveAdmin = localSetting.getApproveAdmin();
             //**********************************************************************************************
-            if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {
+            if (localSetting.getPriceByCust() == 1) {
                 if (allItemsList.get(position).getDiscountCustomer() != 0.0) {
                     haveCstomerDisc = true;
                     discountCustomer = allItemsList.get(position).getDiscountCustomer() + "";
@@ -3866,12 +3871,12 @@ public static     float CountOfItems=1;
                         bonus.setText("");
                         addToList.setEnabled(true);
                         unitQty.setEnabled(true);
-                        if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                        if (localSetting.getCanChangePrice_returnonly() == 1) {
                             if (voucherType == 506) {
                                 price.setEnabled(true);
                             }else {  price.setEnabled(false);}
                         } else {
-                            if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                            if (localSetting.getCanChangePrice() == 1) {
                                 price.setEnabled(true);
                             }
                         }
@@ -3888,7 +3893,7 @@ public static     float CountOfItems=1;
             ImageView requestDiscount = dialog.findViewById(R.id.requestDiscount);
             request = new requestAdmin(cont);
             if (MHandler.getAllSettings().size() != 0) {
-                if (MHandler.getAllSettings().get(0).getBonusNotAlowed() == 0) {//you can  add bonus
+                if (localSetting.getBonusNotAlowed() == 0) {//you can  add bonus
                     bonusLinearLayout.setVisibility(View.VISIBLE);
 //                        bonusLinearLayout.setVisibility(View.GONE);//test Fro serial
                 } else {
@@ -3898,7 +3903,7 @@ public static     float CountOfItems=1;
 
                 }
 
-                if (MHandler.getAllSettings().get(0).getApproveAdmin() == 0) {
+                if (localSetting.getApproveAdmin() == 0) {
                     mainRequestLinear.setVisibility(View.GONE);
                     _linear_switch.setVisibility(View.GONE);
 
@@ -3963,7 +3968,7 @@ public static     float CountOfItems=1;
                                             discountPerVal = 2;
                                         }
                                     }
-                                    if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {
+                                    if (localSetting.getPriceByCust() == 1) {
                                         if (allItemsList.get(position).getDiscountCustomer() != 0.0) {
                                             discountText = discount.getText().toString();
                                             haveCstomerDisc = true;
@@ -4041,12 +4046,12 @@ public static     float CountOfItems=1;
                                     discount.setError("required");
                                     discount.requestFocus();
                                     unitQty.setEnabled(true);
-                                    if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                    if (localSetting.getCanChangePrice_returnonly() == 1) {
                                         if (voucherType == 506) {
                                             price.setEnabled(true);
                                         }else {  price.setEnabled(false);}
                                     } else {
-                                        if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                        if (localSetting.getCanChangePrice() == 1) {
                                             price.setEnabled(true);
                                         }
                                     }
@@ -4076,12 +4081,12 @@ public static     float CountOfItems=1;
                                     bonus.setError("required");
                                     bonus.requestFocus();
                                     unitQty.setEnabled(true);
-                                    if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                    if (localSetting.getCanChangePrice_returnonly() == 1) {
                                         if (voucherType == 506) {
                                             price.setEnabled(true);
                                         }else {  price.setEnabled(false);}
                                     } else {
-                                        if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                        if (localSetting.getCanChangePrice() == 1) {
                                             price.setEnabled(true);
                                         }
                                     }
@@ -4162,13 +4167,13 @@ public static     float CountOfItems=1;
             itemName.setText(allItemsList.get(position).getItemName());
             final DatabaseHandler mHandler = new DatabaseHandler(cont);
             //*********************************** change Price with customer or not accourding to setting  ************************************
-            if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+            if (localSetting.getCanChangePrice_returnonly() == 1) {
                 price.setText("" + allItemsList.get(position).getPrice());
                 if (voucherType == 506) {
                     price.setEnabled(true);
                 }else {  price.setEnabled(false);}
             } else {
-            if (mHandler.getAllSettings().get(0).getCanChangePrice() == 0) {
+            if( localSetting.getCanChangePrice() == 0) {
                 price.setText("" + allItemsList.get(position).getPrice());
                 price.setEnabled(false);
                 //    price.setText("Desable");
@@ -4177,13 +4182,13 @@ public static     float CountOfItems=1;
                 price.setText("" + allItemsList.get(position).getPrice());
             }
         }
-            if (mHandler.getAllSettings().get(0).getItemUnit() == 1&&unitsItems_select==0) {
+            if (localSetting.getItemUnit() == 1&&unitsItems_select==0) {
 //                                                           if(items.get(position).getPrice()!=0)
 //                                                           {
 //                                                               price.setText("" + items.get(position).getPrice());
 //                                                           }else {
                 String itemUnitPrice ="",price_value="";
-                if(mHandler.getAllSettings().get(0).getPriceByCust()==1)
+                if(localSetting.getPriceByCust()==1)
                 {
                      itemUnitPrice = mHandler.getUnitPrice(allItemsList.get(position).getItemNo(), "-2",0);
 
@@ -4214,15 +4219,15 @@ public static     float CountOfItems=1;
 //                                                           price.setText(mHandler.getpreviusePriceSale(items.get(position).getItemNo()));
 //                                                       }
 
-            if (mHandler.getAllSettings().get(0).getTaxClarcKind() == 1)
+            if (localSetting.getTaxClarcKind() == 1)
 //                    discountLinearLayout.setVisibility(View.INVISIBLE);
 
-                if (mHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1) {
+                if (localSetting.getReadDiscountFromOffers() == 1) {
                     discountLinearLayout.setVisibility(View.VISIBLE);
                 }
 
 
-            if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
+            if (localSetting.getUseWeightCase() == 0) {
                 unitWeightLinearLayout.setVisibility(View.GONE);// For Serial
                 textQty.setText(context.getResources().getString(R.string.app_qty));
                 // useWeight.setChecked(false);
@@ -4278,7 +4283,7 @@ public static     float CountOfItems=1;
 
                     if (current_itemHasSerial == 0 || (current_itemHasSerial == 1 && countInvalidSerial == 0)) {
 
-                        if (!TextUtils.isEmpty(qtyText) || mHandler.getAllSettings().get(0).getWork_serialNo() == 0) {
+                        if (!TextUtils.isEmpty(qtyText) || localSetting.getWork_serialNo() == 0) {
                             if (!price.getText().toString().equals("") && !(unitQty.getText().toString()).equals("")) {
                                 if (Double.parseDouble(price.getText().toString()) != 0) {
                                     if ((approveAdmin == 0) || (approveAdmin == 1 && TextUtils.isEmpty(bunosText) && typeRequest == 2)
@@ -4301,7 +4306,7 @@ public static     float CountOfItems=1;
                                                     useWeight = 0;
                                                 }
                                                 currentKey = "";
-                                                if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
+                                                if (localSetting.getUseWeightCase() == 0) {
                                                     unitValue = unit.getSelectedItem().toString();
                                                     // Log.e("unitValue", "" + unitValue);
 //                                                                                               if (items.get(holder.getAdapterPosition()).getQty() >= Double.parseDouble(unitQty.getText().toString())
@@ -4309,7 +4314,7 @@ public static     float CountOfItems=1;
 //                                                                                                       || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508)
                                                     if (validQty(allItemsList.get(position).getQty(), Float.parseFloat(unitQty.getText().toString()))) {
 
-                                                        if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
+                                                        if (localSetting.getMinSalePric() == 0 || (localSetting.getMinSalePric() == 1 &&
                                                                 Double.parseDouble(price.getText().toString()) >= allItemsList.get(position).getMinSalePrice())) {
 
 
@@ -4468,9 +4473,9 @@ public static     float CountOfItems=1;
                                                         Log.e("here**", "" + position);
                                                         if (position > -1) {
                                                             if (allItemsList.get(position).getQty() >= Double.parseDouble(qty)
-                                                                    || mHandler.getAllSettings().get(0).getAllowMinus() == 1
+                                                                    || localSetting.getAllowMinus() == 1
                                                                     || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508) {
-                                                                if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
+                                                                if (localSetting.getMinSalePric() == 0 || (localSetting.getMinSalePric() == 1 &&
                                                                         Double.parseDouble(price.getText().toString()) >= allItemsList.get(position).getMinSalePrice())) {
 
                                                                     AddItemsFragment2 obj = new AddItemsFragment2();
@@ -4732,6 +4737,8 @@ public static     float CountOfItems=1;
             }
         }
     }
+
+
 
     @SuppressLint("WrongConstant")
     private void updateValue(String barcodeValue, ArrayList<serialModel> serialListitems) {
@@ -5088,7 +5095,7 @@ public static     float CountOfItems=1;
        Log.e("validQty==", "qtyCurrent=" + qtyCurrent + "\tqtyRequired=" + qtyRequired);
         if( (((SalesInvoice.voucherType == 504)||
                 (SalesInvoice.voucherType == 508&&  MainActivity.checkQtyForOrdersFlage==1))&&
-                MainActivity.UNITFLAGE==1&&MHandler.getAllSettings().get(0).getAllowMinus() == 0&& oneUnit==0)){
+                MainActivity.UNITFLAGE==1&&localSetting.getAllowMinus() == 0&& oneUnit==0)){
             Log.e("validQty2==", "qtyCurrent2=" + qtyCurrent + "\tqtyRequired=" + qtyRequired+"CountOfItems="+CountOfItems);
             Log.e("validQty3=="," "+ qtyCurrent/CountOfItems);
 //            if (qtyRequired <=(qtyCurrent/CountOfItems) )
@@ -5097,7 +5104,7 @@ public static     float CountOfItems=1;
                 else    return false;
         }
 
-     else   if (MHandler.getAllSettings().get(0).getAllowMinus() == 1
+     else   if (localSetting.getAllowMinus() == 1
                 || SalesInvoice.voucherType == 506
                 || (SalesInvoice.voucherType == 508&&  MainActivity.checkQtyForOrdersFlage==0)
 
@@ -5135,7 +5142,7 @@ public static     float CountOfItems=1;
         }
         discountRequest = new RequestAdmin();
         if (MHandler.getAllSettings().size() != 0) {
-            discountRequest.setSalesman_name(MHandler.getAllSettings().get(0).getSalesMan_name());
+            discountRequest.setSalesman_name(localSetting.getSalesMan_name());
         } else {
             discountRequest.setSalesman_name("");
         }
@@ -5287,7 +5294,7 @@ public static     float CountOfItems=1;
                         date = convertToEnglish(date);
                         date = date.trim();
                         offers = MHandler.getAllOffers();
-                        if (MHandler.getAllSettings().get(0).getReadOfferFromAdmin() == 0) {
+                        if (localSetting.getReadOfferFromAdmin() == 0) {
                             offers = MHandler.getAllOffers();
                         } else {
                             offers = MHandler.getAllOffersFromCustomerPrices();
@@ -5491,7 +5498,7 @@ public static     float CountOfItems=1;
             imagespecial = itemView.findViewById(R.id.imagespecial);
             threeDForm = new DecimalFormat("00.000");
             textViewTax = itemView.findViewById(R.id.textTitleTax);
-            showSolidQty = MHandler.getAllSettings().get(0).getShow_quantity_sold();
+            showSolidQty = localSetting.getShow_quantity_sold();
 
 
 
