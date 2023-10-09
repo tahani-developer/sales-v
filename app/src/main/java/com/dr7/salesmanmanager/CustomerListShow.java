@@ -14,13 +14,16 @@ import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.app.DialogFragment;
 import android.os.Handler;
+import android.os.Looper;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,9 +36,14 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dr7.salesmanmanager.Adapters.CustomersListAdapter;
+import com.dr7.salesmanmanager.Adapters.CustomersListAdapterR;
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.SalesManCustomerNoteAdapter;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.HttpClient;
@@ -78,13 +86,16 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class CustomerListShow extends DialogFragment {
     private String URL_TO_HIT = "";
-
-    public int showCustomerLoc = 0;
-    public ListView itemsListView;
+RecyclerView planRec;
+    public static int  showCustomerLoc = 0;
+    public static ListView itemsListView;
     //    public List<Customer> customerList;
     public List<Customer> emptyCustomerList;
+    CustomersListAdapterR customersListAdapterR;
     private static final int REQ_CODE_SPEECH_INPUT = 100;
+    boolean isIn=true;
     private Button update;
+    private Handler handler2 = new Handler();
     public static EditText customerNameTextView;
     public static String Customer_Name = "No Customer Selected !", Customer_Account = "", PriceListId = "";
     public static int CashCredit, paymentTerm = 1;
@@ -93,9 +104,9 @@ public class CustomerListShow extends DialogFragment {
 
     public static double Max_Discount_value = 0;
     public static int CustHideValu = 0;
-    public  List<Customer> customerList2;
+//    public  List<Customer> customerList2;
 
-    CustomersListAdapter customersListAdapter;
+    public static CustomersListAdapter customersListAdapter;
     DatabaseHandler mHandler;
     private ProgressDialog progressDialog;
     LinearLayout mainlayout, linearFilter;
@@ -112,7 +123,7 @@ public class CustomerListShow extends DialogFragment {
     final Handler handler = new Handler();
     TextView loadingText;
     List<Customer> filteredList=new ArrayList<>();
-
+    Runnable runnable;
     public CustomerListShow.CustomerListShow_interface getListener() {
         return listener;
     }
@@ -127,6 +138,7 @@ public class CustomerListShow extends DialogFragment {
 
     public CustomerListShow() {
         // Required empty public constructor
+        runnable = null;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -148,7 +160,9 @@ public class CustomerListShow extends DialogFragment {
         accSp = (Spinner) view.findViewById(R.id.accSp);
         classificatSp = (Spinner) view.findViewById(R.id.classificatSp);
         categSp = (Spinner) view.findViewById(R.id.categSp);
-        customerList2=customerList;
+//        customerList2=customerList;
+        planRec=view.findViewById(R.id.planRec);
+
         mSpeakBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -205,19 +219,22 @@ public class CustomerListShow extends DialogFragment {
 
                     if (settings.get(0).getShowCustomerList() == 1) {
                         Log.e("c1", "c1");
-                        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList, showCustomerLoc);
-                        itemsListView.setAdapter(customersListAdapter);
+                        planRec.setLayoutManager(new LinearLayoutManager(getContext()));
+                        customersListAdapterR = new CustomersListAdapterR(CustomerListShow.this, getContext(), customerList, showCustomerLoc);
+                        planRec.setAdapter(customersListAdapterR);
                         loadingText.setVisibility(View.GONE);
-                        itemsListView.setVisibility(View.VISIBLE);
+                        planRec.setVisibility(View.VISIBLE);
 
 
                     } else
                     {
                         Log.e("c2", "c2");
-                        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList, showCustomerLoc);
-                        itemsListView.setAdapter(customersListAdapter);
+                        planRec.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                        customersListAdapterR = new CustomersListAdapterR(CustomerListShow.this, getContext(), emptyCustomerList, showCustomerLoc);
+                        planRec.setAdapter(customersListAdapterR);
                         loadingText.setVisibility(View.GONE);
-                        itemsListView.setVisibility(View.VISIBLE);
+                        planRec.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -239,7 +256,7 @@ public class CustomerListShow extends DialogFragment {
                 }
 
 
-*/
+*
 
 
         } else {
@@ -305,61 +322,167 @@ public class CustomerListShow extends DialogFragment {
 
         }
 
-        customerNameTextView.addTextChangedListener(new TextWatcher() {
+        customerNameTextView.addTextChangedListener(textSe);
 
-            @RequiresApi(api = Build.VERSION_CODES.N)
+
+         runnable = new Runnable() {
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!customerNameTextView.getText().toString().equals("") ) {
-                    searchNormal(customerNameTextView.getText().toString());
+            public void run() {
+                if(isIn) {
+                    customerNameTextView.removeTextChangedListener(textSe);
 
+                    // The trick to update text smoothly.
+//                s.replace(0, s.length(), s.toString());
+
+                    if (!customerNameTextView.getText().toString().equals("")) {
+                        isIn=false;
+                        List<Customer> customers = searchNormal(customerNameTextView.getText().toString());
+
+                        fillAdapterData(CustomerListShow.this, getContext(), customers);
+
+                    } else {
+                        fillAdapterData(CustomerListShow.this, getActivity(), customerList);
+
+                        isIn=true;
+                    }
+                    isIn=true;
+                    // Re-register self after update
+                    customerNameTextView.addTextChangedListener(textSe);
 
                 }
             }
+        };
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-//                if (s.length() != 0) {
-////                    if (showCustomerList == 1) {
-//////
-////                        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList, showCustomerLoc);
-////                        itemsListView.setAdapter(customersListAdapter);
-////                        //customersListAdapter.notifyDataSetChanged();
-////                    } else {
-////                        Log.e("c5", "c5");
-////                        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList, showCustomerLoc);
-////                        itemsListView.setAdapter(customersListAdapter);
-////                        // customersListAdapter.notifyDataSetChanged();
-////                    }
+//        customerNameTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+//                    if (!v.getText().toString().equals("")) {
+//                        isIn=false;
+//                        List<Customer> customers = searchNormal(v.getText().toString());
+//
+//                        fillAdapterData(CustomerListShow.this, getContext(), customers);
+//
+//                    } else {
+//                        fillAdapterData(CustomerListShow.this, getActivity(), customerList);
+//
+//                        isIn=true;
+//                    }
+//                    return true;
 //                }
-            }
-        });
+//                return false;
+//            }
+//        });
 
         return view;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void searchNormal(String querey) {
+    TextWatcher textSe=new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+            handler2.removeCallbacks(runnable);
+            handler2.postDelayed(runnable, 200);
+//            new Handler().post(new Runnable() {
+//                @RequiresApi(api = Build.VERSION_CODES.N)
+//                @Override
+//                public void run() {
+
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if(isIn) {
+//                        customerNameTextView.removeTextChangedListener(textSe);
+//
+//                        // The trick to update text smoothly.
+////                s.replace(0, s.length(), s.toString());
+//
+//                        if (!customerNameTextView.getText().toString().equals("")) {
+//                            isIn=false;
+//                            List<Customer> customers = searchNormal(customerNameTextView.getText().toString());
+//
+//                            fillAdapterData(CustomerListShow.this, getContext(), customers);
+//
+//                        } else {
+//                            fillAdapterData(CustomerListShow.this, getActivity(), customerList);
+//
+//                            isIn=true;
+//                        }
+//                        isIn=true;
+//                        // Re-register self after update
+//                        customerNameTextView.addTextChangedListener(textSe);
+//
+//                    }
+//                }
+//            }).start();
+
+
+
+//                }
+//            });
+        }
+    };
+
+    private List<Customer> searchNormal(String querey) {
         filteredList.clear();
-//        for (int i=0;i<customerList2.size();i++){
-//            if(customerList2.get(i).getCustName().toLowerCase().contains(querey)) {
-//                Customer s=customerList2.get(i);
-//                filteredList.add(s);
-//            }
-//        }
-        filteredList = customerList2.stream().filter(v -> v.getCustName().contains(querey)).map(v -> v)
-                .collect(Collectors.toList());
+        for (int i=0;i<customerList.size();i++){
+            if(customerList.get(i).getCustName().toUpperCase().contains(querey.toUpperCase())) {
+                Customer s=customerList.get(i);
+                filteredList.add(s);
+            }
+        }
+//        filteredList = customerList.stream().filter(v -> v.getCustName().contains(querey)).map(v -> v)
+//                .collect(Collectors.toList());
 //        for (int i=0;i<indexes.size();i++){
 //            filteredList.add(customerList2.get(i));
 //        }
 
 //        filteredList=mHandler.getAllCustomersLike(querey);
-        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), filteredList, showCustomerLoc);
-        itemsListView.setAdapter(customersListAdapter);
+//        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList, showCustomerLoc);
+//        itemsListView.setAdapter(customersListAdapter);
+//        customersListAdapter.notifyDataSetChanged();
+
+        return filteredList;
+    }
+
+    public void fillAdapterData(CustomerListShow customerListShow,Context context, List<Customer>salesManPlans) {
+        Log.e("SerialReport2","SerialReport2");
+
+//        planRec.setLayoutManager(new LinearLayoutManager(context));
+//        SalesManCustomerNoteAdapter planAdapter = new SalesManCustomerNoteAdapter(salesManPlans,context);
+//        planRec.setAdapter(planAdapter);
+//        getActivity().runOnUiThread(new Runnable() {
+//            public void run() {
+////
+//        planRec.setLayoutManager(new LinearLayoutManager(context));
+
+
+        customersListAdapterR.setItemsList(salesManPlans);
+
+        new Handler(Looper.getMainLooper()).post(new Runnable(){
+            @Override
+            public void run() {
+        customersListAdapterR.notifyDataSetChanged();
+            }
+        });
+//        customersListAdapterR.setItemsList(salesManPlans);
+//        customersListAdapterR.notifyDataSetChanged();
+
+//
+//            }
+//        });
+
     }
 
     private void fillSpiners() {
@@ -438,8 +561,14 @@ public class CustomerListShow extends DialogFragment {
     private void filterAllSp() {
         customerList = mHandler.getAllCustomersFilters(spiciliSp.getSelectedItem().toString(), accSp.getSelectedItem().toString(), classificatSp.getSelectedItem().toString(), categSp.getSelectedItem().toString());
 
-        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList, showCustomerLoc);
-        itemsListView.setAdapter(customersListAdapter);
+//        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList, showCustomerLoc);
+//        itemsListView.setAdapter(customersListAdapter);
+
+
+        planRec.setLayoutManager(new LinearLayoutManager(getContext()));
+//
+         customersListAdapterR = new CustomersListAdapterR(CustomerListShow.this, getContext(), customerList, showCustomerLoc);
+        planRec.setAdapter(customersListAdapterR);
     }
 
 
@@ -494,6 +623,8 @@ public class CustomerListShow extends DialogFragment {
     void initialize(View view) {
         update = (Button) view.findViewById(R.id.update);
         customerNameTextView = (EditText) view.findViewById(R.id.customerNameTextView);
+
+//        temp=(EditText) view.findViewById(R.id.customerNameTextView);
         itemsListView = (ListView) view.findViewById(R.id.customersList);
         settings = mHandler.getAllSettings();
         update.setOnClickListener(new View.OnClickListener() {
@@ -770,8 +901,10 @@ public class CustomerListShow extends DialogFragment {
                         }
 
                     }
-                    customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList, showCustomerLoc);
-                    itemsListView.setAdapter(customersListAdapter);
+                    planRec.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                    customersListAdapterR = new CustomersListAdapterR(CustomerListShow.this, getContext(), customerList, showCustomerLoc);
+                    planRec.setAdapter(customersListAdapterR);
 
                     Toast.makeText(getActivity(), "Customers list is ready" + customerList.size(), Toast.LENGTH_SHORT).show();
                 } else {
@@ -980,8 +1113,10 @@ public class CustomerListShow extends DialogFragment {
                         }
 
                     }
-                    customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList, showCustomerLoc);
-                    itemsListView.setAdapter(customersListAdapter);
+                    planRec.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                    customersListAdapterR = new CustomersListAdapterR(CustomerListShow.this, getContext(), customerList, showCustomerLoc);
+                    planRec.setAdapter(customersListAdapterR);
 
                     Toast.makeText(getActivity(), "Customers list is ready" + customerList.size(), Toast.LENGTH_SHORT).show();
                 } else {
