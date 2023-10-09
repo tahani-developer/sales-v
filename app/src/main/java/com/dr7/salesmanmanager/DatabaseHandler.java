@@ -87,7 +87,7 @@ import org.jetbrains.annotations.NotNull;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 234;
+    private static final int DATABASE_VERSION = 235;
 //
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -547,7 +547,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String CUST_NUMBER = "CUST_NUMBER";
     private static final String VOUCHER_YEAR = "VOUCHER_YEAR";
     private static final String VOUCHER_time = "VOUCHER_time";
-    private static final String TAX_TYPE = "TAX_TYPE";
+     private static final String TAX_TYPE = "TAX_TYPE";
+     private static final String VOUCHER_DAMAGE = "VOUCHER_DAMAGE";
 
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1263,8 +1264,8 @@ try {
                     + VOUCHER_YEAR + " INTEGER,"
                     + VOUCHER_time + " TEXT, "
                     + ORIGINALVOUCHER_NUMBER+" INTEGER DEFAULT '0',"
-                    +TAX_TYPE+" INTEGER DEFAULT '0'"
-
+                    +TAX_TYPE+" INTEGER DEFAULT '0' ,"
+                    +VOUCHER_DAMAGE+" INTEGER DEFAULT '0'"
                     + ")";
             db.execSQL(CREATE_TABLE_SALES_VOUCHER_MASTER);
         } catch (Exception e) {
@@ -3022,7 +3023,13 @@ try {
 
             Log.e(TAG, e.getMessage().toString());
         }
+        try {
+            db.execSQL("ALTER TABLE SALES_VOUCHER_MASTER ADD '" + VOUCHER_DAMAGE + "'  INTEGER DEFAULT '0'");
 
+        } catch (Exception e) {
+
+            Log.e(TAG, e.getMessage().toString());
+        }
     }
 
     ////B
@@ -4352,8 +4359,10 @@ Log.e("addCompanyInfo","addCompanyInfo");
         values.put(VOUCHER_YEAR, voucher.getVoucherYear());
         values.put(VOUCHER_time, voucher.getTime());
         values.put(ORIGINALVOUCHER_NUMBER, voucher.getORIGINALvoucherNo());
+        values.put(VOUCHER_DAMAGE, voucher.getVocherDamage());
 
         values.put(TAX_TYPE,voucher.getTaxTypa());
+
         try {
 
             db.insert(SALES_VOUCHER_MASTER, null, values);
@@ -5821,6 +5830,7 @@ Log.e("stay",""+customer.getStatus());
                 Voucher.setTime(cursor.getString(17));
                 Voucher.setTaxTypa(cursor.getInt(19));
 
+                Voucher.setVocherDamage(cursor.getInt(20));
 
                 // Adding transaction to list
                 vouchers.add(Voucher);
@@ -5912,6 +5922,7 @@ Log.e("stay",""+customer.getStatus());
                 Voucher.setCustNumber(cursor.getString(15));
                 Voucher.setVoucherYear(Integer.parseInt(cursor.getString(16)));
                 Voucher.setTime(cursor.getString(17));
+                Voucher.setVocherDamage(cursor.getInt(20));
 
                 // Adding transaction to list
                 vouchers.add(Voucher);
@@ -5961,6 +5972,7 @@ Log.e("stay",""+customer.getStatus());
                 Voucher.setCustNumber(cursor.getString(15));
                 Voucher.setVoucherYear(Integer.parseInt(cursor.getString(16)));
                 Voucher.setTime(cursor.getString(17));
+                Voucher.setVocherDamage(cursor.getInt(20));
                 // Adding transaction to list
 
             } while (cursor.moveToNext());
@@ -6010,6 +6022,7 @@ Log.e("stay",""+customer.getStatus());
                 Voucher.setCustNumber(cursor.getString(15));
                 Voucher.setVoucherYear(Integer.parseInt(cursor.getString(16)));
                 Voucher.setTime(cursor.getString(17));
+                Voucher.setVocherDamage(cursor.getInt(20));
                 // Adding transaction to list
 
             } while (cursor.moveToNext());

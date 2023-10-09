@@ -79,6 +79,7 @@ public class VouchersReport extends AppCompatActivity {
     private DecimalFormat decimalFormat;
     int payMethod = 1;
     int voucherType = 504;
+    int damageType = -1;
     Spinner voucherKindSpinner, payMethodSpinner;
 
     double subTotal = 0, tax = 0, netSales = 0;
@@ -87,6 +88,7 @@ public class VouchersReport extends AppCompatActivity {
     GeneralMethod generalMethod;
     public static int type;
     DatabaseHandler obj;
+    Spinner DamSpinner;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
@@ -133,6 +135,7 @@ public class VouchersReport extends AppCompatActivity {
         preview = (Button) findViewById(R.id.preview);
         voucherKindSpinner = (Spinner) findViewById(R.id.payKindSpinner);
         payMethodSpinner = (Spinner) findViewById(R.id.payMethodSpinner);
+        DamSpinner=findViewById(R.id.DamSpinner);
 
         textSubTotal = (TextView) findViewById(R.id.subTotalTextView);
         textTax = (TextView) findViewById(R.id.taxTextView);
@@ -165,6 +168,7 @@ public class VouchersReport extends AppCompatActivity {
             }
         });
         fillSpiner();
+        fillDamSpinner();
         fillSpinerPayMethod();
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +176,7 @@ public class VouchersReport extends AppCompatActivity {
                 clear();
                 getVoucherType();
                 getPayMethod();
+                getDamageType();
                 if (!from_date.getText().toString().equals("") && !to_date.getText().toString().equals("")) {
                     subTotal = 0;
                     tax = 0;
@@ -335,6 +340,25 @@ public class VouchersReport extends AppCompatActivity {
 
     }
 
+
+    private void getDamageType() {
+        int selectedPosuition = DamSpinner.getSelectedItemPosition();
+        switch (selectedPosuition) {
+            case 0:
+                damageType = -1;
+                break;
+            case 1:
+                damageType = 1;
+                break;
+            case 2:
+                damageType = 0;
+                break;
+
+        }
+        Log.e("getDamageType", "" + damageType + "\tselectedPosuition=" + selectedPosuition);
+
+    }
+
     private void fillSpinerPayMethod() {
         ArrayList<String> categorySpinnerArray = new ArrayList<>();
         categorySpinnerArray.add(getString(R.string.all));
@@ -348,6 +372,7 @@ public class VouchersReport extends AppCompatActivity {
         payMethodSpinner.setSelection(0);
 
     }
+
 
     private void fillSpiner() {
         ArrayList<String> categorySpinnerArray = new ArrayList<>();
@@ -365,6 +390,19 @@ public class VouchersReport extends AppCompatActivity {
 
     }
 
+    private void fillDamSpinner() {
+
+        ArrayList<String> damageSpinnerArray = new ArrayList<>();
+        damageSpinnerArray.add(getString(R.string.allVoucher));
+        damageSpinnerArray.add(getResources().getString(R.string.Damaged));
+        damageSpinnerArray.add(getResources().getString(R.string.notDamaged));
+
+        ArrayAdapter<String> damageVoucher = new ArrayAdapter<>(
+                this, R.layout.support_simple_spinner_dropdown_item, damageSpinnerArray);
+
+        DamSpinner.setAdapter(damageVoucher);
+        DamSpinner.setSelection(0);
+    }
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
@@ -798,6 +836,7 @@ public void voucherInfoDialog(int voucherNumber, int voucherType) {
         String date = vouchers.get(n).getVoucherDate();
         int vType = vouchers.get(n).getVoucherType();
         int pMethod = vouchers.get(n).getPayMethod();
+        int DType=vouchers.get(n).getVocherDamage();
 
         try {
             if (!cust_number.getText().toString().equals("")) {
@@ -805,13 +844,13 @@ public void voucherInfoDialog(int voucherNumber, int voucherType) {
                 if ((customerName.contains(textCompanyNumber)) &&
                         (formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))) &&
-                        (vType == voucherType || voucherType == 1) && (pMethod == payMethod || payMethod == 2))
+                        (vType == voucherType || voucherType == 1) && (pMethod == payMethod || payMethod == 2) && (DType==damageType || damageType==-1))
                     return true;
             } else {
-                Log.e("tag", "*****" + date + "***" + fromDate);
+                Log.e("tag", "*****" + date + "***" + fromDate+damageType);
                 if ((formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))) &&
-                        (vType == voucherType || voucherType == 1) && (pMethod == payMethod || payMethod == 2))
+                        (vType == voucherType || voucherType == 1) && (pMethod == payMethod || payMethod == 2) &&  (DType==damageType || damageType==-1))
                     return true;
             }
 

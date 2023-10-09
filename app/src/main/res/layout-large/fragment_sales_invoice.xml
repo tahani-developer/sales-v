@@ -277,7 +277,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="2dp"
-                        android:layout_weight="1.5"
+                        android:layout_weight="1.4"
                         android:background="@drawable/back_border_edit"
                         android:orientation="horizontal">
 
@@ -355,6 +355,17 @@
                                 android:layout_width="match_parent"
 
                                 />
+                            <CheckBox
+                                android:id="@+id/talef"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:layout_weight="1"
+                                android:text="@string/Damaged"
+                                android:textColor="@color/text_view_color"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                />
                         </LinearLayout>
 
                         <LinearLayout
@@ -428,6 +439,8 @@
                                     android:textSize="14sp" />
 
                             </RadioGroup>
+
+
                         </LinearLayout>
                             <LinearLayout
                                 android:orientation="horizontal"

@@ -136,6 +136,8 @@ import static android.content.Context.LOCATION_SERVICE;
 //import static android.support.v4.content.ContextCompat.getSystemService;
 //import static android.support.v4.content.ContextCompat.getSystemServiceName;
 import static android.content.Context.MODE_PRIVATE;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static android.widget.LinearLayout.VERTICAL;
 import static com.dr7.salesmanmanager.Activities.currentKey;
 import static com.dr7.salesmanmanager.Activities.currentKeyTotalDiscount;
@@ -293,6 +295,7 @@ public class SalesInvoice extends Fragment {
     boolean isFinishPrint = false;
     double total_Qty = 0.0;
     double totalQty_forPrint = 0;
+    CheckBox talef;
     Voucher voucherShow;
     RadioButton discValueRadioButton,discPercRadioButton;
     RadioGroup radioDiscountSerial;
@@ -917,6 +920,9 @@ public class SalesInvoice extends Fragment {
                                                 switch (checkedId) {
                                                     case R.id.salesRadioButton:
                                                         voucherType = 504;
+                                                        talef.setChecked(false);
+                                                        talef.setVisibility(View.GONE);
+
 //                                                        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
                                                         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
                                                         String vn1 = voucherNumber + "";
@@ -928,6 +934,8 @@ public class SalesInvoice extends Fragment {
                                                         break;
                                                     case R.id.retSalesRadioButton:
                                                         voucherType = 506;
+                                                        talef.setChecked(false);
+                                                        talef.setVisibility(View.VISIBLE);
 //                                                        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
                                                         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
                                                         String vn2 = voucherNumber + "";
@@ -937,7 +945,9 @@ public class SalesInvoice extends Fragment {
                                                         orderRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
                                                         break;
                                                     case R.id.orderRadioButton:
+                                                        talef.setChecked(false);
                                                         voucherType = 508;
+                                                        talef.setVisibility(View.GONE);
 //                                                        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
                                                         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
                                                         String vn3 = voucherNumber + "";
@@ -2262,6 +2272,7 @@ Log.e("bmb.size="," "+bmb.getPiecePlaceEnum().pieceNumber());
 
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void afterTextChanged(Editable editable) {
                 if(editable.toString().trim().length()!=0){
@@ -2338,6 +2349,9 @@ if(editable.toString().trim().equals("refreshtext")){
         netTotalTextView = (TextView) view.findViewById(R.id.netSalesTextView1);
         maxDiscount = (ImageButton) view.findViewById(R.id.max_disc);// the max discount for this customer
         maxDiscount.setVisibility(View.GONE);
+        talef=view.findViewById(R.id.talef);
+        talef.setVisibility(View.GONE);
+
         //readNewDiscount=(CheckBox) view.findViewById(R.id.readNewDiscount);
         priceListNo=(TextView) view.findViewById(R.id.priceListNo);
         linearRegulerOfferList=(LinearLayout) view.findViewById(R.id.linearRegulerOfferList);
@@ -2527,6 +2541,24 @@ if(editable.toString().trim().equals("refreshtext")){
                         voucher.setSaleManNumber(salesMan);
                         voucher.setVoucherDiscount(discountValue);
                         voucher.setVoucherDiscountPercent(discountPerc);
+
+
+                        if(talef.isChecked()){
+                            if(voucherType==506) {
+                                voucher.setVocherDamage(1);
+                            }else{
+                                voucher.setVocherDamage(0);
+
+                            }
+
+                        }else {
+                            voucher.setVocherDamage(0);
+
+                        }
+
+
+
+
 //                        try {
 //                            if(remark.trim().length()==0)
 //                            {remark=VERSION;}
@@ -8224,6 +8256,7 @@ try {
 
 
 
+  @RequiresApi(api = Build.VERSION_CODES.M)
   void   checkserialsOfVochs() {
       mDbHandler = new DatabaseHandler(getActivity());
       int voucherNum=0;
