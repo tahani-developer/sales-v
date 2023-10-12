@@ -571,7 +571,7 @@ public class CustomerCheckInFragment extends DialogFragment {
 
         Log.e("timerOff","nnnnn"+lon+"    "+lat+"    "+"seconds remaining: ");
 
-        mDbHandler.updateTransactionLocationReal(transaction.getCusCode(),""+lon,""+lat,transaction.getCheckOutTime(),transaction.getCheckInDate());
+//        mDbHandler.updateTransactionLocationReal(transaction.getCusCode(),""+lon,""+lat,transaction.getCheckOutTime(),transaction.getCheckInDate());
 
 //                mTextField.setText("done!");
         Log.e("timerOff","finish");
@@ -724,7 +724,7 @@ else
         if(approveAdmin==1) {
             Log.e("timerOff00",""+approveAdmin);
 
-            timerForRealLocation(transaction);
+//            timerForRealLocation(transaction);
         }
     }
 

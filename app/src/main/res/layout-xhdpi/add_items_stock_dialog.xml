@@ -202,7 +202,7 @@
                 android:textColor="@color/colorblue_dark"
                 android:textSize="12sp" />
 
-            <androidx.appcompat.widget.SearchView
+            <EditText
                 android:id="@+id/mSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

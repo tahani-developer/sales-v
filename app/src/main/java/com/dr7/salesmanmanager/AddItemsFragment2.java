@@ -5,6 +5,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 
+import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -21,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -52,6 +54,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.SearchView;
@@ -76,6 +79,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.dr7.salesmanmanager.CustomerCheckInFragment.customerList;
 import static com.dr7.salesmanmanager.Login.POS_ACTIVE;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.sharedPref;
@@ -98,6 +102,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 
 
 public class AddItemsFragment2 extends DialogFragment {
+    Runnable runnable;
     public   AllItemRecyclerListViewAdapter allItemAdapterList;
     ArrayList<Item> filteredList_allItem = new ArrayList<>();
  HashMap<Integer,Item>filteredMap=new HashMap<>();
@@ -116,7 +121,8 @@ public class AddItemsFragment2 extends DialogFragment {
     public static final int REQUEST_Camera_Barcode = 1;
     private Item item;
     Button addToListButton, doneButton;
-    SearchView search;
+//    SearchView search;
+    EditText search;
    public static EditText barcode;
    public  TextView clearBarcode;
     ImageView barcodebtn;
@@ -150,6 +156,7 @@ public class AddItemsFragment2 extends DialogFragment {
     ProgressBar progress_circular;
     RelativeLayout allitemLayout;
     TextView firstSpinerLable;
+    private Handler handler2 ;
     public AddItemsInterface getListener() {
         return listener;
     }
@@ -162,6 +169,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
     public AddItemsFragment2() {
         generalMethod=new GeneralMethod(context);
+        runnable=null;
         // Required empty public constructor
     }
 
@@ -186,7 +194,7 @@ public class AddItemsFragment2 extends DialogFragment {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(false);
         setCancelable(false);
-
+        handler2 = new Handler();
 
         getDialog().getWindow().clearFlags(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
@@ -552,41 +560,100 @@ public class AddItemsFragment2 extends DialogFragment {
             autoSearchFlag=1;
         }else  autoSearchFlag=0;
         Log.e("autoSearchFlag","=="+autoSearchFlag);
-        if(autoSearchFlag==0){
-            search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-//                    if(autoSearchFlag==0){
-                        filterQueryName(query);
+//        Handler h = new Handler(Looper.getMainLooper());
+//        h.post(
+//                runnable = new Runnable() {
+//
+//            @Override
+//            public void run() {
+////                if(isIn) {
+//
+//                    search.removeTextChangedListener(textWatcher);
+//
+//                    // The trick to update text smoothly.
+////                s.replace(0, s.length(), s.toString());
+//
+//                    if (!search.getText().toString().equals("")) {
+//                       // isIn=false;
+//                        ArrayList<Item>  filteredList= filterQueryName(search.getText().toString());
+////                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+////                        recyclerView.setAdapter(adapter);
+//                        new Handler(Looper.getMainLooper()).post(new Runnable(){
+//                            @Override
+//                            public void run() {
+//                                RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+//                                recyclerView.setAdapter(adapter);
+////                                adapter.notifyDataSetChanged();
+//                            }
+//                        });
+//
+//                    } else {
+//
+//                    filteredMap.clear();
+////                    for (int  i=0;i<filteredList.size();i++ )
+////                        filteredMap.put(i,filteredList.get(i));
+//
+//
+//                        new Handler(Looper.getMainLooper()).post(new Runnable(){
+//                            @Override
+//                            public void run() {
+//                                ArrayList<Item> filteredList = new ArrayList<>();
+//                                filteredList =   getFilteredZero();
+//                                RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+//                                recyclerView.setAdapter(adapter);
+//
+////                                adapter.notifyDataSetChanged();
+//                            }
+//                        });
+//
+//
 //                    }
-                    return false;
+//
+//                    // Re-register self after update
+//                    search.addTextChangedListener(textWatcher);
+//
+////                }
+//            }
+//            };
 
-                }
-
-                @Override
-                public boolean onQueryTextChange(String query) {
-
-                    return false;
-                }
-            });
-        }else {
-            search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    return false;
-
-                }
-
-                @Override
-                public boolean onQueryTextChange(String query) {
-//                    if(query.length()!=0){
-                        filterQueryName(query);
-//                    }else  filterKindSpinner();
-
-                    return false;
-                }
-            });
-        }
+//        if(autoSearchFlag==0){
+            search.addTextChangedListener(textWatcher           );
+////            search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+////                @Override
+////                public boolean onQueryTextSubmit(String query) {
+//////                    if(autoSearchFlag==0){
+//////                    handler2.removeCallbacks(runnable);
+//////                    handler2.postDelayed(runnable, 200);
+//////                        filterQueryName(query);
+//////                    }
+////                    return false;
+////
+////                }
+////
+////                @Override
+////                public boolean onQueryTextChange(String query) {
+////
+////                    return false;
+////                }
+////            });
+//        }else {
+////            search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+////                @Override
+////                public boolean onQueryTextSubmit(String query) {
+////                    return false;
+////
+////                }
+////
+////                @Override
+////                public boolean onQueryTextChange(String query) {
+//////                    if(query.length()!=0){
+////                        filterQueryName(query);
+//////                    }else  filterKindSpinner();
+////
+////                    return false;
+////                }
+////            });
+//        }
 
         //***************************************************************************************
         barcode = (EditText) view.findViewById(R.id.barcode);
@@ -878,22 +945,25 @@ public class AddItemsFragment2 extends DialogFragment {
         });
 
 
-        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if(view.getHeight() > 0 && view.getWidth() > 0) {
-                    //cache values
-                    view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-            }
-        });
+//        OnBackPressedCallback onBackPressedCallback= new OnBackPressedCallback(true) {
+//            @Override
+//            public void handleOnBackPressed() {
+//
+//                Log.e("onBaccckkk","yeeesss");
+//            }
+//        };
+//        getActivity().getOnBackPressedDispatcher().addCallback(onBackPressedCallback);
 
 
 
         return view;
     }
 
-    private void filterQueryName(String query) {
+
+
+
+    private  ArrayList<Item> filterQueryName(String query) {
+        ArrayList<Item> filteredList = new ArrayList<>();
         //FILTER AS YOU TYPE
 //                adapter.getFilter().filter(query);
         boolean isFound = false;
@@ -924,7 +994,7 @@ public class AddItemsFragment2 extends DialogFragment {
             int[] countResult = new int[arrOfStr.length];
 
 
-            ArrayList<Item> filteredList = new ArrayList<>();
+
 //                    filteredList_allItem
 
 // old search
@@ -1012,21 +1082,22 @@ public class AddItemsFragment2 extends DialogFragment {
             }
 //            Log.e("filteredMap2-",filteredList.size()+"");
 
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
-            recyclerView.setAdapter(adapter);
+//            RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+//            recyclerView.setAdapter(adapter);
             //   Toast.makeText(context, ""+filteredList.size(), Toast.LENGTH_SHORT).show();
 
         } else {
 //            filterKindSpinner();
-                    ArrayList<Item> filteredList = new ArrayList<>();
-                    filteredList =   getFilteredZero();
-                    filteredMap.clear();
-                    for (int  i=0;i<filteredList.size();i++ )
-                        filteredMap.put(i,filteredList.get(i));
-
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
-                    recyclerView.setAdapter(adapter);
+//                    ArrayList<Item> filteredList = new ArrayList<>();
+//                    filteredList =   getFilteredZero();
+//                    filteredMap.clear();
+//                    for (int  i=0;i<filteredList.size();i++ )
+//                        filteredMap.put(i,filteredList.get(i));
+//
+//                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+//                    recyclerView.setAdapter(adapter);
         }
+      return  filteredList;
     }
 
     private void filterKindSpinner() {
@@ -1085,7 +1156,7 @@ public class AddItemsFragment2 extends DialogFragment {
         listAllItemsView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
         RecyclerViewAdapter adapter;
-           // Log.e("forAdapter",""+jsonItemsList.size());
+            Log.e("forAdapter",""+jsonItemsList.size());
 //            adapter = new RecyclerViewAdapter(itemAdapter, AddItemsFragment2.this);
             if(type==0) {
                 linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -1124,6 +1195,38 @@ public class AddItemsFragment2 extends DialogFragment {
 //        }
 
     }
+    TextWatcher textWatcher=new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            ArrayList<Item>  filteredList= filterQueryName(search.getText().toString());
+
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+            recyclerView.setAdapter(adapter);
+
+            if(filteredList.size()==0){
+                filteredMap.clear();
+                for (int  i=0;i<filteredList_allItem.size();i++ )
+                    filteredMap.put(i,filteredList_allItem.get(i));
+                ArrayList<Item> filteredList2 = new ArrayList<>();
+                filteredList2 =   getFilteredZero();
+                RecyclerViewAdapter adapter2 = new RecyclerViewAdapter(filteredList2, AddItemsFragment2.this);
+                recyclerView.setAdapter(adapter2);
+            }
+//            handler2.removeCallbacks(runnable);
+//            handler2.postDelayed(runnable, 200);
+
+        }
+    };
     private void fillListViewAllItem() {
         Log.e("fillListViewAllItem","jsonItemsList="+jsonItemsList.size());
         allItemAdapterList = new AllItemRecyclerListViewAdapter( jsonItemsList,AddItemsFragment2.this);// if screen is landscape =====> 0

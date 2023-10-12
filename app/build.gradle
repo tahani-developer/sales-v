@@ -127,4 +127,5 @@ dependencies {
     implementation 'com.android.support:design:33.1.0'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.squareup.picasso:picasso:2.8'
+    implementation "androidx.activity:activity:1.6.0-alpha05"
 }

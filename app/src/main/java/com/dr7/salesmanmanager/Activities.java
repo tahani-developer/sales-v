@@ -157,6 +157,7 @@ public class Activities extends AppCompatActivity implements
             addItemsFragment.show(getSupportFragmentManager(), "");
         } catch (Exception e) {
             String x = e.getMessage();
+            Log.e("displayFindItemFr",""+e.getMessage());
         }
     }
 
