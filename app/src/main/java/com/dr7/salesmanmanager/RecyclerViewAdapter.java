@@ -228,6 +228,12 @@ public static     float CountOfItems=1;
 
     }
 
+    public void setAllItemsList(List<Item> allItemsList) {
+        this.allItemsList = allItemsList;
+    }
+
+
+
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
