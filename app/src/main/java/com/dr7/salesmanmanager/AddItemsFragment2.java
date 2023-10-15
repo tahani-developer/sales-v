@@ -1082,12 +1082,12 @@ public class AddItemsFragment2 extends DialogFragment {
             }
 //            Log.e("filteredMap2-",filteredList.size()+"");
 
-//            RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
-//            recyclerView.setAdapter(adapter);
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+            recyclerView.setAdapter(adapter);
             //   Toast.makeText(context, ""+filteredList.size(), Toast.LENGTH_SHORT).show();
 
         } else {
-//            filterKindSpinner();
+            filterKindSpinner();
 //                    ArrayList<Item> filteredList = new ArrayList<>();
 //                    filteredList =   getFilteredZero();
 //                    filteredMap.clear();
@@ -1178,23 +1178,6 @@ public class AddItemsFragment2 extends DialogFragment {
 //                recyclerView.setAdapter(adapter);
 //            }
     }
-    private void onScrolledToBottom() {
-//        if (songMainList.size() < songAllList.size()) {
-//            int x, y;
-//            if ((songAllList.size() - songMainList.size()) >= 50) {
-//                x = songMainList.size();
-//                y = x + 50;
-//            } else {
-//                x = songMainList.size();
-//                y = x + songAllList.size() - songMainList.size();
-//            }
-//            for (int i = x; i < y; i++) {
-//                songMainList.add(songAllList.get(i));
-//            }
-//            songsAdapter.notifyDataSetChanged();
-//        }
-
-    }
     TextWatcher textWatcher=new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1203,25 +1186,30 @@ public class AddItemsFragment2 extends DialogFragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+//            ArrayList<Item>  filteredList= filterQueryName(search.getText().toString());
+//
+//            RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+//            recyclerView.setAdapter(adapter);
+//
+//            if(filteredList.size()==0){
+//                filteredMap.clear();
+//                for (int  i=0;i<filteredList_allItem.size();i++ )
+//                    filteredMap.put(i,filteredList_allItem.get(i));
+//                ArrayList<Item> filteredList2 = new ArrayList<>();
+//                filteredList2 =   getFilteredZero();
+//                RecyclerViewAdapter adapter2 = new RecyclerViewAdapter(filteredList2, AddItemsFragment2.this);
+//                recyclerView.setAdapter(adapter2);
+//            }
 
+
+            if(search.getText().toString().length()!=0){
+                        filterQueryName(search.getText().toString());
+                    }else  filterKindSpinner();
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            ArrayList<Item>  filteredList= filterQueryName(search.getText().toString());
 
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
-            recyclerView.setAdapter(adapter);
-
-            if(filteredList.size()==0){
-                filteredMap.clear();
-                for (int  i=0;i<filteredList_allItem.size();i++ )
-                    filteredMap.put(i,filteredList_allItem.get(i));
-                ArrayList<Item> filteredList2 = new ArrayList<>();
-                filteredList2 =   getFilteredZero();
-                RecyclerViewAdapter adapter2 = new RecyclerViewAdapter(filteredList2, AddItemsFragment2.this);
-                recyclerView.setAdapter(adapter2);
-            }
 //            handler2.removeCallbacks(runnable);
 //            handler2.postDelayed(runnable, 200);
 
