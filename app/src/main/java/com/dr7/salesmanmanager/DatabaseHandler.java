@@ -11627,7 +11627,7 @@ void updateDataForClient(){
 
        String selectQuery = "SELECT Qty FROM SalesMan_Items_Balance where ItemNo = '" + itemNo + "'";
        Log.e("selectQuerygetSalesManQty==", selectQuery+"\t\t");
-       //  db = this.getWritableDatabase();
+         db = this.getWritableDatabase();
        Cursor cursor = db.rawQuery(selectQuery, null);
        Log.e("cursor2==", cursor.getCount()+"\t\t");
        double available=0;
