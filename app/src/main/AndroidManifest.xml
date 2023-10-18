@@ -5,7 +5,8 @@
     android:versionCode="3"
     android:versionName="2.0">
 
-    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
+    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android"
+        android:minSdkVersion="8"/>
 
     <supports-screens
         android:anyDensity="true"
@@ -72,7 +73,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        android:enableOnBackInvokedCallback="true"
+        android:enableOnBackInvokedCallback="false"
         tools:ignore="GoogleAppIndexingWarning,HardcodedDebugMode">
         <activity
             android:name=".Reports.MedicalVisitReport"

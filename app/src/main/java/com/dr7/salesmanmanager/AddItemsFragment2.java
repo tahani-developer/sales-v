@@ -7,6 +7,8 @@ import android.app.AlertDialog;
 
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
+import com.dr7.salesmanmanager.Modles.NetworkLogModel;
+import com.dr7.salesmanmanager.Modles.Response_Link;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.google.zxing.integration.android.IntentIntegrator;
 
@@ -17,6 +19,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -67,6 +71,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dr7.salesmanmanager.Modles.Item;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -76,11 +87,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
 import java.util.stream.Collectors;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.dr7.salesmanmanager.CustomerCheckInFragment.customerList;
 import static com.dr7.salesmanmanager.Login.POS_ACTIVE;
+import static com.dr7.salesmanmanager.Login.headerDll;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.sharedPref;
 //import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
@@ -100,9 +113,12 @@ import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 public class AddItemsFragment2 extends DialogFragment {
     Runnable runnable;
+    static TextView runApp;
     public   AllItemRecyclerListViewAdapter allItemAdapterList;
     ArrayList<Item> filteredList_allItem = new ArrayList<>();
  HashMap<Integer,Item>filteredMap=new HashMap<>();
@@ -110,6 +126,7 @@ public class AddItemsFragment2 extends DialogFragment {
     public static List<Item> List;
     TableRow HeaderNewLin;
     public  static  int endAddItem=0;
+    Timer timer;
     int  Spancount=2;
     public  static  int size_customerpriceslist=0,qtyGreatZero=0;
     public  List<Item> itemsList_forFilter;
@@ -120,6 +137,7 @@ public class AddItemsFragment2 extends DialogFragment {
     public  String voucherDate="";
     public static final int REQUEST_Camera_Barcode = 1;
     private Item item;
+    String resulApp="0";
     Button addToListButton, doneButton;
 //    SearchView search;
     EditText search;
@@ -130,7 +148,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //    public static  List<Item> jsonItemsList;
 //    public static List<Item> jsonItemsList2;
 //    public static List<Item> jsonItemsList_intermidiate;
-    RecyclerView recyclerView;
+      RecyclerView recyclerView;
    CheckBox orientation_checkbox;
         AppCompatCheckBox Smallericon_checkbox;
     ListView listAllItemsView;
@@ -180,7 +198,11 @@ public class AddItemsFragment2 extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 //        new LocaleAppUtils().changeLayot(context);
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+//        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        Window window = getDialog().getWindow();
+        if (window != null) {
+            window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        }
         mDbHandler = new DatabaseHandler(getActivity());
 
         countListVisible = mDbHandler.getCountVisibleItemSize();
@@ -554,6 +576,9 @@ public class AddItemsFragment2 extends DialogFragment {
         });
 
         search = view.findViewById(R.id.mSearch);
+        runApp = view.findViewById(R.id.runApp);
+
+        runApp.setText("0");
         if(sharedPref==null)
             sharedPref = getActivity().getSharedPreferences("SETTINGS_PREFERENCES", MODE_PRIVATE);
         if  (sharedPref.getBoolean(Login.UtoSearch_PREF, false)){
@@ -616,7 +641,52 @@ public class AddItemsFragment2 extends DialogFragment {
 //            }
 //            };
 
+
+
+
+
+
+//        runnable = new Runnable() {
+//
+//            @Override
+//            public void run() {
+////
+//                search.removeTextChangedListener(textWatcher);
+//
+//                ArrayList<Item>  filteredList= filterQueryName(search.getText().toString());
+//
+//                RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+////                recyclerView.setAdapter(adapter);
+//
+//                if(filteredList.size()==0){
+//                    filteredMap.clear();
+//                    for (int  i=0;i<filteredList_allItem.size();i++ )
+//                        filteredMap.put(i,filteredList_allItem.get(i));
+//                    ArrayList<Item> filteredList2 = new ArrayList<>();
+//                    filteredList2 =   getFilteredZero();
+////                    RecyclerViewAdapter adapter2 = new RecyclerViewAdapter(filteredList2, AddItemsFragment2.this);
+//
+//
+////                    ArrayList<Item> finalFilteredList = filteredList2;
+//                    RecyclerViewAdapter adapter2 = new RecyclerViewAdapter(filteredList2, AddItemsFragment2.this);
+//
+//                    new Handler(Looper.getMainLooper()).post(new Runnable(){
+//                        @Override
+//                        public void run() {
+//
+//                            recyclerView.setAdapter(adapter2);
+////                            adapter.notifyDataSetChanged();
+//                        }
+//                    });
+//                }
+//                search.addTextChangedListener(textWatcher);
+//
+//            }
+//        };
+
+
 //        if(autoSearchFlag==0){
+        runApp.addTextChangedListener(textWatcher);
             search.addTextChangedListener(textWatcher           );
 ////            search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 ////                @Override
@@ -962,6 +1032,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     private  ArrayList<Item> filterQueryName(String query) {
         ArrayList<Item> filteredList = new ArrayList<>();
         //FILTER AS YOU TYPE
@@ -1096,6 +1167,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //
 //                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
 //                    recyclerView.setAdapter(adapter);
+            filteredList.clear();
         }
       return  filteredList;
     }
@@ -1204,29 +1276,33 @@ public class AddItemsFragment2 extends DialogFragment {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+            if(resulApp.equals("0")){
+//                runApp.setText("1");
+                Log.e("print", "test in text = " + resulApp + "  " + search.getText().toString());
+
+                if(!search.getText().toString().equals("")) {
+
+                    new GetFilter(search.getText().toString()).execute();
+                }else {
+                   fillAllItems();
+                }
+            }
+
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            ArrayList<Item>  filteredList= filterQueryName(search.getText().toString());
 
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
-            recyclerView.setAdapter(adapter);
 
-            if(filteredList.size()==0){
-                filteredMap.clear();
-                for (int  i=0;i<filteredList_allItem.size();i++ )
-                    filteredMap.put(i,filteredList_allItem.get(i));
-                ArrayList<Item> filteredList2 = new ArrayList<>();
-                filteredList2 =   getFilteredZero();
-                RecyclerViewAdapter adapter2 = new RecyclerViewAdapter(filteredList2, AddItemsFragment2.this);
-                recyclerView.setAdapter(adapter2);
-            }
 //            handler2.removeCallbacks(runnable);
 //            handler2.postDelayed(runnable, 200);
 
         }
     };
+
+
+
+
     private void fillListViewAllItem() {
         Log.e("fillListViewAllItem","jsonItemsList="+jsonItemsList.size());
         allItemAdapterList = new AllItemRecyclerListViewAdapter( jsonItemsList,AddItemsFragment2.this);// if screen is landscape =====> 0
@@ -2197,8 +2273,117 @@ boolean FisrtCharsFromString(String ItemName, String SerachText){
 
    return falge; }
 
+    private class GetFilter extends AsyncTask<String, String, String> {
+
+        String seT="";
+
+        public GetFilter(String seT) {
+            this.seT = seT;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            runApp.setText("0");
+            Log.e("print","test pre");
+
+
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
+        @Override
+        protected String doInBackground(String... params) {
+            resulApp="1";
+
+            new Handler(Looper.getMainLooper()).post(new Runnable(){
+                        @Override
+                        public void run() {
+                            runApp.setText("1");
+
+                        }
+                    });
+//            AddItemsFragment2.runApp.setText("1");
+
+//            filteredMap.clear();
+//            for (int  i=0;i<filteredList_allItem.size();i++ ) {
+//                filteredMap.put(i, filteredList_allItem.get(i));
+//            }
+            ArrayList<Item> filteredList2 = new ArrayList<>();
+            filteredList2 =   getFilteredZero();
+            Log.e("print","test2 doB"+ search.getText().toString());
+//                filteredList2.clear();
+            try {
+                    //set time in mili
+                    Thread.sleep(300);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            ArrayList<Item>  filteredList= filterQueryName(search.getText().toString());
+            refresh(filteredList);
+            Log.e("print","test3 doB "+search.getText().toString());
+
+//            RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+//            recyclerView.setAdapter(adapter);
+//
+//            if(filteredList.size()==0){
+//                filteredMap.clear();
+//                for (int  i=0;i<filteredList_allItem.size();i++ ) {
+//                    filteredMap.put(i, filteredList_allItem.get(i));
+//                }
+//                ArrayList<Item> filteredList2 = new ArrayList<>();
+//                filteredList2 =   getFilteredZero();
+//                Log.e("print","test2 doB");
+////                filteredList2.clear();
+//                refresh(filteredList2);
+//            }else {
+//                Log.e("print","test3 doB");
+//
+//                refresh(filteredList);
+//            }
+            return null;
+
+        }
+
+
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+            runApp.setText("0");
+            Log.e("print","test1 post");
+            resulApp="0";
+        }
 
     }
+
+    void refresh(List<Item>filteredList2){
+        new Handler(Looper.getMainLooper()).post(new Runnable(){
+            @Override
+            public void run() {
+                Log.e("print","test refresh size="+filteredList2.size());
+
+                RecyclerViewAdapter adapter2 = new RecyclerViewAdapter(filteredList2, AddItemsFragment2.this);
+                recyclerView.setAdapter(adapter2);
+//                try {
+//                    //set time in mili
+//                    Thread.sleep(3000);
+//
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+
+                runApp.setText("2");
+            }
+        });
+
+
+    }
+
+    }
+
+
+
 
 
 

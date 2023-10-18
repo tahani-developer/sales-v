@@ -186,6 +186,16 @@
                 android:layout_weight="2"
                 android:layout_marginLeft="10dp"
                 />
+            <TextView
+                android:id="@+id/runApp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                android:text="0"
+                android:textColor="@color/colorblue_dark"
+                android:textSize="12sp" />
         </LinearLayout>
 
     </LinearLayout>

@@ -113,6 +113,16 @@
                     android:textSize="12sp"
                     android:textStyle="bold"
                     />
+
+                <TextView
+                    android:id="@+id/runApp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:visibility="gone"
+                    android:text="0"
+                    android:textColor="@color/colorblue_dark"
+                    android:textSize="12sp" />
                 <LinearLayout
                     android:id="@+id/kindLinear"
                     android:layout_width="match_parent"
@@ -251,10 +261,13 @@
 
                         <EditText
                             android:id="@+id/mSearch"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-
+                            android:layout_width="200dp"
+                            android:layout_height="40dp"
+                            android:maxLines="1"
+                            android:maxLength="100"
+                            android:inputType="textNoSuggestions"
+                            android:imeOptions="actionSearch"
+                            android:selectAllOnFocus="true"
                             />
                     </LinearLayout>
 
