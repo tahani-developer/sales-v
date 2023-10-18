@@ -132,6 +132,15 @@
                 android:layout_height="40dp"
                 android:layout_marginLeft="20dp"
                 android:gravity="center" />
+            <TextView
+                android:id="@+id/runApp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                android:text="0"
+                android:textColor="@color/colorblue_dark"
+                android:textSize="12sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_height="wrap_content"
