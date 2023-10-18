@@ -152,7 +152,7 @@
                 android:textSize="16sp"
                 android:text="@string/item_name" />
 
-            <EditText
+            <androidx.appcompat.widget.SearchView
                 android:id="@+id/mSearch"
                 android:layout_width="0dp"
                 android:layout_height="40dp"

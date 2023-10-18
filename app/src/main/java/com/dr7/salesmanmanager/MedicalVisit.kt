@@ -38,6 +38,7 @@ class MedicalVisit : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         curentDate=generalMethod.getCurentTimeDate(1)
         Log.e("curentDate"," "+curentDate);
 
+        adoption_value="0"
 
         dataBase.getAllVisitReport()
         fillAdoption(binding)
@@ -106,10 +107,10 @@ class MedicalVisit : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             item.qty= 1F;
         }
 
-        Log.e("getData","qty="+item.qty)
+//        Log.e("getData","qty="+item.qty)
         item.cust=userNo
         listSelectedItem.add(item)
-        Log.e("getData",""+listSelectedItem.size)
+//        Log.e("getData",""+listSelectedItem.size)
         fillItemAdapter(binding)
 
 
