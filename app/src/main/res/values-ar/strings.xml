@@ -562,6 +562,7 @@
     <string name="noTax">معفى</string>
     <string name="shelf_inventory">جرد الرف</string>
     <string name="carstock">جرد السيارة</string>
+    <string name="voucherTax">فاتورة ضريبية</string>
     <string name="appDiscount">خصم </string>
     <string name="totalDiscount">خصم كلي للكاش</string>
     <string name="deffirentPrice">سعر مختلف عن</string>

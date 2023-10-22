@@ -112,7 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_width="200dp"
             android:layout_margin="5dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:background="@drawable/back_border_edit"
             android:orientation="horizontal">
 
@@ -142,7 +142,7 @@
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="200dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_margin="5dp"
             android:background="@drawable/back_border_edit"
             android:orientation="horizontal">
@@ -190,10 +190,22 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="2"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="2dp"
 
 
             />
+            <TextView
+                android:id="@+id/clearText"
+
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+
+                android:layout_gravity="center"
+                android:layout_marginLeft="1dp"
+
+                android:gravity="center"
+                android:drawableRight="@drawable/ic_clear_black_24dp"
+                />
         </LinearLayout>
 
     </LinearLayout>

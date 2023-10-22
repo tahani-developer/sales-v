@@ -87,7 +87,7 @@ import org.jetbrains.annotations.NotNull;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 235;
+    private static final int DATABASE_VERSION = 236;
 //
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -260,6 +260,7 @@ import org.jetbrains.annotations.NotNull;
     private static final String TAYE_LAYOUT="TAYE_LAYOUT";
      private static final String PrintItemNumber="PrintItemNumber";
      private static final String CurrencyValue="CurrencyValue";
+     private static final String VOUCHER_TAX="VOUCHER_TAX";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
     private static final String VISIT_RATE="VISIT_RATE";
@@ -1023,7 +1024,8 @@ private static final String  TransactionInfo="TransactionInfo_tabel";
                + netsalFLAG + " TEXT , "
                + HeaderprintInOrders + " INTEGER , "
                +PrintItemNumber+ " INTEGER , "
-               +CurrencyValue+ " TEXT  "
+               +CurrencyValue  + " TEXT , "
+               +VOUCHER_TAX    + " INTEGER  "
 
                + ")";
        db.execSQL(CREATE_PRINTER_SETTING_TABLE);
@@ -2983,6 +2985,11 @@ try {
         } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString() + "PRINTER_SETTING_TABLE");
         }
+        try {
+            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD VOUCHER_TAX   INTEGER DEFAULT '0'");
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage().toString() + "PRINTER_SETTING_TABLE");
+        }
 
 
         try{
@@ -3750,6 +3757,7 @@ else   selectQuery = "SELECT PaymentSerials_cridt FROM " + PaymentSerials ;
         values.put(HeaderprintInOrders,printer.getDontrprintheadeInOrders());
         values.put(PrintItemNumber,printer.getPrintItemNumber());
         values.put(CurrencyValue,printer.getCurency());
+        values.put(VOUCHER_TAX,printer.getVoucherTax());
         db.insert(PRINTER_SETTING_TABLE, null, values);
 
         db.close();
@@ -7791,6 +7799,7 @@ Log.e("stay",""+customer.getStatus());
                 printerSetting.setDontrprintheadeInOrders(cursor.getInt(6));
                 printerSetting.setPrintItemNumber(cursor.getInt(7));
                 printerSetting.setCurency(cursor.getString(8));
+                printerSetting.setVoucherTax(cursor.getInt(9));
                 keyvalue.add(printerSetting);
             } while (cursor.moveToNext());
         }

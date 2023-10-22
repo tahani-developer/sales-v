@@ -196,6 +196,18 @@
                 android:layout_marginLeft="10dp"
 
                 />
+            <TextView
+                android:id="@+id/clearText"
+
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+
+                android:layout_gravity="center"
+                android:layout_marginLeft="1dp"
+
+                android:gravity="center"
+                android:drawableRight="@drawable/ic_clear_black_24dp"
+                />
         </LinearLayout>
 
     </LinearLayout>

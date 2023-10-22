@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity
 //    public static EditText passwordFromAdmin, password;
 //    static public TextView mainTextView, timeTextView, salesmanPlanRespon, getplan, notExportedTextView, openPendingTextView;
     LinearLayout checkInLinearLayout, checkOutLinearLayout;
-    public static ImageView checkInImageView, checkOutImageView;
+    public static ImageView checkInImageView;
     static int checknum;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -282,8 +282,7 @@ public class MainActivity extends AppCompatActivity
     int NoLocationAsk = 0;
 
     public static TextView masterControlLoc, fill_Pending_inv;
-    ;
-    String ipAddress = "";
+
     NavigationView navigationView;
 
     GeneralMethod generalMethod;
@@ -367,20 +366,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    //////////
-
-
-    protected LocationManager locationManager1;
-    protected LocationListener locationListener1;
-
     String lat;
-    String provider;
+
     protected String latitude, longitude;
-    protected boolean gps_enabled, network_enabled;
     Settings settings;
-
-    ////////
-
 
     public static int dayOfWeek = 0;
 
@@ -683,7 +672,7 @@ public class MainActivity extends AppCompatActivity
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         first = 1;
         locationPermissionRequest = new LocationPermissionRequest(MainActivity.this);
-        TextView textTimer = (TextView) findViewById(R.id.timerTextView);
+        TextView textTimer =findViewById(R.id.timerTextView);
         masterControlLoc = findViewById(R.id.masterControlLoc);
 
         settingsList = mDbHandler.getAllSettings();
@@ -2482,6 +2471,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     private void openSelectCustDialog() {
         CustomerCheckInFragment customerCheckInFragment = new CustomerCheckInFragment(MainActivity.this);
         customerCheckInFragment.setCancelable(false);
@@ -4893,13 +4883,14 @@ public class MainActivity extends AppCompatActivity
         }
 
         final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name,innerPrinter,innerPrinter_image;
-        CheckBox short_Invoice,dontPrintHeader,altayee_checkbox,headerprintorder,printItemNumber;
+        CheckBox short_Invoice,dontPrintHeader,altayee_checkbox,headerprintorder,printItemNumber,voucherTax;
        EditText currency_valuetxt;
         RadioGroup netsal_radioGroup = (RadioGroup) dialog.findViewById(R.id.netsal_radioGrp);
         RadioButton valu_radio =  dialog.findViewById(R.id.valu_radio);
         RadioButton netsal_radio =  dialog.findViewById(R.id.netsal_radio);
         innerPrinter_image=  dialog.findViewById(R.id.innerPrinter_image);
         currency_valuetxt= dialog.findViewById(R.id.currency_valuetxt);
+        voucherTax= dialog.findViewById(R.id.voucherTax);
         netsal_radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -5015,11 +5006,20 @@ public class MainActivity extends AppCompatActivity
                 printItemNumber.setChecked(true);
 
             else    printItemNumber.setChecked(false);
+            try {
+                voucherTax.setChecked(printer.get(0).getVoucherTax()==1);
+            }catch (Exception e){
+                voucherTax.setChecked(false);
+                Log.e("voucherTax",""+printer.get(0).getVoucherTax());
+            }
+
+
 }else {
     lk30.setChecked(true);
     normalnam.setChecked(true);
     short_Invoice.setChecked(false);
      currency_valuetxt.setText("JD");
+            voucherTax.setChecked(false);
 }
 
 
@@ -5106,6 +5106,10 @@ public class MainActivity extends AppCompatActivity
                     printerSetting.setPrintItemNumber(0);
 
                 }
+                if(voucherTax.isChecked())
+                { printerSetting.setVoucherTax(1);}
+                else printerSetting.setVoucherTax(0);
+
 
                 printerSetting.setNetsalflag(netsalflag);
                 mDbHandler.addPrinterSeting(printerSetting);

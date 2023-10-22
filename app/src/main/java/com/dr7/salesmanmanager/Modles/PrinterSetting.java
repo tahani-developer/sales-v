@@ -11,7 +11,16 @@ public class PrinterSetting {
     private int netsalflag;
     private int dontrprintheadeInOrders;
     private int printItemNumber;
+    private int voucherTax;
     private  String curency;
+
+    public int getVoucherTax() {
+        return voucherTax;
+    }
+
+    public void setVoucherTax(int voucherTax) {
+        this.voucherTax = voucherTax;
+    }
 
     public String getCurency() {
         return curency;

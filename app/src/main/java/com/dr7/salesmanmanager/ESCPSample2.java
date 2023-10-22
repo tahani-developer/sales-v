@@ -938,7 +938,7 @@ public class ESCPSample2
 
 		int largeHeader=24,textSmallcontent=20,x_Larg=26;
 		int dontShowHeader=0,dontShowHeaderinOrders=0;
-		int tayaaLayout=0,net_requiredValue=0;
+		int tayaaLayout=0,net_requiredValue=0,voucherTax=0;
 		try {
 			List<PrinterSetting> printerSettings = obj.getPrinterSetting_();
 			notePosition=obj.getAllCompanyInfo().get(0).getNotePosition();
@@ -950,7 +950,8 @@ public class ESCPSample2
 				dontShowHeaderinOrders=printerSettings.get(0).getDontrprintheadeInOrders();
 				tayaaLayout=printerSettings.get(0).getTayeeLayout();
 				net_requiredValue=printerSettings.get(0).getNetsalflag();
-				Log.e("printerType",""+printerType+"\ttayaaLayout="+tayaaLayout);
+				voucherTax=printerSettings.get(0).getVoucherTax();
+				Log.e("printerType",""+printerType+"\tvoucherTax="+voucherTax);
 			}
 		}catch (Exception e)
 		{
@@ -1007,12 +1008,21 @@ public class ESCPSample2
 			String voucherTyp = "فاتورة بيع";
 			switch (voucherforPrint.getVoucherType()) {
 				case 504:
+					if(voucherTax==1)
+						voucherTyp = "فاتورة ضريبية";
+					else
 					voucherTyp = "فاتورة بيع";
 					break;
 				case 506:
+					if(voucherTax==1)
+						voucherTyp = "فاتورة ضريبية";
+					else
 					voucherTyp = "فاتورة مرتجعات";
 					break;
 				case 508:
+					if(voucherTax==1)
+						voucherTyp = "فاتورة ضريبية";
+					else
 					voucherTyp = "طلب جديد";
 					break;
 			}

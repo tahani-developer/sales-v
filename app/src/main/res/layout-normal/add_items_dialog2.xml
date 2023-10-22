@@ -74,6 +74,7 @@
                         android:textSize="12sp" />
                     <TextView
                         android:id="@+id/clearBarcode"
+
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -82,7 +83,9 @@
                         android:gravity="center"
                         android:drawableRight="@drawable/ic_clear_black_24dp"
                         android:textColor="@color/colorblue_dark"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+
+                        />
 
 
 
@@ -269,6 +272,18 @@
                             android:imeOptions="actionSearch"
                             android:selectAllOnFocus="true"
                             />
+                        <TextView
+                            android:id="@+id/clearText"
+
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="1dp"
+
+                            android:gravity="center"
+                            android:drawableRight="@drawable/ic_clear_black_24dp"
+                           />
                     </LinearLayout>
 
 

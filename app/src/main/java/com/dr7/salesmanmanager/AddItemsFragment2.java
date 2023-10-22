@@ -142,7 +142,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //    SearchView search;
     EditText search;
    public static EditText barcode;
-   public  TextView clearBarcode;
+   public  TextView clearBarcode,clearText;
     ImageView barcodebtn;
     private ArrayList<String> itemsList;
 //    public static  List<Item> jsonItemsList;
@@ -578,6 +578,22 @@ public class AddItemsFragment2 extends DialogFragment {
         search = view.findViewById(R.id.mSearch);
         runApp = view.findViewById(R.id.runApp);
 
+        clearText=view.findViewById(R.id.clearText);
+        clearText.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search.setText("");
+                new Handler(Looper.getMainLooper()).post(new Runnable(){
+                    @Override
+                    public void run() {
+                        filterKindItem();
+//                        fillAllItems();
+
+                    }
+                });
+//                filterKindItem();
+            }
+        });
         runApp.setText("0");
         if(sharedPref==null)
             sharedPref = getActivity().getSharedPreferences("SETTINGS_PREFERENCES", MODE_PRIVATE);
@@ -1059,7 +1075,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
 
-        filteredList_allItem.clear();
+//        filteredList_allItem.clear();
         if (query != null && query.length() > 0) {
             String[] arrOfStr = query.split(" ");
             int[] countResult = new int[arrOfStr.length];
@@ -1167,7 +1183,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //
 //                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
 //                    recyclerView.setAdapter(adapter);
-            filteredList.clear();
+//            filteredList.clear();
         }
       return  filteredList;
     }
@@ -1280,12 +1296,13 @@ public class AddItemsFragment2 extends DialogFragment {
 //                runApp.setText("1");
                 Log.e("print", "test in text = " + resulApp + "  " + search.getText().toString());
 
-                if(!search.getText().toString().equals("")) {
+//                if(!search.getText().toString().equals("")) {
 
                     new GetFilter(search.getText().toString()).execute();
-                }else {
-                   fillAllItems();
-                }
+//                }else {
+//
+//                   fillAllItems();
+//                }
             }
 
         }
@@ -2365,6 +2382,8 @@ boolean FisrtCharsFromString(String ItemName, String SerachText){
 
                 RecyclerViewAdapter adapter2 = new RecyclerViewAdapter(filteredList2, AddItemsFragment2.this);
                 recyclerView.setAdapter(adapter2);
+                if(filteredList2.size()==0)
+                    filterKindSpinner();
 //                try {
 //                    //set time in mili
 //                    Thread.sleep(3000);
